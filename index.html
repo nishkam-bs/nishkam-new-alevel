@@ -3,1037 +3,817 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Unit 3.1 Complete Notes — AQA A-Level Business (7138)</title>
+<meta name="description" content="AQA A-Level Business (7138) revision and study tools from Nishkam School West London. Three units, exam practice, model answers and targeted exam technique — first teaching September 2026.">
+<title>A-Level Business — Nishkam School West London</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
---navy:#1a2744;--navy-deep:#0f1a2e;--gold:#c8a84e;--gold-light:#e8d48a;--gold-muted:#b89a3f;
---cream:#faf8f3;--warm-white:#f5f2ec;--text:#2c2c2c;--text-light:#6b6b6b;--text-on-dark:#e8e4dc;
---border:#e0dcd4;--card-bg:#fff;--green:#2d7a4f;--green-bg:#eef6f1;--orange:#c57b1f;--orange-bg:#fdf4e8;
---blue:#2563a8;--blue-bg:#eef3fa;--red:#b44040;--red-bg:#fbeaea;--radius:6px;
---font-display:'EB Garamond',Georgia,serif;--font-body:'Inter',Calibri,sans-serif;
+:root {
+  --navy: #1a2744;
+  --navy-deep: #0f1a2e;
+  --gold: #c8a84e;
+  --gold-light: #e8d48a;
+  --gold-muted: #b89a3f;
+  --cream: #faf8f3;
+  --warm-white: #f5f2ec;
+  --text: #2c2c2c;
+  --text-light: #6b6b6b;
+  --text-on-dark: #e8e4dc;
+  --border: #e0dcd4;
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(26,39,68,0.06), 0 4px 12px rgba(26,39,68,0.04);
+  --card-shadow-hover: 0 2px 8px rgba(26,39,68,0.1), 0 8px 24px rgba(26,39,68,0.06);
+  --radius: 6px;
+  --max-w: 1100px;
+  --font-display: 'EB Garamond', Georgia, serif;
+  --font-body: 'Inter', Calibri, sans-serif;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:var(--font-body);color:var(--text);background:var(--cream);line-height:1.7;-webkit-font-smoothing:antialiased}
-@media print{body{background:#fff;font-size:10pt;line-height:1.5}
-.hero{background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.toc-card,.rule-box,.trap-box,.exam-box,.example-box,.formula-box{break-inside:avoid}
-.unit-section{break-before:page}}
-.hero{background:var(--navy);color:var(--text-on-dark);padding:56px 24px 48px;text-align:center}
-.hero-inner{max-width:720px;margin:0 auto}
-.hero-badge{display:inline-block;font-size:.7rem;font-weight:600;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px;padding:5px 12px;border:1px solid rgba(200,168,78,.25);border-radius:16px}
-.hero h1{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:600;color:#fff;line-height:1.2;margin-bottom:10px}
-.hero h1 em{font-style:italic;color:var(--gold-light)}
-.hero-sub{font-size:.9rem;color:var(--text-on-dark);opacity:.75;max-width:560px;margin:0 auto}
-.toc{max-width:720px;margin:0 auto;padding:32px 24px 0}
-.toc-title{font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--navy);margin-bottom:12px}
-.toc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
-.toc-card{display:block;padding:14px 16px;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:border-color .2s}
-.toc-card:hover{border-color:var(--gold)}
-.toc-num{font-size:.72rem;font-weight:600;color:var(--gold-muted);margin-bottom:2px}
-.toc-card h3{font-family:var(--font-display);font-size:.95rem;font-weight:600;color:var(--navy);margin-bottom:2px}
-.toc-card p{font-size:.78rem;color:var(--text-light);line-height:1.45}
-.main{max-width:720px;margin:0 auto;padding:40px 24px 80px}
-.unit-section{margin-bottom:64px;scroll-margin-top:24px}
-.section-bar{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:12px;border-bottom:2px solid var(--gold)}
-.section-num{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--gold-muted);white-space:nowrap}
-.section-bar h2{font-family:var(--font-display);font-size:1.35rem;font-weight:600;color:var(--navy);line-height:1.25}
-.topic{margin-bottom:40px}
-.topic h3{font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--navy);margin-bottom:12px;padding-top:8px;border-top:1px solid var(--border)}
-.topic h4{font-family:var(--font-display);font-size:.95rem;font-weight:600;color:var(--text);margin:20px 0 8px}
-.topic p{font-size:.88rem;margin-bottom:12px;line-height:1.7}
-.topic ul,.topic ol{font-size:.88rem;margin:0 0 16px 20px;line-height:1.7}
-.topic li{margin-bottom:4px}
-.rule-box{background:var(--warm-white);border-left:3px solid var(--gold);padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0;margin:16px 0}
-.trap-box{background:var(--red-bg);border-left:3px solid var(--red);padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0;margin:16px 0}
-.exam-box{background:var(--blue-bg);border-left:3px solid var(--blue);padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0;margin:16px 0}
-.example-box{background:var(--green-bg);border-left:3px solid var(--green);padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0;margin:16px 0}
-.formula-box{background:var(--card-bg);border:1px solid var(--border);padding:14px 16px;border-radius:var(--radius);margin:16px 0;font-size:.88rem}
-.formula-box code{font-family:'Courier New',monospace;font-size:.86rem;background:var(--warm-white);padding:2px 6px;border-radius:3px}
-.box-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;display:block}
-.box-label.rule{color:var(--gold-muted)}.box-label.trap{color:var(--red)}.box-label.exam{color:var(--blue)}.box-label.example{color:var(--green)}
-.rule-box p,.trap-box p,.exam-box p,.example-box p{margin-bottom:4px;font-size:.86rem}
-table{width:100%;border-collapse:collapse;font-size:.84rem;margin:16px 0}
-th{text-align:left;padding:8px 10px;background:var(--navy);color:#fff;font-weight:600;font-size:.78rem}
-td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
-tr:nth-child(even) td{background:var(--warm-white)}
-.footer{text-align:center;padding:24px;font-size:.74rem;color:var(--text-light);border-top:1px solid var(--border)}
-@media(max-width:600px){.hero{padding:44px 20px 36px}.main{padding:28px 18px 60px}.toc{padding:24px 18px 0}.toc-grid{grid-template-columns:1fr}}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--cream);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- NAV --- */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--navy-deep);
+  border-bottom: 1px solid rgba(200,168,78,0.15);
+}
+.nav-inner {
+  max-width: var(--max-w); margin: 0 auto;
+  padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.nav-brand {
+  font-family: var(--font-display);
+  font-size: 1.05rem; font-weight: 600;
+  color: var(--gold); text-decoration: none;
+  letter-spacing: 0.01em;
+}
+.nav-brand span { color: var(--text-on-dark); font-weight: 400; }
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a {
+  color: var(--text-on-dark); text-decoration: none;
+  font-size: 0.82rem; font-weight: 500;
+  opacity: 0.85; transition: opacity 0.2s;
+}
+.nav-links a:hover { opacity: 1; }
+
+.nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+.nav-toggle svg { width: 22px; height: 22px; stroke: var(--text-on-dark); }
+
+@media (max-width: 720px) {
+  .nav-links { 
+    display: none; flex-direction: column; gap: 0;
+    position: absolute; top: 56px; left: 0; right: 0;
+    background: var(--navy-deep); border-top: 1px solid rgba(200,168,78,0.1);
+    padding: 8px 0;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links a { padding: 12px 24px; display: block; }
+  .nav-toggle { display: block; }
+}
+
+/* --- HERO --- */
+.hero {
+  background: var(--navy);
+  color: var(--text-on-dark);
+  padding: 120px 24px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at 30% 20%, rgba(200,168,78,0.06) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 80%, rgba(200,168,78,0.04) 0%, transparent 50%);
+}
+.hero-inner { position: relative; max-width: 720px; margin: 0 auto; }
+.hero-badge {
+  display: inline-block;
+  font-size: 0.72rem; font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  padding: 6px 14px;
+  border: 1px solid rgba(200,168,78,0.25);
+  border-radius: 20px;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: #fff;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+.hero-sub {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-on-dark);
+  opacity: 0.8;
+  max-width: 560px;
+  margin: 0 auto 32px;
+}
+.hero-actions {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 12px 24px;
+  font-family: var(--font-body);
+  font-size: 0.88rem; font-weight: 600;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer; border: none;
+}
+.btn-gold {
+  background: var(--gold);
+  color: var(--navy-deep);
+}
+.btn-gold:hover { background: var(--gold-light); }
+.btn-outline {
+  background: transparent;
+  color: var(--text-on-dark);
+  border: 1px solid rgba(232,228,220,0.3);
+}
+.btn-outline:hover { border-color: rgba(232,228,220,0.6); }
+
+.hero-meta {
+  margin-top: 48px;
+  display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
+  font-size: 0.78rem;
+  color: var(--text-on-dark);
+  opacity: 0.6;
+}
+
+/* --- SECTIONS --- */
+.section {
+  padding: 80px 24px;
+}
+.section-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+.section-header {
+  margin-bottom: 48px;
+}
+.section-label {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--gold-muted);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+.section-desc {
+  font-size: 0.92rem;
+  color: var(--text-light);
+  max-width: 600px;
+  line-height: 1.65;
+}
+
+.section-alt { background: var(--warm-white); }
+.section-dark { background: var(--navy); color: var(--text-on-dark); }
+.section-dark .section-title { color: #fff; }
+.section-dark .section-desc { color: var(--text-on-dark); opacity: 0.75; }
+
+/* --- UNITS --- */
+.units-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+.unit-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  text-decoration: none;
+  color: var(--text);
+  transition: box-shadow 0.25s, border-color 0.25s;
+  display: flex; flex-direction: column;
+}
+.unit-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--gold);
+}
+.unit-number {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--gold-muted);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.unit-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.unit-card p {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  flex: 1;
+}
+.unit-topics {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: auto;
+}
+.topic-tag {
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: var(--warm-white);
+  color: var(--text-light);
+  font-weight: 500;
+}
+.unit-card .paper-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--gold-muted);
+  margin-bottom: 4px;
+}
+
+/* --- TOOLS --- */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+.tool-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-decoration: none;
+  color: var(--text);
+  transition: box-shadow 0.25s, border-color 0.25s;
+}
+.tool-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--gold);
+}
+.tool-type {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--gold-muted);
+  margin-bottom: 8px;
+}
+.tool-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.tool-card p {
+  font-size: 0.83rem;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+.tool-card .coming {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-light);
+  margin-top: 10px;
+  opacity: 0.6;
+}
+
+/* --- PAPERS --- */
+.papers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.paper-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(200,168,78,0.15);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.paper-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gold-light);
+  margin-bottom: 6px;
+}
+.paper-card .paper-unit {
+  font-size: 0.8rem;
+  color: var(--text-on-dark);
+  opacity: 0.65;
+  margin-bottom: 14px;
+}
+.paper-detail {
+  font-size: 0.82rem;
+  color: var(--text-on-dark);
+  opacity: 0.8;
+  line-height: 1.65;
+}
+.paper-detail strong { color: var(--gold-light); font-weight: 600; }
+
+/* --- VIRTUES --- */
+.virtues-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 32px;
+}
+.virtue-item {
+  padding: 24px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(200,168,78,0.12);
+  border-radius: var(--radius);
+}
+.virtue-item h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--gold-light);
+  margin-bottom: 8px;
+}
+.virtue-item p {
+  font-size: 0.84rem;
+  color: var(--text-on-dark);
+  opacity: 0.75;
+  line-height: 1.6;
+}
+
+/* --- ETHOS --- */
+.ethos-pillars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.pillar {
+  padding: 24px;
+  border-left: 3px solid var(--gold);
+}
+.pillar h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.pillar p {
+  font-size: 0.84rem;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+.mission-quote {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text);
+  max-width: 640px;
+  border-left: 3px solid var(--gold);
+  padding-left: 20px;
+  margin: 0;
+}
+.mission-quote cite {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-light);
+  font-style: normal;
+  margin-top: 8px;
+}
+
+/* --- FOOTER --- */
+.footer {
+  background: var(--navy-deep);
+  color: var(--text-on-dark);
+  padding: 48px 24px 32px;
+}
+.footer-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 40px;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.footer-motto {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--text-on-dark);
+  opacity: 0.6;
+  margin-bottom: 12px;
+}
+.footer-spec {
+  font-size: 0.78rem;
+  color: var(--text-on-dark);
+  opacity: 0.5;
+}
+.footer h4 {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--gold-muted);
+  margin-bottom: 12px;
+}
+.footer ul { list-style: none; }
+.footer ul li { margin-bottom: 8px; }
+.footer ul a {
+  font-size: 0.82rem;
+  color: var(--text-on-dark);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.footer ul a:hover { opacity: 1; }
+.footer-bottom {
+  max-width: var(--max-w);
+  margin: 32px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(200,168,78,0.1);
+  font-size: 0.72rem;
+  color: var(--text-on-dark);
+  opacity: 0.4;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+  .hero { padding: 100px 20px 60px; }
+  .section { padding: 56px 20px; }
+  .hero-meta { gap: 16px; }
+}
 </style>
 </head>
 <body>
 
-<header class="hero">
-<div class="hero-inner">
-<div class="hero-badge">Paper 1 &middot; AQA 7138 &middot; Nishkam School West London</div>
-<h1>Unit 3.1 &mdash; <em>Complete Notes</em></h1>
-<p class="hero-sub">What is business? Managing marketing and finance. Every topic, every formula, every exam trap &mdash; with model-answer guidance linked to AQA&rsquo;s sample papers.</p>
-</div>
-</header>
-
-<nav class="toc">
-<div class="toc-title">Contents</div>
-<div class="toc-grid">
-<a href="#exam-rules" class="toc-card"><div class="toc-num">Exam rules</div><h3>How Paper 1 works</h3><p>6, 9 and 15-mark structures, AO breakdowns, quantitative skills</p></a>
-<a href="#s311" class="toc-card"><div class="toc-num">3.1.1</div><h3>Business and objectives</h3><p>Entrepreneurs, business planning, SMART objectives</p></a>
-<a href="#s312" class="toc-card"><div class="toc-num">3.1.2</div><h3>Forms of business and stakeholders</h3><p>Sole traders to plcs, cooperatives, social enterprises, stakeholder conflict</p></a>
-<a href="#s313" class="toc-card"><div class="toc-num">3.1.3</div><h3>Marketing management</h3><p>Research, PED, YED, segmentation, marketing mix, digital marketing, international, ethics</p></a>
-<a href="#s314" class="toc-card"><div class="toc-num">3.1.4</div><h3>Financial management</h3><p>Sources of finance, break-even, profit, budgets, cash flow, ratios, financial reporting</p></a>
-<a href="#traps" class="toc-card"><div class="toc-num">Reference</div><h3>Traps, formulae and question map</h3><p>The 20 biggest exam traps, all 30 formulae, Paper 1 question map</p></a>
-</div>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">A-Level Business <span>· Nishkam</span></a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <ul class="nav-links">
+      <li><a href="#units">Units</a></li>
+      <li><a href="#tools">Study Tools</a></li>
+      <li><a href="#papers">Papers</a></li>
+      <li><a href="#ethos">Ethos</a></li>
+      <li><a href="#resources">Resources</a></li>
+    </ul>
+  </div>
 </nav>
 
-<main class="main">
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">AQA 7138 · First teaching September 2026</div>
+    <h1>A-Level <em>Business</em></h1>
+    <p class="hero-sub">Nishkam School West London. Three units, case-study practice, calculations, model answers and exam technique — built around the new AQA specification.</p>
+    <div class="hero-actions">
+      <a href="#units" class="btn btn-gold">Browse units</a>
+      <a href="#tools" class="btn btn-outline">Study tools</a>
+    </div>
+    <div class="hero-meta">
+      <span>Papers 1, 2 &amp; 3</span>
+      <span>3 × 2 hours</span>
+      <span>90 marks per paper</span>
+    </div>
+  </div>
+</header>
 
-<section class="unit-section" id="exam-rules">
-<div class="section-bar">
-<span class="section-num">Paper 1</span>
-<h2>How the exam works</h2>
-</div>
+<!-- ETHOS -->
+<section class="section section-alt" id="ethos">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Ethos</div>
+      <h2 class="section-title">Virtue-led Business learning</h2>
+      <p class="section-desc">Business Studies at Nishkam is not only about passing exams. Every topic connects to who we are — a community learning to serve, to think carefully and to act with integrity.</p>
+    </div>
 
-<div class="topic">
-<h3>Paper 1 structure</h3>
-<p>Paper 1 is <strong>2 hours, 90 marks, 33.3% of the A-level</strong>. It contains two case studies. Each case study is followed by five compulsory questions worth 45 marks.</p>
-<p>In AQA&rsquo;s current sample paper, each case study contains two 6-mark Analyse questions, two 9-mark Assess questions and one 15-mark Evaluate question.</p>
-<p>Unit 3.1 is the direct content for Paper 1, but this knowledge can also be drawn on synoptically in Papers 2 and 3.</p>
-</div>
+    <div class="ethos-pillars">
+      <div class="pillar">
+        <h3>Faith-inspired</h3>
+        <p>Learning from the wisdom of all traditions. Businesses that act with integrity and compassion reflect values at the heart of every great faith.</p>
+      </div>
+      <div class="pillar">
+        <h3>Virtues-led</h3>
+        <p>Fostering compassion, humility, justice and courage. Every business decision is an ethical choice — a chance to practise virtue or fall short of it.</p>
+      </div>
+      <div class="pillar">
+        <h3>Aspiring for excellence</h3>
+        <p>Becoming the best human beings we can possibly be. In Business Studies, this means thinking critically, writing with precision, and achieving the highest standards.</p>
+      </div>
+    </div>
 
-<div class="topic">
-<h3>6 marks &mdash; Analyse</h3>
-<p>AO1 = 2, AO2 = 2, AO3 = 2. No AO4.</p>
-<p>One well-developed argument can get full marks. No conclusion, balance or evaluation is required.</p>
-<p>The thinking: <strong>concept &rarr; context &rarr; mechanism &rarr; precise endpoint</strong>.</p>
-<div class="rule-box">
-<span class="box-label rule">Endpoint rule</span>
-<p>If the question asks about <strong>profit</strong>, do not stop at sales. If it asks about <strong>market share</strong>, do not merely reach sales. If it asks about <strong>PED</strong>, discuss sensitivity to price rather than just demand. AQA defines strong analysis as a chain with the appropriate starting point and endpoint.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>9 marks &mdash; Assess</h3>
-<p>AO1 = 2, AO2 = 2, AO3 = 2, AO4 = 3. Three levels: Level 3 (7&ndash;9), Level 2 (4&ndash;6), Level 1 (1&ndash;3).</p>
-<p>Level 3 requires: knowledge explained to show understanding, good application to context, logical chains of reasoning, and evaluation which effectively weighs up arguments and reaches a convincing, coherent judgement that fully addresses the question.</p>
-<p>There is no compulsory structure. Students may argue for and against then conclude, evaluate throughout, or open with a judgement and support it. But for Level 3 there must be a clear answer to the question with a weighing up of argument and counter-argument.</p>
-<div class="exam-box">
-<span class="box-label exam">From AQA&rsquo;s mark scheme guidance</span>
-<p>The 9-mark question requires a decision on a particular issue &mdash; it does not require students to consider other issues. A response that lacks any evaluation can receive a maximum of 6 marks. A response with AO1 and AO3 but no context or judgement can receive a maximum of 4 marks.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>15 marks &mdash; Evaluate and recommend</h3>
-<p>AO1 = 3, AO2 = 3, AO3 = 4, AO4 = 5. Five levels: Level 5 (13&ndash;15), Level 4 (10&ndash;12), Level 3 (7&ndash;9), Level 2 (4&ndash;6), Level 1 (1&ndash;3).</p>
-<p>Students will normally evaluate two options and recommend one.</p>
-<p>Level 5 requires: precise, well-selected knowledge, application throughout, well-developed logical chains for <strong>both</strong> options (using sophisticated concepts where appropriate), and evaluation that weighs up both options, provides a coherent overarching judgement and fully addresses the question.</p>
-<p>The recommendation should explain <strong>why the chosen option is preferable to the alternative in this specific situation</strong> &mdash; not just repeat an earlier argument.</p>
-</div>
-
-<div class="topic">
-<h3>Quantitative questions</h3>
-<p>Papers 1 and 2 each contain two quantitative questions (9 or 15-mark). Six marks within each are linked to quantitative skills:</p>
-<ul>
-<li>AO1 (2 marks) &mdash; knowing the formula and selecting the right numbers</li>
-<li>AO2 (2 marks) &mdash; performing the calculation</li>
-<li>AO3 (1 mark) &mdash; interpreting and using the result in an argument</li>
-<li>AO4 (1 mark) &mdash; using the findings to support a judgement</li>
-</ul>
-<p>There are an additional 3 marks for further qualitative analysis and evaluation in relation to the calculation.</p>
-<div class="rule-box">
-<span class="box-label rule">Own-figure rule</span>
-<p>An incorrect calculation can still earn analysis and evaluation credit if the student correctly interprets their own (wrong) result. So always write the interpretation even if you are not confident in the number.</p>
-</div>
-</div>
+    <blockquote class="mission-quote">
+      To empower children with <strong>virtues</strong> that enable them to excel <strong>academically and spiritually</strong>, inspiring them to serve humanity <strong>selflessly</strong> — with an abundance of love, compassion and forgiveness.
+      <cite>Nishkam School Trust — Mission Statement</cite>
+    </blockquote>
+  </div>
 </section>
 
-<section class="unit-section" id="s311">
-<div class="section-bar">
-<span class="section-num">3.1.1</span>
-<h2>Business and objectives</h2>
-</div>
+<!-- UNITS -->
+<section class="section" id="units">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Specification</div>
+      <h2 class="section-title">Three units of study</h2>
+      <p class="section-desc">Each unit has detailed notes, key definitions, worked examples, exam-style questions and links to the specification content.</p>
+    </div>
 
-<div class="topic">
-<h3>Entrepreneurs</h3>
+    <div class="units-grid">
+      <!-- Unit 3.1 -->
+      <a href="unit31/" class="unit-card">
+        <div class="paper-badge">Paper 1</div>
+        <div class="unit-number">Unit 3.1</div>
+        <h3>What is business? Managing marketing and finance</h3>
+        <p>Entrepreneurs, business planning, objectives, forms of business, stakeholders, marketing management and financial management.</p>
+        <div class="unit-topics">
+          <span class="topic-tag">Entrepreneurs</span>
+          <span class="topic-tag">Objectives</span>
+          <span class="topic-tag">Stakeholders</span>
+          <span class="topic-tag">Marketing</span>
+          <span class="topic-tag">Finance</span>
+        </div>
+      </a>
 
-<h4>Reasons for starting a business</h4>
-<p><strong>Financial:</strong> profit, income, wealth creation, financial independence.</p>
-<p><strong>Non-financial:</strong> being their own boss, pursuing a passion, making a difference, flexibility, personal challenge, solving a problem, social impact.</p>
-<div class="rule-box">
-<span class="box-label rule">Context matters</span>
-<p>Do not assume every entrepreneur is motivated by maximising profit. A social entrepreneur may prioritise social objectives. A lifestyle entrepreneur may value independence. A founder backed by investors may face greater pressure for growth and financial returns. Use the case study to identify which motives apply.</p>
-</div>
+      <!-- Unit 3.2 -->
+      <a href="#" class="unit-card">
+        <div class="paper-badge">Paper 2</div>
+        <div class="unit-number">Unit 3.2</div>
+        <h3>Managing people and operations</h3>
+        <p>HR objectives, organisational design, leadership, motivation, developing people, operations management and managing business culture.</p>
+        <div class="unit-topics">
+          <span class="topic-tag">HR planning</span>
+          <span class="topic-tag">Leadership</span>
+          <span class="topic-tag">Motivation</span>
+          <span class="topic-tag">Operations</span>
+          <span class="topic-tag">Culture</span>
+        </div>
+      </a>
 
-<h4>Characteristics</h4>
-<p>The spec names six: <strong>risk taker, resilient, focused, passionate, innovative, adaptable</strong>.</p>
-<table>
-<tr><th>Characteristic</th><th>What it means</th><th>How to use it in analysis</th></tr>
-<tr><td>Risk taker</td><td>Commits resources despite uncertainty</td><td>Opportunity identified &rarr; resources invested &rarr; new product/market entered &rarr; potential increase in sales/success</td></tr>
-<tr><td>Resilient</td><td>Recovers from setbacks</td><td>Early failure &rarr; entrepreneur persists &rarr; refines approach &rarr; eventual success</td></tr>
-<tr><td>Focused</td><td>Maintains attention on key objectives</td><td>Avoids distractions &rarr; resources directed efficiently &rarr; faster progress</td></tr>
-<tr><td>Passionate</td><td>Strong commitment and enthusiasm</td><td>Greater effort &rarr; persuasive leadership &rarr; enthusiasm communicates to customers/investors</td></tr>
-<tr><td>Innovative</td><td>Introduces new ideas, products or processes</td><td>Innovation &rarr; differentiation &rarr; customer value &rarr; increased demand</td></tr>
-<tr><td>Adaptable</td><td>Responds effectively when conditions change</td><td>Market shifts &rarr; entrepreneur adjusts strategy &rarr; business remains competitive</td></tr>
-</table>
-
-<div class="exam-box">
-<span class="box-label exam">AQA Paper 1 SAM Q1.1</span>
-<p><em>Analyse how one entrepreneurial characteristic has contributed to the success of Gymshark Ltd.</em> [6]</p>
-<p>AQA expects <strong>one</strong> characteristic, supported by Gymshark context, with a clear link to a <strong>measure of success</strong> such as sales or profit. The top-scoring sample response uses risk-taking (dropping out of university) and reaches success through brand awareness, sales and investor confidence &mdash; all in one paragraph.</p>
-</div>
-
-<h4>Challenges of starting a business</h4>
-<p>Difficulty obtaining finance, generating ideas, high barriers to entry, lack of experience, cash flow problems, competition from established businesses.</p>
-<p>AQA encourages students to connect characteristics to challenges. For example: lack of finance + resilience &rarr; entrepreneur continues seeking funding &rarr; eventually secures investment &rarr; business can launch.</p>
-
-<h4>Change in role as business grows</h4>
-<p>In a start-up, the entrepreneur personally develops products, handles marketing, manages finance and sells to customers. As the business grows, AQA highlights a shift towards <strong>leading teams, delegating tasks and coordinating resources</strong>.</p>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p>Do not write that the entrepreneur &ldquo;is no longer important.&rdquo; Their role <strong>changes</strong> &mdash; it does not disappear. They move from doing everything to managing the people who do it.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Business planning and decisions</h3>
-
-<h4>Business plans</h4>
-<p>A business plan sets out what the business intends to do and how. It typically covers objectives, product/service, target market, marketing approach, operations and financial forecasts.</p>
-<p>Its value: provides direction, coordinates decisions, identifies resource requirements, anticipates problems, supports finance applications, gives targets to measure progress against.</p>
-<p>Its limitations: depends on the quality of assumptions and accuracy of forecasts. A detailed plan based on poor sales forecasts may create false confidence. The value also depends on how rapidly the market changes and whether managers actually use and update it.</p>
-
-<h4>Competitiveness</h4>
-<p>The ability of a business or product to perform against rivals. This goes beyond price &mdash; it includes quality, service, differentiation, efficiency, innovation, brand and customer experience.</p>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p>Do not reduce competitiveness to &ldquo;charging lower prices.&rdquo; A premium brand can be highly competitive without being the cheapest.</p>
-</div>
-
-<h4>Influences on business decisions</h4>
-<p>The spec lists seven: <strong>objectives, risk, reward, resources, market conditions, ethics, opportunity cost</strong>.</p>
-<p><strong>Resources</strong> constrain decisions &mdash; money, people, skills, time, capacity and technology. A theoretically attractive strategy can be inappropriate if the business lacks the resources to carry it out.</p>
-<p><strong>Opportunity cost</strong> is particularly useful in evaluation. Choosing one action means sacrificing the next best alternative. A strong evaluation might say: &ldquo;The real issue may not simply be whether Option A generates a benefit, but whether those resources could generate a greater benefit elsewhere.&rdquo;</p>
-
-<h4>Risk, reward and ethical dilemmas</h4>
-<p>Decisions offering greater potential returns may carry greater uncertainty. Students should consider probability, scale of downside, possible upside and the business&rsquo;s ability to absorb failure.</p>
-<p>AQA specifically highlights the <strong>profit vs ethics</strong> dilemma. Ethically sourced inputs may raise costs and reduce short-term margins &mdash; but ethical sourcing may also improve reputation, build trust, strengthen demand and increase long-term revenue. The trade-off depends on the business&rsquo;s objectives and ownership structure.</p>
-<div class="rule-box">
-<span class="box-label rule">Ethical does not mean legal</span>
-<p>Something can be legal but ethically questionable. AQA explicitly highlights this confusion. Ethical issues are about what is <em>right</em>, not just what is <em>allowed</em>.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Business objectives and SMART</h3>
-<p>Objectives provide targets and guide decision-making. Effective objectives are:</p>
-<p><strong>S</strong>pecific &mdash; clear outcome. <strong>M</strong>easurable &mdash; progress can be quantified. <strong>A</strong>ccountable &mdash; someone is responsible for achieving it. <strong>R</strong>ealistic &mdash; achievable with available resources. <strong>T</strong>ime specific &mdash; deadline attached.</p>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p>AQA uses <strong>Accountable</strong>, not &ldquo;Achievable&rdquo; which you may have learned at GCSE. Make sure you use the correct specification term.</p>
-</div>
-<div class="rule-box">
-<span class="box-label rule">SMART as a critique tool</span>
-<p>Do not just expand the acronym. Use SMART to evaluate whether an objective is actually useful. &ldquo;Increase sales&rdquo; is not SMART. &ldquo;Increase UK sales by 10% within 12 months&rdquo; is. AQA suggests SMART can be used to critique objectives &mdash; for example, identifying that an objective without a time dimension may be less effective.</p>
-</div>
-<div class="exam-box">
-<span class="box-label exam">Exam tip</span>
-<p>Objectives underpin evaluation in 9 and 15-mark questions. A business with a growth objective will make different decisions from one focused on survival. When you recommend a course of action, link it back to the business&rsquo;s objectives.</p>
-</div>
-</div>
+      <!-- Unit 3.3 -->
+      <a href="#" class="unit-card">
+        <div class="paper-badge">Paper 3 · A-level only</div>
+        <div class="unit-number">Unit 3.3</div>
+        <h3>Business and society, external environment, and strategy</h3>
+        <p>Corporate social responsibility, sustainability, ESG, the competitive and economic environment, strategic planning and managing change.</p>
+        <div class="unit-topics">
+          <span class="topic-tag">CSR &amp; ESG</span>
+          <span class="topic-tag">External environment</span>
+          <span class="topic-tag">Strategy</span>
+          <span class="topic-tag">Change</span>
+        </div>
+      </a>
+    </div>
+  </div>
 </section>
 
-<section class="unit-section" id="s312">
-<div class="section-bar">
-<span class="section-num">3.1.2</span>
-<h2>Forms of business and stakeholders</h2>
-</div>
+<!-- TOOLS -->
+<section class="section section-alt" id="tools">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Study tools</div>
+      <h2 class="section-title">Practice, plan and prepare</h2>
+      <p class="section-desc">Exam practice tools, knowledge quizzes, calculation drills and model answers — all built for the new 7138 specification.</p>
+    </div>
 
-<div class="topic">
-<h3>Forms of business</h3>
-<p>The exam will not ask you to list the features of a sole trader. It will ask you to analyse or assess whether a particular business should change its form, or what the consequences of its current form are.</p>
+    <div class="tools-grid">
+      <a href="#" class="tool-card">
+        <div class="tool-type">Exam practice</div>
+        <h3>15-Mark Evaluate Lab</h3>
+        <p>Choose a question, plan your answer, then submit for feedback. Covers the new 15-mark evaluate-and-recommend format with two case studies per paper.</p>
+        <span class="coming">Coming soon</span>
+      </a>
 
-<table>
-<tr><th>Form</th><th>Ownership</th><th>Liability</th><th>Key issues</th></tr>
-<tr><td>Sole trader</td><td>One person</td><td>Unlimited</td><td>Full control and profit, but personal assets at risk, limited finance options</td></tr>
-<tr><td>Private Ltd</td><td>Shareholders (restricted)</td><td>Limited</td><td>More finance options, continuity, but ownership can be diluted, more legal requirements</td></tr>
-<tr><td>Public plc</td><td>Shareholders (public)</td><td>Limited</td><td>Large-scale finance via stock exchange, but pressure from shareholders for dividends and short-term results</td></tr>
-<tr><td>Co-operative</td><td>Members (workers, consumers or producers)</td><td>Depends on legal structure</td><td>Democratic control, shared returns, but can have capital-raising difficulties, potentially slower decisions</td></tr>
-<tr><td>Social enterprise</td><td>Varies</td><td>Varies</td><td>Trades like a normal business but surplus reinvested into social/environmental mission</td></tr>
-</table>
+      <a href="#" class="tool-card">
+        <div class="tool-type">Exam practice</div>
+        <h3>9-Mark Assess Lab</h3>
+        <p>Write your answer and get it marked against the AO breakdown: AO1, AO2, AO3 and AO4. Colour-coded annotated feedback with numbered examiner notes.</p>
+        <span class="coming">Coming soon</span>
+      </a>
 
-<div class="rule-box">
-<span class="box-label rule">The form determines what decisions are available</span>
-<p>A sole trader cannot issue shares. A plc must publish its accounts. A social enterprise reinvests its surplus. When a case study tells you the form of the business, think about what that means for the question being asked.</p>
-</div>
+      <a href="https://claude.ai/artifact/Y6wN6aZAWDfRVCKNtTzXjc" target="_blank" class="tool-card">
+        <div class="tool-type">Exam practice · AI-powered</div>
+        <h3>6-Mark Analyse Lab</h3>
+        <p>Practise the two 6-mark analyse questions from each case study. Build chains of reasoning that reach the endpoint the question asks about.</p>
+      </a>
 
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p><strong>Social enterprise &#8800; charity.</strong> AQA explicitly warns about this. A social enterprise trades as a business and can have financial objectives. The difference is that surplus is reinvested to support its social purpose.</p>
-</div>
+      <a href="#" class="tool-card">
+        <div class="tool-type">Calculations</div>
+        <h3>Calculation Practice</h3>
+        <p>Every formula from the specification with step-by-step worked solutions, rearranged-formula practice and AI-generated questions across all three units.</p>
+        <span class="coming">Coming soon</span>
+      </a>
 
-<div class="exam-box">
-<span class="box-label exam">Gymshark link</span>
-<p>Gymshark in the SAM remained a private Ltd even after bringing in General Atlantic. Ben retained 70% ownership. This makes control highly relevant to finance and ownership decisions.</p>
-</div>
+      <a href="#" class="tool-card">
+        <div class="tool-type">Knowledge</div>
+        <h3>Knowledge Quiz</h3>
+        <p>Test yourself across all three units. Choose your topics, set the number of questions, and get instant results with explanations.</p>
+        <span class="coming">Coming soon</span>
+      </a>
 
-<h4>Shares, dividends and market capitalisation</h4>
-<div class="formula-box">
-<p><code>Market capitalisation = Issued shares &times; Current share price</code></p>
-<p><code>Dividend per share = Total dividend paid &divide; Number of ordinary shares in issue</code></p>
-<p><code>Dividend yield (%) = (Dividend per share &divide; Share price) &times; 100</code></p>
-</div>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p><strong>Market capitalisation is not the same as revenue, profit or total assets.</strong> It is the market&rsquo;s valuation of the company&rsquo;s equity at a point in time.</p>
-</div>
+      <a href="#" class="tool-card">
+        <div class="tool-type">Knowledge</div>
+        <h3>Key Concepts</h3>
+        <p>Search any concept on the AQA specification. Understand it, analyse it, apply it, evaluate it — and see the causal chain step by step.</p>
+        <span class="coming">Coming soon</span>
+      </a>
 
-<h4>Why people buy shares</h4>
-<p>Dividend income, potential capital gain if the share price rises, and ownership/voting rights.</p>
+      <a href="#" class="tool-card">
+        <div class="tool-type">Exam practice</div>
+        <h3>Case Study Practice</h3>
+        <p>Full case-study sets with data, questions and model answers. Practise extracting, calculating, interpreting and connecting data to business arguments.</p>
+        <span class="coming">Coming soon</span>
+      </a>
 
-<h4>What affects share price?</h4>
-<p>Expected future profits, recent performance, dividends, investor confidence, major announcements, economic conditions. The key word is <strong>expectations</strong> &mdash; markets react to what investors believe will happen, not only what has already happened.</p>
-<div class="exam-box">
-<span class="box-label exam">AQA Paper 1 SAM Q2.2</span>
-<p><em>Analyse one factor that might have caused a change in Apple&rsquo;s share price.</em> [6]</p>
-<p>The chain must reach share price: factor &rarr; investor expectations &rarr; demand for shares changes relative to supply &rarr; share price rises/falls. Do not stop at &ldquo;Apple&rsquo;s profit increased.&rdquo;</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Stakeholders</h3>
-<p><strong>Internal:</strong> employees, owners/shareholders. <strong>External:</strong> customers, suppliers, other creditors, community, government.</p>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p><strong>A shareholder is a stakeholder.</strong> Not every stakeholder is a shareholder. AQA specifically identifies this as a common confusion.</p>
-</div>
-
-<h4>Stakeholder conflict</h4>
-<p>Employees want fair pay and job security. Shareholders want dividends and a rising share price. Customers want quality at reasonable prices. Suppliers want prompt payment. These interests often conflict.</p>
-<p>Which stakeholder matters most depends on power, urgency, the business&rsquo;s objectives, its ownership structure, its financial position and market conditions.</p>
-<div class="rule-box">
-<span class="box-label rule">Where the analysis lives</span>
-<p>Identifying that &ldquo;stakeholders are affected&rdquo; is not enough. Explain <em>how</em> a specific group is affected and <em>why</em> their interests conflict with another group&rsquo;s.</p>
-</div>
-
-<h4>Ethical responsibilities to stakeholders</h4>
-<p>Businesses have ethical responsibilities to each stakeholder group &mdash; paying fair wages, being honest with customers, treating suppliers reasonably, minimising harm to communities. Whether a business acts on these often depends on its form, its objectives and the pressure it faces.</p>
-</div>
+      <a href="#" class="tool-card">
+        <div class="tool-type">Knowledge</div>
+        <h3>Models and Theories</h3>
+        <p>Every specification model explained with its mechanism, how to weave it into analysis, and common mistakes to avoid.</p>
+        <span class="coming">Coming soon</span>
+      </a>
+    </div>
+  </div>
 </section>
 
-<section class="unit-section" id="s313">
-<div class="section-bar">
-<span class="section-num">3.1.3</span>
-<h2>Marketing management</h2>
-</div>
+<!-- PAPERS -->
+<section class="section section-dark" id="papers">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label" style="color:var(--gold)">Assessment</div>
+      <h2 class="section-title">Three papers, same structure</h2>
+      <p class="section-desc">Every paper has two case studies. Each case study is followed by five compulsory questions worth 45 marks.</p>
+    </div>
 
-<div class="topic">
-<h3>Market research</h3>
-<p>Market research gathers information to reduce uncertainty surrounding marketing decisions. It does not eliminate risk &mdash; it reduces it.</p>
+    <div class="papers-grid">
+      <div class="paper-card">
+        <h3>Paper 1</h3>
+        <div class="paper-unit">Unit 3.1 — Marketing and finance</div>
+        <div class="paper-detail">
+          <strong>2 hours · 90 marks · 33.3%</strong><br>
+          2 × 6-mark analyse<br>
+          2 × 9-mark assess<br>
+          1 × 15-mark evaluate<br>
+          <em>per case study</em><br><br>
+          Two quantitative questions (9 or 15 marks)
+        </div>
+      </div>
 
-<h4>Primary vs secondary</h4>
-<p><strong>Primary:</strong> new data collected specifically for the business&rsquo;s purpose (surveys, interviews, focus groups, observation). Current and specific, but expensive and time-consuming. Poor samples can produce unreliable results.</p>
-<p><strong>Secondary:</strong> existing data originally gathered for another purpose (government statistics, industry reports, competitor data). Quicker and cheaper, but may be outdated, may not directly fit the firm&rsquo;s needs, and the original method may be unknown.</p>
+      <div class="paper-card">
+        <h3>Paper 2</h3>
+        <div class="paper-unit">Unit 3.2 — People and operations</div>
+        <div class="paper-detail">
+          <strong>2 hours · 90 marks · 33.3%</strong><br>
+          2 × 6-mark analyse<br>
+          2 × 9-mark assess<br>
+          1 × 15-mark evaluate<br>
+          <em>per case study</em><br><br>
+          Two quantitative questions (9 or 15 marks)
+        </div>
+      </div>
 
-<h4>Quantitative vs qualitative</h4>
-<p><strong>Quantitative:</strong> numerical data &mdash; useful for identifying patterns, calculating percentages, comparing groups, estimating market size. <strong>Qualitative:</strong> opinions, attitudes, motivations &mdash; useful for understanding <em>why</em> consumers behave as they do.</p>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p>Quantitative does not automatically mean &ldquo;better.&rdquo; The research method must fit the question being investigated.</p>
-</div>
-
-<h4>Confidence levels and intervals</h4>
-<p>A <strong>confidence level</strong> indicates how confident the researcher can be that the true population value lies within the calculated interval. A <strong>confidence interval</strong> is the statistical range itself (e.g. &plusmn;4%).</p>
-<div class="example-box">
-<span class="box-label example">Worked example</span>
-<p>A survey finds that 68% of smartwatch users would consider a health-monitoring app, with a confidence interval of &plusmn;4% at a 95% confidence level. This means we can be 95% confident that the true figure for the population is between 64% and 72%.</p>
-</div>
-<div class="rule-box">
-<span class="box-label rule">Key points</span>
-<p>Sample-based research cannot provide absolute certainty. A narrower interval gives greater precision. Increasing the confidence level normally widens the interval, other things being equal. AQA identifies this as an area students find challenging.</p>
-</div>
-
-<h4>Market mapping</h4>
-<p>Places brands/products on axes using customer-relevant characteristics (e.g. low price &harr; high price, basic &harr; premium). Purpose: identify gaps, understand competitive positioning, support differentiation.</p>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p>A gap on a market map does not automatically represent a profitable opportunity. There may be no demand there.</p>
-</div>
-
-<h4>Influences on how research is conducted</h4>
-<p>Risk (how important is the decision?), cost (budget available?), time (how quickly is the answer needed?), need for reliability (how confident does the business need to be?).</p>
-
-<div class="exam-box">
-<span class="box-label exam">AQA Paper 1 SAM Q2.3</span>
-<p><em>Assess whether an increase in spending on market research could be profitable for Apple.</em> [9]</p>
-<p><strong>For:</strong> better research &rarr; better understanding of demand &rarr; marketing mix better matched to customers &rarr; fewer unsuccessful launches &rarr; increased profit.</p>
-<p><strong>Against:</strong> Apple already has extensive customer data from 2 billion devices &rarr; marginal gain may be small &rarr; extra cost and delay &rarr; competitors may move first.</p>
-<p><strong>Judgement:</strong> depends on whether additional research improves decisions enough to generate benefits exceeding its cost and delay.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Markets and marketing data</h3>
-
-<h4>Types of markets</h4>
-<p><strong>B2B</strong> (business to business) &mdash; fewer but higher-value customers, longer relationships, more personal selling. <strong>B2C</strong> (business to consumer) &mdash; larger customer base, greater role for mass/digital promotion. <strong>C2C</strong> (consumer to consumer) &mdash; individuals transacting via platforms (e.g. Vinted, eBay).</p>
-
-<h4>Goods vs services</h4>
-<p>Services are intangible and often consumed at the same time they are delivered, making employee behaviour, consistency and customer experience particularly important. This affects marketing decisions &mdash; you cannot photograph a service or let a customer try it before purchase in the same way.</p>
-
-<h4>Market size, growth and share</h4>
-<div class="formula-box">
-<p><code>Market share (%) = (Business sales &divide; Total market sales) &times; 100</code></p>
-<p><code>Market growth (%) = (Change in market size &divide; Original market size) &times; 100</code></p>
-</div>
-<p><strong>Market size</strong> is the total value or volume of sales in a market. It can be measured in units (volume) or revenue (value). You may need to calculate the size of individual market segments within a larger market.</p>
-<div class="trap-box">
-<span class="box-label trap">Critical trap</span>
-<p><strong>Sales growth &#8800; market-share growth.</strong> If a business&rsquo;s sales rise by 5% but the market grows by 15%, the business has actually <em>lost</em> market share.</p>
-</div>
-
-<h4>Sales data, volume and value</h4>
-<p><strong>Volume</strong> = number of units sold. <strong>Value</strong> = monetary worth of those sales. A company can have falling volume but increasing sales value if prices rise. The spec requires you to interpret sales data by region, product and store.</p>
-
-<h4>Index numbers, percentages and percentage changes</h4>
-<p>AQA explicitly requires analysis using index numbers, percentage calculations and percentage changes. An index number shows change relative to a base year (base = 100). If an index rises to 115, the value has increased by 15% since the base year.</p>
-
-<h4>Correlation</h4>
-<p>Positive (variables move together), negative (move in opposite directions), strong or weak.</p>
-<div class="rule-box">
-<span class="box-label rule">Golden rule</span>
-<p><strong>Correlation does not prove causation.</strong> There may be coincidence, reverse causality, or another variable affecting both.</p>
-</div>
-
-<h4>Return on marketing spend</h4>
-<div class="formula-box">
-<p><code>Return on marketing spend (%) = (Profit from marketing activities &divide; Amount of marketing spend) &times; 100</code></p>
-</div>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p>A campaign with large sales may not have the highest return if it also costs far more. This measures <em>efficiency</em>, not just scale.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Demand and elasticity</h3>
-
-<h4>Price elasticity of demand (PED)</h4>
-<div class="formula-box">
-<p><code>PED = % change in quantity demanded &divide; % change in price</code></p>
-</div>
-<p>PED is normally negative (price up, demand down) but we focus on the magnitude.</p>
-<table>
-<tr><th>If |PED| is&hellip;</th><th>Demand is&hellip;</th><th>Effect of a price increase on revenue</th></tr>
-<tr><td>Greater than 1</td><td>Price elastic</td><td>Revenue <strong>falls</strong> &mdash; quantity drops proportionately more than price rises</td></tr>
-<tr><td>Less than 1</td><td>Price inelastic</td><td>Revenue <strong>rises</strong> &mdash; quantity drops proportionately less than price rises</td></tr>
-<tr><td>Equal to 1</td><td>Unit elastic</td><td>Revenue stays the same</td></tr>
-</table>
-<div class="example-box">
-<span class="box-label example">Worked example</span>
-<p>A business increases its price by 10%. Quantity demanded falls by 5%. PED = &minus;5% &divide; 10% = &minus;0.5 (inelastic). Because |PED| &lt; 1, the percentage fall in quantity demanded is smaller than the percentage rise in price &mdash; so total revenue increases.</p>
-</div>
-<div class="rule-box">
-<span class="box-label rule">The profit trap</span>
-<p><strong>PED tells you what happens to revenue, not profit.</strong> Higher revenue does not automatically mean higher profit &mdash; profit also depends on costs. AQA explicitly warns about this. If the question asks about profit, you must consider both revenue and costs.</p>
-</div>
-
-<h4>Factors affecting PED</h4>
-<p>Demand tends to be less price sensitive where: branding/loyalty is strong, substitutes are limited, the item is a small proportion of income, consumers perceive it as important or necessary.</p>
-
-<div class="exam-box">
-<span class="box-label exam">AQA Paper 1 SAM Q1.2</span>
-<p><em>Analyse one way in which having a brand as strong as Nike&rsquo;s could affect the PED for Gymshark&rsquo;s products.</em> [6]</p>
-<p>Strong brand &rarr; greater loyalty &rarr; fewer perceived substitutes &rarr; customers less likely to switch after a price increase &rarr; quantity demanded falls proportionately less &rarr; demand becomes relatively more price inelastic. Stopping at &ldquo;sales increase&rdquo; does not answer the PED endpoint.</p>
-</div>
-
-<h4>Income elasticity of demand (YED)</h4>
-<div class="formula-box">
-<p><code>YED = % change in quantity demanded &divide; % change in income</code></p>
-</div>
-<table>
-<tr><th>If YED is&hellip;</th><th>The product is&hellip;</th><th>When incomes rise&hellip;</th></tr>
-<tr><td>Positive and &gt; 1</td><td>Luxury / income elastic</td><td>Demand rises more than proportionately</td></tr>
-<tr><td>Positive but &lt; 1</td><td>Normal / income inelastic</td><td>Demand rises but less than proportionately</td></tr>
-<tr><td>Negative</td><td>Inferior good</td><td>Demand falls &mdash; consumers switch to preferred alternatives</td></tr>
-</table>
-<div class="example-box">
-<span class="box-label example">Calculation example</span>
-<p>YED = +2. Incomes rise by 4%. Expected change in quantity demanded: +8%.</p>
-</div>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p><strong>Negative YED does not mean the product is bad.</strong> Budget supermarkets, value clothing and public transport all have negative YED &mdash; when people earn more, they switch to alternatives they prefer.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Target market and segmentation</h3>
-<p>Market segmentation divides a market into groups of consumers with similar characteristics.</p>
-<p><strong>Demographic</strong> (age, income, gender, occupation), <strong>geographic</strong> (region, country, climate), <strong>psychographic</strong> (lifestyle, attitudes, values), <strong>behavioural</strong> (purchase habits, loyalty, usage rate).</p>
-
-<h4>Choosing and entering a target market</h4>
-<p>Influenced by: size and growth of the segment, customer needs, level of competition, business resources, potential profitability, and fit with the brand and capabilities.</p>
-
-<h4>Niche vs mass markets</h4>
-<table>
-<tr><th></th><th>Niche</th><th>Mass</th></tr>
-<tr><td>Size</td><td>Small, specialised</td><td>Large, broad</td></tr>
-<tr><td>Competition</td><td>Often less direct</td><td>Intense</td></tr>
-<tr><td>Prices</td><td>Often premium</td><td>Often lower (economies of scale)</td></tr>
-<tr><td>Key risk</td><td>Reliance on a narrow customer base</td><td>Intense competition and potentially greater resource requirements</td></tr>
-</table>
-<div class="rule-box">
-<span class="box-label rule">No inherently &ldquo;better&rdquo; option</span>
-<p>It depends on resources, brand, objectives, competition and capabilities. The exam wants you to consider which is more appropriate <em>for this business</em>.</p>
-</div>
-
-<h4>Adapting the marketing mix for the target market</h4>
-<p>Once a target market is chosen, the business should adapt its product, price, place and promotion to match the needs and characteristics of that segment. A premium niche segment requires a different mix from a mass-market value segment.</p>
-</div>
-
-<div class="topic">
-<h3>Marketing objectives and planning</h3>
-<p>The spec lists: <strong>lead generation, sales, market share, brand awareness, customer retention, engagement, conversion</strong>.</p>
-<div class="trap-box">
-<span class="box-label trap">Distinctions that matter</span>
-<p>Engagement &#8800; sales. Awareness &#8800; conversion. Sales growth &#8800; market-share growth. These distinctions are highly examinable.</p>
-</div>
-
-<h4>Influences on marketing objectives</h4>
-<p>Corporate objectives, market conditions, competition, available resources, stage of product lifecycle, regulatory environment, and the business&rsquo;s form and ownership. A plc facing shareholder pressure may prioritise short-term sales targets; a social enterprise may prioritise brand awareness within its community.</p>
-
-<h4>Marketing budget</h4>
-<p>Affected by objectives, resources, expected returns, competitors, stage of product lifecycle, market conditions. More marketing expenditure is worthwhile only if the incremental benefit exceeds the incremental cost.</p>
-
-<h4>Changes in demand</h4>
-<p><strong>Seasonal</strong> &mdash; predictable variation during the year. <strong>Cyclical</strong> &mdash; varies with the wider economic cycle. Rising demand may justify higher promotion, higher inventory, additional distribution, possibly higher prices. Falling demand may lead to promotions, price reductions, repositioning or product changes.</p>
-
-<h4>Interrelationship with other functions</h4>
-<p>Marketing decisions affect and are affected by finance (budget constraints), operations (production capacity) and HR (staffing). For example, a marketing campaign that doubles orders is pointless if operations cannot fulfil them. Strong answers recognise these connections.</p>
-
-<h4>How marketing decisions affect competitiveness</h4>
-<p>Better segmentation &rarr; more targeted offer &rarr; stronger customer loyalty &rarr; harder for competitors to attract those customers. Strong branding &rarr; reduced price sensitivity &rarr; ability to charge higher prices while maintaining demand. Effective digital marketing &rarr; lower customer acquisition cost &rarr; improved profitability relative to competitors.</p>
-</div>
-
-<div class="topic">
-<h3>Marketing mix: product</h3>
-
-<h4>Product lifecycle</h4>
-<p><strong>Development</strong> &rarr; costs incurred, no sales. <strong>Introduction</strong> &rarr; low sales, high promotional needs, often negative profit. <strong>Growth</strong> &rarr; rapid sales increase, competitors may enter. <strong>Maturity</strong> &rarr; sales growth slows, competition intensifies. <strong>Decline</strong> &rarr; sales fall.</p>
-<div class="rule-box">
-<span class="box-label rule">Don&rsquo;t just describe the stages</span>
-<p>AQA wants their <strong>significance for marketing planning and other functions</strong>. For example: maturity &rarr; slower sales growth &rarr; extension strategy needed &rarr; increased marketing expenditure &rarr; affects finance function.</p>
-</div>
-
-<h4>Extension strategies</h4>
-<p>Advertising, rebranding, lowering the price, adapting the product. Purpose: extend maturity or slow decline.</p>
-
-<h4>Boston Matrix</h4>
-<table>
-<tr><th></th><th>High market share</th><th>Low market share</th></tr>
-<tr><td><strong>High growth</strong></td><td><strong>Star</strong> &mdash; generates revenue but needs investment</td><td><strong>Question mark</strong> &mdash; potential but uncertain</td></tr>
-<tr><td><strong>Low growth</strong></td><td><strong>Cash cow</strong> &mdash; strong cash flow, little investment needed</td><td><strong>Dog</strong> &mdash; low revenue, candidate for review</td></tr>
-</table>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p>&ldquo;Dogs should always be sold off&rdquo; is too simplistic. A dog may contribute to covering fixed costs or complete a product range. The Boston Matrix simplifies reality and ignores many qualitative factors.</p>
-</div>
-
-<h4>New product development</h4>
-<p>Benefits: new revenue, access to growth markets, differentiation, replacing declining products. Challenges: high cost, uncertain demand, cannibalisation risk, long development periods, failure risk.</p>
-<div class="exam-box">
-<span class="box-label exam">AQA Paper 1 SAM Q2.4</span>
-<p><em>Assess whether a large investment in NPD is likely to increase Apple&rsquo;s market share.</em> [9]</p>
-<p>Keep the endpoint on <strong>market share</strong>, not merely sales. AQA rewards recognising that Apple&rsquo;s existing portfolio may reduce the need for extremely high investment, and that what matters is how <em>effectively</em> the investment is used.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Marketing mix: price</h3>
-<table>
-<tr><th>Category</th><th>Method</th><th>How it works</th></tr>
-<tr><td>Cost based</td><td>Cost-plus</td><td>Add a markup to total cost</td></tr>
-<tr><td rowspan="3">Demand based</td><td>Penetration</td><td>Low initial price to attract customers and gain market share</td></tr>
-<tr><td>Price skimming</td><td>High initial price for new/innovative product to maximise early profits</td></tr>
-<tr><td>Dynamic pricing</td><td>Adjust in real time based on demand, conditions or customer behaviour</td></tr>
-<tr><td rowspan="3">Competition based</td><td>Premium</td><td>Above competitors &mdash; signals quality/exclusivity</td></tr>
-<tr><td>Going rate</td><td>Match the market price</td></tr>
-<tr><td>Discount</td><td>Below competitors &mdash; targets price-sensitive customers</td></tr>
-</table>
-<div class="rule-box">
-<span class="box-label rule">Price has knock-on effects</span>
-<p>Price affects revenue, profit margins and brand perception simultaneously. Cutting the price might increase volume but reduce margins and damage a premium image.</p>
-</div>
-<div class="exam-box">
-<span class="box-label exam">AQA Paper 1 SAM Q2.1</span>
-<p><em>Analyse one way in which setting a high price might affect the revenue Apple earns.</em> [6]</p>
-<p><strong>Positive route:</strong> strong brand &rarr; inelastic demand &rarr; price effect outweighs volume loss &rarr; revenue increases.</p>
-<p><strong>Negative route:</strong> Vision Pro far above competitors &rarr; customers switch/don&rsquo;t purchase &rarr; quantity falls substantially &rarr; revenue decreases.</p>
-<p>Either direction can score full marks if supported.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Marketing mix: distribution</h3>
-<p><strong>Direct distribution:</strong> greater control, retain intermediary margin, direct customer data &mdash; but own logistics and infrastructure needed.</p>
-<p><strong>Intermediaries (wholesalers/retailers):</strong> wider reach, established distribution &mdash; but reduced control and margin goes to the intermediary.</p>
-<p><strong>E-commerce:</strong> lower overheads, wider reach, 24/7 &mdash; but intense competition, delivery logistics, customers cannot physically inspect products.</p>
-<p><strong>Multi-channel:</strong> increases reach and convenience &mdash; but adds complexity, cost and potential channel conflict.</p>
-</div>
-
-<div class="topic">
-<h3>Marketing mix: promotional mix</h3>
-<ul>
-<li><strong>Advertising</strong> &mdash; paid messages through media</li>
-<li><strong>Social media and influencers</strong> &mdash; leveraging platforms and online personalities</li>
-<li><strong>Sales promotions</strong> &mdash; short-term incentives (discounts, competitions, BOGOF)</li>
-<li><strong>Sponsorship</strong> &mdash; association with an event, team or individual</li>
-<li><strong>Personal selling</strong> &mdash; direct contact, including account managers managing client relationships (particularly important in B2B)</li>
-<li><strong>Branding</strong> &mdash; building brand loyalty. <strong>Own-label brands</strong> are products manufactured for a retailer and sold under the retailer&rsquo;s name rather than the manufacturer&rsquo;s &mdash; they allow the retailer to control pricing and margins while offering a lower-cost alternative to branded goods.</li>
-</ul>
-
-<h4>Influences on the promotional mix</h4>
-<p>Target market, marketing objectives, budget, type of product, competition, stage of product lifecycle. A new product at introduction may need heavy advertising; a mature product may rely more on sales promotions and loyalty schemes.</p>
-
-<div class="rule-box">
-<span class="box-label rule">Match the method to the business</span>
-<p>A B2B industrial supplier is unlikely to benefit from TikTok influencers. A youth clothing brand is unlikely to benefit from trade magazine advertising. Always consider whether the method fits the target market.</p>
-</div>
-
-<div class="exam-box">
-<span class="box-label exam">AQA Paper 1 SAM Q1.3</span>
-<p><em>Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd.</em> [9]</p>
-<p><strong>Strong conclusion logic:</strong> &ldquo;Increasing expenditure is likely to increase profit only if the extra contribution from Gymshark&rsquo;s social-media audience exceeds the additional influencer costs. Given Gymshark already has 18 million followers and Ben himself has promotional reach, the <em>marginal benefit</em> of additional spending is what matters.&rdquo;</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Digital technology and marketing</h3>
-<p>This is a major new area on the 7138 spec.</p>
-
-<h4>Digital marketing methods</h4>
-<ul>
-<li><strong>Social media campaigns</strong> &mdash; targeting, engagement, real-time communication, measurable</li>
-<li><strong>Content marketing</strong> &mdash; blogs, videos, articles designed to build trust and spread</li>
-<li><strong>SEO</strong> &mdash; optimising a website to rank higher in search results &rarr; more relevant traffic &rarr; more conversions</li>
-<li><strong>PPC</strong> &mdash; business pays each time someone clicks an ad. Clicks are not sales &mdash; high cost-per-click + low conversion = poor return</li>
-<li><strong>Website cookies</strong> &mdash; track user behaviour to personalise the experience and optimise sales</li>
-</ul>
-
-<h4>Measures of digital marketing success</h4>
-<p>Search performance, click-through rates, time on site, conversion rates, number of users/subscribers, advertising revenue.</p>
-<div class="rule-box">
-<span class="box-label rule">Don&rsquo;t interpret one metric alone</span>
-<p>High traffic + low conversion may indicate ineffective targeting or poor website performance. Connect metrics to a business outcome.</p>
-</div>
-
-<h4>CRM (Customer Relationship Management)</h4>
-<p>Supports: <strong>customer acquisition</strong> (gaining new customers), <strong>customer retention</strong> (keeping existing ones), <strong>lead generation</strong> (attracting potential customers), <strong>pipeline management</strong> (tracking potential sales through the process). AQA highlights particular relevance for B2B firms, small firms where replacing customers is expensive, and competitive markets.</p>
-
-<h4>Data analytics and AI in marketing</h4>
-<p>Segmentation (who to target), campaign performance tracking (what is working), personalisation (tailoring experience), predictions (forecasting trends), dynamic pricing (adjusting prices based on data).</p>
-
-<h4>How digital technology affects competitiveness</h4>
-<p>Better customer data &rarr; more accurate personalisation &rarr; higher conversion and retention &rarr; greater customer lifetime value &rarr; stronger competitive position. This is listed separately on the spec because AQA wants students to make this connection explicitly.</p>
-
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p>Data quality matters. Poor or incomplete data combined with sophisticated AI produces sophisticated poor decisions.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>International marketing <span style="font-size:.78rem;color:var(--gold-muted);font-weight:600">(A-level only)</span></h3>
-<p>Purpose, value and challenges of marketing internationally.</p>
-<p>Challenges include language barriers, cultural differences, religious differences and understanding unfamiliar markets.</p>
-<p>Adapting the marketing mix: product (tastes, features, packaging), price (income levels, competition, exchange rates), place (infrastructure, distribution habits), promotion (language, culture, media use).</p>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p>International marketing &#8800; just translating the adverts. AQA&rsquo;s teaching guide specifically identifies language, cultural and religious differences as challenges.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Ethical issues in marketing <span style="font-size:.78rem;color:var(--gold-muted);font-weight:600">(A-level only)</span></h3>
-<p>Ethical issues in <strong>product</strong> decisions (planned obsolescence, unsafe products), <strong>promotional</strong> decisions (misleading advertising, targeting vulnerable groups), <strong>pricing</strong> decisions (exploitative pricing, dynamic pricing that takes advantage of urgency).</p>
-</div>
+      <div class="paper-card">
+        <h3>Paper 3</h3>
+        <div class="paper-unit">Unit 3.3 — Society, environment and strategy</div>
+        <div class="paper-detail">
+          <strong>2 hours · 90 marks · 33.3%</strong><br>
+          2 × 6-mark analyse<br>
+          2 × 9-mark assess<br>
+          1 × 15-mark evaluate<br>
+          <em>per case study</em><br><br>
+          One quantitative question + one drawing on data across the specification
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="unit-section" id="s314">
-<div class="section-bar">
-<span class="section-num">3.1.4</span>
-<h2>Financial management</h2>
-</div>
+<!-- VIRTUES -->
+<section class="section" id="virtues">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Virtues</div>
+      <h2 class="section-title">Peacefulness, Diligence, Determination</h2>
+      <p class="section-desc">Our three classroom virtues, lived inside the content of every lesson.</p>
+    </div>
 
-<div class="topic">
-<h3>Managing finance</h3>
-<p>The spec lists five financial objectives: <strong>profit, profitability, cash flow, liquidity, levels of borrowing</strong>.</p>
-
-<h4>Influences on financial objectives</h4>
-<p>The type of business, its stage of development, market conditions, owners&rsquo; attitudes to risk, competitor performance and the objectives of other functions. A start-up typically prioritises cash flow and survival; an established plc may focus on profitability and shareholder returns.</p>
-
-<h4>Profit vs profitability</h4>
-<p>Profit is an absolute monetary amount. Profitability considers profit <em>relative to</em> another figure such as revenue or capital employed. Firm A with &pound;10m profit may be less profitable than Firm B with &pound;5m profit if Firm A&rsquo;s revenue is far higher.</p>
-
-<h4>Cash flow vs profit</h4>
-<p>A profitable business can still run out of cash because customers have not yet paid, cash is tied up in inventory, or loan repayments require immediate cash. AQA identifies this as a common area of difficulty.</p>
-
-<h4>Interrelationship with other functions</h4>
-<p>Financial decisions affect and are affected by every other function. Marketing expansion increases finance requirements. Operations investment requires funding approval. Cutting HR spending may improve short-term profit but damage productivity. In the exam, recognise these connections &mdash; do not treat finance in isolation.</p>
-
-<h4>How financial decisions affect competitiveness</h4>
-<p>Securing the right finance at the right cost enables investment in capacity, technology, marketing and people. Poor financial management &mdash; running out of cash, excessive borrowing, underinvestment &mdash; weakens the business relative to competitors.</p>
-</div>
-
-<div class="topic">
-<h3>Sources of finance</h3>
-
-<h4>Internal sources</h4>
-<table>
-<tr><th>Source</th><th>What it is</th><th>Advantage</th><th>Disadvantage</th><th>Suitable when</th></tr>
-<tr><td>Owners&rsquo; investment</td><td>The owner&rsquo;s own money put into the business</td><td>No interest, no dilution, immediate</td><td>Limited by personal wealth, increases personal risk</td><td>Start-up or small expansion</td></tr>
-<tr><td>Retained profits</td><td>Profits kept in the business rather than distributed</td><td>No interest, no dilution, no repayment</td><td>Only available if the business is profitable, reduces dividends</td><td>Ongoing investment in an established, profitable business</td></tr>
-<tr><td>Sale of assets</td><td>Selling things the business owns</td><td>Generates cash from underused assets</td><td>Assets are gone permanently, may disrupt operations</td><td>When assets are no longer needed or are underperforming</td></tr>
-<tr><td>Sale and leaseback</td><td>Selling an asset and leasing it back for use</td><td>Releases capital while retaining use of the asset</td><td>Creates ongoing lease payments, lose ownership</td><td>When cash is needed but the asset is still operationally important</td></tr>
-<tr><td>Working capital</td><td>Using cash generated from day-to-day operations</td><td>Immediately available, no external cost</td><td>May leave insufficient cash for daily needs</td><td>Small, short-term needs</td></tr>
-</table>
-
-<h4>External sources</h4>
-<table>
-<tr><th>Source</th><th>What it is</th><th>Advantage</th><th>Disadvantage</th><th>Suitable when</th></tr>
-<tr><td>Trade credit</td><td>Buying now, paying later (typically 30&ndash;60 days)</td><td>Preserves short-term cash, interest-free if paid on time</td><td>Risk of damaging supplier relationships if abused</td><td>Day-to-day purchasing</td></tr>
-<tr><td>Share capital</td><td>Selling shares in the business</td><td>Large sums possible, no repayment required</td><td>Dilutes ownership and control</td><td>Major expansion, especially for limited companies</td></tr>
-<tr><td>Overdraft</td><td>Withdrawing more than is in the bank account</td><td>Flexible, available immediately</td><td>High interest rates, can be recalled at short notice</td><td>Covering short-term cash shortfalls</td></tr>
-<tr><td>Loans</td><td>Borrowing a fixed amount for a fixed period</td><td>Predictable repayments, no dilution of ownership</td><td>Interest costs, repayments regardless of profit, may need security</td><td>Large purchases or investment with predictable returns</td></tr>
-<tr><td>Business angels</td><td>Wealthy individuals investing in exchange for equity</td><td>Finance + expertise + contacts</td><td>Ownership diluted, angel may want influence</td><td>Start-ups and early-stage growth businesses</td></tr>
-<tr><td>Private equity</td><td>Investment firms buying into the business</td><td>Large sums, strategic expertise</td><td>Significant ownership diluted, pressure for returns</td><td>Significant expansion or restructuring</td></tr>
-<tr><td>Crowdfunding</td><td>Raising small amounts from many people, usually online</td><td>Market testing + finance + publicity</td><td>Time-consuming, may not reach target, idea exposed publicly</td><td>Consumer-facing products with broad appeal</td></tr>
-</table>
-
-<div class="rule-box">
-<span class="box-label rule">Match the source to the need</span>
-<p>Short-term needs (covering a temporary shortfall) suit short-term finance (overdraft, trade credit). Long-term needs (buying equipment, expanding) suit long-term finance (loans, share capital, private equity). AQA&rsquo;s teaching guide specifically recommends this distinction. Always explain <em>why</em> a source is suitable for this specific business.</p>
-</div>
-
-<div class="exam-box">
-<span class="box-label exam">AQA Paper 1 SAM Q1.5</span>
-<p><em>Evaluate two sources of external finance that Ben could use to fund Gymshark&rsquo;s ambitious plans and recommend which one he should choose.</em> [15]</p>
-<p>AQA says: do not credit internal finance; overdraft is inappropriate for the scale implied; top responses must be rooted in Gymshark&rsquo;s ambitious expansion; control is relevant because Ben retains 70%.</p>
-<p><strong>Loan:</strong> no dilution &rarr; Ben keeps control. But interest and repayments increase fixed cash outflows &rarr; greater financial risk if expansion underperforms.</p>
-<p><strong>Share capital / PE:</strong> large sums available + expertise. But ownership diluted &rarr; Ben sacrifices control.</p>
-<p><strong>Recommendation:</strong> depends on size of finance required, expected cash flow, and Ben&rsquo;s priority regarding control.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Break-even</h3>
-<div class="formula-box">
-<p><code>Contribution per unit = Selling price &minus; Variable cost per unit</code></p>
-<p><code>Total contribution = Contribution per unit &times; Units sold</code></p>
-<p><code>Break-even output = Fixed costs &divide; Contribution per unit</code></p>
-<p><code>Margin of safety = Actual output &minus; Break-even output</code></p>
-</div>
-<div class="example-box">
-<span class="box-label example">Worked example</span>
-<p>Selling price = &pound;10. Variable costs = &pound;4/unit. Fixed costs = &pound;30,000.</p>
-<p>Contribution/unit = &pound;10 &minus; &pound;4 = &pound;6</p>
-<p>Break-even = &pound;30,000 &divide; &pound;6 = <strong>5,000 units</strong></p>
-<p>If actual sales = 7,000: Margin of safety = 7,000 &minus; 5,000 = <strong>2,000 units</strong></p>
-</div>
-
-<h4>What changes break-even?</h4>
-<p>Higher selling price &rarr; higher contribution &rarr; lower break-even. Higher variable costs &rarr; lower contribution &rarr; higher break-even. Higher fixed costs &rarr; higher break-even (contribution unchanged).</p>
-
-<h4>Break-even charts</h4>
-<p>You need to be able to interpret charts and illustrate the effects of changes. The key lines:</p>
-<ul>
-<li>A horizontal <strong>fixed-cost line</strong> (stays the same regardless of output)</li>
-<li>A <strong>total-cost line</strong> starting at fixed costs and rising with output (fixed + variable)</li>
-<li>A <strong>revenue line</strong> starting at the origin and rising with output</li>
-<li>The <strong>break-even point</strong> is where the revenue line crosses the total-cost line</li>
-<li>Below that point: <strong>loss</strong>. Above: <strong>profit</strong></li>
-<li>The <strong>margin of safety</strong> is the horizontal distance between actual output and break-even output</li>
-</ul>
-<p>If fixed costs rise, the total-cost line shifts upward and break-even output increases. If the selling price rises, the revenue line gets steeper and break-even output falls. If variable costs rise, the total-cost line gets steeper and break-even output increases.</p>
-
-<div class="rule-box">
-<span class="box-label rule">Break-even is the minimum, not the target</span>
-<p>A business wants to exceed break-even by as much as possible. In the exam, go further: what does the margin of safety tell us? Is the business at risk? What would happen if costs increased or prices fell?</p>
-</div>
-<div class="trap-box">
-<span class="box-label trap">Limitations</span>
-<p>Break-even assumes one product, constant selling price, stable variable costs per unit, and that all output is sold. AQA&rsquo;s teaching guide specifically notes difficulty where firms sell multiple products. Mentioning these limitations is a straightforward way to add evaluation.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Profit</h3>
-<div class="formula-box">
-<p><code>Gross profit = Revenue &minus; Cost of sales</code></p>
-<p><code>Operating profit = Gross profit &minus; Operating expenses</code></p>
-<p><code>Profit for year = Operating profit + Other income &minus; Net finance costs &minus; Tax</code></p>
-<p><code>Gross profit margin (%) = (Gross profit &divide; Revenue) &times; 100</code></p>
-<p><code>Operating profit margin (%) = (Operating profit &divide; Revenue) &times; 100</code></p>
-<p><code>Profit for year margin (%) = (Profit for year &divide; Revenue) &times; 100</code></p>
-</div>
-
-<h4>Increasing profit</h4>
-<p>Two routes: increase revenue or reduce costs. But every action has consequences. Price increase &rarr; higher revenue per unit, but may reduce demand. Cost reduction &rarr; stronger margins, but may reduce quality or service.</p>
-<div class="rule-box">
-<span class="box-label rule">Always compare margins, not just profit</span>
-<p>&ldquo;The business made &pound;1m profit&rdquo; tells you nothing without context. Compare it to revenue (margin), to the previous year (trend), or to competitors (benchmarking).</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Budgets</h3>
-
-<h4>Purpose and value of budgeting</h4>
-<p>Target setting, planning, coordination across functions, resource allocation, monitoring and control, identifying variances, motivating managers by giving them financial targets and accountability.</p>
-
-<h4>Limitations</h4>
-<p>Based on forecasts which may be inaccurate, can create inflexibility, managers may build in &ldquo;budgetary slack&rdquo; (deliberately underestimating revenue or overestimating costs to make targets easier), time-consuming to prepare.</p>
-
-<h4>Zero-based budgeting</h4>
-<p>Every item starts at zero and must be justified from scratch, rather than basing next year&rsquo;s budget on last year&rsquo;s. Avoids &ldquo;budget creep&rdquo; but is time-consuming and managers may struggle to justify longer-term or intangible activities.</p>
-
-<div class="formula-box">
-<p><code>Budget variance = Budgeted figure &minus; Actual figure</code></p>
-</div>
-<p><strong>Favourable:</strong> actual result was better than expected. <strong>Adverse:</strong> worse than expected.</p>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p>A favourable variance is not always good news. If the business spent much less than budgeted on marketing, that is a favourable cost variance &mdash; but it might mean marketing was underfunded and sales suffered. A variance is not favourable merely because the number is positive &mdash; for costs versus revenue, the interpretation differs. Consider <em>why</em> the variance occurred.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Cash flow and liquidity</h3>
-
-<h4>Cash-flow forecasting</h4>
-<p>A cash-flow forecast estimates expected inflows and outflows over a future period. The structure:</p>
-<div class="formula-box">
-<p><code>Opening balance + Total inflows &minus; Total outflows = Closing balance</code></p>
-<p>The closing balance of one month becomes the opening balance of the next.</p>
-</div>
-<p>Purpose and value: identifies when cash shortfalls are likely to occur, allows the business to arrange finance in advance, helps plan the timing of major payments, supports applications for finance by showing when cash will be available.</p>
-
-<div class="example-box">
-<span class="box-label example">Reading a cash-flow forecast</span>
-<p>If the forecast shows a negative closing balance in Month 3, the business knows it needs to arrange finance (perhaps an overdraft) before that point. If receivables are high but cash is low, the issue may be slow-paying customers rather than weak sales.</p>
-</div>
-
-<p>You need to be able to <strong>complete</strong> cash-flow forecasts (fill in missing figures), <strong>interpret</strong> them (identify problems and causes), and <strong>analyse</strong> them (explain what the figures mean for the business).</p>
-
-<h4>Receivables and payables</h4>
-<p><strong>Receivables</strong> = money owed <em>to</em> the business by customers. <strong>Payables</strong> = money the business owes <em>to</em> suppliers.</p>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p>Students regularly reverse receivables and payables. AQA specifically identifies this confusion.</p>
-</div>
-
-<h4>Improving cash flow</h4>
-<ul>
-<li><strong>Debt factoring</strong> &mdash; selling receivables to a third party for immediate cash, but at a discount (you receive less than the full invoice value)</li>
-<li><strong>Shortening customer payment periods</strong> &mdash; receive cash earlier, but customers may dislike less generous credit</li>
-<li><strong>Early-payment incentives</strong> &mdash; offering a small discount for prompt payment</li>
-<li><strong>Credit checks</strong> &mdash; reduce the risk of customers not paying at all</li>
-<li><strong>Lengthening supplier payment periods</strong> &mdash; hold cash longer, but may damage supplier relationships</li>
-<li><strong>Reducing outgoings</strong> &mdash; cutting costs, but must consider impact on quality/capacity</li>
-<li><strong>Better invoice management</strong> &mdash; chasing payments promptly and accurately</li>
-</ul>
-
-<h4>Liquidity ratios</h4>
-<div class="formula-box">
-<p><code>Current ratio = Current assets &divide; Current liabilities</code></p>
-<p><code>Acid test ratio = (Current assets &minus; Inventory) &divide; Current liabilities</code></p>
-<p><code>Payable days = (Payables &divide; Cost of sales) &times; 365</code></p>
-<p><code>Receivable days = (Receivables &divide; Revenue) &times; 365</code></p>
-</div>
-<div class="rule-box">
-<span class="box-label rule">The acid test is the stricter measure</span>
-<p>It strips out inventory because inventory cannot always be quickly converted to cash. A current ratio of 2:1 might look healthy, but if most current assets are unsold stock, the acid test ratio will tell a very different story.</p>
-</div>
-
-<div class="exam-box">
-<span class="box-label exam">AQA Paper 1 SAM Q1.4</span>
-<p><em>Assess whether Gymshark Ltd&rsquo;s current ratio indicates the business was in a strong financial position in 2024.</em> [9]</p>
-<p>Gymshark&rsquo;s result is 0.74 versus a clothing industry average of 1.4. Current assets are lower than current liabilities &mdash; a possible liquidity concern. But the current ratio only measures liquidity &mdash; it tells you nothing directly about profitability, long-term returns or the reasons behind the figures.</p>
-<p><strong>AQA says:</strong> an answer based solely on the calculation can score no more than 6. The result must be interpreted and evaluated.</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Financial reporting</h3>
-
-<h4>Income statement structure</h4>
-<p>Students must be able to interpret and amend income statements. The basic structure:</p>
-<table>
-<tr><td>Revenue</td><td></td></tr>
-<tr><td>&minus; Cost of sales</td><td></td></tr>
-<tr><td>= <strong>Gross profit</strong></td><td>Performance relating to production/purchasing</td></tr>
-<tr><td>&minus; Operating expenses</td><td></td></tr>
-<tr><td>= <strong>Operating profit</strong></td><td>Performance from normal operations</td></tr>
-<tr><td>&plusmn; Other income/costs, &minus; Finance costs, &minus; Tax</td><td></td></tr>
-<tr><td>= <strong>Profit for the year</strong></td><td>Final profit after everything</td></tr>
-</table>
-
-<h4>Statement of financial position (balance sheet)</h4>
-<p>Shows what the business owns, owes and is worth at a specific point in time:</p>
-<table>
-<tr><td><strong>Non-current assets</strong></td><td>Long-term assets (property, equipment, vehicles)</td></tr>
-<tr><td><strong>Current assets</strong></td><td>Short-term assets (inventory, receivables, cash)</td></tr>
-<tr><td><strong>Current liabilities</strong></td><td>Short-term debts (payables, overdraft)</td></tr>
-<tr><td><strong>Non-current liabilities</strong></td><td>Long-term debts (loans, mortgages)</td></tr>
-<tr><td><strong>Equity</strong></td><td>What belongs to shareholders (share capital + retained profit)</td></tr>
-</table>
-
-<h4>Key ratios</h4>
-<div class="formula-box">
-<p><code>ROCE (%) = (Operating profit &divide; Capital employed) &times; 100</code></p>
-<p>where Capital employed = Total equity + Non-current liabilities</p>
-<p><code>Return on investment (%) = (Profit from investment &divide; Cost of investment) &times; 100</code></p>
-<p><code>Gearing (%) = (Non-current liabilities &divide; Capital employed) &times; 100</code></p>
-</div>
-
-<div class="rule-box">
-<span class="box-label rule">ROCE is an important overall profitability measure</span>
-<p>It shows how effectively the business uses its capital to generate profit. A declining ROCE, even if absolute profit is rising, suggests the business is becoming less efficient. But it should not be judged in isolation &mdash; always consider alongside liquidity, gearing and other measures.</p>
-</div>
-
-<h4>Gearing</h4>
-<p>Higher gearing means a greater proportion of capital employed is financed through non-current liabilities. This increases financial risk because interest payments must be made regardless of profit. But borrowing can finance profitable growth without diluting ownership.</p>
-<div class="trap-box">
-<span class="box-label trap">Trap</span>
-<p><strong>High gearing is not automatically bad.</strong> Whether it creates concern depends on the business&rsquo;s cash flow, profitability, interest rates, objectives and industry. A stable, profitable business with predictable cash flows can handle higher gearing than a volatile start-up.</p>
-</div>
-
-<h4>Limitations of financial reporting</h4>
-<p>Financial reports are historic (backward-looking), do not include non-financial factors (employee morale, brand reputation, environmental impact), and can be influenced by accounting choices.</p>
-</div>
-
-<div class="topic">
-<h3>Assessing financial position and performance</h3>
-<p>This is an explicitly separate spec heading. AQA expects students to bring together multiple measures and judge them <strong>relative to objectives, competitors, business planning and context</strong>.</p>
-<p>The measures to integrate: profits and margins, ROCE, ROI, cash flow and liquidity, gearing, shareholder rewards (dividend per share, dividend yield), break-even output, margin of safety, budget variance.</p>
-
-<div class="rule-box">
-<span class="box-label rule">Never judge from one number</span>
-<p>The strongest answers triangulate. For example:</p>
-<p>High operating margin + strong ROCE + weak current ratio + high gearing = a business that is profitable but may carry liquidity and financial-risk concerns.</p>
-<p>The ratio is meaningless without a comparison &mdash; to previous years, competitors, targets or the industry average.</p>
-</div>
-
-<div class="exam-box">
-<span class="box-label exam">Exam guidance</span>
-<p>When you calculate any financial ratio, your analysis should answer three questions: (1) What does the number mean? (2) Is it good or bad &mdash; compared to what? (3) What should the business do about it?</p>
-</div>
-</div>
-
-<div class="topic">
-<h3>Ethics in finance <span style="font-size:.78rem;color:var(--gold-muted);font-weight:600">(A-level only)</span></h3>
-<p>Two areas: <strong>tax avoidance</strong> and <strong>payment terms for customers and suppliers</strong>.</p>
-<p><strong>Tax avoidance</strong> means legally arranging business affairs to reduce tax liability. <strong>Tax evasion</strong> means deliberately not paying tax that is owed &mdash; this is illegal. The spec covers avoidance &mdash; the ethical question is whether a business <em>should</em> minimise its tax even though it legally <em>can</em>.</p>
-<p><strong>Payment terms:</strong> a large business demanding very long payment terms from small suppliers may preserve its own cash flow but place financial pressure on those suppliers. Similarly, offering customers very generous payment terms may win business but weaken the firm&rsquo;s own cash position.</p>
-<div class="rule-box">
-<span class="box-label rule">Evaluation territory</span>
-<p>Delaying supplier payments &rarr; preserves cash &rarr; but may damage relationships &rarr; suppliers may eventually refuse favourable terms or prioritise other customers. AQA links these ethical choices to objectives and ownership structure.</p>
-</div>
-</div>
+    <div class="ethos-pillars">
+      <div class="pillar">
+        <h3>Peacefulness</h3>
+        <p>Approach complex questions with a calm, focused mind. Listen to different stakeholder perspectives with respect. Create a learning environment where every voice is valued.</p>
+      </div>
+      <div class="pillar">
+        <h3>Diligence</h3>
+        <p>Commit fully to mastering each topic. Check your chains of analysis, refine your evaluations, and never submit work that is less than your best.</p>
+      </div>
+      <div class="pillar">
+        <h3>Determination</h3>
+        <p>Persevere through challenging exam questions. Treat every mistake as a stepping stone. Keep pushing toward your target grade and beyond.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="unit-section" id="traps">
-<div class="section-bar">
-<span class="section-num">Reference</span>
-<h2>Traps, formulae and question map</h2>
-</div>
+<!-- RESOURCES -->
+<section class="section section-alt" id="resources">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Resources</div>
+      <h2 class="section-title">Downloads and reference</h2>
+      <p class="section-desc">Workbooks, past papers, mark schemes, formula sheets and exam technique guides.</p>
+    </div>
 
-<div class="topic">
-<h3>The 20 biggest Unit 3.1 exam traps</h3>
-<ol>
-<li><strong>Sales &#8800; profit.</strong> Always account for costs when the endpoint is profit.</li>
-<li><strong>Sales growth &#8800; market-share growth.</strong> Compare business growth with market growth.</li>
-<li><strong>Revenue &#8800; cash flow.</strong> Revenue may be earned before payment arrives.</li>
-<li><strong>Profit &#8800; cash.</strong> A profitable business can run out of cash.</li>
-<li><strong>Profit &#8800; profitability.</strong> Compare margins, not just absolute figures.</li>
-<li><strong>Operating profit &#8800; profit for the year.</strong> They measure different things.</li>
-<li><strong>Shareholder &#8800; stakeholder.</strong> Shareholders are one stakeholder group.</li>
-<li><strong>Social enterprise &#8800; charity.</strong> Social enterprises trade for profit but reinvest surplus.</li>
-<li><strong>Ethical &#8800; legal.</strong> Something can be legal but ethically questionable.</li>
-<li><strong>Correlation &#8800; causation.</strong> Two variables moving together does not prove one causes the other.</li>
-<li><strong>Brand strength &rarr; PED must reach price sensitivity</strong>, not just &ldquo;more sales.&rdquo;</li>
-<li><strong>Market-share questions must reach market share</strong>, not simply sales.</li>
-<li><strong>Revenue questions must reach revenue</strong>, not profit (unless the question asks for it).</li>
-<li><strong>A quantitative answer &#8800; calculation only.</strong> Interpret and use the figure.</li>
-<li><strong>Ratios are meaningless without context.</strong> Always compare to something.</li>
-<li><strong>More marketing spend &#8800; more profit.</strong> Analyse marginal costs and returns.</li>
-<li><strong>More market research &#8800; better decisions.</strong> Quality and use of research matter.</li>
-<li><strong>More NPD spend &#8800; guaranteed innovation.</strong> Effectiveness matters more than expenditure.</li>
-<li><strong>High gearing is not automatically bad.</strong> Context matters.</li>
-<li><strong>An action being beneficial is not enough for a 15-marker.</strong> Explain why it is preferable to the alternative.</li>
-</ol>
-</div>
-
-<div class="topic">
-<h3>All 30 Unit 3.1 formulae</h3>
-<table>
-<tr><th>#</th><th>Measure</th><th>Formula</th></tr>
-<tr><td>1</td><td>Market capitalisation</td><td>Issued shares &times; Share price</td></tr>
-<tr><td>2</td><td>Dividend per share</td><td>Total dividend &divide; Ordinary shares</td></tr>
-<tr><td>3</td><td>Dividend yield (%)</td><td>(DPS &divide; Share price) &times; 100</td></tr>
-<tr><td>4</td><td>Market share (%)</td><td>(Business sales &divide; Market sales) &times; 100</td></tr>
-<tr><td>5</td><td>Market growth (%)</td><td>(Change in market &divide; Original market) &times; 100</td></tr>
-<tr><td>6</td><td>PED</td><td>% &Delta; QD &divide; % &Delta; Price</td></tr>
-<tr><td>7</td><td>YED</td><td>% &Delta; QD &divide; % &Delta; Income</td></tr>
-<tr><td>8</td><td>Total variable cost</td><td>VC per unit &times; Units sold</td></tr>
-<tr><td>9</td><td>Total cost</td><td>Fixed cost + Variable cost</td></tr>
-<tr><td>10</td><td>Revenue</td><td>Price &times; Quantity</td></tr>
-<tr><td>11</td><td>Contribution per unit</td><td>Price &minus; VC per unit</td></tr>
-<tr><td>12</td><td>Total contribution</td><td>Contribution per unit &times; Units sold</td></tr>
-<tr><td>13</td><td>Break-even output</td><td>Fixed costs &divide; Contribution per unit</td></tr>
-<tr><td>14</td><td>Margin of safety</td><td>Actual output &minus; Break-even output</td></tr>
-<tr><td>15</td><td>Budget variance</td><td>Budgeted &minus; Actual</td></tr>
-<tr><td>16</td><td>Payable days</td><td>(Payables &divide; Cost of sales) &times; 365</td></tr>
-<tr><td>17</td><td>Receivable days</td><td>(Receivables &divide; Revenue) &times; 365</td></tr>
-<tr><td>18</td><td>Current ratio</td><td>Current assets &divide; Current liabilities</td></tr>
-<tr><td>19</td><td>Acid test</td><td>(Current assets &minus; Inventory) &divide; Current liabilities</td></tr>
-<tr><td>20</td><td>Profit</td><td>Revenue &minus; Total costs</td></tr>
-<tr><td>21</td><td>Gross profit</td><td>Revenue &minus; Cost of sales</td></tr>
-<tr><td>22</td><td>Gross profit margin (%)</td><td>(GP &divide; Revenue) &times; 100</td></tr>
-<tr><td>23</td><td>Operating profit</td><td>Gross profit &minus; Operating expenses</td></tr>
-<tr><td>24</td><td>Operating profit margin (%)</td><td>(OP &divide; Revenue) &times; 100</td></tr>
-<tr><td>25</td><td>Profit for year</td><td>OP + Other &minus; Finance costs &minus; Tax</td></tr>
-<tr><td>26</td><td>Profit for year margin (%)</td><td>(PFY &divide; Revenue) &times; 100</td></tr>
-<tr><td>27</td><td>ROCE (%)</td><td>(OP &divide; Capital employed) &times; 100</td></tr>
-<tr><td>28</td><td>Return on marketing spend (%)</td><td>(Profit from marketing &divide; Marketing spend) &times; 100</td></tr>
-<tr><td>29</td><td>ROI (%)</td><td>(Investment profit &divide; Investment cost) &times; 100</td></tr>
-<tr><td>30</td><td>Gearing (%)</td><td>(NCL &divide; Capital employed) &times; 100</td></tr>
-</table>
-</div>
-
-<div class="topic">
-<h3>Paper 1 SAM question map</h3>
-<p>This shows how AQA assesses Unit 3.1 &mdash; topics are not isolated. Every question starts with a concept but demands a specific business outcome.</p>
-<table>
-<tr><th>Q</th><th>Marks</th><th>Topic</th><th>The chain required</th></tr>
-<tr><td>1.1</td><td>6</td><td>Entrepreneurial characteristics</td><td>Characteristic &rarr; business success</td></tr>
-<tr><td>1.2</td><td>6</td><td>Branding / PED</td><td>Brand strength &rarr; price sensitivity</td></tr>
-<tr><td>1.3</td><td>9</td><td>Influencers</td><td>Promotional spend &rarr; profit</td></tr>
-<tr><td>1.4</td><td>9</td><td>Current ratio (quant)</td><td>Calculation &rarr; financial position</td></tr>
-<tr><td>1.5</td><td>15</td><td>External finance</td><td>Compare two sources &rarr; recommend</td></tr>
-<tr><td>2.1</td><td>6</td><td>Pricing</td><td>High price &rarr; revenue</td></tr>
-<tr><td>2.2</td><td>6</td><td>Share price</td><td>Factor &rarr; change in share price</td></tr>
-<tr><td>2.3</td><td>9</td><td>Market research</td><td>Research spend &rarr; profitability</td></tr>
-<tr><td>2.4</td><td>9</td><td>New product development</td><td>NPD investment &rarr; market share</td></tr>
-<tr><td>2.5</td><td>15</td><td>Quantitative / business decision</td><td>Calculation + evaluation &rarr; recommend</td></tr>
-</table>
-</div>
+    <div class="tools-grid">
+      <a href="#" class="tool-card">
+        <div class="tool-type">Reference</div>
+        <h3>Formula sheet</h3>
+        <p>Every formula from the specification across all three units, grouped by topic with worked examples.</p>
+      </a>
+      <a href="#" class="tool-card">
+        <div class="tool-type">Reference</div>
+        <h3>Sample papers</h3>
+        <p>AQA sample assessment materials for Papers 1, 2 and 3 with mark schemes and examiner commentaries.</p>
+      </a>
+      <a href="#" class="tool-card">
+        <div class="tool-type">Workbooks</div>
+        <h3>Unit workbooks</h3>
+        <p>Printable workbooks with notes, activities and exam-style questions for each unit of the specification.</p>
+        <span class="coming">Coming soon</span>
+      </a>
+    </div>
+  </div>
 </section>
 
-</main>
+<!-- FOOTER -->
 <footer class="footer">
-Nishkam School West London &middot; Man Neeva, Mat Uchi &middot; AQA A-Level Business (7138) &middot; Unit 3.1 Complete Notes
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">A-Level Business</div>
+      <div class="footer-motto">Man Neeva, Mat Uchi — To be humble, to be wise</div>
+      <div class="footer-spec">AQA A-Level Business (7138)<br>First teaching September 2026<br>First A-level exams 2028</div>
+    </div>
+    <div>
+      <h4>Units</h4>
+      <ul>
+        <li><a href="unit31/">3.1 Marketing &amp; finance</a></li>
+        <li><a href="#">3.2 People &amp; operations</a></li>
+        <li><a href="#">3.3 Strategy &amp; change</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Tools</h4>
+      <ul>
+        <li><a href="#">15-Mark Lab</a></li>
+        <li><a href="#">9-Mark Lab</a></li>
+        <li><a href="https://claude.ai/artifact/Y6wN6aZAWDfRVCKNtTzXjc" target="_blank">6-Mark Lab</a></li>
+        <li><a href="#">Calculations</a></li>
+        <li><a href="#">Knowledge Quiz</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    &copy; Nishkam School West London · AQA A-Level Business (7138)
+  </div>
 </footer>
+
 </body>
 </html>
