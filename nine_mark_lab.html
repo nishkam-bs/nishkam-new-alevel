@@ -819,7 +819,7 @@ async function runMark(){
 /* ═══ LOGGING ═══ */
 async function logToSheet(fb,qText){
   try{
-    const url='https://script.google.com/macros/s/AKfycbwp1BPFJztzwXXY81prlg0Uo7J34-P7FE3SWKelOEUppM6hzq576Au3ra58xkEI51nP/exec';
+    const url='https://script.google.com/macros/s/AKfycbxg5Mgn342vH-EGawWRJxK-NtgTbz01IHKKkaWiRZo4Z_LCFSzXtArVs6jKZnFHYMTM/exec';
     const payload={tool:'9-Mark Lab',name:student.name,candidateNumber:student.num,question:qText.slice(0,100),mark:fb.mark,maxMark:9,level:fb.level,chains:(fb.chain_for||'')+'|'+(fb.chain_against||''),endpoint:fb.endpoint||'',blocker:fb.blocker_heading||'',tip:fb.improve?fb.improve.slice(0,120):'',qtype:fb.qtype||lastQType,judgement:fb.judgement_quality||''};
     await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
   }catch(e){}
