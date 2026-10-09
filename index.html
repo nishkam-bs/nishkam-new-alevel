@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="AQA A-Level Business (7138) revision and study tools from Nishkam School West London. Three units, exam practice, model answers and targeted exam technique — first teaching September 2026."/>
+<title>AQA A-Level Business — Nishkam School West London</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0E2A47;--navy-deep:#081A2E;--navy-soft:#1F3F63;
+  --gold:#B08A3E;--gold-soft:#D4B570;
+  --parchment:#FAF7F1;--parchment-warm:#F3ECDB;--paper:#fff;
+  --ink:#1A1A1A;--ink-soft:#444;--muted:#6B6B6B;
+  --rule:#E5DFD2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--parchment);color:var(--ink);line-height:1.6}
+a{color:var(--navy);text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+.layout{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+aside{background:var(--navy);color:#c8d4e6;padding:28px 22px;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;border-right:3px solid var(--navy-deep)}
+.sidebar-brand{margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sidebar-brand h1{font-family:'DM Serif Display',serif;font-size:20px;color:white;line-height:1.3}
+.sidebar-brand p{font-size:12px;color:var(--gold-soft);margin-top:4px;font-style:italic}
+aside h2{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin:18px 0 8px;font-weight:700}
+aside a{display:block;color:#c8d4e6;padding:8px 12px;border-radius:8px;font-size:14px;font-weight:500;transition:.15s}
+aside a:hover{background:rgba(255,255,255,.07);color:white}
+aside a.active{background:rgba(255,255,255,.1);color:white;font-weight:700}
+aside .sub-link{padding-left:24px;font-size:13px;color:#8a9bb5}
+aside .sub-link:hover{color:white}
+.sidebar-footer{margin-top:auto;padding-top:18px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:#8a9bb5;line-height:1.5}
+.sidebar-footer strong{display:block;color:var(--gold-soft);font-size:12px;margin-bottom:2px}
+.hamburger{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--navy);color:white;border:0;width:44px;height:44px;border-radius:10px;font-size:20px}
+.scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
+main{max-width:1080px;margin:0 auto;padding:48px 40px 80px}
+/* Hero */
+.hero{padding:60px 0 48px;border-bottom:1px solid var(--rule);margin-bottom:40px}
+.hero .spec{font-size:13px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.hero h2{font-family:'DM Serif Display',serif;font-size:48px;color:var(--navy);line-height:1.15;margin:8px 0 12px}
+.hero h2 em{font-style:italic;color:var(--gold)}
+.hero p{font-size:17px;color:var(--ink-soft);max-width:640px;line-height:1.6}
+.hero .btn-row{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}
+.btn-hero{padding:12px 24px;border-radius:10px;font-weight:700;font-size:14px;border:0;transition:.15s;display:inline-block}
+.btn-primary{background:var(--navy);color:white}.btn-primary:hover{background:var(--navy-soft)}
+.btn-secondary{background:var(--parchment-warm);color:var(--navy);border:1px solid var(--rule)}.btn-secondary:hover{background:var(--rule)}
+/* Sections */
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);font-weight:700;margin-bottom:4px}
+.section-heading{font-family:'DM Serif Display',serif;font-size:30px;color:var(--navy);margin-bottom:6px}
+.section-sub{font-size:14px;color:var(--muted);max-width:600px;margin-bottom:24px}
+/* Tool cards */
+.tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.tool-card{background:var(--paper);border:1px solid var(--rule);border-radius:14px;padding:24px;transition:.15s;text-decoration:none;color:var(--ink)}
+.tool-card:hover{border-color:var(--gold);box-shadow:0 8px 24px rgba(14,42,71,.08);transform:translateY(-2px)}
+.tool-num{font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.tool-card h3{font-family:'DM Serif Display',serif;font-size:20px;color:var(--navy);margin-bottom:6px}
+.tool-card p{font-size:13px;color:var(--muted);line-height:1.5}
+.tool-arrow{font-size:12px;color:var(--gold);font-weight:700;margin-top:10px;display:inline-block}
+.tool-card.featured{border:2px solid var(--gold);background:linear-gradient(135deg,var(--paper) 0%,rgba(176,138,62,.04) 100%)}
+/* Unit blocks */
+.unit-block{background:var(--paper);border:1px solid var(--rule);border-radius:14px;padding:28px;margin-bottom:20px}
+.unit-block-header{display:flex;align-items:baseline;gap:14px;margin-bottom:4px}
+.unit-block-header .unit-label{font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+.unit-block-header h3{font-family:'DM Serif Display',serif;font-size:20px;color:var(--navy)}
+.unit-block .unit-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:16px}
+.guide-list{list-style:none;padding:0;margin:0}
+.guide-list li{border-top:1px solid var(--rule)}
+.guide-list li:first-child{border-top:0}
+.guide-list a{display:flex;align-items:center;justify-content:space-between;padding:14px 12px;border-radius:8px;transition:.15s;text-decoration:none;color:var(--ink)}
+.guide-list a:hover{background:var(--parchment-warm)}
+.guide-list .guide-name{font-weight:600;font-size:14px}
+.guide-list .guide-spec{font-size:12px;color:var(--muted);margin-left:8px}
+.guide-list .guide-arrow{font-size:12px;color:var(--gold);font-weight:700}
+.guide-list a.coming-soon{pointer-events:none;opacity:.45}
+.guide-list a.coming-soon .guide-arrow{color:var(--muted)}
+.alevel-tag{display:inline-block;font-size:10px;font-weight:700;color:#7c3aed;background:#ede9fe;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle}
+/* Papers */
+.papers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
+.paper-card{background:var(--paper);border:1px solid var(--rule);border-radius:14px;padding:24px}
+.paper-card h4{font-family:'DM Serif Display',serif;font-size:18px;color:var(--navy);margin-bottom:4px}
+.paper-card .paper-sub{font-size:12px;color:var(--gold);font-weight:600;margin-bottom:10px}
+.paper-card p{font-size:13px;color:var(--ink-soft);line-height:1.6}
+.paper-detail{font-size:12px;color:var(--muted);margin-top:8px;font-style:italic}
+/* Ethos */
+.ethos{margin-top:48px;padding:40px 0;border-top:1px solid var(--rule)}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
+.pillar{background:var(--paper);border:1px solid var(--rule);border-radius:14px;padding:22px}
+.pillar h4{font-family:'DM Serif Display',serif;font-size:16px;color:var(--navy);margin-bottom:6px}
+.pillar p{font-size:13px;color:var(--ink-soft);line-height:1.5}
+/* Virtues */
+.virtues{margin-top:40px;padding:40px 0;border-top:1px solid var(--rule)}
+.virtue-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
+.virtue-box{background:var(--navy);border-radius:14px;padding:22px}
+.virtue-box h4{font-family:'DM Serif Display',serif;font-size:17px;color:#FFE066;margin-bottom:8px}
+.virtue-box p{font-size:13px;color:#c8d4e6;line-height:1.6}
+/* Quote */
+.quote{margin:40px 0;padding:28px 32px;background:var(--parchment-warm);border-left:4px solid var(--gold);border-radius:0 14px 14px 0}
+.quote p{font-family:'DM Serif Display',serif;font-size:18px;color:var(--navy);line-height:1.5}
+.quote cite{font-size:12px;color:var(--muted);display:block;margin-top:8px;font-style:italic}
+/* Footer */
+footer{margin-top:60px;padding:32px 0;border-top:1px solid var(--rule);display:grid;grid-template-columns:repeat(3,1fr);gap:24px;font-size:13px;color:var(--muted)}
+footer h4{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--navy);margin-bottom:8px;font-weight:700}
+footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var(--navy)}
+.footer-brand{font-family:'DM Serif Display',serif;font-size:16px;color:var(--navy)}
+.footer-motto{color:var(--gold-soft);font-style:italic;font-size:12px}
+/* Responsive */
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  aside{position:fixed;left:-320px;z-index:100;width:300px;transition:.3s}
+  aside.open{left:0}
+  .hamburger{display:grid;place-items:center}
+  .scrim.show{display:block;z-index:99}
+  main{padding:32px 18px 60px}
+  .hero h2{font-size:32px}
+  .tools-grid,.pillars,.virtue-grid,.papers-grid{grid-template-columns:1fr}
+  footer{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<button class="hamburger" id="menuBtn" aria-label="Open menu">&#9776;</button>
+<div class="scrim" id="scrim"></div>
+<div class="layout">
+<aside id="sidebar">
+  <div class="sidebar-brand">
+    <h1>A-Level Business</h1>
+    <p>Man Neeva, Mat Uchi</p>
+  </div>
+  <h2>Overview</h2>
+  <a href="index.html" class="active">Home</a>
+  <h2>Study Tools</h2>
+  <a href="six_marker_lab.html">6-Mark Analyse Lab</a>
+  <a href="nine_mark_lab.html">9-Mark Assess Lab</a>
+  <a href="#" style="opacity:.5">15-Mark Evaluate Lab</a>
+  <a href="redraft.html">Redraft</a>
+  <a href="#" style="opacity:.5">Calculations</a>
+  <a href="#" style="opacity:.5">Knowledge Quiz</a>
+  <h2>Unit 3.1</h2>
+  <a class="sub-link" href="guide_3_1_1_business_and_objectives.html">3.1.1 Business &amp; objectives</a>
+  <a class="sub-link" href="guide_3_1_2_forms_of_business_and_stakeholders.html">3.1.2 Forms &amp; stakeholders</a>
+  <a class="sub-link" href="guide_3_1_3_marketing_management.html">3.1.3 Marketing</a>
+  <a class="sub-link" href="guide_3_1_4_financial_management.html">3.1.4 Finance</a>
+  <h2>Unit 3.2</h2>
+  <a class="sub-link" href="guide_3_2_1_people_management.html" style="opacity:.5">3.2.1 People management</a>
+  <a class="sub-link" href="guide_3_2_2_operations_management.html" style="opacity:.5">3.2.2 Operations</a>
+  <a class="sub-link" href="guide_3_2_3_managing_business_culture.html" style="opacity:.5">3.2.3 Business culture</a>
+  <h2>Unit 3.3 <span style="font-size:9px;color:#c8d4e6;text-transform:none;letter-spacing:0;font-weight:400">(A-level)</span></h2>
+  <a class="sub-link" href="guide_3_3_1_business_and_society.html" style="opacity:.5">3.3.1 Business &amp; society</a>
+  <a class="sub-link" href="guide_3_3_2_external_environment.html" style="opacity:.5">3.3.2 External environment</a>
+  <a class="sub-link" href="guide_3_3_3_strategy.html" style="opacity:.5">3.3.3 Strategy</a>
+  <a class="sub-link" href="guide_3_3_4_change.html" style="opacity:.5">3.3.4 Change</a>
+  <h2>Resources</h2>
+  <a href="#" style="opacity:.5">Sample papers</a>
+  <a href="formula_reference.html">Formula reference</a>
+  <div class="sidebar-footer">
+    <strong>Nishkam School West London</strong>
+    AQA A-Level Business (7138)<br>
+    First teaching September 2026
+  </div>
+</aside>
+<main>
+  <div class="hero">
+    <div class="spec">AQA A-Level Business (7138) &middot; First teaching September 2026</div>
+    <h2>Your <em>A-Level Business</em> revision hub.</h2>
+    <p>Three units, case-study practice, calculations, model answers and exam technique &mdash; built around the new AQA specification.</p>
+    <div class="btn-row">
+      <a href="six_marker_lab.html" class="btn-hero btn-primary">6-Mark Analyse Lab</a>
+      <a href="nine_mark_lab.html" class="btn-hero btn-secondary">9-Mark Assess Lab</a>
+      <a href="redraft.html" class="btn-hero btn-secondary">Redraft</a>
+      <a href="#units" class="btn-hero btn-secondary">Exam guides</a>
+    </div>
+  </div>
+
+  <!-- STUDY TOOLS -->
+  <div id="tools">
+    <div class="section-label">Study Tools</div>
+    <div class="section-heading">Practice, plan and prepare.</div>
+    <div class="section-sub">Get your essays marked, practise exam technique, and build the skills the examiner is actually looking for.</div>
+    <div class="tools-grid">
+
+      <a href="six_marker_lab.html" class="tool-card featured">
+        <div class="tool-num">I. Exam Practice</div>
+        <h3>6-Mark Analyse Lab</h3>
+        <p>18 case studies, 36 questions across all three papers. Write your answer or upload photos of handwritten work, and get annotated AO feedback with examiner-style margin notes. One developed argument can score 6/6.</p>
+        <span class="tool-arrow">Open the lab &rarr;</span>
+      </a>
+
+      <a href="nine_mark_lab.html" class="tool-card featured">
+        <div class="tool-num">II. Exam Practice</div>
+        <h3>9-Mark Assess Lab</h3>
+        <p>12 case studies with qualitative and quantitative 9-markers across all three papers. Write your answer and get it marked against the AO breakdown with colour-coded annotated feedback and numbered examiner notes.</p>
+        <span class="tool-arrow">Open the lab &rarr;</span>
+      </a>
+
+      <a href="#" class="tool-card" style="opacity:.5">
+        <div class="tool-num">III. Exam Practice</div>
+        <h3>15-Mark Evaluate Lab</h3>
+        <p>Choose a question, plan your answer, then submit for feedback. Covers the new 15-mark evaluate-and-recommend format with two case studies per paper.</p>
+        <span class="tool-arrow">Coming soon</span>
+      </a>
+
+      <a href="redraft.html" class="tool-card">
+        <div class="tool-num">IV. Improve Your Work</div>
+        <h3>Redraft</h3>
+        <p>Upload your marked feedback PDF, paste your improved work, and get specific feedback on what you've strengthened and what still needs attention. Full essays get a new mark.</p>
+        <span class="tool-arrow">Open redraft &rarr;</span>
+      </a>
+
+      <a href="formula_reference.html" class="tool-card featured">
+        <div class="tool-num">V. Reference</div>
+        <h3>Formula Reference</h3>
+        <p>All 41 Annex 7 formulas plus core calculation methods. Each one with rules, common traps and a worked example. Organised by unit.</p>
+        <span class="tool-arrow">Open formula reference &rarr;</span>
+      </a>
+
+      <a href="#" class="tool-card" style="opacity:.5">
+        <div class="tool-num">VI. Knowledge</div>
+        <h3>Knowledge Quiz</h3>
+        <p>Test yourself across all three units. Choose your topics, set the number of questions, and get instant results with explanations.</p>
+        <span class="tool-arrow">Coming soon</span>
+      </a>
+
+      <a href="#" class="tool-card" style="opacity:.5">
+        <div class="tool-num">VII. Knowledge</div>
+        <h3>Key Concepts</h3>
+        <p>Search any concept on the AQA specification. Understand it, analyse it, apply it, evaluate it &mdash; and see the causal chain step by step.</p>
+        <span class="tool-arrow">Coming soon</span>
+      </a>
+
+      <a href="#" class="tool-card" style="opacity:.5">
+        <div class="tool-num">VIII. Exam Practice</div>
+        <h3>Case Study Practice</h3>
+        <p>Full case-study sets with data, questions and model answers. Practise extracting, calculating, interpreting and connecting data to business arguments.</p>
+        <span class="tool-arrow">Coming soon</span>
+      </a>
+
+      <a href="#" class="tool-card" style="opacity:.5">
+        <div class="tool-num">IX. Knowledge</div>
+        <h3>Models and Theories</h3>
+        <p>Every specification model explained with its mechanism, how to weave it into analysis, and common mistakes to avoid.</p>
+        <span class="tool-arrow">Coming soon</span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- EXAM GUIDES BY UNIT -->
+  <div id="units" style="margin-top:48px;padding-top:40px;border-top:1px solid var(--rule)">
+    <div class="section-label">Exam Guides</div>
+    <div class="section-heading">Every section of the specification.</div>
+    <div class="section-sub">Each guide covers the full spec content, model answers with AO colour-coding, common mistakes, exam technique and real-world examples. Click to open.</div>
+
+    <!-- Unit 3.1 -->
+    <div class="unit-block">
+      <div class="unit-block-header">
+        <span class="unit-label">Paper 1 &middot; Unit 3.1</span>
+        <h3>What is business? Managing marketing and finance</h3>
+      </div>
+      <p class="unit-desc">Entrepreneurs, business planning, objectives, forms of business, stakeholders, marketing management and financial management.</p>
+      <ul class="guide-list">
+        <li><a href="guide_3_1_1_business_and_objectives.html">
+          <span><span class="guide-name">Business and objectives</span><span class="guide-spec">3.1.1</span></span>
+          <span class="guide-arrow">Open &rarr;</span>
+        </a></li>
+        <li><a href="guide_3_1_2_forms_of_business_and_stakeholders.html">
+          <span><span class="guide-name">Forms of business and stakeholders</span><span class="guide-spec">3.1.2</span></span>
+          <span class="guide-arrow">Open &rarr;</span>
+        </a></li>
+        <li><a href="guide_3_1_3_marketing_management.html">
+          <span><span class="guide-name">Marketing management</span><span class="guide-spec">3.1.3</span></span>
+          <span class="guide-arrow">Open &rarr;</span>
+        </a></li>
+        <li><a href="guide_3_1_4_financial_management.html">
+          <span><span class="guide-name">Financial management</span><span class="guide-spec">3.1.4</span></span>
+          <span class="guide-arrow">Open &rarr;</span>
+        </a></li>
+      </ul>
+    </div>
+
+    <!-- Unit 3.2 -->
+    <div class="unit-block">
+      <div class="unit-block-header">
+        <span class="unit-label">Paper 2 &middot; Unit 3.2</span>
+        <h3>Managing people and operations</h3>
+      </div>
+      <p class="unit-desc">HR objectives, organisational design, leadership, motivation, developing people, operations management and managing business culture.</p>
+      <ul class="guide-list">
+        <li><a href="guide_3_2_1_people_management.html" class="coming-soon">
+          <span><span class="guide-name">People management</span><span class="guide-spec">3.2.1</span></span>
+          <span class="guide-arrow">Coming soon</span>
+        </a></li>
+        <li><a href="guide_3_2_2_operations_management.html" class="coming-soon">
+          <span><span class="guide-name">Operations management</span><span class="guide-spec">3.2.2</span></span>
+          <span class="guide-arrow">Coming soon</span>
+        </a></li>
+        <li><a href="guide_3_2_3_managing_business_culture.html" class="coming-soon">
+          <span><span class="guide-name">Managing business culture</span><span class="guide-spec">3.2.3</span><span class="alevel-tag">A-level only</span></span>
+          <span class="guide-arrow">Coming soon</span>
+        </a></li>
+      </ul>
+    </div>
+
+    <!-- Unit 3.3 -->
+    <div class="unit-block">
+      <div class="unit-block-header">
+        <span class="unit-label">Paper 3 &middot; Unit 3.3 &middot; A-level only</span>
+        <h3>Business and society, external environment, and strategy</h3>
+      </div>
+      <p class="unit-desc">Corporate social responsibility, sustainability, ESG, the competitive and economic environment, strategic planning and managing change.</p>
+      <ul class="guide-list">
+        <li><a href="guide_3_3_1_business_and_society.html" class="coming-soon">
+          <span><span class="guide-name">Business and society</span><span class="guide-spec">3.3.1</span></span>
+          <span class="guide-arrow">Coming soon</span>
+        </a></li>
+        <li><a href="guide_3_3_2_external_environment.html" class="coming-soon">
+          <span><span class="guide-name">Business and the external environment</span><span class="guide-spec">3.3.2</span></span>
+          <span class="guide-arrow">Coming soon</span>
+        </a></li>
+        <li><a href="guide_3_3_3_strategy.html" class="coming-soon">
+          <span><span class="guide-name">Strategy</span><span class="guide-spec">3.3.3</span></span>
+          <span class="guide-arrow">Coming soon</span>
+        </a></li>
+        <li><a href="guide_3_3_4_change.html" class="coming-soon">
+          <span><span class="guide-name">Change</span><span class="guide-spec">3.3.4</span></span>
+          <span class="guide-arrow">Coming soon</span>
+        </a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PAPERS -->
+  <div id="papers" style="margin-top:48px;padding-top:40px;border-top:1px solid var(--rule)">
+    <div class="section-label">Assessment</div>
+    <div class="section-heading">Three papers, same structure.</div>
+    <div class="section-sub">Every paper has two case studies. Each case study is followed by five compulsory questions worth 45 marks.</div>
+    <div class="papers-grid">
+      <div class="paper-card">
+        <h4>Paper 1</h4>
+        <div class="paper-sub">Unit 3.1 &mdash; Marketing and finance</div>
+        <p><strong>2 hours &middot; 90 marks &middot; 33.3%</strong></p>
+        <p>2 &times; 6-mark analyse<br>2 &times; 9-mark assess<br>1 &times; 15-mark evaluate<br><em>per case study</em></p>
+        <p class="paper-detail">Two quantitative questions (9 or 15 marks)</p>
+      </div>
+      <div class="paper-card">
+        <h4>Paper 2</h4>
+        <div class="paper-sub">Unit 3.2 &mdash; People and operations</div>
+        <p><strong>2 hours &middot; 90 marks &middot; 33.3%</strong></p>
+        <p>2 &times; 6-mark analyse<br>2 &times; 9-mark assess<br>1 &times; 15-mark evaluate<br><em>per case study</em></p>
+        <p class="paper-detail">Two quantitative questions (9 or 15 marks)</p>
+      </div>
+      <div class="paper-card">
+        <h4>Paper 3</h4>
+        <div class="paper-sub">Unit 3.3 &mdash; Society, environment and strategy</div>
+        <p><strong>2 hours &middot; 90 marks &middot; 33.3%</strong></p>
+        <p>2 &times; 6-mark analyse<br>2 &times; 9-mark assess<br>1 &times; 15-mark evaluate<br><em>per case study</em></p>
+        <p class="paper-detail">One quantitative question + one drawing on data across the specification</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ETHOS -->
+  <div class="ethos" id="ethos">
+    <div class="section-label">Ethos</div>
+    <div class="section-heading">Virtue-led Business learning.</div>
+    <div class="section-sub">Business Studies at Nishkam is not only about passing exams. Every topic connects to who we are &mdash; a community learning to serve, to think carefully and to act with integrity.</div>
+    <div class="pillars">
+      <div class="pillar"><h4>Faith-Inspired</h4><p>Learning from the wisdom of all traditions. Businesses that act with integrity and compassion reflect values at the heart of every great faith.</p></div>
+      <div class="pillar"><h4>Virtues-Led</h4><p>Fostering compassion, humility, justice and courage. Every business decision is an ethical choice &mdash; a chance to practise virtue or fall short of it.</p></div>
+      <div class="pillar"><h4>Aspiring for Excellence</h4><p>Becoming the best human beings we can possibly be. In Business Studies, this means thinking critically, writing with precision, and achieving the highest standards.</p></div>
+    </div>
+  </div>
+
+  <div class="quote">
+    <p>To empower children with virtues that enable them to excel academically and spiritually, inspiring them to serve humanity selflessly &mdash; with an abundance of love, compassion and forgiveness.</p>
+    <cite>Nishkam School Trust &mdash; Mission Statement</cite>
+  </div>
+
+  <div class="virtues">
+    <div class="section-label">Virtues</div>
+    <div class="section-heading">Peacefulness. Diligence. Determination.</div>
+    <div class="section-sub">Our three classroom virtues, lived inside the content of every lesson.</div>
+    <div class="virtue-grid">
+      <div class="virtue-box"><h4>Peacefulness</h4><p>Approach complex questions with a calm, focused mind. Listen to different stakeholder perspectives with respect. Create a learning environment where every voice is valued.</p></div>
+      <div class="virtue-box"><h4>Diligence</h4><p>Commit fully to mastering each topic. Check your chains of analysis, refine your evaluations, and never submit work that is less than your best.</p></div>
+      <div class="virtue-box"><h4>Determination</h4><p>Persevere through challenging exam questions. Treat every mistake as a stepping stone. Keep pushing toward your target grade and beyond.</p></div>
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      <div class="footer-brand">A-Level Business</div>
+      <div class="footer-motto">Man Neeva, Mat Uchi &mdash; To be humble, to be wise</div>
+      <p style="margin-top:8px">AQA A-Level Business (7138)<br>First teaching September 2026<br>First A-level exams 2028</p>
+    </div>
+    <div>
+      <h4>Units</h4>
+      <a href="#units">3.1 Marketing &amp; finance</a>
+      <a href="#units">3.2 People &amp; operations</a>
+      <a href="#units">3.3 Strategy &amp; change</a>
+    </div>
+    <div>
+      <h4>Tools</h4>
+      <a href="six_marker_lab.html">6-Mark Analyse Lab</a>
+      <a href="nine_mark_lab.html">9-Mark Assess Lab</a>
+      <a href="#" style="opacity:.5">15-Mark Evaluate Lab</a>
+      <a href="redraft.html">Redraft</a>
+      <a href="#" style="opacity:.5">Calculations</a>
+      <a href="#" style="opacity:.5">Knowledge Quiz</a>
+    </div>
+  </footer>
+</main>
+</div>
+<script>
+const menuBtn=document.getElementById('menuBtn');
+const sidebar=document.getElementById('sidebar');
+const scrim=document.getElementById('scrim');
+menuBtn.onclick=()=>{sidebar.classList.toggle('open');scrim.classList.toggle('show');};
+scrim.onclick=()=>{sidebar.classList.remove('open');scrim.classList.remove('show');};
+</script>
+</body>
+</html>
