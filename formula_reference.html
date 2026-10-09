@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AQA A-Level Business (7138) — Complete Formula Reference</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,400&family=DM+Mono:wght@400;500&display=swap');
+  :root{--ink:#0f172a;--slate:#1e293b;--steel:#334155;--stone:#475569;--mist:#94a3b8;--snow:#f1f5f9;--white:#fff;--blue:#2563eb;--blue-l:#dbeafe;--em:#059669;--em-l:#d1fae5;--red:#dc2626;--red-l:#fee2e2;--amb:#d97706;--amb-l:#fef3c7;--pur:#7c3aed;--pur-l:#ede9fe;--teal:#0d9488;--teal-l:#ccfbf1;--bdr:#e2e8f0;--sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',-apple-system,sans-serif;background:var(--snow);color:var(--slate);line-height:1.72;font-size:15px}
+  .ctr{max-width:980px;margin:0 auto;padding:20px}
+
+  /* Hero */
+  .hero{background:var(--ink);color:#fff;padding:56px 0 48px;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;top:-50%;right:-18%;width:600px;height:600px;background:radial-gradient(circle,rgba(37,99,235,.18) 0%,transparent 70%);border-radius:50%}
+  .hero::after{content:'';position:absolute;bottom:-30%;left:-8%;width:400px;height:400px;background:radial-gradient(circle,rgba(5,150,105,.12) 0%,transparent 70%);border-radius:50%}
+  .hero h1{font-size:30px;font-weight:900;letter-spacing:-.8px;line-height:1.2;margin-bottom:10px;position:relative}
+  .hero .sub{font-size:15px;font-weight:500;opacity:.75;position:relative}
+  .hero .badges{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;position:relative}
+  .hero .badge{display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:4px 12px;font-size:12px;font-weight:700}
+
+  /* Section headers */
+  .sh{background:var(--ink);color:#fff;padding:14px 24px;border-radius:10px 10px 0 0;font-size:17px;font-weight:800;letter-spacing:-.2px;margin-top:44px;display:flex;align-items:center;gap:10px}
+  .sh .p{display:inline-block;font-size:10px;font-weight:800;padding:3px 9px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase;flex-shrink:0}
+  .p.bl{background:var(--blue)}.p.gn{background:var(--em)}.p.pu{background:var(--pur)}.p.am{background:var(--amb)}.p.rd{background:var(--red)}.p.tl{background:var(--teal)}
+
+  /* Cards */
+  .cd{background:var(--white);border:1px solid var(--bdr);border-radius:0 0 10px 10px;padding:28px;margin-bottom:36px;box-shadow:var(--sh)}
+  .cd.sa{border-radius:10px;margin-top:16px}
+
+  h2{font-size:20px;font-weight:900;color:var(--ink);margin:28px 0 10px;padding-bottom:6px;border-bottom:3px solid var(--blue);display:inline-block}
+  h3{font-size:16px;font-weight:700;color:var(--slate);margin:20px 0 8px}
+  p{margin-bottom:10px}strong{font-weight:700}
+
+  /* Boxes */
+  .bx{padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0}.bx .l{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+  .tp{background:var(--red-l);border-left:4px solid var(--red)}.tp .l{color:var(--red)}
+  .ti{background:var(--em-l);border-left:4px solid var(--em)}.ti .l{color:var(--em)}
+  .eg{background:var(--amb-l);border-left:4px solid var(--amb)}.eg .l{color:var(--amb)}
+  .nt{background:var(--teal-l);border-left:4px solid var(--teal)}.nt .l{color:var(--teal)}
+  .df{background:var(--blue-l);border-left:4px solid var(--blue)}.df .l{color:var(--blue)}
+
+  /* Formula display */
+  .formula-box{background:var(--ink);color:#fff;padding:18px 24px;border-radius:8px;margin:14px 0;font-size:17px;font-weight:600;text-align:center;line-height:1.6;letter-spacing:.2px}
+  .formula-box .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 4px}
+  .formula-box .frac .num{border-bottom:2px solid rgba(255,255,255,.6);padding:0 6px 3px;font-size:15px}
+  .formula-box .frac .den{padding:3px 6px 0;font-size:15px}
+  .formula-box .times{margin:0 6px;font-weight:400;opacity:.7}
+
+  /* Formula entry */
+  .f-entry{margin-bottom:40px;padding-bottom:32px;border-bottom:2px solid var(--bdr)}
+  .f-entry:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .f-num{display:inline-block;background:var(--blue);color:#fff;font-size:12px;font-weight:800;width:28px;height:28px;line-height:28px;text-align:center;border-radius:50%;margin-right:8px;vertical-align:middle}
+  .f-title{font-size:18px;font-weight:800;color:var(--ink);display:inline;vertical-align:middle}
+  .f-unit{display:inline-block;background:var(--snow);border:1px solid var(--bdr);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;margin-left:8px;color:var(--stone);vertical-align:middle}
+
+  /* Working */
+  .working{background:var(--snow);border:1px solid var(--bdr);border-radius:8px;padding:16px 20px;margin:12px 0;font-family:'DM Mono',monospace;font-size:13px;line-height:1.8;color:var(--steel)}
+  .working .step{color:var(--stone);font-size:12px;font-weight:600;margin-bottom:2px;font-family:'DM Sans',sans-serif}
+  .working .ans{color:var(--em);font-weight:700}
+
+  /* Nav */
+  .nav-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin:16px 0}
+  .nav-link{display:block;padding:12px 16px;background:var(--white);border:1px solid var(--bdr);border-radius:8px;text-decoration:none;color:var(--slate);font-size:13px;font-weight:600;transition:all .15s}
+  .nav-link:hover{border-color:var(--blue);background:var(--blue-l)}
+  .nav-link .nl{font-weight:400;color:var(--stone);font-size:12px}
+
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px}
+  th{background:var(--ink);color:#fff;font-weight:700;text-align:left;padding:10px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  td{padding:10px 14px;border-bottom:1px solid var(--bdr);vertical-align:top}tr:nth-child(even){background:var(--snow)}
+
+  @media(max-width:640px){.hero h1{font-size:22px}.ctr{padding:12px}.cd{padding:18px}.formula-box{font-size:14px;padding:14px}.nav-grid{grid-template-columns:1fr}}
+  @media print{body{background:#fff;font-size:12px}.hero{padding:24px 0}.cd{box-shadow:none;border:1px solid #ddd}.sh{page-break-before:auto}.f-entry{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="ctr">
+    <h1>Formula Reference</h1>
+    <div class="sub">AQA A-Level Business 7138 — Every formula you need, with rules, traps and worked examples</div>
+    <div class="badges">
+      <span class="badge">Papers 1, 2 &amp; 3</span>
+      <span class="badge">Annex 7 — All 41 formulas</span>
+      <span class="badge">+ Core calculation methods</span>
+    </div>
+  </div>
+</div>
+
+<div class="ctr">
+
+<!-- Quick nav -->
+<div class="sh"><span class="p bl">NAV</span> Jump to a section</div>
+<div class="cd">
+  <div class="nav-grid">
+    <a class="nav-link" href="#core"><span class="nl">Section 0</span><br>Core calculation methods</a>
+    <a class="nav-link" href="#shares"><span class="nl">3.1.2</span><br>Shares &amp; dividends</a>
+    <a class="nav-link" href="#marketing"><span class="nl">3.1.3</span><br>Marketing data &amp; demand</a>
+    <a class="nav-link" href="#breakeven"><span class="nl">3.1.4</span><br>Break-even</a>
+    <a class="nav-link" href="#budgets"><span class="nl">3.1.4</span><br>Budgets</a>
+    <a class="nav-link" href="#liquidity"><span class="nl">3.1.4</span><br>Cash flow &amp; liquidity</a>
+    <a class="nav-link" href="#profit"><span class="nl">3.1.4</span><br>Profit &amp; profitability</a>
+    <a class="nav-link" href="#gearing"><span class="nl">3.1.4</span><br>Gearing &amp; returns</a>
+    <a class="nav-link" href="#people"><span class="nl">3.2.1–3.2.2</span><br>People &amp; operations</a>
+    <a class="nav-link" href="#invest"><span class="nl">3.3.3</span><br>Investment appraisal</a>
+  </div>
+</div>
+
+<!-- ===================== SECTION 0: CORE METHODS ===================== -->
+<div id="core" class="sh"><span class="p tl">FOUNDATION</span> Core calculation methods</div>
+<div class="cd">
+<p>These are not numbered formulas in Annex 7, but they underpin almost every quantitative question on the paper. Get these right first.</p>
+
+<div class="f-entry">
+  <span class="f-title">Percentage change</span>
+  <div class="formula-box">
+    Percentage change (%) = <span class="frac"><span class="num">New value − Original value</span><span class="den">Original value</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">Rules</div>
+    <ul>
+      <li>Always divide by the <strong>original</strong> (starting) value, not the new one.</li>
+      <li>A negative answer means a decrease; a positive answer means an increase.</li>
+      <li>Show your working — even a simple percentage change earns method marks.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Dividing by the new figure instead of the original.</li>
+      <li>Forgetting to multiply by 100 (giving 0.25 instead of 25%).</li>
+      <li>Getting confused about which year is "original" when the question gives data for three years — always use the year stated in the question as your base.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Revenue was £400,000 last year and £460,000 this year. What is the percentage change?
+    <div class="working">
+      <div class="step">Step 1: Find the change</div>
+      £460,000 − £400,000 = £60,000<br>
+      <div class="step">Step 2: Divide by original</div>
+      £60,000 ÷ £400,000 = 0.15<br>
+      <div class="step">Step 3: Multiply by 100</div>
+      <span class="ans">0.15 × 100 = 15% increase</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-title">Index numbers</span>
+  <div class="formula-box">
+    Index number = <span class="frac"><span class="num">Value in current period</span><span class="den">Value in base period</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">Rules</div>
+    <ul>
+      <li>The base period always has an index of 100.</li>
+      <li>An index above 100 means the value has increased since the base period.</li>
+      <li>An index below 100 means the value has decreased.</li>
+      <li>To find the percentage change from the base: subtract 100 from the index.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Treating the index number as the actual value (an index of 120 does not mean £120).</li>
+      <li>Comparing index numbers from two different base years as if they are directly comparable.</li>
+      <li>Forgetting that you <strong>cannot</strong> calculate the actual values from index numbers alone unless you are given at least one real figure.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Sales in Year 1 (base) were £200,000. Sales in Year 3 are £230,000. What is the index number for Year 3?
+    <div class="working">
+      £230,000 ÷ £200,000 = 1.15<br>
+      1.15 × 100 = <span class="ans">115</span><br><br>
+      This means sales have increased by 15% compared to the base year.
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===================== SECTION: SHARES ===================== -->
+<div id="shares" class="sh"><span class="p pu">3.1.2</span> Shares &amp; dividends</div>
+<div class="cd">
+
+<div class="f-entry">
+  <span class="f-num">1</span><span class="f-title">Market capitalisation</span>
+  <div class="formula-box">
+    Market capitalisation = Number of issued shares × Current share price
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    This measures the market value of a company's issued equity — what the stock market thinks the company is worth. It is not the same as the total value of all the business's assets. Investors use it to compare the size of public limited companies.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Using the nominal (face) value of shares instead of the current market price.</li>
+      <li>Confusing "issued shares" with "authorised shares" — use the number actually in circulation.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    A plc has 50 million shares in issue. The current share price is £4.20. What is its market capitalisation?
+    <div class="working">
+      50,000,000 × £4.20 = <span class="ans">£210,000,000 (£210m)</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">2</span><span class="f-title">Dividend per share</span>
+  <div class="formula-box">
+    Dividend per share = <span class="frac"><span class="num">Total dividend paid</span><span class="den">Number of ordinary shares in issue</span></span>
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    This is what each shareholder receives per share they own. A higher figure attracts investors; a lower figure may suggest the company is retaining profits for investment.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Using profit for the year instead of the total dividend paid — they are not the same thing.</li>
+      <li>Watch the units. If total dividends are given in £millions and you need pence per share, convert carefully.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    A company pays a total dividend of £6 million. It has 20 million shares in issue.
+    <div class="working">
+      £6,000,000 ÷ 20,000,000 = <span class="ans">£0.30 (30p per share)</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">3</span><span class="f-title">Dividend yield</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    Dividend yield (%) = <span class="frac"><span class="num">Dividend per share (pence)</span><span class="den">Share price (pence)</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    Dividend yield compares annual dividends per share with the share's current market price. It does not include capital gains or losses, and it is not necessarily the return on the investor's original purchase price. Investors compare it to interest rates on savings — a higher yield may make shares more attractive.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li><strong>Both values must be in the same unit</strong> — typically pence. If dividend per share is given in £ and share price in pence (or vice versa), convert before dividing.</li>
+      <li>Forgetting to multiply by 100.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Dividend per share is 30p. Share price is 420p.
+    <div class="working">
+      30 ÷ 420 = 0.0714…<br>
+      0.0714 × 100 = <span class="ans">7.14%</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===================== SECTION: MARKETING ===================== -->
+<div id="marketing" class="sh"><span class="p am">3.1.3</span> Marketing data &amp; demand</div>
+<div class="cd">
+
+<div class="f-entry">
+  <span class="f-num">4</span><span class="f-title">Market share</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    Market share (%) = <span class="frac"><span class="num">Sales of one product / brand / business</span><span class="den">Total sales in the market</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    Use the same measure for both — either sales revenue or sales volume, but not one of each. The question will usually make this clear.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Mixing up sales value and sales volume.</li>
+      <li>Using the firm's total sales when the question asks about a single product or brand.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    A business has sales of £8 million in a market worth £50 million.
+    <div class="working">
+      £8m ÷ £50m = 0.16<br>
+      0.16 × 100 = <span class="ans">16%</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">5</span><span class="f-title">Market growth</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    Market growth (%) = <span class="frac"><span class="num">Change in the size of the market over a period</span><span class="den">Original size of the market</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    This is simply the percentage change formula applied to total market size. A growing market is generally more attractive for new entrants.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Confusing market growth with sales growth — market growth is about the whole market, not just one firm.</li>
+      <li>Dividing by the new market size instead of the original.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    The market was worth £200m last year and £218m this year.
+    <div class="working">
+      Change = £218m − £200m = £18m<br>
+      £18m ÷ £200m = 0.09<br>
+      0.09 × 100 = <span class="ans">9% market growth</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">6</span><span class="f-title">Price elasticity of demand (PED)</span>
+  <div class="formula-box">
+    PED = <span class="frac"><span class="num">% change in the quantity demanded</span><span class="den">% change in price</span></span>
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>PED is <strong>normally negative</strong> because price and demand usually move in opposite directions. Some textbooks ignore the sign; AQA may give the value as negative.</li>
+      <li>If PED is between 0 and −1 → price inelastic (demand changes less than price).</li>
+      <li>If PED is beyond −1 (e.g. −2.5) → price elastic (demand changes more than price).</li>
+      <li>The specification says "calculate, interpret and analyse" — you may need to calculate PED from given data as well as interpret a value you are given.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Saying demand is "elastic" when PED is −0.5 — that is inelastic.</li>
+      <li>Confusing which goes on top. It is always % change in <strong>quantity demanded</strong> on top, % change in <strong>price</strong> on the bottom.</li>
+      <li>Forgetting the business implication: if demand is price inelastic, raising the price increases total revenue — but only while demand remains inelastic over that price range.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    A firm raises its price by 10% and sees quantity demanded fall by 5%. What is the PED?
+    <div class="working">
+      PED = −5% ÷ +10% = <span class="ans">−0.5 (price inelastic)</span><br><br>
+      Because PED is between 0 and −1, a price increase would increase total revenue — as long as demand remains price inelastic over the new price range.
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">7</span><span class="f-title">Income elasticity of demand (YED)</span>
+  <div class="formula-box">
+    YED = <span class="frac"><span class="num">% change in the quantity demanded</span><span class="den">% change in income</span></span>
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>If YED is <strong>positive</strong> → normal good (demand rises as income rises).</li>
+      <li>If YED is <strong>negative</strong> → inferior good (demand falls as income rises, e.g. budget brands).</li>
+      <li>The higher the positive value, the more sensitive demand is to income changes — luxury goods tend to have YED well above +1.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Confusing PED and YED — PED uses price changes, YED uses income changes.</li>
+      <li>Assuming all goods are normal goods — some products actually lose sales when customers get richer.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Incomes rise by 8% and demand for a luxury brand increases by 20%.
+    <div class="working">
+      YED = +20% ÷ +8% = <span class="ans">+2.5 (income elastic, normal/luxury good)</span><br><br>
+      The business is vulnerable to economic downturns — demand will fall sharply if incomes drop.
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">28</span><span class="f-title">Return on marketing spend</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    Return on marketing spend (%) = <span class="frac"><span class="num">Profit from marketing activities</span><span class="den">Amount of marketing spend</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    This measures how effectively marketing money has been used. A result above 100 means the marketing generated more profit than it cost; below 100 means it did not pay for itself.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Using revenue instead of profit — the formula specifically says <strong>profit</strong> from marketing activities.</li>
+      <li>Remember to multiply by 100 — AQA's formula includes × 100, so the result is a percentage figure.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    A social media campaign cost £20,000 and generated £55,000 in profit attributable to the campaign.
+    <div class="working">
+      £55,000 ÷ £20,000 = 2.75<br>
+      2.75 × 100 = <span class="ans">275</span><br><br>
+      For every £1 spent on marketing, the business generated £2.75 in profit.
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===================== SECTION: BREAK-EVEN ===================== -->
+<div id="breakeven" class="sh"><span class="p bl">3.1.4</span> Break-even</div>
+<div class="cd">
+
+<div class="f-entry">
+  <span class="f-num">8</span><span class="f-title">Variable costs (total)</span>
+  <div class="formula-box">
+    Total variable costs = Variable cost per unit × Number of units sold
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    Variable costs change in direct proportion to output — materials, packaging, piece-rate labour. Fixed costs (rent, salaries) are not included.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Including fixed costs in the variable cost figure.</li>
+      <li>Forgetting that "number of units sold" may differ from "number of units produced" if some are unsold.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Variable cost per unit is £3.50 and the business sells 12,000 units.
+    <div class="working">
+      £3.50 × 12,000 = <span class="ans">£42,000</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">9</span><span class="f-title">Total costs</span>
+  <div class="formula-box">
+    Total costs = Fixed costs + Variable costs
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Fixed costs = £80,000. Variable costs = £42,000.
+    <div class="working">
+      £80,000 + £42,000 = <span class="ans">£122,000</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">10</span><span class="f-title">Revenue</span>
+  <div class="formula-box">
+    Revenue = Selling price per unit × Number of units sold
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    Revenue is sometimes called turnover or sales. It is the total income from selling goods or services <strong>before</strong> any costs are deducted.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Confusing revenue with profit. Revenue does not account for any costs.</li>
+      <li>Using cost per unit instead of selling price.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Selling price is £8 per unit and 12,000 units are sold.
+    <div class="working">
+      £8 × 12,000 = <span class="ans">£96,000</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">11</span><span class="f-title">Contribution per unit</span>
+  <div class="formula-box">
+    Contribution per unit = Selling price − Variable cost per unit
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    Contribution is what each unit "contributes" towards covering fixed costs and then generating profit. It is not profit — profit only begins once all fixed costs have been covered.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Subtracting total costs instead of just variable costs.</li>
+      <li>Confusing contribution with profit.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Selling price = £8. Variable cost per unit = £3.50.
+    <div class="working">
+      £8 − £3.50 = <span class="ans">£4.50 contribution per unit</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">12</span><span class="f-title">Total contribution</span>
+  <div class="formula-box">
+    Total contribution = Contribution per unit × Units sold<br>
+    <span style="opacity:.6;font-size:14px">OR: Total revenue − Total variable costs</span>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Contribution per unit = £4.50. Units sold = 12,000.
+    <div class="working">
+      £4.50 × 12,000 = <span class="ans">£54,000</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">13</span><span class="f-title">Break-even output</span>
+  <div class="formula-box">
+    Break-even output = <span class="frac"><span class="num">Fixed costs</span><span class="den">Contribution per unit</span></span>
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    This tells you the number of units the business must sell to cover all its costs — no profit, no loss. The formula assumes that selling price, variable cost per unit and fixed costs remain constant over the relevant range of output.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Dividing fixed costs by selling price instead of contribution per unit.</li>
+      <li>Dividing by total costs — the formula uses <strong>only</strong> fixed costs on top.</li>
+      <li>If the answer is not a whole number, <strong>always round up</strong>. You cannot sell half a unit, so break-even is the next whole number above.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Fixed costs = £80,000. Contribution per unit = £4.50.
+    <div class="working">
+      £80,000 ÷ £4.50 = 17,777.78<br>
+      <span class="ans">Break-even = 17,778 units (rounded up)</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">14</span><span class="f-title">Margin of safety</span>
+  <div class="formula-box">
+    Margin of safety = Actual level of output − Break-even level of output
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    The margin of safety tells you how far sales can fall before the business starts making a loss. A larger margin of safety means less risk.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Subtracting the wrong way round (break-even minus actual gives a negative number).</li>
+      <li>Not linking the result to risk — always explain what a high or low margin of safety means for the business.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Actual output = 22,000 units. Break-even = 17,778 units.
+    <div class="working">
+      22,000 − 17,778 = <span class="ans">4,222 units</span><br><br>
+      The business could lose 4,222 sales before it starts making a loss.
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===================== SECTION: BUDGETS ===================== -->
+<div id="budgets" class="sh"><span class="p am">3.1.4</span> Budgets</div>
+<div class="cd">
+
+<div class="f-entry">
+  <span class="f-num">15</span><span class="f-title">Budget variance</span>
+  <div class="formula-box">
+    Budget variance = Budgeted figure − Actual figure
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>The formula gives a positive or negative number, but <strong>you cannot decide favourable or adverse from the sign alone</strong> — it depends on the type of figure.</li>
+      <li>For <strong>revenue</strong>: actual higher than budgeted is <strong>favourable</strong> (even though the formula gives a negative number).</li>
+      <li>For <strong>costs</strong>: actual lower than budgeted is <strong>favourable</strong> (the formula gives a positive number).</li>
+      <li>Always state the size of the variance and label it favourable or adverse.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Assuming a positive result is always favourable or a negative result is always adverse — <strong>it depends whether you are looking at revenue or costs.</strong></li>
+      <li>If budgeted costs were £50,000 and actual costs were £55,000, the variance is −£5,000 (adverse) — costs were higher than planned.</li>
+      <li>Forgetting to label the variance as favourable or adverse.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Budgeted revenue = £120,000. Actual revenue = £135,000.<br>
+    Budgeted costs = £80,000. Actual costs = £88,000.
+    <div class="working">
+      Revenue variance: £120,000 − £135,000 = −£15,000<br>
+      But actual revenue is <em>higher</em> → this is a <span class="ans">£15,000 favourable variance</span><br><br>
+      Cost variance: £80,000 − £88,000 = −£8,000<br>
+      Actual costs are <em>higher</em> → this is a <span class="ans">£8,000 adverse variance</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===================== SECTION: LIQUIDITY ===================== -->
+<div id="liquidity" class="sh"><span class="p gn">3.1.4</span> Cash flow &amp; liquidity</div>
+<div class="cd">
+
+<div class="f-entry">
+  <span class="f-num">16</span><span class="f-title">Payable days</span>
+  <div class="formula-box">
+    Payable days = <span class="frac"><span class="num">Payables</span><span class="den">Cost of sales</span></span> <span class="times">×</span> 365
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    This tells you how many days, on average, a business takes to pay its suppliers. A higher number means the business holds onto cash longer, but might damage supplier relationships.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Using revenue instead of <strong>cost of sales</strong> on the bottom.</li>
+      <li>Forgetting to multiply by 365.</li>
+      <li>Confusing payable days with receivable days — they measure different things.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Payables = £40,000. Cost of sales = £300,000.
+    <div class="working">
+      £40,000 ÷ £300,000 = 0.1333<br>
+      0.1333 × 365 = <span class="ans">48.7 days (≈ 49 days)</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">17</span><span class="f-title">Receivable days</span>
+  <div class="formula-box">
+    Receivable days = <span class="frac"><span class="num">Receivables</span><span class="den">Revenue</span></span> <span class="times">×</span> 365
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    This tells you how many days, on average, it takes customers to pay the business. A lower number is better for cash flow.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Using cost of sales instead of <strong>revenue</strong>. Receivable days uses revenue; payable days uses cost of sales. They are different.</li>
+      <li>Forgetting to multiply by 365.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Receivables = £55,000. Revenue = £500,000.
+    <div class="working">
+      £55,000 ÷ £500,000 = 0.11<br>
+      0.11 × 365 = <span class="ans">40.15 days (≈ 40 days)</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">18</span><span class="f-title">Current ratio</span>
+  <div class="formula-box">
+    Current ratio = <span class="frac"><span class="num">Current assets</span><span class="den">Current liabilities</span></span>
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>This measures short-term liquidity — can the business pay its debts due within a year?</li>
+      <li>A ratio of around 1.5–2 is often used as a rough guide, but the acceptable level varies by industry — a supermarket may operate well below 1.5 because it receives cash daily.</li>
+      <li>Below 1 means the business may struggle to pay its short-term debts.</li>
+      <li>Too high (e.g. 5:1) could mean the business has idle assets not being used productively.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Putting current liabilities on top — it is current <strong>assets</strong> divided by current <strong>liabilities</strong>.</li>
+      <li>Expressing it as a percentage — it should be expressed as a ratio, e.g. 1.8:1.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Current assets = £180,000. Current liabilities = £100,000.
+    <div class="working">
+      £180,000 ÷ £100,000 = <span class="ans">1.8:1</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">19</span><span class="f-title">Acid test ratio</span>
+  <div class="formula-box">
+    Acid test ratio = <span class="frac"><span class="num">Current assets − Inventory</span><span class="den">Current liabilities</span></span>
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>This is a stricter test than the current ratio because it removes inventory (which may be hard to sell quickly).</li>
+      <li>A ratio of around 1:1 is often used as a rough guide, but what is acceptable depends on the industry and how quickly the business can convert assets to cash.</li>
+      <li>Below 1:1 could signal liquidity problems, though some businesses (e.g. large retailers) operate normally at this level.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Forgetting to subtract inventory from current assets <strong>before</strong> dividing.</li>
+      <li>Using the wrong figure for inventory — it should be the inventory figure from current assets on the statement of financial position.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Current assets = £180,000. Inventory = £50,000. Current liabilities = £100,000.
+    <div class="working">
+      (£180,000 − £50,000) ÷ £100,000<br>
+      £130,000 ÷ £100,000 = <span class="ans">1.3:1</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===================== SECTION: PROFIT ===================== -->
+<div id="profit" class="sh"><span class="p rd">3.1.4</span> Profit &amp; profitability</div>
+<div class="cd">
+
+<div class="f-entry">
+  <span class="f-num">20</span><span class="f-title">Profit</span>
+  <div class="formula-box">
+    Profit = Total revenue − Total costs<br>
+    <span style="opacity:.6;font-size:14px">OR: Total contribution − Fixed costs</span>
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    Both versions give the same answer. Use whichever fits the data you have been given.
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Total revenue = £96,000. Total costs = £122,000.
+    <div class="working">
+      £96,000 − £122,000 = <span class="ans">−£26,000 (a loss)</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">21</span><span class="f-title">Gross profit</span>
+  <div class="formula-box">
+    Gross profit = Revenue − Cost of sales
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    Gross profit only deducts the direct costs of making or buying the goods sold. It does not include overheads like rent, marketing or admin.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Using total costs instead of cost of sales — that would give you operating profit, not gross profit.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Revenue = £500,000. Cost of sales = £300,000.
+    <div class="working">
+      £500,000 − £300,000 = <span class="ans">£200,000</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">22</span><span class="f-title">Gross profit margin</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    Gross profit margin (%) = <span class="frac"><span class="num">Gross profit</span><span class="den">Revenue</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    This tells you how much of every £1 of revenue is left after paying the direct costs. A GPM of 40% means 40p from every £1 is gross profit.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Dividing by cost of sales instead of revenue.</li>
+      <li>Confusing gross profit margin with operating profit margin.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Gross profit = £200,000. Revenue = £500,000.
+    <div class="working">
+      £200,000 ÷ £500,000 = 0.4<br>
+      0.4 × 100 = <span class="ans">40%</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">23</span><span class="f-title">Operating profit</span>
+  <div class="formula-box">
+    Operating profit = Gross profit − Operating expenses
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    Operating expenses include rent, salaries, marketing, utilities — everything involved in running the business day to day. Operating profit shows how well the core business is performing.
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Gross profit = £200,000. Operating expenses = £140,000.
+    <div class="working">
+      £200,000 − £140,000 = <span class="ans">£60,000</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">24</span><span class="f-title">Operating profit margin</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    Operating profit margin (%) = <span class="frac"><span class="num">Operating profit</span><span class="den">Revenue</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Operating profit = £60,000. Revenue = £500,000.
+    <div class="working">
+      £60,000 ÷ £500,000 = 0.12<br>
+      0.12 × 100 = <span class="ans">12%</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">25</span><span class="f-title">Profit for the year</span>
+  <div class="formula-box">
+    Profit for year = Operating profit + Profit from other activities − Net finance costs − Tax
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    This is the final "bottom line" profit after everything has been deducted, including interest and tax. This is what can be distributed as dividends or retained.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Forgetting to subtract both net finance costs <strong>and</strong> tax.</li>
+      <li>Confusing "profit from other activities" with revenue — it refers to non-operating income such as property rental or investment income.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Operating profit = £60,000. Profit from other activities = £5,000. Net finance costs = £8,000. Tax = £11,400.
+    <div class="working">
+      £60,000 + £5,000 − £8,000 − £11,400 = <span class="ans">£45,600</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">26</span><span class="f-title">Profit for the year margin</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    Profit for year margin (%) = <span class="frac"><span class="num">Profit for year</span><span class="den">Revenue</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Profit for year = £45,600. Revenue = £500,000.
+    <div class="working">
+      £45,600 ÷ £500,000 = 0.0912<br>
+      0.0912 × 100 = <span class="ans">9.12%</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===================== SECTION: GEARING ===================== -->
+<div id="gearing" class="sh"><span class="p pu">3.1.4</span> Gearing, ROCE &amp; ROI</div>
+<div class="cd">
+
+<div class="f-entry">
+  <span class="f-num">27</span><span class="f-title">Return on capital employed (ROCE)</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    ROCE (%) = <span class="frac"><span class="num">Operating profit</span><span class="den">Total equity + Non-current liabilities</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>Total equity + non-current liabilities = capital employed.</li>
+      <li>ROCE tells you how efficiently a business uses its long-term capital to generate profit.</li>
+      <li>ROCE can be compared with the cost of borrowing — if it is consistently lower, this raises questions about whether the business is using its capital effectively. But a single year's figure does not prove value destruction.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Using profit for the year instead of <strong>operating profit</strong>.</li>
+      <li>Using total assets instead of capital employed (total equity + non-current liabilities).</li>
+      <li>Forgetting what capital employed means — it appears in both the ROCE and gearing formulas.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Operating profit = £60,000. Total equity = £200,000. Non-current liabilities = £100,000.
+    <div class="working">
+      Capital employed = £200,000 + £100,000 = £300,000<br>
+      £60,000 ÷ £300,000 = 0.2<br>
+      0.2 × 100 = <span class="ans">20%</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">29</span><span class="f-title">Return on investment (ROI)</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    ROI (%) = <span class="frac"><span class="num">Profit from the investment (£)</span><span class="den">Cost of the investment (£)</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>ROI measures the percentage return on a specific investment. A positive ROI means the investment generated profit; a negative ROI means it lost money.</li>
+      <li>"Profit from the investment" means the net gain — revenue generated minus all costs associated with the investment.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Using total revenue from the investment instead of the <strong>profit</strong> from the investment.</li>
+      <li>Confusing ROI with ROCE — ROI is about a specific investment; ROCE is about the whole business.</li>
+      <li>Using a different version of the formula (e.g. gain minus cost over cost) — AQA's version uses <strong>"profit from the investment ÷ cost of the investment × 100"</strong>.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    A business invests £50,000 in new equipment. It generates £12,000 profit from the investment.
+    <div class="working">
+      £12,000 ÷ £50,000 = 0.24<br>
+      0.24 × 100 = <span class="ans">24%</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">30</span><span class="f-title">Gearing</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    Gearing (%) = <span class="frac"><span class="num">Non-current liabilities</span><span class="den">Total equity + Non-current liabilities</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>Gearing shows what proportion of a business's long-term finance comes from borrowing.</li>
+      <li>50% is a commonly used reference point — above it, the business relies more on debt than equity and is often described as highly geared. But there is no fixed danger threshold; what matters is whether the business can comfortably service its debt.</li>
+      <li>High gearing means higher interest payments, which is riskier if profits fall.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Using current liabilities instead of <strong>non-current liabilities</strong> — gearing only looks at long-term debt.</li>
+      <li>Putting total equity on top instead of non-current liabilities.</li>
+      <li>Note: the denominator is the same as for ROCE (capital employed).</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Non-current liabilities = £100,000. Total equity = £200,000.
+    <div class="working">
+      Capital employed = £200,000 + £100,000 = £300,000<br>
+      £100,000 ÷ £300,000 = 0.333<br>
+      0.333 × 100 = <span class="ans">33.3%</span><br><br>
+      This business has relatively low gearing — most of its finance comes from equity rather than debt.
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===================== SECTION: PEOPLE & OPERATIONS ===================== -->
+<div id="people" class="sh"><span class="p tl">3.2</span> People &amp; operations</div>
+<div class="cd">
+
+<div class="f-entry">
+  <span class="f-num">31</span><span class="f-title">Employee productivity</span>
+  <div class="formula-box">
+    Employee productivity = <span class="frac"><span class="num">Output over a time period</span><span class="den">Number of employees</span></span>
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    Output could be units produced, orders processed, or any measurable output. Higher productivity means the business is getting more from each worker.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Confusing productivity with efficiency — productivity is per employee; efficiency can relate to other resources too.</li>
+      <li>Using revenue instead of output.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    A factory produces 240,000 units per year with 60 employees.
+    <div class="working">
+      240,000 ÷ 60 = <span class="ans">4,000 units per employee per year</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">32</span><span class="f-title">Sales per employee</span>
+  <div class="formula-box">
+    Sales per employee = <span class="frac"><span class="num">Sales over a time period</span><span class="den">Number of employees</span></span>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Annual sales = £1.2 million. Number of employees = 15.
+    <div class="working">
+      £1,200,000 ÷ 15 = <span class="ans">£80,000 per employee</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">33</span><span class="f-title">Employee turnover</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    Employee turnover (%) = <span class="frac"><span class="num">Number of staff leaving</span><span class="den">Number of staff employed by the business</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    A high turnover rate can indicate problems such as poor pay, weak culture or limited progression — but it can also reflect seasonal employment, restructuring or deliberate replacement of underperforming staff. Some industries naturally have higher turnover (retail, hospitality). Always consider the context before judging.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Using the number of new hires instead of the number of staff <strong>leaving</strong>.</li>
+      <li>Not considering context — a turnover of 30% might be normal in fast food but alarming in a law firm.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    12 employees left during the year. The business has 80 staff.
+    <div class="working">
+      12 ÷ 80 = 0.15<br>
+      0.15 × 100 = <span class="ans">15%</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">34</span><span class="f-title">Employee costs as a percentage of revenue</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    Employee costs (%) = <span class="frac"><span class="num">Employee costs</span><span class="den">Revenue</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    This shows how much of each £1 of revenue goes on paying staff. Labour-intensive industries (e.g. education, healthcare) will naturally have higher figures.
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Employee costs = £320,000. Revenue = £800,000.
+    <div class="working">
+      £320,000 ÷ £800,000 = 0.4<br>
+      0.4 × 100 = <span class="ans">40%</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">35</span><span class="f-title">Unit costs (average costs)</span>
+  <div class="formula-box">
+    Unit costs = <span class="frac"><span class="num">Total costs</span><span class="den">Number of units of output</span></span>
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    Spreading fixed costs over more units tends to reduce unit costs — this is the basis of economies of scale. However, increasing output can also push up variable costs or lead to diseconomies of scale, so average costs do not always fall as output rises.
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Using only variable costs instead of <strong>total</strong> costs.</li>
+      <li>Forgetting to link the result to economies or diseconomies of scale in your analysis.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Total costs = £250,000. Output = 50,000 units.
+    <div class="working">
+      £250,000 ÷ 50,000 = <span class="ans">£5.00 per unit</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">36</span><span class="f-title">Capacity utilisation</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    Capacity utilisation (%) = <span class="frac"><span class="num">Actual output</span><span class="den">Maximum possible output</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>100% means operating at full capacity — no spare capacity.</li>
+      <li>Low capacity utilisation means fixed costs are spread over fewer units, raising unit costs.</li>
+      <li>Very high capacity utilisation (near 100%) makes it hard to respond to sudden increases in demand.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Putting maximum output on top instead of actual output.</li>
+      <li>Not linking the answer to unit costs — this is usually the key analytical point.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    A factory produces 36,000 units per month. Maximum capacity is 48,000 units.
+    <div class="working">
+      36,000 ÷ 48,000 = 0.75<br>
+      0.75 × 100 = <span class="ans">75%</span><br><br>
+      The factory has 25% spare capacity. Unit costs could be reduced if output increased.
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">37</span><span class="f-title">Inventory turnover</span>
+  <div class="formula-box">
+    Inventory turnover = <span class="frac"><span class="num">Cost of sales</span><span class="den">Average inventories held</span></span>
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>This tells you how many times the business sells and replaces its inventory in a year.</li>
+      <li>A higher number means faster-moving stock — generally a good sign, but an unusually high figure could indicate the business holds too little inventory and risks stockouts.</li>
+      <li>A very low number could mean slow-selling or obsolete stock.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Using revenue instead of <strong>cost of sales</strong>.</li>
+      <li>Putting inventory on top — it is cost of sales ÷ average inventories, not the other way round.</li>
+      <li>This is expressed as "times" not as a percentage — do not multiply by 100.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Cost of sales = £300,000. Average inventory = £25,000.
+    <div class="working">
+      £300,000 ÷ £25,000 = <span class="ans">12 times per year</span><br><br>
+      On average, the business sells and replaces its entire inventory every month.
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">38</span><span class="f-title">Float time (network analysis)</span>
+  <div class="formula-box">
+    Float time = Latest Finish Time − Duration of activity − Earliest Start Time
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>Float tells you how long an activity can be delayed without delaying the whole project.</li>
+      <li>Activities on the critical path have a float of <strong>zero</strong>.</li>
+      <li>Activities with float give managers flexibility in scheduling and resource allocation.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Getting the order of subtraction wrong — it is LFT minus duration minus EST, not the other way round.</li>
+      <li>Confusing EST and LFT with activity start and end times.</li>
+      <li>Saying an activity is on the critical path when it has float &gt; 0.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Activity C: EST = 4 days, LFT = 12 days, Duration = 5 days.
+    <div class="working">
+      Float = 12 − 5 − 4 = <span class="ans">3 days</span><br><br>
+      Activity C can be delayed by up to 3 days without affecting the project completion date.
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===================== SECTION: INVESTMENT ===================== -->
+<div id="invest" class="sh"><span class="p rd">3.3.3</span> Investment appraisal</div>
+<div class="cd">
+
+<div class="f-entry">
+  <span class="f-num">39</span><span class="f-title">Payback period</span>
+  <div class="formula-box" style="text-align:left;font-size:14px;line-height:2">
+    Step 1: Identify the net cash flows for each period<br>
+    Step 2: Keep a cumulative total (including the initial investment as a negative)<br>
+    Step 3: When cumulative cash flow becomes positive = end of payback<br><br>
+    For the precise payback point:<br>
+    <span style="font-size:16px">Amount still to pay back at start of final year ÷ Cash flow in that year</span>
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>Payback measures how long it takes to get the initial investment back.</li>
+      <li>Shorter payback = lower risk, but it ignores what happens after the payback point.</li>
+      <li>It does not consider the time value of money (unlike NPV).</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Forgetting that the initial investment is a <strong>negative</strong> cash flow in Year 0.</li>
+      <li>Not calculating the precise payback period when the question asks for it — you will need to work out the fraction of a year. Converting this to months (e.g. 0.6 × 12 = 7.2 months) assumes cash flows arrive evenly during the year.</li>
+      <li>Mixing up net cash flow with cumulative cash flow.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Initial investment = £100,000. Annual net cash flows: Year 1 = £30,000, Year 2 = £40,000, Year 3 = £50,000, Year 4 = £35,000.
+    <div class="working">
+      <div class="step">Cumulative cash flows:</div>
+      Year 0: −£100,000<br>
+      Year 1: −£100,000 + £30,000 = −£70,000<br>
+      Year 2: −£70,000 + £40,000 = −£30,000<br>
+      Year 3: −£30,000 + £50,000 = +£20,000 ← payback occurs here<br><br>
+      <div class="step">Precise payback:</div>
+      Amount needed at start of Year 3: £30,000<br>
+      Cash flow in Year 3: £50,000<br>
+      £30,000 ÷ £50,000 = 0.6 of a year<br>
+      <span class="ans">Payback = 2 years and 0.6 years (2 years 7 months)</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">40</span><span class="f-title">Average rate of return (ARR)</span>
+  <span class="f-unit">%</span>
+  <div class="formula-box">
+    ARR (%) = <span class="frac"><span class="num">Average annual return (£)</span><span class="den">Initial cost of project (£)</span></span> <span class="times">×</span> 100
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>Average annual return = (total net cash flows − initial cost) ÷ number of years. You <strong>must subtract the initial investment</strong> before dividing by the number of years — this gives you the average annual <em>profit</em>, not the average annual cash flow.</li>
+      <li>ARR can be compared directly with interest rates or other investments.</li>
+      <li>It considers the whole life of the project (unlike payback).</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Not calculating the average annual return correctly — you need total net returns over the whole project divided by the number of years.</li>
+      <li>Confusing ARR with ROCE — ARR is for a specific project, ROCE is for the whole business.</li>
+      <li>Forgetting to multiply by 100.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Initial investment = £100,000. Total net cash flows over 4 years = £155,000.
+    <div class="working">
+      <div class="step">Step 1: Total net return (profit)</div>
+      £155,000 − £100,000 = £55,000<br>
+      <div class="step">Step 2: Average annual return</div>
+      £55,000 ÷ 4 years = £13,750<br>
+      <div class="step">Step 3: ARR</div>
+      £13,750 ÷ £100,000 = 0.1375<br>
+      0.1375 × 100 = <span class="ans">13.75%</span>
+    </div>
+  </div>
+</div>
+
+<div class="f-entry">
+  <span class="f-num">41</span><span class="f-title">Net present value (NPV)</span>
+  <div class="formula-box" style="text-align:left;font-size:14px;line-height:2">
+    Present value = Cash flow × Discount factor<br><br>
+    NPV = Total of all present values − Cost of investment
+  </div>
+  <div class="bx ti"><div class="l">What to know</div>
+    <ul>
+      <li>NPV accounts for the time value of money — £1 today is worth more than £1 in the future.</li>
+      <li>A positive NPV means the project is expected to add value at the chosen discount rate — it supports the case for going ahead, but is not the only factor a business would consider.</li>
+      <li>A negative NPV means the project is expected to destroy value at that discount rate.</li>
+      <li>Discount factors will be given in the question — you do not need to calculate them.</li>
+    </ul>
+  </div>
+  <div class="bx tp"><div class="l">Common traps</div>
+    <ul>
+      <li>Forgetting to apply the discount factor to <strong>every</strong> year's cash flow, including Year 0 (although Year 0's discount factor is usually 1.000).</li>
+      <li>Adding up the present values without subtracting the initial investment.</li>
+      <li>Comparing NPV figures from projects of different durations without thinking about the timescale.</li>
+      <li><strong>Double deduction</strong>: if Year 0 is already included in the table as a negative present value (−£100,000 × 1.000), do not subtract the investment again at the end. Either include Year 0 in the sum, or exclude it and subtract separately — never both.</li>
+    </ul>
+  </div>
+  <div class="bx eg"><div class="l">Worked example</div>
+    Initial investment = £100,000. Discount rate = 8%.
+    <table>
+      <tr><th>Year</th><th>Cash flow</th><th>Discount factor (8%)</th><th>Present value</th></tr>
+      <tr><td>0</td><td>−£100,000</td><td>1.000</td><td>−£100,000</td></tr>
+      <tr><td>1</td><td>£30,000</td><td>0.926</td><td>£27,780</td></tr>
+      <tr><td>2</td><td>£40,000</td><td>0.857</td><td>£34,280</td></tr>
+      <tr><td>3</td><td>£50,000</td><td>0.794</td><td>£39,700</td></tr>
+      <tr><td>4</td><td>£35,000</td><td>0.735</td><td>£25,725</td></tr>
+    </table>
+    <div class="working">
+      Total present value = £27,780 + £34,280 + £39,700 + £25,725 = £127,485<br>
+      NPV = £127,485 − £100,000 = <span class="ans">+£27,485</span><br><br>
+      The NPV is positive at an 8% discount rate, which supports the case for the investment. However, the business should also consider the reliability of the cash flow forecasts, the risk involved, strategic fit and whether better alternatives exist.
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===================== OWN FIGURE RULE ===================== -->
+<div class="sh"><span class="p gn">EXAM</span> The own-figure rule</div>
+<div class="cd">
+  <p>In AQA Business exams, if you make an error in an early part of a calculation but then use your (wrong) figure correctly in the rest of the working, you can still earn marks for the later steps. This is the <strong>own-figure rule</strong>.</p>
+  <p>This means:</p>
+  <ul style="margin:10px 0 10px 20px">
+    <li>Always show your full working, even if you are not confident in your answer.</li>
+    <li>If you get the wrong contribution per unit but then use it correctly in the break-even formula, you still earn credit for the break-even method.</li>
+    <li>Never leave a calculation blank — a method mark is still a mark.</li>
+  </ul>
+</div>
+
+<!-- ===================== QUICK REFERENCE TABLE ===================== -->
+<div class="sh"><span class="p bl">SUMMARY</span> All formulas at a glance</div>
+<div class="cd" style="overflow-x:auto">
+<table>
+  <tr><th>#</th><th>Formula</th><th>Key</th><th>Unit</th></tr>
+  <tr><td>—</td><td>Percentage change</td><td>(New − Original) ÷ Original × 100</td><td>%</td></tr>
+  <tr><td>—</td><td>Index numbers</td><td>Current ÷ Base × 100</td><td>index</td></tr>
+  <tr><td>1</td><td>Market capitalisation</td><td>Shares × Share price</td><td>£</td></tr>
+  <tr><td>2</td><td>Dividend per share</td><td>Total dividends ÷ Shares in issue</td><td>£/p</td></tr>
+  <tr><td>3</td><td>Dividend yield</td><td>DPS (p) ÷ Share price (p) × 100</td><td>%</td></tr>
+  <tr><td>4</td><td>Market share</td><td>Firm's sales ÷ Total market sales × 100</td><td>%</td></tr>
+  <tr><td>5</td><td>Market growth</td><td>Change in market ÷ Original market × 100</td><td>%</td></tr>
+  <tr><td>6</td><td>PED</td><td>% Δ qty demanded ÷ % Δ price</td><td>ratio</td></tr>
+  <tr><td>7</td><td>YED</td><td>% Δ qty demanded ÷ % Δ income</td><td>ratio</td></tr>
+  <tr><td>8</td><td>Total variable costs</td><td>VC per unit × Units sold</td><td>£</td></tr>
+  <tr><td>9</td><td>Total costs</td><td>FC + VC</td><td>£</td></tr>
+  <tr><td>10</td><td>Revenue</td><td>Selling price × Units sold</td><td>£</td></tr>
+  <tr><td>11</td><td>Contribution per unit</td><td>Selling price − VC per unit</td><td>£</td></tr>
+  <tr><td>12</td><td>Total contribution</td><td>CPU × Units sold (or TR − TVC)</td><td>£</td></tr>
+  <tr><td>13</td><td>Break-even output</td><td>FC ÷ CPU</td><td>units</td></tr>
+  <tr><td>14</td><td>Margin of safety</td><td>Actual output − BE output</td><td>units</td></tr>
+  <tr><td>15</td><td>Budget variance</td><td>Budgeted − Actual</td><td>£</td></tr>
+  <tr><td>16</td><td>Payable days</td><td>Payables ÷ Cost of sales × 365</td><td>days</td></tr>
+  <tr><td>17</td><td>Receivable days</td><td>Receivables ÷ Revenue × 365</td><td>days</td></tr>
+  <tr><td>18</td><td>Current ratio</td><td>Current assets ÷ Current liabilities</td><td>ratio</td></tr>
+  <tr><td>19</td><td>Acid test</td><td>(CA − Inventory) ÷ CL</td><td>ratio</td></tr>
+  <tr><td>20</td><td>Profit</td><td>TR − TC (or Total contribution − FC)</td><td>£</td></tr>
+  <tr><td>21</td><td>Gross profit</td><td>Revenue − Cost of sales</td><td>£</td></tr>
+  <tr><td>22</td><td>Gross profit margin</td><td>GP ÷ Revenue × 100</td><td>%</td></tr>
+  <tr><td>23</td><td>Operating profit</td><td>GP − Operating expenses</td><td>£</td></tr>
+  <tr><td>24</td><td>Operating profit margin</td><td>OP ÷ Revenue × 100</td><td>%</td></tr>
+  <tr><td>25</td><td>Profit for year</td><td>OP + Other − Finance costs − Tax</td><td>£</td></tr>
+  <tr><td>26</td><td>Profit for year margin</td><td>PFY ÷ Revenue × 100</td><td>%</td></tr>
+  <tr><td>27</td><td>ROCE</td><td>OP ÷ Capital employed × 100</td><td>%</td></tr>
+  <tr><td>28</td><td>Return on marketing spend</td><td>Marketing profit ÷ Marketing spend × 100</td><td>%</td></tr>
+  <tr><td>29</td><td>ROI</td><td>Profit from investment ÷ Cost of investment × 100</td><td>%</td></tr>
+  <tr><td>30</td><td>Gearing</td><td>NCL ÷ Capital employed × 100</td><td>%</td></tr>
+  <tr><td>31</td><td>Employee productivity</td><td>Output ÷ Employees</td><td>units</td></tr>
+  <tr><td>32</td><td>Sales per employee</td><td>Sales ÷ Employees</td><td>£</td></tr>
+  <tr><td>33</td><td>Employee turnover</td><td>Leavers ÷ Employees × 100</td><td>%</td></tr>
+  <tr><td>34</td><td>Employee costs %</td><td>Employee costs ÷ Revenue × 100</td><td>%</td></tr>
+  <tr><td>35</td><td>Unit costs</td><td>Total costs ÷ Output</td><td>£</td></tr>
+  <tr><td>36</td><td>Capacity utilisation</td><td>Actual output ÷ Max output × 100</td><td>%</td></tr>
+  <tr><td>37</td><td>Inventory turnover</td><td>Cost of sales ÷ Avg inventory</td><td>times</td></tr>
+  <tr><td>38</td><td>Float time</td><td>LFT − Duration − EST</td><td>days</td></tr>
+  <tr><td>39</td><td>Payback period</td><td>Cumulative cash flow method</td><td>years</td></tr>
+  <tr><td>40</td><td>ARR</td><td>Avg annual return ÷ Initial cost × 100</td><td>%</td></tr>
+  <tr><td>41</td><td>NPV</td><td>Σ(Cash flow × Discount factor) − Investment</td><td>£</td></tr>
+</table>
+</div>
+
+<div style="text-align:center;padding:32px 0 40px;color:var(--mist);font-size:13px">
+  AQA A-Level Business 7138 — Formula Reference<br>
+  Nishkam School West London
+</div>
+
+</div>
+</body>
+</html>
