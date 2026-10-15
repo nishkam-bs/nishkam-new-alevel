@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculation Practice Lab — AQA A-Level Business (7138)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0a1628;--paper:#f8f9fb;--card:#fff;--border:#dfe4ea;--muted:#6b7a90;--accent:#c9a84c;--blue:#2563eb;--green:#059669;--gold:#c9a84c;--purple:#7c3aed;--red:#dc2626;--navy:#0a1628;--nishkam-gold:#c9a84c;--teal:#0d9488;--amb:#d97706}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.65;font-size:15px}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* Login overlay */
+#loginOverlay{position:fixed;inset:0;background:var(--ink);z-index:9999;display:flex;align-items:center;justify-content:center}
+.login-box{background:var(--card);border-radius:16px;padding:48px 40px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.login-box h1{font-family:'DM Serif Display',serif;font-size:26px;color:var(--ink);margin-bottom:4px}
+.login-box .motto{font-size:12px;color:var(--muted);font-style:italic;margin-bottom:6px}
+.login-box .spec{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.5px;margin-bottom:24px}
+.login-box input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:inherit;margin-bottom:12px;outline:none;transition:border .2s}
+.login-box input:focus{border-color:var(--accent)}
+.login-box button{width:100%;padding:14px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s}
+.login-box button:hover{background:#1a2a44}
+
+/* Page header */
+.page-header{background:var(--ink);color:#fff;padding:28px 0 20px;position:relative}
+.page-header .ctr{max-width:1100px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.page-header h1{font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-.3px}
+.page-header .sub{font-size:12px;opacity:.6;margin-top:2px}
+.page-header .school{font-size:11px;color:var(--accent);font-weight:600;text-align:right}
+.page-header .school .virtue{font-size:10px;font-style:italic;opacity:.7;display:block;margin-top:2px}
+
+/* Stats bar */
+#statsBar{display:flex;gap:16px;justify-content:center;padding:14px 20px;background:var(--card);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:22px;font-weight:900;color:var(--ink)}
+.stat-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+
+/* Nav */
+.nav-bar{display:flex;gap:0;background:var(--ink);padding:0 20px;justify-content:center}
+.nav-btn{background:none;border:none;color:rgba(255,255,255,.55);font-size:13px;font-weight:700;padding:12px 24px;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;font-family:inherit}
+.nav-btn:hover{color:#fff}
+.nav-btn.active{color:#fff;border-bottom-color:var(--accent)}
+
+/* Container */
+.ctr{max-width:1100px;margin:0 auto;padding:0 20px}
+#mainContent{display:none}
+.tab-area{display:none}.tab-area.active{display:block}
+
+/* Topic grid */
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:24px 0}
+.topic-card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:22px;cursor:pointer;transition:all .2s}
+.topic-card:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(0,0,0,.06);transform:translateY(-2px)}
+.topic-card h3{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:6px}
+.topic-card p{font-size:13px;color:var(--muted);margin-bottom:10px;line-height:1.5}
+.tc-spec{font-size:10px;font-weight:700;color:var(--blue);margin-bottom:4px}
+.tc-count{font-size:11px;color:var(--muted);font-weight:600}
+
+/* Question view */
+#question-view{display:none}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1.5px solid var(--border);border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;margin:20px 0 8px;font-family:inherit;transition:all .15s}
+.back-btn:hover{border-color:var(--ink);color:var(--ink)}
+
+.q-section h2{font-family:'DM Serif Display',serif;font-size:24px;color:var(--ink);margin-bottom:6px}
+.q-section .intro{font-size:14px;color:var(--muted);margin-bottom:20px;max-width:720px}
+
+.formula-ref{background:var(--ink);color:#fff;border-radius:10px;padding:20px 24px;margin-bottom:28px}
+.formula-ref h3{color:var(--accent);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.formula-line{font-family:'JetBrains Mono',monospace;font-size:13px;padding:4px 0;opacity:.85}
+
+/* Question cards */
+.q-card{background:var(--card);border:1.5px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden;transition:border-color .2s}
+.q-card:hover{border-color:var(--accent)}
+.q-card-header{padding:18px 22px;cursor:pointer}
+.q-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.q-ref{font-size:11px;font-weight:700;color:var(--blue);background:rgba(37,99,235,.08);padding:2px 8px;border-radius:4px}
+.q-marks{font-size:11px;font-weight:700;color:var(--green);background:rgba(5,150,105,.08);padding:2px 8px;border-radius:4px}
+.q-type{font-size:10px;font-weight:800;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.4px}
+.q-type-written{color:var(--purple);background:rgba(124,58,237,.08)}
+.q-type-mcq{color:var(--amb);background:rgba(217,119,6,.08)}
+.q-rearranged{font-size:10px;font-weight:800;color:var(--red);background:rgba(220,38,38,.08);padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.4px}
+.q-text{font-size:14px;color:var(--ink);line-height:1.7;white-space:pre-line}
+
+.q-solution{display:none;padding:18px 22px;border-top:1px dashed var(--border);background:rgba(248,249,251,.7)}
+.q-solution.open{display:block}
+.q-solution h4{font-size:12px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.step{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);padding:5px 0;line-height:1.6}
+.final-answer{font-size:15px;font-weight:800;color:var(--green);padding:10px 0 6px;border-top:1px solid var(--border);margin-top:8px}
+.trap-note{background:rgba(220,38,38,.06);border-left:3px solid var(--red);padding:10px 14px;margin-top:10px;border-radius:0 6px 6px 0;font-size:13px;color:#444;line-height:1.55}
+.examiner-note{background:rgba(37,99,235,.05);border-left:3px solid var(--blue);padding:10px 14px;margin-top:8px;border-radius:0 6px 6px 0;font-size:13px;color:#444;line-height:1.55}
+
+/* Generate tab */
+.gen-intro{font-size:14px;color:var(--muted);margin:20px 0 16px;max-width:640px}
+.gen-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px}
+.gen-controls label{font-size:12px;font-weight:700;color:var(--ink);display:block;margin-bottom:4px}
+.gen-controls select{padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:var(--card);min-width:200px}
+.gen-btn{background:var(--ink);color:#fff;border:none;border-radius:8px;padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s}
+.gen-btn:hover{background:#1a2a44}
+.gen-btn:disabled{opacity:.5;cursor:wait}
+.gen-loading{text-align:center;padding:40px;color:var(--muted);font-size:14px}
+.gen-loading .dots::after{content:'';animation:dots 1.5s infinite}
+@keyframes dots{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
+.ai-reveal-btn{background:var(--green);color:#fff;border:none;border-radius:6px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.ai-reveal-btn:hover{opacity:.9}
+
+/* Formula tab */
+#formulaList .formula-ref{margin-bottom:12px}
+#formulaList .formula-ref h3{color:var(--accent)}
+
+/* Footer */
+.page-footer{text-align:center;padding:32px 20px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:40px}
+.page-footer a{color:var(--accent);text-decoration:none}
+
+@media(max-width:640px){
+  .nav-btn{font-size:11px;padding:10px 14px}
+  .topic-grid{grid-template-columns:1fr}
+  .gen-controls{flex-direction:column}
+  .gen-controls select{width:100%}
+  .page-header h1{font-size:18px}
+}
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="loginOverlay">
+  <div class="login-box">
+    <h1>Calculation Practice Lab</h1>
+    <div class="motto">Man Neeva, Mat Uchi — Be humble, live wisely</div>
+    <div class="spec">AQA A-LEVEL BUSINESS · 7138 · NEW SPECIFICATION</div>
+    <input type="text" id="calcLoginName" placeholder="Your name">
+    <input type="text" id="calcLoginNum" placeholder="Candidate number">
+    <button onclick="calcLogin()">Start practising</button>
+  </div>
+</div>
+
+<!-- Main content -->
+<div id="mainContent">
+  <div class="page-header">
+    <div class="ctr">
+      <div>
+        <h1>Calculation Practice Lab</h1>
+        <div class="sub">New AQA A-Level Business (7138) — exam-style questions with worked solutions</div>
+      </div>
+      <div class="school">
+        Nishkam School West London
+        <span class="virtue">Daya · Santokh · Nimrata · Pyaar · Sat</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="statsBar"></div>
+
+  <div class="nav-bar">
+    <button class="nav-btn active" onclick="showTab('practice',this)">Practice Questions</button>
+    <button class="nav-btn" onclick="showTab('generate',this)">Generate Questions</button>
+    <button class="nav-btn" onclick="showTab('formulas',this)">Formula Reference</button>
+  </div>
+
+  <!-- Tab: Practice -->
+  <div id="tab-practice" class="tab-area active">
+    <div class="ctr">
+      <div id="topic-menu">
+        <div id="topicGrid" class="topic-grid"></div>
+      </div>
+      <div id="question-view">
+        <button class="back-btn" onclick="backToTopics()">← Back to topics</button>
+        <div id="question-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Generate -->
+  <div id="tab-generate" class="tab-area">
+    <div class="ctr">
+      <p class="gen-intro">Choose a topic and difficulty level. The generator will create five new questions with full worked solutions for you to practise.</p>
+      <div class="gen-controls">
+        <div>
+          <label for="gen-topic">Topic</label>
+          <select id="gen-topic"></select>
+        </div>
+        <div>
+          <label for="gen-diff">Difficulty</label>
+          <select id="gen-diff">
+            <option value="standard">Standard</option>
+            <option value="rearranged">Rearranged formula</option>
+            <option value="multi-step">Multi-step</option>
+            <option value="changing data">Changing data</option>
+          </select>
+        </div>
+        <button class="gen-btn" id="genBtn" onclick="generateQuestion()">Generate 5 questions</button>
+      </div>
+      <div id="genOutput"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Formulas -->
+  <div id="tab-formulas" class="tab-area">
+    <div class="ctr" style="padding-top:20px;padding-bottom:40px">
+      <div id="formulaList"></div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    Nishkam School West London · AQA A-Level Business 7138 · <a href="https://www.nishkamschooltrust.org/nswl" target="_blank">nishkamschooltrust.org</a>
+  </div>
+</div>
+
+<script>
+let calcStudent={name:'',num:''};
+function calcLogin(){
+  const name=document.getElementById('calcLoginName').value.trim();
+  const num=document.getElementById('calcLoginNum').value.trim();
+  if(!name){alert('Please enter your name.');return;}
+  if(!num){alert('Please enter your candidate number.');return;}
+  calcStudent={name,num};
+  document.getElementById('loginOverlay').style.display='none';
+  document.getElementById('mainContent').style.display='block';
+}
+const CALC_SHEET_URL='https://script.google.com/macros/s/AKfycbwp1BPFJztzwXXY81prlg0Uo7J34-P7FE3SWKelOEUppM6hzq576Au3ra58xkEI51nP/exec';
+function logToSheet(data){
+  try{
+    const form=document.createElement('form');
+    form.method='POST';form.action=CALC_SHEET_URL;form.target='sheet_iframe';form.style.display='none';
+    const input=document.createElement('input');
+    input.name='payload';input.value=JSON.stringify({...data,timestamp:new Date().toISOString()});
+    form.appendChild(input);
+    let iframe=document.getElementById('sheet_iframe');
+    if(!iframe){iframe=document.createElement('iframe');iframe.name='sheet_iframe';iframe.id='sheet_iframe';iframe.style.display='none';document.body.appendChild(iframe);}
+    document.body.appendChild(form);form.submit();document.body.removeChild(form);
+  }catch(e){console.log('Sheet log failed:',e);}
+}
+function logCalcActivity(topic,difficulty,count){
+  logToSheet({name:calcStudent.name,candidateNumber:calcStudent.num,question:'Calc: '+topic+' ('+difficulty+') — '+count+' questions',maxMark:count,mark:'',level:difficulty,www1:'Generated '+count+' '+topic+' questions',www2:'',ebi1:'',ebi2:'',tool:'calculations'});
+}
+</script>
+<script>
+const TOPICS = [
+  {
+    "id":"core",
+    "title":"Percentage change, reverse percentages and index numbers",
+    "desc":"These underpin nearly every quantitative question. Percentage change divides by the original. Reverse percentages divide by (1 ± the percentage as a decimal). Index numbers compare to a base year value.",
+    "spec":"Core skills (Annex 6)",
+    "formulas":[
+      "% change = ((New − Original) ÷ Original) × 100",
+      "Reverse %: Original = New value ÷ (1 + x/100) if increased",
+      "Reverse %: Original = New value ÷ (1 − x/100) if decreased",
+      "Index number = (Value ÷ Base year value) × 100"
+    ],
+    "questions":[
+      {"ref":"Practice Q1","type":"written","marks":3,"text":"A business had revenue of £4.2 million in 2027 and £5.04 million in 2028.\n\nCalculate the percentage change in revenue.","rearranged":false,"steps":["Change = £5.04m − £4.2m = <strong>£0.84m</strong>","% change = (£0.84m ÷ £4.2m) × 100 = <strong>20%</strong>"],"answer":"20% increase","trap":"Divide by the original (2027) figure, not the new one. Dividing by £5.04m gives 16.67% — wrong."},
+      {"ref":"Practice Q2","type":"written","marks":3,"text":"A retailer's revenue increased by 10% to €8.8 billion.\n\nCalculate the revenue before the increase.","rearranged":true,"steps":["€8.8bn = 110% of original","Original = €8.8bn ÷ 1.1 = <strong>€8.0 billion</strong>"],"answer":"€8.0 billion","trap":"Do NOT calculate 10% of €8.8bn (€0.88bn) and subtract. 10% of the new figure is not the same as 10% of the old figure."},
+      {"ref":"Practice Q3","type":"written","marks":3,"text":"A company's costs fell by 15% to £170,000.\n\nCalculate the original costs before the decrease.","rearranged":true,"steps":["£170,000 = 85% of original","Original = £170,000 ÷ 0.85 = <strong>£200,000</strong>"],"answer":"£200,000","trap":"Subtracting 15% of £170,000 gives £144,500 — completely wrong. You must divide by 0.85."},
+      {"ref":"Practice Q4","type":"written","marks":3,"text":"An index chart (base year 2020 = 100) shows: 2018 value = 82, 2024 value = 146.\n\nCalculate the percentage change from 2018 to 2024.","rearranged":false,"steps":["Change = 146 − 82 = <strong>64</strong>","% change = (64 ÷ 82) × 100 = <strong>78.0%</strong>"],"answer":"78.0%","trap":"Divide by the old value (82), not the new value or the base year value (100)."},
+      {"ref":"MCQ","type":"mcq","marks":1,"text":"A product's price rose by 25% to £50. What was the original price?\n\nA. £37.50\nB. £40.00\nC. £42.50\nD. £62.50","rearranged":true,"steps":["£50 = 125% of original","Original = £50 ÷ 1.25 = <strong>£40.00</strong>"],"answer":"B — £40.00","trap":"A (£37.50) comes from subtracting 25% of £50. D (£62.50) comes from adding 25% — the wrong direction."}
+    ]
+  },
+  {
+    "id":"shares",
+    "title":"Shares and dividends",
+    "desc":"Market capitalisation, dividend per share and dividend yield. Watch the units — share prices are often given in pence, not pounds. Convert before calculating.",
+    "spec":"3.1.2 — Raising finance",
+    "formulas":[
+      "Market capitalisation = Number of issued shares × Current share price",
+      "Dividend per share = Total dividend paid ÷ Number of ordinary shares in issue",
+      "Dividend yield (%) = (Dividend per share (p) ÷ Share price (p)) × 100"
+    ],
+    "questions":[
+      {"ref":"Practice Q1","type":"written","marks":3,"text":"A company has 4 million ordinary shares. The share price is £3.20. It pays a total dividend of £480,000.\n\nCalculate the dividend yield.","rearranged":false,"steps":["Dividend per share = £480,000 ÷ 4,000,000 = <strong>£0.12 (12p)</strong>","Share price = £3.20 = 320p","Dividend yield = (12 ÷ 320) × 100 = <strong>3.75%</strong>"],"answer":"3.75%","trap":"Make sure both figures are in the same units — either both pence or both pounds."},
+      {"ref":"Practice Q2","type":"written","marks":4,"text":"Market capitalisation: £23,552,000. Share price: £9.20. Dividend per share: £0.20.\n\nCalculate the total dividend paid.","rearranged":true,"steps":["Number of shares = Market cap ÷ Share price = £23,552,000 ÷ £9.20 = <strong>2,560,000 shares</strong>","Total dividend = 2,560,000 × £0.20 = <strong>£512,000</strong>"],"answer":"£512,000","trap":"You must rearrange the market capitalisation formula first to find the number of shares."},
+      {"ref":"Practice Q3","type":"written","marks":3,"text":"Metro Bank: Share price 128.0p. Market capitalisation £218.8m.\n\nCalculate how many shares Metro Bank had issued.","rearranged":true,"steps":["Convert share price: 128.0p = <strong>£1.28</strong>","Number of shares = £218.8m ÷ £1.28 = <strong>170,937,500 shares</strong>"],"answer":"170,937,500 shares (170.9 million)","trap":"Share price is in pence — convert to pounds before dividing."},
+      {"ref":"MCQ","type":"mcq","marks":1,"text":"A company has 10 million shares at 250p each and pays a total dividend of £1.5 million. The dividend yield is:\n\nA. 0.6%\nB. 6%\nC. 15%\nD. 60%","rearranged":false,"steps":["DPS = £1,500,000 ÷ 10,000,000 = 15p","Share price = 250p","Yield = (15 ÷ 250) × 100 = <strong>6%</strong>"],"answer":"B — 6%","trap":"A (0.6%) comes from not converting properly. C (15%) confuses DPS with yield."}
+    ]
+  },
+  {
+    "id":"marketing",
+    "title":"Market share, market growth, PED and YED",
+    "desc":"Market share uses firm sales over total market sales. PED and YED are ratios of percentage changes. A negative YED means an inferior good — demand rises when income falls.",
+    "spec":"3.1.3 — Marketing",
+    "formulas":[
+      "Market share (%) = (Firm sales ÷ Total market sales) × 100",
+      "Market growth (%) = ((New market size − Old market size) ÷ Old market size) × 100",
+      "PED = % change in quantity demanded ÷ % change in price",
+      "YED = % change in quantity demanded ÷ % change in income"
+    ],
+    "questions":[
+      {"ref":"Practice Q1","type":"written","marks":4,"text":"Business X: Sales £40m (2027), growth 10% in 2028. Business Y: Sales £100m, growth 50%. Business Z: Sales £186m, growth 0%. Others: Sales £170m, growth 0%.\n\nCalculate the market share of Business X in 2028.","rearranged":false,"steps":["X 2028 sales = £40m × 1.1 = <strong>£44m</strong>","Y 2028 sales = £100m × 1.5 = <strong>£150m</strong>","Market size 2028 = £44m + £150m + £186m + £170m = <strong>£550m</strong>","Market share = (£44m ÷ £550m) × 100 = <strong>8%</strong>"],"answer":"8%","trap":"You must calculate each firm's new sales before finding the total market size."},
+      {"ref":"Practice Q2","type":"written","marks":3,"text":"A company's sales revenue was £5.75m in 2027 and £6.90m in 2029.\n\nCalculate the percentage change in sales revenue.","rearranged":false,"steps":["Change = £6.90m − £5.75m = <strong>£1.15m</strong>","% change = (£1.15m ÷ £5.75m) × 100 = <strong>20%</strong>"],"answer":"20%","trap":"Divide by the old figure (£5.75m), not the new figure."},
+      {"ref":"Practice Q3","type":"written","marks":3,"text":"A product has PED of −0.6. The business reduces the price by 3%.\n\nWhat happens to quantity demanded and total revenue?","rearranged":false,"steps":["% change in Qd = PED × % change in price = −0.6 × −3% = <strong>+1.8%</strong>","Qd rises by 1.8% (less than the 3% price fall)","PED is inelastic (between 0 and −1) so revenue <strong>falls</strong>"],"answer":"Quantity demanded rises by 1.8% but total revenue falls (inelastic demand)","trap":"With inelastic demand, a price cut means the quantity increase is proportionally smaller than the price fall, so revenue drops."},
+      {"ref":"Practice Q4","type":"mcq","marks":1,"text":"A product has PED = −2 and YED = −1. For a certain increase in sales revenue, which combination is needed?\n\nA. Prices falling and incomes falling\nB. Prices falling and incomes rising\nC. Prices rising and incomes falling\nD. Prices rising and incomes rising","rearranged":true,"steps":["PED = −2 → elastic → price cut increases revenue ✓","YED = −1 → inferior good → income fall increases demand ✓","Both effects push demand up → certain increase"],"answer":"A — Prices falling and incomes falling","trap":"Negative YED means it is an inferior good. When incomes fall, demand for inferior goods rises."},
+      {"ref":"Practice Q5","type":"written","marks":3,"text":"The UK balloon market was worth $227m in 2027 and $287m in 2029. The UK was 25% of the global market in 2027 and 30% in 2029.\n\nCalculate the percentage increase in the UK balloon market.","rearranged":false,"steps":["UK 2027 = 25% × $227m = <strong>$56.75m</strong>","UK 2029 = 30% × $287m = <strong>$86.10m</strong>","Change = $86.10m − $56.75m = <strong>$29.35m</strong>","% change = ($29.35m ÷ $56.75m) × 100 = <strong>51.72%</strong>"],"answer":"51.72%","trap":"Calculate the UK market value for both years first, then find the percentage change."}
+    ]
+  },
+  {
+    "id":"breakeven",
+    "title":"Break-even, contribution and margin of safety",
+    "desc":"Contribution per unit, total contribution, break-even output and margin of safety. The hardest questions give you the answer and ask you to find an input — rearranged questions separate the top grades.",
+    "spec":"3.1.4 — Financial planning",
+    "formulas":[
+      "Contribution per unit (CPU) = Selling price − Variable cost per unit",
+      "Total contribution = CPU × Units sold  OR  Total revenue − Total variable costs",
+      "Break-even output = Fixed costs ÷ CPU",
+      "Margin of safety = Actual output − Break-even output",
+      "Profit = Total contribution − Fixed costs"
+    ],
+    "questions":[
+      {"ref":"Practice Q1","type":"written","marks":4,"text":"Selling price per unit: £16,000. Variable costs per unit: £7,000. Fixed costs: £360,000. Actual output: 52 units.\n\nCalculate the margin of safety.","rearranged":false,"steps":["CPU = £16,000 − £7,000 = <strong>£9,000</strong>","Break-even = £360,000 ÷ £9,000 = <strong>40 units</strong>","Margin of safety = 52 − 40 = <strong>12 units</strong>"],"answer":"12 units","trap":"Express margin of safety in units, not pounds. MoS and profit are different things."},
+      {"ref":"Practice Q2","type":"written","marks":4,"text":"Fixed costs = £8,000. Selling price = £10. Variable costs per unit = £6. Total contribution from current output = £10,000.\n\nCalculate the margin of safety at the current level of output.","rearranged":true,"steps":["CPU = £10 − £6 = <strong>£4</strong>","Current output = Total contribution ÷ CPU = £10,000 ÷ £4 = <strong>2,500 units</strong>","Break-even = Fixed costs ÷ CPU = £8,000 ÷ £4 = <strong>2,000 units</strong>","Margin of safety = 2,500 − 2,000 = <strong>500 units</strong>"],"answer":"500 units","trap":"Current output is not stated directly — you must work it out from total contribution ÷ CPU."},
+      {"ref":"Practice Q3","type":"written","marks":3,"text":"Fixed costs: £15,000. Total variable costs for 1,000 units: £750. Selling price: £6.75.\n\nCalculate the break-even output.","rearranged":false,"steps":["VC per unit = £750 ÷ 1,000 = <strong>£0.75</strong>","CPU = £6.75 − £0.75 = <strong>£6.00</strong>","Break-even = £15,000 ÷ £6.00 = <strong>2,500 units</strong>"],"answer":"2,500 units","trap":"Variable costs are given as a total for 1,000 units — you must calculate the per-unit figure first."},
+      {"ref":"Practice Q4","type":"written","marks":4,"text":"Break-even output = 500 units. Fixed costs = £30,000. Variable cost per unit = £30.\n\nThe business is operating at its break-even output. Calculate the selling price.","rearranged":true,"steps":["At break-even: Total contribution = Fixed costs = <strong>£30,000</strong>","CPU = £30,000 ÷ 500 = <strong>£60</strong>","Selling price = CPU + VC per unit = £60 + £30 = <strong>£90</strong>"],"answer":"£90","trap":"Two-step rearrangement: find CPU from break-even formula, then rearrange CPU = SP − VC."},
+      {"ref":"Practice Q5","type":"written","marks":4,"text":"Total contribution: £168,000. Fixed costs: £127,200. Sales: 350 units.\n\nCalculate the margin of safety.","rearranged":true,"steps":["CPU = Total contribution ÷ Sales = £168,000 ÷ 350 = <strong>£480</strong>","Break-even = Fixed costs ÷ CPU = £127,200 ÷ £480 = <strong>265 units</strong>","MoS = 350 − 265 = <strong>85 units</strong>"],"answer":"85 units","trap":"CPU is not given directly — derive it from total contribution ÷ units sold."},
+      {"ref":"MCQ","type":"mcq","marks":1,"text":"At break-even, a business must have:\n\nA. Total contribution = fixed costs\nB. Total contribution = total variable costs\nC. Total profit = total costs\nD. Total revenue = fixed costs","rearranged":false,"steps":["At break-even, profit = 0","Total revenue = Total costs","This means total contribution = fixed costs"],"answer":"A — Total contribution = fixed costs","trap":"B is wrong because contribution covers fixed costs, not variable costs. D is wrong because revenue must cover all costs, not just fixed."},
+      {"ref":"MCQ","type":"mcq","marks":1,"text":"A noodle bar breaks even at 400 meals per week. Fixed costs are £800/week, selling price is £5 per meal. What is the variable cost per meal?\n\nA. £4\nB. £3\nC. £2.50\nD. £2","rearranged":true,"steps":["CPU = FC ÷ Break-even = £800 ÷ 400 = <strong>£2</strong>","VC = SP − CPU = £5 − £2 = <strong>£3</strong>"],"answer":"B — £3","trap":"Rearranging both the break-even formula and the contribution formula in sequence."}
+    ]
+  },
+  {
+    "id":"budgets",
+    "title":"Budgets and variance",
+    "desc":"Budget variance is the difference between budgeted and actual figures. Always state whether the variance is adverse or favourable — this is a separate mark.",
+    "spec":"3.1.4 — Financial planning",
+    "formulas":[
+      "Budget variance = Budgeted figure − Actual figure",
+      "Favourable: actual revenue > budget  OR  actual costs < budget",
+      "Adverse: actual revenue < budget  OR  actual costs > budget"
+    ],
+    "questions":[
+      {"ref":"Practice Q1","type":"written","marks":4,"text":"Budgeted income: £80m. Budgeted expenditure: £70m. Actual income 5% below budget. Actual expenditure 10% higher than budget.\n\nCalculate the profit variance and state whether it is adverse or favourable.","rearranged":false,"steps":["Actual income = £80m × 0.95 = <strong>£76m</strong>","Actual expenditure = £70m × 1.1 = <strong>£77m</strong>","Budgeted profit = £80m − £70m = <strong>£10m</strong>","Actual profit = £76m − £77m = <strong>−£1m (loss)</strong>","Variance = −£1m − £10m = <strong>£11m adverse</strong>"],"answer":"£11 million adverse","trap":"Calculate both the budgeted profit and the actual profit, then find the difference. Stating adverse/favourable is a separate mark."},
+      {"ref":"Practice Q2","type":"written","marks":4,"text":"A fashion company's budgeted profit: £2,946,000. Actual data: Revenue £5,600,000. Costs — Inventory £2,300,000, Warehousing £200,000, Distribution £126,000, IT £170,000, Other £180,000.\n\nCalculate the profit variance. State adverse or favourable.","rearranged":false,"steps":["Total costs = £2,300k + £200k + £126k + £170k + £180k = <strong>£2,976,000</strong>","Actual profit = £5,600,000 − £2,976,000 = <strong>£2,624,000</strong>","Variance = £2,624,000 − £2,946,000 = <strong>−£322,000 (adverse)</strong>"],"answer":"£322,000 adverse","trap":"Add all cost categories carefully. Stating adverse is a separate mark."},
+      {"ref":"MCQ","type":"mcq","marks":1,"text":"Budgeted income £200m, budgeted expenditure £160m. Actual income as budgeted, expenditure 20% higher. The actual profit showed:\n\nA. Favourable variance of £8m\nB. Favourable variance of £32m\nC. Adverse variance of £8m\nD. Adverse variance of £32m","rearranged":false,"steps":["Budgeted profit = £200m − £160m = £40m","Actual expenditure = £160m × 1.2 = £192m","Actual profit = £200m − £192m = £8m","Variance = £8m − £40m = <strong>−£32m (adverse)</strong>"],"answer":"D — Adverse variance of £32m","trap":"20% of £160m = £32m extra expenditure, directly reducing profit by £32m."}
+    ]
+  },
+  {
+    "id":"cashflow",
+    "title":"Cash flow forecasts and liquidity",
+    "desc":"Net cash flow, opening and closing balances, current ratio, acid test ratio, payable days, receivable days and inventory turnover. Payable days uses cost of sales as the denominator, not revenue.",
+    "spec":"3.1.4 — Financial planning",
+    "formulas":[
+      "Net cash flow = Cash inflows − Cash outflows",
+      "Closing balance = Opening balance + Net cash flow",
+      "Current ratio = Current assets ÷ Current liabilities",
+      "Acid test ratio = (Current assets − Inventory) ÷ Current liabilities",
+      "Payable days = (Payables ÷ Cost of sales) × 365",
+      "Receivable days = (Receivables ÷ Revenue) × 365",
+      "Inventory turnover = Cost of sales ÷ Average inventories held"
+    ],
+    "questions":[
+      {"ref":"Practice Q1","type":"written","marks":3,"text":"2028: Opening balance (£50,000), Inflows £80,000, Outflows £70,000, Closing balance (£40,000).\n2029: Inflows £120,000, Outflows £180,000.\n\nCalculate the closing balance in 2029.","rearranged":false,"steps":["2029 opening balance = 2028 closing balance = <strong>(£40,000)</strong>","Net cash flow 2029 = £120,000 − £180,000 = <strong>(£60,000)</strong>","Closing balance = (£40,000) + (£60,000) = <strong>(£100,000)</strong>"],"answer":"(£100,000)","trap":"The opening balance is negative. You must carry that negative sign through. −£40,000 + (−£60,000) = −£100,000."},
+      {"ref":"Practice Q2","type":"written","marks":4,"text":"Revenue £47,569k, Gross profit £22,289k, Payables £5,056k.\n\nCalculate the payable days ratio.","rearranged":false,"steps":["Cost of sales = Revenue − Gross profit = £47,569k − £22,289k = <strong>£25,280k</strong>","Payable days = (£5,056k ÷ £25,280k) × 365 = <strong>73 days</strong>"],"answer":"73 days","trap":"Cost of sales is not given directly — calculate it from revenue minus gross profit. A common mistake is using revenue as the denominator."},
+      {"ref":"Practice Q3","type":"written","marks":3,"text":"Cost of sales £50m, Inventory £8m (average level).\n\nCalculate inventory turnover.","rearranged":false,"steps":["Inventory turnover = £50m ÷ £8m = <strong>6.25 times</strong>"],"answer":"6.25 times (or 58.4 days)","trap":"Express as times or days, not as '6.25m' or '6.25%'."},
+      {"ref":"Practice Q4","type":"written","marks":4,"text":"Inventories £80m, Receivables £35m, Cash £40m, Payables £70m, Net current assets £85m.\n\nCalculate the current ratio.","rearranged":false,"steps":["CA = Inventories + Receivables + Cash = £80m + £35m + £40m = <strong>£155m</strong>","CL = Payables = <strong>£70m</strong>","Current ratio = £155m ÷ £70m = <strong>2.21 : 1</strong>"],"answer":"2.21 : 1","trap":"Do not use the net current assets figure. You must add the individual current assets."},
+      {"ref":"Practice Q5","type":"written","marks":4,"text":"CA £31m, CL £18m, NCL £24m. The business receives £20m from a share issue: £15m buys machinery, £3m pays off an overdraft, £2m increases inventory.\n\nCalculate the new current ratio.","rearranged":false,"steps":["New CA = £31m + £2m (inventory) = <strong>£33m</strong>","New CL = £18m − £3m (overdraft paid off) = <strong>£15m</strong>","Current ratio = £33m ÷ £15m = <strong>2.2 : 1</strong>"],"answer":"2.2 : 1","trap":"£15m on machinery is a non-current asset — it does not affect the current ratio. The overdraft is a current liability."},
+      {"ref":"MCQ","type":"mcq","marks":1,"text":"Opening balance £5,000 on 1 July. Cash outflow £14,000 in July. Net cash flow for July is £22,000. Closing balance on 31 July is:\n\nA. −£9,000\nB. £8,000\nC. £13,000\nD. £27,000","rearranged":false,"steps":["Closing = Opening + Net cash flow = £5,000 + £22,000 = <strong>£27,000</strong>","The £14,000 outflow is already included in the net cash flow figure"],"answer":"D — £27,000","trap":"Net cash flow already accounts for inflows minus outflows. Do not subtract the outflows again."}
+    ]
+  },
+  {
+    "id":"profit",
+    "title":"Revenue, costs, profit and profit margins",
+    "desc":"A critical distinction: operating profit is a number in pounds, operating profit margin is a percentage. Gross profit only subtracts cost of sales. Operating profit also subtracts operating expenses. Profit for the year further subtracts finance costs and tax.",
+    "spec":"3.1.4 — Financial planning",
+    "formulas":[
+      "Revenue = Selling price per unit × Number of units sold",
+      "Variable costs (total) = Variable cost per unit × Number of units sold",
+      "Total costs = Fixed costs + Variable costs",
+      "Gross profit = Revenue − Cost of sales",
+      "Operating profit = Gross profit − Operating expenses",
+      "Profit for year = Operating profit − Finance costs − Tax",
+      "Gross profit margin (%) = (Gross profit ÷ Revenue) × 100",
+      "Operating profit margin (%) = (Operating profit ÷ Revenue) × 100",
+      "Profit for year margin (%) = (Profit for year ÷ Revenue) × 100"
+    ],
+    "questions":[
+      {"ref":"Practice Q1","type":"written","marks":4,"text":"Selling price per unit: £5. Output: 9,000 units. Variable cost per unit: £2. Expenses: £20,000.\n\nCalculate the operating profit margin.","rearranged":false,"steps":["Revenue = £5 × 9,000 = <strong>£45,000</strong>","Total VC = £2 × 9,000 = <strong>£18,000</strong>","Operating profit = £45,000 − £18,000 − £20,000 = <strong>£7,000</strong>","OPM = (£7,000 ÷ £45,000) × 100 = <strong>15.6%</strong>"],"answer":"15.6%","trap":"The margin is a percentage of revenue, not output. Students who forget to calculate revenue try to divide by 9,000."},
+      {"ref":"Practice Q2","type":"written","marks":3,"text":"Sales revenue: £6.90m. Cost of sales: £5.07m.\n\nCalculate the gross profit margin.","rearranged":false,"steps":["Gross profit = £6.90m − £5.07m = <strong>£1.83m</strong>","GPM = (£1.83m ÷ £6.90m) × 100 = <strong>26.5%</strong>"],"answer":"26.5%","trap":"Subtract cost of sales from revenue, not the other way round."},
+      {"ref":"Practice Q3","type":"mcq","marks":1,"text":"Revenue £529k, Cost of sales £192k, Corporation tax £7k, Finance costs £18k, Operating expenses £285k. What is the profit for the year?\n\nA. £27,000\nB. £34,000\nC. £52,000\nD. £237,000","rearranged":false,"steps":["Gross profit = £529k − £192k = £337k","Operating profit = £337k − £285k = £52k","Profit for year = £52k − £18k − £7k = <strong>£27k</strong>"],"answer":"A — £27,000","trap":"C (£52k) is operating profit, not profit for the year. D (£237k) ignores cost of sales."},
+      {"ref":"Practice Q4","type":"mcq","marks":1,"text":"Revenue £25,750m. GPM: 24.5%. Net profit margin: 5.6%. What is the gross profit?\n\nA. £1,442m\nB. £148.68m\nC. £650.48m\nD. £6,308.75m","rearranged":true,"steps":["Gross profit = GPM × Revenue = 24.5% × £25,750m = <strong>£6,308.75m</strong>"],"answer":"D — £6,308.75m","trap":"Rearranging the GPM formula. C comes from applying GPM to a wrong figure."},
+      {"ref":"Practice Q5","type":"written","marks":3,"text":"A café has revenue of £1,600,000 per year. Costs as % of revenue: Food 30%, Staff 30%, Advertising 5%, Maintenance 3%, Utility bills 3%, Other 2%.\n\nCalculate the annual profit.","rearranged":false,"steps":["Total costs = 30+30+5+3+3+2 = <strong>73% of revenue</strong>","Profit = 100% − 73% = 27% of revenue","Profit = 27% × £1,600,000 = <strong>£432,000</strong>"],"answer":"£432,000","trap":"Add cost percentages, subtract from 100%, apply to revenue. Avoids calculating each cost individually."}
+    ]
+  },
+  {
+    "id":"gearing",
+    "title":"Gearing, ROCE, ROI and return on marketing spend",
+    "desc":"The hardest questions give you one ratio and ask you to rearrange it to find a missing value, then use that to calculate another ratio. A new loan increases both NCL and capital employed.",
+    "spec":"3.1.4 — Financial planning",
+    "formulas":[
+      "Gearing (%) = (Non-current liabilities ÷ Capital employed) × 100",
+      "Capital employed = Total equity + Non-current liabilities",
+      "ROCE (%) = (Operating profit ÷ Capital employed) × 100",
+      "Return on investment (%) = (Profit from investment ÷ Cost of investment) × 100",
+      "Return on marketing spend = (Profit from marketing activities ÷ Amount of marketing spend) × 100"
+    ],
+    "questions":[
+      {"ref":"Practice Q1","type":"written","marks":4,"text":"Operating profit £3m. NCL £4m. Gearing 22%.\n\nCalculate the ROCE.","rearranged":true,"steps":["From gearing: 22 = (£4m ÷ CE) × 100","CE = (£4m × 100) ÷ 22 = <strong>£18.18m</strong>","ROCE = (£3m ÷ £18.18m) × 100 = <strong>16.5%</strong>"],"answer":"16.5%","trap":"Capital employed is not given — you must derive it by rearranging the gearing formula."},
+      {"ref":"Practice Q2","type":"written","marks":4,"text":"NCL = £200,000. Gearing = 40%. The business takes out a £100,000 long-term loan.\n\nCalculate the new gearing ratio.","rearranged":true,"steps":["Original CE = NCL ÷ Gearing = £200,000 ÷ 0.40 = <strong>£500,000</strong>","New NCL = £200,000 + £100,000 = <strong>£300,000</strong>","New CE = £500,000 + £100,000 = <strong>£600,000</strong>","New gearing = (£300,000 ÷ £600,000) × 100 = <strong>50%</strong>"],"answer":"50%","trap":"The loan adds to both the numerator (NCL) and the denominator (CE)."},
+      {"ref":"Practice Q3","type":"written","marks":4,"text":"ROCE of 12%. NCL £230m, Total equity £190m.\n\nCalculate the operating profit.","rearranged":true,"steps":["CE = Total equity + NCL = £190m + £230m = <strong>£420m</strong>","12 = (OP ÷ £420m) × 100","OP = 12 × £420m ÷ 100 = <strong>£50.4m</strong>"],"answer":"£50.4 million","trap":"Reverse ROCE calculation — you know the ratio, find the operating profit."},
+      {"ref":"Practice Q4","type":"written","marks":6,"text":"Current assets £15m, Current liabilities £18m, Total equity £170m, NCL £280m.\n\nCalculate: (a) the current ratio, and (b) the gearing ratio.","rearranged":false,"steps":["(a) Current ratio = £15m ÷ £18m = <strong>0.83 : 1</strong>","(b) CE = £170m + £280m = <strong>£450m</strong>","Gearing = (£280m ÷ £450m) × 100 = <strong>62.2%</strong>"],"answer":"Current ratio: 0.83 : 1. Gearing: 62.2%","trap":"Current ratio is expressed as a ratio (X : 1), gearing as a percentage."},
+      {"ref":"MCQ","type":"mcq","marks":1,"text":"Operating profit rises by 10%, capital employed rises by 20%, NCL rises by 30%. What happens to gearing and ROCE?\n\nA. Both rise\nB. Both fall\nC. Gearing rises, ROCE falls\nD. Gearing falls, ROCE rises","rearranged":false,"steps":["ROCE: OP grows 10%, CE grows 20% → numerator grows slower → ROCE falls","Gearing: NCL grows 30%, CE grows 20% → numerator grows faster → Gearing rises"],"answer":"C — Gearing rises, ROCE falls","trap":"Compare the growth rates of numerator and denominator — you do not need actual numbers."}
+    ]
+  },
+  {
+    "id":"people",
+    "title":"People and operations",
+    "desc":"Employee productivity, employee turnover, employee costs as a percentage of revenue, sales per employee, unit costs, capacity utilisation and float time. Labour turnover is an inverse metric — lower is better.",
+    "spec":"3.2 — Managing people and operations",
+    "formulas":[
+      "Employee productivity = Output over a time period ÷ Number of employees",
+      "Sales per employee = Sales over a time period ÷ Number of employees",
+      "Employee turnover (%) = (Number of staff leaving ÷ Number of staff employed) × 100",
+      "Employee costs as % of revenue = (Employee costs ÷ Revenue) × 100",
+      "Unit costs (average costs) = Total costs ÷ Number of units of output",
+      "Capacity utilisation (%) = (Actual output ÷ Maximum possible output) × 100",
+      "Float time = Latest finish time − Duration − Earliest start time"
+    ],
+    "questions":[
+      {"ref":"Practice Q1","type":"written","marks":4,"text":"Capacity = 180 units/day. 16 employees. Wages = £60/day each. Selling price = £15/unit. Capacity utilisation = 80%.\n\nCalculate employee costs as a percentage of turnover.","rearranged":false,"steps":["Actual output = 180 × 0.80 = <strong>144 units</strong>","Revenue = 144 × £15 = <strong>£2,160</strong>","Total wages = 16 × £60 = <strong>£960</strong>","Employee costs % = (£960 ÷ £2,160) × 100 = <strong>44.4%</strong>"],"answer":"44.4%","trap":"Use actual output (80% of capacity), not full capacity. Using 180 gives 35.6% — wrong."},
+      {"ref":"Practice Q2","type":"written","marks":3,"text":"A business had 30,000 employees in 2028. Staff increased by 25% in 2029. In 2029, 3,000 employees left.\n\nCalculate the employee turnover for 2029.","rearranged":false,"steps":["2029 staff = 30,000 × 1.25 = <strong>37,500</strong>","Employee turnover = (3,000 ÷ 37,500) × 100 = <strong>8%</strong>"],"answer":"8%","trap":"The denominator is the 2029 workforce (37,500), not the 2028 figure."},
+      {"ref":"Practice Q3","type":"written","marks":3,"text":"2027 output: 27,648 units. Output increased by 10% in 2028. 2028 employees: 120.\n\nCalculate employee productivity in 2028.","rearranged":false,"steps":["2028 output = 27,648 × 1.1 = <strong>30,412.8 units</strong>","Productivity = 30,412.8 ÷ 120 = <strong>253.4 units per employee</strong>"],"answer":"253.4 units per employee","trap":"Calculate the 2028 output first using the 10% increase."},
+      {"ref":"Practice Q4","type":"written","marks":3,"text":"A theatre: Saturday 850 seats sold (capacity 1,000). Sunday 980 seats sold (capacity 1,000).\n\nCalculate the capacity utilisation for the weekend.","rearranged":false,"steps":["Total seats sold = 850 + 980 = <strong>1,830</strong>","Total capacity = 1,000 + 1,000 = <strong>2,000</strong>","CU = (1,830 ÷ 2,000) × 100 = <strong>91.5%</strong>"],"answer":"91.5%","trap":"Add both days together for both the numerator and denominator."},
+      {"ref":"Practice Q5","type":"mcq","marks":1,"text":"A firm's capacity utilisation is 60%. Its capacity then increases by 20%. Its new capacity utilisation is:\n\nA. 40%\nB. 50%\nC. 75%\nD. 80%","rearranged":true,"steps":["Let original capacity = 100, so output = 60","New capacity = 100 × 1.2 = 120","Output unchanged = 60","New CU = (60 ÷ 120) × 100 = <strong>50%</strong>"],"answer":"B — 50%","trap":"Capacity increases but output stays the same, so utilisation falls."},
+      {"ref":"Practice Q6","type":"written","marks":5,"text":"2027: Employee productivity 80, Employees 40. 2028: Employees 42. Total output increased by 15.5%.\n\nCalculate the change in employee productivity.","rearranged":false,"steps":["2027 output = 80 × 40 = <strong>3,200 units</strong>","Increase = 15.5% × 3,200 = <strong>496 units</strong>","2028 output = 3,200 + 496 = <strong>3,696 units</strong>","2028 productivity = 3,696 ÷ 42 = <strong>88 units per employee</strong>","Change = 88 − 80 = <strong>+8 units per employee</strong>"],"answer":"+8 units per employee","trap":"Calculate 2027 output from the given productivity and employees, then apply the percentage increase, then recalculate productivity."},
+      {"ref":"Practice Q7","type":"written","marks":2,"text":"From a network diagram: LFT = 14, EST = 4, Duration = 4.\n\nCalculate the float time for this activity.","rearranged":false,"steps":["Float = LFT − EST − Duration = 14 − 4 − 4 = <strong>6 days</strong>"],"answer":"6 days","trap":"If an activity is on the critical path, its float is zero."}
+    ]
+  },
+  {
+    "id":"invest",
+    "title":"Investment appraisal: payback, ARR and NPV",
+    "desc":"For ARR, the critical error is failing to subtract the initial cost from total returns before averaging. For NPV, watch for negative cash flows in later years. Express payback as years and months.",
+    "spec":"3.3.3 — Assessing competitiveness",
+    "formulas":[
+      "Payback period = Years before full recovery + (Amount still to recover ÷ Cash flow in recovery year)",
+      "ARR (%) = (Average annual profit ÷ Initial investment) × 100",
+      "Average annual profit = (Total returns − Initial cost) ÷ Number of years",
+      "NPV = Sum of (Net cash flow × Discount factor) for all years"
+    ],
+    "questions":[
+      {"ref":"Practice Q1","type":"written","marks":4,"text":"Total revenue over 3 years: £14,350. Total costs over 3 years: £11,890. Initial investment: £8,000.\n\nCalculate the ARR.","rearranged":false,"steps":["Net return = £14,350 − £11,890 = <strong>£2,460</strong>","Average annual profit = £2,460 ÷ 3 = <strong>£820</strong>","ARR = (£820 ÷ £8,000) × 100 = <strong>10.25%</strong>"],"answer":"10.25%","trap":"The critical error: failing to subtract the initial cost. ARR uses net return, not total returns."},
+      {"ref":"Practice Q2","type":"written","marks":3,"text":"Year 0: (£50,000). Year 1: £13,000. Year 2: £28,000. Year 3: £27,000.\n\nCalculate the payback period.","rearranged":false,"steps":["Cumulative: Y0 = (£50k), Y1 = (£37k), Y2 = (£9k), Y3 = +£18k","Payback occurs during Year 3","Monthly CF in Y3 = £27,000 ÷ 12 = £2,250","Months = £9,000 ÷ £2,250 = <strong>4 months</strong>"],"answer":"2 years and 4 months","trap":"Always draw a cumulative column. Express as years and months, not 2.33 years."},
+      {"ref":"Practice Q3","type":"written","marks":4,"text":"Year 0: (£500k) DF 1.00. Year 1: (£50k) DF 0.91. Year 2: £250k DF 0.83. Year 3: £600k DF 0.75.\n\nCalculate the NPV.","rearranged":false,"steps":["Y0: (£500k) × 1.00 = <strong>(£500,000)</strong>","Y1: (£50k) × 0.91 = <strong>(£45,500)</strong>","Y2: £250k × 0.83 = <strong>£207,500</strong>","Y3: £600k × 0.75 = <strong>£450,000</strong>","NPV = (£500k) + (£45.5k) + £207.5k + £450k = <strong>£112,000</strong>"],"answer":"£112,000 (positive — the project is worthwhile)","trap":"Year 1 is also negative. Students who treat it as positive overstate the NPV."},
+      {"ref":"Practice Q4","type":"written","marks":4,"text":"Investment: £20m in Year 0. Year 1: £11m (DF 0.91). Year 2: £12m (DF 0.83).\n\nCalculate the NPV.","rearranged":false,"steps":["Y0: −£20m × 1.00 = <strong>−£20m</strong>","Y1: £11m × 0.91 = <strong>£10.01m</strong>","Y2: £12m × 0.83 = <strong>£9.96m</strong>","NPV = −£20m + £10.01m + £9.96m = <strong>−£0.03m</strong>"],"answer":"−£0.03m (marginally negative — borderline project)","trap":"Write the negative sign clearly. Answering +£0.03m loses a mark."},
+      {"ref":"Practice Q5","type":"mcq","marks":1,"text":"Year 0: (£1,000k). Year 1: £500k. Year 2: £900k. After two years, the ARR (%) is:\n\nA. 90%\nB. 70%\nC. 40%\nD. 20%","rearranged":false,"steps":["Total returns = £500k + £900k = £1,400k","Total profit = £1,400k − £1,000k = £400k","Average annual profit = £400k ÷ 2 = £200k","ARR = (£200k ÷ £1,000k) × 100 = <strong>20%</strong>"],"answer":"D — 20%","trap":"A (90%) comes from not subtracting the initial investment."},
+      {"ref":"Practice Q6","type":"written","marks":4,"text":"Option 1: Cost £5m. Success (0.6, pay-off £20m), Failure (0.4, pay-off −£25m).\nOption 2: Cost £2m. Success (0.7, pay-off £5m), Failure (0.3, pay-off −£5m).\nOption 3: Do nothing.\n\nCalculate the net gain of Option 1 and recommend which option the business should choose.","rearranged":false,"steps":["Option 1 EV = (0.6 × £20m) + (0.4 × −£25m) = £12m − £10m = <strong>£2m</strong>","Option 1 net gain = £2m − £5m = <strong>−£3m</strong>","Option 2 EV = (0.7 × £5m) + (0.3 × −£5m) = £3.5m − £1.5m = £2m","Option 2 net gain = £2m − £2m = <strong>£0</strong>","Option 3 = £0"],"answer":"Best choice: Option 3 — Do nothing (Options 1 and 2 have non-positive net gains)","trap":"Both active options have negative or zero net gains. The best financial outcome is to do nothing."},
+      {"ref":"MCQ","type":"mcq","marks":1,"text":"A software application costs £5m to develop, expected lifetime 5 years, net return £1.5m per year. What is the payback period?\n\nA. 2 years\nB. 2 years 6 months\nC. 3 years 4 months\nD. 5 years","rearranged":false,"steps":["Cumulative: Y1 = £1.5m, Y2 = £3.0m, Y3 = £4.5m, Y4 = £6.0m","Remaining after Y3 = £5m − £4.5m = £0.5m","Monthly = £1.5m ÷ 12 = £125k","Months = £500k ÷ £125k = 4 months"],"answer":"C — 3 years 4 months","trap":"Not 2 years — that would require £2.5m per year."}
+    ]
+  }
+];
+
+let totalQs = 0, totalWritten = 0, totalMCQ = 0, totalRearranged = 0;
+TOPICS.forEach(t => {
+  t.questions.forEach(q => {
+    totalQs++;
+    if(q.type==='written') totalWritten++;
+    if(q.type==='mcq') totalMCQ++;
+    if(q.rearranged) totalRearranged++;
+  });
+});
+
+function renderStats(){
+  document.getElementById('statsBar').innerHTML =
+    '<div class="stat"><div class="stat-num">'+totalQs+'</div><div class="stat-label">questions</div></div>'+
+    '<div class="stat"><div class="stat-num">'+totalWritten+'</div><div class="stat-label">written</div></div>'+
+    '<div class="stat"><div class="stat-num">'+totalMCQ+'</div><div class="stat-label">MCQs</div></div>'+
+    '<div class="stat"><div class="stat-num">'+totalRearranged+'</div><div class="stat-label">rearranged</div></div>'+
+    '<div class="stat"><div class="stat-num">'+TOPICS.length+'</div><div class="stat-label">topics</div></div>';
+}
+
+function renderTopics(){
+  const grid=document.getElementById('topicGrid');
+  grid.innerHTML=TOPICS.map(t=>{
+    const wc=t.questions.filter(q=>q.type==='written').length;
+    const mc=t.questions.filter(q=>q.type==='mcq').length;
+    const rc=t.questions.filter(q=>q.rearranged).length;
+    return '<div class="topic-card" onclick="showTopic(\''+t.id+'\')">'+
+      '<div class="tc-spec">'+t.spec+'</div>'+
+      '<h3>'+t.title+'</h3>'+
+      '<p>'+t.desc.slice(0,140)+(t.desc.length>140?'...':'')+'</p>'+
+      '<div class="tc-count">'+wc+' written, '+mc+' MCQs'+(rc?' — '+rc+' rearranged':'')+'</div></div>';
+  }).join('');
+}
+
+function showTopic(id){
+  const t=TOPICS.find(x=>x.id===id);
+  if(!t) return;
+  document.getElementById('topic-menu').style.display='none';
+  document.getElementById('question-view').style.display='block';
+  let h='<div class="q-section"><h2>'+t.title+'</h2><p class="intro">'+t.desc+'</p>';
+  h+='<div class="formula-ref"><h3>Formulas needed</h3>'+t.formulas.map(f=>'<div class="formula-line">'+f+'</div>').join('')+'</div>';
+  t.questions.forEach((q,i)=>{
+    const sid='sol-'+id+'-'+i;
+    h+='<div class="q-card"><div class="q-card-header" onclick="toggleSol(\''+sid+'\')"><div>'+
+      '<div class="q-meta">'+
+        '<span class="q-ref">'+q.ref+'</span>'+
+        '<span class="q-marks">'+q.marks+(q.marks===1?' mark':' marks')+'</span>'+
+        '<span class="q-type '+(q.type==='written'?'q-type-written':'q-type-mcq')+'">'+(q.type==='written'?'Written':'MCQ')+'</span>'+
+        (q.rearranged?'<span class="q-rearranged">Rearranged</span>':'')+
+      '</div>'+
+      '<div class="q-text">'+q.text+'</div>'+
+    '</div></div>'+
+    '<div class="q-solution" id="'+sid+'">'+
+      '<h4>Worked solution</h4>'+
+      q.steps.map(s=>'<div class="step">'+s+'</div>').join('')+
+      '<div class="final-answer">'+q.answer+'</div>'+
+      (q.trap?'<div class="trap-note"><strong>Watch out:</strong> '+q.trap+'</div>':'')+
+    '</div></div>';
+  });
+  h+='</div>';
+  document.getElementById('question-content').innerHTML=h;
+}
+
+function backToTopics(){
+  document.getElementById('topic-menu').style.display='block';
+  document.getElementById('question-view').style.display='none';
+}
+
+function toggleSol(id){
+  document.getElementById(id).classList.toggle('open');
+}
+
+function showTab(tab,btn){
+  document.querySelectorAll('.tab-area').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  btn.classList.add('active');
+  if(tab==='practice') backToTopics();
+}
+
+function renderFormulas(){
+  document.getElementById('formulaList').innerHTML=TOPICS.map(t=>
+    '<div class="formula-ref" style="margin-bottom:12px">'+
+    '<h3>'+t.title+'</h3>'+
+    '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:8px">'+t.spec+'</div>'+
+    t.formulas.map(f=>'<div class="formula-line">'+f+'</div>').join('')+
+    '</div>'
+  ).join('');
+}
+
+function renderGenTopics(){
+  const sel=document.getElementById('gen-topic');
+  sel.innerHTML=TOPICS.map(t=>'<option value="'+t.title+'">'+t.title+'</option>').join('');
+}
+
+function cleanMd(s){return s.replace(/\*\*/g,'').replace(/\*/g,'').replace(/^#+\s*/gm,'').replace(/^---+$/gm,'').trim();}
+
+async function generateQuestion(){
+  const topic=document.getElementById('gen-topic').value;
+  const diff=document.getElementById('gen-diff').value;
+  const btn=document.getElementById('genBtn');
+  const output=document.getElementById('genOutput');
+  btn.disabled=true;btn.textContent='Generating 5 questions...';
+  output.innerHTML='<div class="gen-loading">Creating 5 questions with worked solutions<span class="dots"></span></div>';
+  const sys='You are an AQA A-Level Business calculation question writer (specification 7138, new spec). Generate EXACTLY 5 different exam-style questions on: '+topic+'. Difficulty: '+diff+'. Rules: realistic UK business data, include mark allocation (2-5 marks), full step-by-step worked solution, a Watch Out note on the most common error, correct AQA formulas, clean answers, currency in pounds, no emoji, plain English for Year 12. Each question must test a DIFFERENT aspect of the topic — vary the numbers, context, and specific skill. For rearranged: student must rearrange a standard formula. For multi-step: use 2+ formulas in sequence. For changing data: give initial values then change variables. Use this EXACT format for EACH of the 5 questions:\n\n===QUESTION=== (X marks)\n[question text with business context and data]\n\n===SOLUTION===\nStep 1: ...\nStep 2: ...\nAnswer: [final answer with units]\n\n===WATCHOUT===\n[common error note]\n\nRepeat this format exactly 5 times. No markdown. No question numbers.';
+  try{
+    const r=await fetch('https://nishkam-marker.j-kerrisk.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:3500,messages:[{role:'user',content:'Generate 5 '+diff+' calculation questions on: '+topic}],system:sys})});
+    if(!r.ok) throw new Error('API error');
+    const data=await r.json();
+    const rawText=data.content.map(c=>c.text||'').join('');
+    const blocks=rawText.split('===QUESTION===').filter(b=>b.trim());
+    if(!blocks.length) throw new Error('No questions');
+    let html='';
+    blocks.forEach((block,i)=>{
+      const parts=block.split('===SOLUTION===');
+      const qRaw=(parts[0]||'').trim();
+      const rest=parts[1]||'';
+      const solParts=rest.split('===WATCHOUT===');
+      const solRaw=(solParts[0]||'').trim();
+      const watchRaw=(solParts[1]||'').trim();
+      const question=cleanMd(qRaw);
+      const solution=cleanMd(solRaw);
+      const watchOut=cleanMd(watchRaw);
+      const stepLines=solution.split('\n').filter(l=>l.trim());
+      const stepsHtml=stepLines.map(l=>{
+        let line=l.trim();
+        if(/^step\s*\d/i.test(line)) line=line.replace(/^step\s*(\d+):?\s*/i,'<strong>Step $1:</strong> ');
+        if(/^answer/i.test(line)) line='<strong>'+line+'</strong>';
+        return '<div class="step">'+line+'</div>';
+      }).join('');
+      const ansMatch=solution.match(/^Answer:?\s*(.+)$/im);
+      const answerHtml=ansMatch?'<div class="final-answer">'+ansMatch[1].trim()+'</div>':'';
+      const watchHtml=watchOut?'<div class="trap-note" style="margin-top:.7rem"><strong>Watch out:</strong> '+watchOut+'</div>':'';
+      html+='<div style="margin-bottom:1.2rem">'+
+        '<div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem">Question '+(i+1)+' · '+topic+'</div>'+
+        '<div class="q-text" style="white-space:pre-line;margin-bottom:1rem">'+question+'</div>'+
+        '<button class="ai-reveal-btn" onclick="var s=this.nextElementSibling;if(s.style.display===\'block\'){s.style.display=\'none\';this.textContent=\'Show solution\';}else{s.style.display=\'block\';this.textContent=\'Hide solution\';}">Show solution</button>'+
+        '<div style="display:none;margin-top:.8rem;padding-top:.8rem;border-top:1px dashed var(--border)">'+
+          '<h4 style="font-size:.8rem;font-weight:600;color:var(--green);margin-bottom:.5rem">Worked solution</h4>'+
+          stepsHtml+answerHtml+watchHtml+
+        '</div></div>';
+    });
+    output.innerHTML=html+'<button class="gen-btn" onclick="generateQuestion()" style="margin-top:.8rem">Generate 5 more</button>';
+    logCalcActivity(topic,diff,blocks.length);
+  }catch(err){
+    output.innerHTML='<p style="color:var(--red);font-size:.85rem;padding:1rem">Something went wrong. Please try again.</p><button class="gen-btn" onclick="generateQuestion()" style="margin-top:.5rem">Try again</button>';
+  }
+  btn.disabled=false;btn.textContent='Generate 5 questions';
+}
+
+renderStats();
+renderTopics();
+renderFormulas();
+renderGenTopics();
+</script>
+</body>
+</html>

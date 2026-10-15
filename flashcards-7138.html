@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards — AQA A-Level Business</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a2e;
+  --surface: #f5f5f0;
+  --border: #d4d4c8;
+  --accent: #2c5f7c;
+  --accent-light: #e8f0f5;
+  --muted: #6b6b6b;
+  --heading: #1a1a2e;
+  --success: #2d7a4f;
+  --warning: #b8860b;
+  --danger: #a33;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'IBM Plex Sans', -apple-system, sans-serif;
+  --card-bg: #fff;
+  --card-border: #d4d4c8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161620; --fg: #e0ddd5; --surface: #1e1e2a; --border: #333345;
+    --accent: #5fa8c8; --accent-light: #1c2a35; --muted: #999; --heading: #e8e5dd;
+    --success: #4daa6f; --warning: #d4a030; --danger: #d66;
+    --card-bg: #1e1e2a; --card-border: #333345; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161620; --fg: #e0ddd5; --surface: #1e1e2a; --border: #333345;
+  --accent: #5fa8c8; --accent-light: #1c2a35; --muted: #999; --heading: #e8e5dd;
+  --success: #4daa6f; --warning: #d4a030; --danger: #d66;
+  --card-bg: #1e1e2a; --card-border: #333345; color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); line-height: 1.65; margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; }
+.page-wrap { max-width: 760px; margin: 0 auto; padding: 2rem 20px 4rem; }
+h1 { font-family: var(--font-display); color: var(--heading); font-size: 1.8rem; margin: 0 0 0.3rem; }
+.subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+.mode-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border); }
+.mode-tab { padding: 0.6rem 1.2rem; font-family: var(--font-body); font-size: 0.88rem; font-weight: 500; background: none; border: none; color: var(--muted); cursor: pointer; position: relative; transition: color 0.15s; }
+.mode-tab:hover { color: var(--fg); }
+.mode-tab.active { color: var(--accent); }
+.mode-tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: var(--accent); }
+.filter-bar { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
+.filter-btn { padding: 0.35rem 0.75rem; font-family: var(--font-body); font-size: 0.78rem; font-weight: 500; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--fg); cursor: pointer; transition: all 0.15s; }
+.filter-btn:hover { background: var(--accent-light); }
+.filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.progress-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; font-size: 0.82rem; color: var(--muted); }
+.progress-track { flex: 1; height: 6px; background: var(--surface); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--success); border-radius: 3px; transition: width 0.3s; width: 0%; }
+.card-container { perspective: 800px; margin-bottom: 1.2rem; }
+.flashcard { width: 100%; min-height: 280px; cursor: pointer; position: relative; transform-style: preserve-3d; transition: transform 0.5s; border-radius: 8px; }
+.flashcard.flipped { transform: rotateY(180deg); }
+.card-face { position: absolute; inset: 0; backface-visibility: hidden; border: 1px solid var(--card-border); border-radius: 8px; padding: 2rem 1.8rem; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: var(--card-bg); }
+.card-front { z-index: 2; }
+.card-front .card-unit { font-size: 0.72rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem; }
+.card-front .card-term { font-family: var(--font-display); font-size: 1.45rem; color: var(--heading); line-height: 1.3; }
+.card-front .card-hint { margin-top: 1rem; font-size: 0.78rem; color: var(--muted); }
+.card-back { transform: rotateY(180deg); overflow-y: auto; }
+.card-back .card-definition { font-size: 0.95rem; line-height: 1.7; color: var(--fg); max-width: 520px; }
+.card-back .card-exam-note { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--muted); font-style: italic; }
+.card-controls { display: flex; justify-content: center; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.card-controls button { padding: 0.5rem 1rem; font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); color: var(--fg); cursor: pointer; transition: all 0.15s; }
+.card-controls button:hover { background: var(--accent-light); }
+.btn-got-it { background: var(--success) !important; color: #fff !important; border-color: var(--success) !important; }
+.btn-got-it:hover { opacity: 0.85; }
+.card-counter { font-size: 0.85rem; color: var(--muted); min-width: 60px; text-align: center; }
+.ai-panel { display: none; }
+.ai-panel.visible { display: block; }
+.ai-form { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; }
+.ai-form input { flex: 1; padding: 0.6rem 0.9rem; font-family: var(--font-body); font-size: 0.9rem; border: 1px solid var(--border); border-radius: 4px; background: var(--card-bg); color: var(--fg); outline: none; }
+.ai-form input:focus { border-color: var(--accent); }
+.ai-form input::placeholder { color: var(--muted); }
+.ai-form button { padding: 0.6rem 1.2rem; font-family: var(--font-body); font-size: 0.88rem; font-weight: 500; background: var(--accent); color: #fff; border: none; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: opacity 0.15s; }
+.ai-form button:hover { opacity: 0.85; }
+.ai-form button:disabled { opacity: 0.5; cursor: not-allowed; }
+.ai-status { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; min-height: 1.4em; }
+.ai-status.error { color: var(--danger); }
+.ai-suggestions { margin-bottom: 1rem; }
+.ai-suggestions p { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
+.suggestion-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.suggestion-chip { padding: 0.3rem 0.65rem; font-family: var(--font-body); font-size: 0.76rem; background: var(--surface); border: 1px solid var(--border); border-radius: 3px; color: var(--fg); cursor: pointer; transition: all 0.15s; }
+.suggestion-chip:hover { background: var(--accent-light); border-color: var(--accent); }
+.reset-link { font-size: 0.8rem; color: var(--muted); cursor: pointer; text-decoration: underline; background: none; border: none; font-family: var(--font-body); }
+.reset-link:hover { color: var(--accent); }
+.hidden { display: none !important; }
+@media (max-width: 600px) {
+  h1 { font-size: 1.5rem; }
+  .flashcard { min-height: 240px; }
+  .card-front .card-term { font-size: 1.2rem; }
+  .card-face { padding: 1.5rem 1.2rem; }
+  .ai-form { flex-direction: column; }
+  .filter-bar { gap: 0.3rem; }
+  .filter-btn { font-size: 0.72rem; padding: 0.3rem 0.55rem; }
+}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+  <h1>Flashcards</h1>
+  <p class="subtitle">AQA A-Level Business (7138)</p>
+  <div class="mode-tabs">
+    <button class="mode-tab active" data-mode="static">Topic cards</button>
+    <button class="mode-tab" data-mode="ai">Generate your own</button>
+  </div>
+
+  <!-- STATIC MODE -->
+  <div id="static-panel">
+    <div class="filter-bar" id="filter-bar"></div>
+    <div class="progress-row">
+      <span id="progress-label">0 / 0</span>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <button class="reset-link" id="reset-btn">Reset</button>
+    </div>
+    <div class="card-container" id="card-container">
+      <div class="flashcard" id="flashcard">
+        <div class="card-face card-front">
+          <div class="card-unit" id="card-unit"></div>
+          <div class="card-term" id="card-term"></div>
+          <div class="card-hint">Click to reveal</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-definition" id="card-definition"></div>
+          <div class="card-exam-note" id="card-exam-note"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-controls">
+      <button id="prev-btn">&#8592; Prev</button>
+      <span class="card-counter" id="card-counter">1 / 1</span>
+      <button id="next-btn">Next &#8594;</button>
+      <button class="btn-got-it" id="got-it-btn">Got it</button>
+      <button id="shuffle-btn">Shuffle</button>
+    </div>
+  </div>
+
+  <!-- AI MODE -->
+  <div id="ai-panel" class="ai-panel">
+    <div class="ai-suggestions">
+      <p>Try a topic:</p>
+      <div class="suggestion-chips">
+        <button class="suggestion-chip">Break-even analysis</button>
+        <button class="suggestion-chip">Price elasticity of demand</button>
+        <button class="suggestion-chip">Capacity utilisation</button>
+        <button class="suggestion-chip">Motivation theories</button>
+        <button class="suggestion-chip">Porter's Five Forces</button>
+        <button class="suggestion-chip">Exchange rates</button>
+        <button class="suggestion-chip">Lean production</button>
+        <button class="suggestion-chip">Ansoff Matrix</button>
+        <button class="suggestion-chip">ESG and sustainability</button>
+        <button class="suggestion-chip">Stakeholder mapping</button>
+      </div>
+    </div>
+    <div class="ai-form">
+      <input type="text" id="ai-topic" placeholder="e.g. Economies of scale and diseconomies" maxlength="120">
+      <button id="ai-generate-btn">Generate</button>
+    </div>
+    <div class="ai-status" id="ai-status"></div>
+    <div class="card-container hidden" id="ai-card-container">
+      <div class="flashcard" id="ai-flashcard">
+        <div class="card-face card-front">
+          <div class="card-unit" id="ai-card-unit"></div>
+          <div class="card-term" id="ai-card-term"></div>
+          <div class="card-hint">Click to reveal</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-definition" id="ai-card-definition"></div>
+          <div class="card-exam-note" id="ai-card-exam-note"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-controls hidden" id="ai-controls">
+      <button id="ai-prev-btn">&#8592; Prev</button>
+      <span class="card-counter" id="ai-card-counter">1 / 1</span>
+      <button id="ai-next-btn">Next &#8594;</button>
+      <button id="ai-shuffle-btn">Shuffle</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CARDS=[
+// ═══════ 3.1.1 Business and objectives ═══════
+{unit:"3.1.1",term:"Entrepreneur",def:"A person who takes the financial risk of starting and managing a new business venture. They organise resources, make decisions and bear the consequences of success or failure.",note:""},
+{unit:"3.1.1",term:"Business plan",def:"A written document setting out a business's objectives, strategies, market analysis and financial forecasts. Used to guide decision-making and to help secure external finance.",note:""},
+{unit:"3.1.1",term:"Business objectives",def:"The measurable goals a business sets itself, such as survival, profit maximisation, growth, market share, or social objectives. Good objectives follow the SMART framework: Specific, Measurable, Achievable, Realistic, Time-bound.",note:"Objectives differ between businesses and may change over time depending on the circumstances."},
+{unit:"3.1.1",term:"Competitiveness",def:"The ability of a business to compete effectively against rivals. Depends on factors such as price, quality, customer service, innovation and efficiency.",note:""},
+{unit:"3.1.1",term:"Market conditions",def:"The external factors affecting the market a business operates in, such as the level of demand, degree of competition, rate of growth and consumer trends.",note:""},
+{unit:"3.1.1",term:"Opportunity cost",def:"The next best alternative forgone when a decision is made. Every business decision involves giving up the benefits of the option not chosen.",note:"This applies to all business decisions, from investment choices to resource allocation."},
+{unit:"3.1.1",term:"Adding value",def:"The difference between the selling price of a product and the cost of the materials and components used to make it. Businesses add value through branding, design, quality, convenience or service.",note:""},
+
+// ═══════ 3.1.2 Forms of business and stakeholders ═══════
+{unit:"3.1.2",term:"Sole trader",def:"A business owned and run by one person with unlimited liability. The simplest form of business to set up. The owner keeps all profits but is personally responsible for all debts.",note:""},
+{unit:"3.1.2",term:"Private limited company (Ltd)",def:"A company with shares that can only be sold privately, not on a stock exchange. Owners have limited liability and the company has a separate legal identity from its owners.",note:"Ltd does not mean small. Many large businesses are private limited companies."},
+{unit:"3.1.2",term:"Public limited company (plc)",def:"A company whose shares are traded publicly on a stock exchange. Must have at least £50,000 share capital. Easier to raise large amounts of capital but risk of hostile takeover and pressure from shareholders for short-term returns.",note:""},
+{unit:"3.1.2",term:"Limited liability",def:"The owners' financial risk is limited to the amount they invested in the business. Personal assets are protected if the business fails. Applies to Ltd and plc companies.",note:""},
+{unit:"3.1.2",term:"Unlimited liability",def:"The owner is personally responsible for all business debts. If the business fails, personal assets such as a house or savings can be seized to pay creditors. Applies to sole traders and partnerships.",note:""},
+{unit:"3.1.2",term:"Co-operative",def:"A business owned and run jointly by its members, who share the profits or benefits. Members have an equal say in decisions regardless of how much they have invested.",note:""},
+{unit:"3.1.2",term:"Social enterprise",def:"A business with primarily social or environmental objectives that reinvests most of its profits back into the community or cause rather than distributing them to shareholders.",note:""},
+{unit:"3.1.2",term:"Dividend",def:"A share of the profits paid to shareholders, usually expressed as an amount per share. The board of directors decides whether to pay a dividend and how much.",note:""},
+{unit:"3.1.2",term:"Dividend yield",def:"The annual dividend per share expressed as a percentage of the current share price. Formula: (dividend per share ÷ share price) × 100. Helps investors compare returns across companies.",note:""},
+{unit:"3.1.2",term:"Market capitalisation",def:"The total market value of a company's issued shares. Formula: number of issued shares × current share price. Used to measure the size of a plc.",note:""},
+{unit:"3.1.2",term:"Stakeholder",def:"Any individual or group that has an interest in or is affected by the activities of a business. Includes employees, customers, suppliers, the local community, the government and shareholders.",note:""},
+
+// ═══════ 3.1.3 Marketing management ═══════
+{unit:"3.1.3",term:"Primary market research",def:"New data collected first-hand for a specific purpose, such as surveys, interviews, focus groups or observation. More relevant to the business's needs but more expensive and time-consuming than secondary research.",note:""},
+{unit:"3.1.3",term:"Secondary market research",def:"Data that already exists and was collected for another purpose, such as government statistics, market reports, competitor websites or internal sales records. Cheaper and quicker but may not be specific enough.",note:""},
+{unit:"3.1.3",term:"Quantitative research",def:"Research that produces numerical data that can be statistically analysed, such as sales figures, survey percentages or market share data.",note:""},
+{unit:"3.1.3",term:"Qualitative research",def:"Research that produces non-numerical data exploring opinions, motivations and attitudes, such as focus group discussions or open-ended interview responses.",note:""},
+{unit:"3.1.3",term:"Confidence interval",def:"The range within which the true value of a population measure is likely to fall. A narrower interval gives more precise results but requires a larger sample.",note:""},
+{unit:"3.1.3",term:"Confidence level",def:"The probability that the results of research are reliable and not due to chance. For example, a 95% confidence level means there is a 95% chance the results reflect the true population.",note:""},
+{unit:"3.1.3",term:"Market size",def:"The total value of sales (sales value) or total volume of units sold (sales volume) in a market over a given period of time.",note:""},
+{unit:"3.1.3",term:"Sales value",def:"The total revenue generated from sales in a market, measured in monetary terms such as pounds sterling.",note:""},
+{unit:"3.1.3",term:"Sales volume",def:"The total number of units sold in a market over a given period of time.",note:""},
+{unit:"3.1.3",term:"Market share",def:"The proportion of total market sales held by one business or product. Formula: (business sales ÷ total market sales) × 100.",note:""},
+{unit:"3.1.3",term:"Positive correlation",def:"When two variables move in the same direction — as one increases, the other also increases.",note:"Correlation does not prove causation. Other factors may be involved."},
+{unit:"3.1.3",term:"Negative correlation",def:"When two variables move in opposite directions — as one increases, the other decreases.",note:""},
+{unit:"3.1.3",term:"Seasonal demand",def:"Predictable fluctuations in demand linked to the time of year, such as higher demand for ice cream in summer or heating in winter.",note:""},
+{unit:"3.1.3",term:"Cyclical demand",def:"Fluctuations in demand linked to the broader economic cycle of growth and recession, rather than seasonal patterns.",note:""},
+{unit:"3.1.3",term:"Price elasticity of demand (PED)",def:"Measures how responsive demand is to a change in price. Formula: % change in quantity demanded ÷ % change in price. If PED > 1, demand is elastic. If PED < 1, demand is inelastic. Always negative.",note:"Elastic demand: cut price to raise revenue. Inelastic demand: raise price to raise revenue."},
+{unit:"3.1.3",term:"Income elasticity of demand (YED)",def:"Measures how responsive demand is to a change in income. Formula: % change in quantity demanded ÷ % change in income. Normal goods have positive YED. Inferior goods have negative YED.",note:"A luxury good has YED greater than +1. When incomes fall, demand for inferior goods rises."},
+{unit:"3.1.3",term:"Target market",def:"The specific group of consumers a business aims its products and marketing at. Identified through market segmentation based on factors like age, income, location or lifestyle.",note:""},
+{unit:"3.1.3",term:"Market segmentation",def:"Dividing a market into distinct groups of consumers with similar characteristics or needs. Allows more focused and effective marketing.",note:""},
+{unit:"3.1.3",term:"Niche markets",def:"A small, specialised segment of a larger market. Businesses targeting a niche can charge higher prices and face less competition, but the market size is limited.",note:""},
+{unit:"3.1.3",term:"Mass markets",def:"The largest part of a market, where products are aimed at a wide range of consumers. High potential sales but more competition and less ability to charge premium prices.",note:""},
+{unit:"3.1.3",term:"Marketing mix",def:"The combination of factors a business uses to influence consumers to buy its product. Includes product, price, place and promotion.",note:""},
+{unit:"3.1.3",term:"The product life cycle",def:"The stages a product goes through from development to withdrawal: development, introduction, growth, maturity, decline. Each stage has different implications for sales, costs and marketing strategy.",note:"Extension strategies such as new markets, updated features or new packaging can prolong the maturity phase."},
+{unit:"3.1.3",term:"The Boston Matrix",def:"A model that classifies products by relative market share (high/low) and market growth (high/low). Four categories: Star (high/high), Cash Cow (high share/low growth), Question Mark (low share/high growth), Dog (low/low).",note:"Helps a business manage its product portfolio and allocate resources."},
+{unit:"3.1.3",term:"Cost-based pricing",def:"Setting the price by adding a mark-up to the cost of producing the product. Simple to calculate but ignores what the market is willing to pay.",note:""},
+{unit:"3.1.3",term:"Competition-based pricing",def:"Setting a price in relation to competitors. Can be premium pricing (above competitors), going-rate pricing (matching competitors) or discount pricing (below competitors).",note:""},
+{unit:"3.1.3",term:"Demand-based pricing",def:"Setting the price based on what consumers are willing to pay. Includes penetration pricing (low initial price to gain share), price skimming (high initial price for new products), and dynamic pricing (prices change with demand).",note:""},
+{unit:"3.1.3",term:"Distribution channel",def:"The route a product takes from the producer to the consumer. Can be direct (producer to consumer) or indirect (through intermediaries such as wholesalers and retailers).",note:""},
+{unit:"3.1.3",term:"Wholesaler",def:"A business that buys goods in bulk from producers and sells them in smaller quantities to retailers. Breaks bulk and provides storage, reducing the burden on both producers and retailers.",note:""},
+{unit:"3.1.3",term:"Multi-channel distribution",def:"Using more than one distribution channel to reach customers, such as selling through shops, online, and through third-party retailers at the same time.",note:""},
+{unit:"3.1.3",term:"E-commerce",def:"Buying and selling goods and services online. Allows businesses to reach a wider market with lower overheads, but increases competition and requires investment in technology and logistics.",note:""},
+{unit:"3.1.3",term:"SEO (Search Engine Optimisation)",def:"Techniques used to improve a website's ranking in search engine results, increasing the amount of organic (unpaid) traffic to the site.",note:""},
+{unit:"3.1.3",term:"Pay per click (PPC)",def:"An online advertising model where the business pays a fee each time a user clicks on one of its adverts. Allows targeted advertising but costs can escalate quickly.",note:""},
+{unit:"3.1.3",term:"Content marketing",def:"Creating and sharing valuable, relevant content such as blogs, videos or social media posts to attract and retain customers, rather than directly promoting a product.",note:""},
+{unit:"3.1.3",term:"Click-through rate",def:"The percentage of people who click on a link or advert after seeing it. Formula: (clicks ÷ impressions) × 100. A key measure of digital marketing effectiveness.",note:""},
+{unit:"3.1.3",term:"Customer acquisition",def:"The process of attracting new customers to a business. Involves marketing, advertising and promotions. The cost of acquisition should be weighed against the lifetime value of the customer.",note:""},
+{unit:"3.1.3",term:"CRM (Customer Relationship Management)",def:"Strategies and systems used to manage a business's interactions with current and potential customers. Aims to improve customer satisfaction, retention and lifetime value.",note:""},
+{unit:"3.1.3",term:"Lead generation",def:"The process of identifying and attracting potential customers who have shown interest in a product or service, often through digital marketing, events or referrals.",note:""},
+{unit:"3.1.3",term:"Pipeline management",def:"Tracking and managing potential customers through each stage of the sales process, from initial contact to completed sale.",note:""},
+{unit:"3.1.3",term:"Website cookies",def:"Small files stored on a user's device by a website, used to track browsing behaviour, remember preferences and enable targeted advertising.",note:"Raises ethical issues around data privacy and informed consent."},
+
+// ═══════ 3.1.4 Financial management ═══════
+{unit:"3.1.4",term:"Revenue",def:"The total income a business receives from selling its products. Formula: selling price per unit × quantity sold.",note:"Not the same as profit. Revenue does not deduct any costs."},
+{unit:"3.1.4",term:"Fixed costs",def:"Costs that do not change with the level of output in the short run, such as rent, salaries and insurance. Must be paid regardless of how much is produced.",note:""},
+{unit:"3.1.4",term:"Variable costs",def:"Costs that change in direct proportion to the level of output, such as raw materials and packaging. Formula: variable cost per unit × number of units sold.",note:""},
+{unit:"3.1.4",term:"Contribution per unit",def:"The amount each unit sold contributes towards covering fixed costs and then generating profit. Formula: selling price − variable cost per unit.",note:""},
+{unit:"3.1.4",term:"Total contribution",def:"The total amount contributed by all units sold towards covering fixed costs. Formula: contribution per unit × units sold. Profit = total contribution − fixed costs.",note:""},
+{unit:"3.1.4",term:"Break-even",def:"The level of output where total revenue equals total costs, so the business makes neither a profit nor a loss. Formula: fixed costs ÷ contribution per unit.",note:"Know how the break-even chart changes when price, costs or output change."},
+{unit:"3.1.4",term:"Margin of safety",def:"The difference between actual output and break-even output, measured in units. Shows how much output can fall before the business starts making a loss.",note:"Always express in units, not in pounds."},
+{unit:"3.1.4",term:"Profit",def:"The financial return to a business after all costs have been deducted from revenue. Can be measured at different levels: gross profit, operating profit and profit for the year.",note:"Not the same as cash flow. A profitable business can still run out of cash."},
+{unit:"3.1.4",term:"Gross profit",def:"Revenue minus cost of sales. Shows the profit from trading before other operating expenses are deducted.",note:"Rent and other overheads do not affect gross profit."},
+{unit:"3.1.4",term:"Operating profit",def:"Gross profit minus operating expenses such as rent, wages, utilities and marketing. Shows the profit from normal business operations.",note:""},
+{unit:"3.1.4",term:"Profit for the year",def:"The final profit figure after all costs, interest and tax have been deducted from revenue. This is the profit available to shareholders.",note:""},
+{unit:"3.1.4",term:"Profitability",def:"A measure of how effectively a business generates profit relative to its revenue or capital. Assessed using ratios such as gross profit margin, operating profit margin and ROCE.",note:"A business can increase revenue but see profitability fall if costs rise faster."},
+{unit:"3.1.4",term:"Budgets",def:"Financial plans setting out expected income and expenditure over a future period. Help with planning, coordination, control and motivation.",note:""},
+{unit:"3.1.4",term:"Variance analysis",def:"The comparison of budgeted figures with actual figures. A favourable variance means actual performance is better than budgeted. An adverse variance means it is worse.",note:"Always label variances as favourable or adverse."},
+{unit:"3.1.4",term:"Favourable variance",def:"When actual income is higher than budgeted, or actual spending is lower than budgeted. Indicates better-than-expected performance.",note:""},
+{unit:"3.1.4",term:"Adverse variance",def:"When actual income is lower than budgeted, or actual spending is higher than budgeted. Indicates worse-than-expected performance and may require investigation.",note:""},
+{unit:"3.1.4",term:"Zero-based budgeting",def:"A method of budgeting where every expense must be justified from scratch for each new period, rather than basing the budget on last year's figures plus adjustments.",note:"More thorough but very time-consuming."},
+{unit:"3.1.4",term:"Cash flow forecast",def:"A prediction of expected cash inflows and outflows over a future period, showing the expected closing cash balance each month. Used for planning and securing finance.",note:""},
+{unit:"3.1.4",term:"Cash",def:"Money held by a business in the form of notes, coins and bank deposits. Essential for paying day-to-day expenses. A business can be profitable but still run out of cash.",note:""},
+{unit:"3.1.4",term:"Liquidity",def:"A measure of a business's ability to meet its short-term financial obligations as they fall due. Assessed using the current ratio and acid test ratio.",note:""},
+{unit:"3.1.4",term:"Current ratio",def:"A measure of short-term liquidity. Formula: current assets ÷ current liabilities. A ratio around 1.5 to 2 is generally considered healthy.",note:"Too high may mean assets are not being used efficiently."},
+{unit:"3.1.4",term:"Acid test ratio",def:"A stricter measure of liquidity that excludes inventory. Formula: (current assets − inventory) ÷ current liabilities. A ratio below 1 may indicate cash flow problems.",note:"Also called the quick ratio."},
+{unit:"3.1.4",term:"Working capital",def:"The money available for day-to-day operations. Formula: current assets − current liabilities. Positive working capital means the business can meet its short-term debts.",note:""},
+{unit:"3.1.4",term:"Receivables",def:"Money owed to the business by its customers for goods or services supplied on credit. Also known as trade receivables or debtors.",note:""},
+{unit:"3.1.4",term:"Receivable days",def:"The average number of days it takes to collect payment from customers. Formula: (receivables ÷ revenue) × 365. Lower is better for cash flow.",note:""},
+{unit:"3.1.4",term:"Payables",def:"Money owed by the business to its suppliers for goods or services received on credit. Also known as trade payables or creditors.",note:""},
+{unit:"3.1.4",term:"Payable days",def:"The average number of days the business takes to pay its suppliers. Formula: (payables ÷ cost of sales) × 365. Higher is better for cash flow but risks damaging supplier relationships.",note:"Uses cost of sales, not revenue."},
+{unit:"3.1.4",term:"Income statement",def:"A financial statement showing a business's revenue, costs and profit over a given period. Includes gross profit, operating profit and profit for the year.",note:"Also called the profit and loss account."},
+{unit:"3.1.4",term:"Statement of financial position",def:"A financial statement showing a business's assets, liabilities and equity at a single point in time. Provides a snapshot of what the business owns and owes.",note:"Also called the balance sheet."},
+{unit:"3.1.4",term:"Gearing",def:"The proportion of a business's long-term finance that comes from debt. Formula: (non-current liabilities ÷ capital employed) × 100. High gearing means higher risk but potentially higher returns for shareholders.",note:"Capital employed = total equity + non-current liabilities."},
+{unit:"3.1.4",term:"ROCE (Return on Capital Employed)",def:"A measure of how efficiently a business generates profit from its total capital. Formula: (operating profit ÷ capital employed) × 100. Higher ROCE means better use of resources.",note:""},
+{unit:"3.1.4",term:"ROI (Return on Investment)",def:"The profit from an investment expressed as a percentage of the cost of that investment. Formula: (profit from investment ÷ cost of investment) × 100.",note:""},
+{unit:"3.1.4",term:"Share capital",def:"Money raised by a company through selling shares to investors. A long-term source of finance that does not need to be repaid, but dilutes ownership and control.",note:""},
+{unit:"3.1.4",term:"Loan",def:"A fixed amount of money borrowed from a bank or other lender, repaid over an agreed period with interest. Provides certainty but commits the business to regular repayments.",note:""},
+{unit:"3.1.4",term:"Overdraft",def:"A facility allowing a business to spend more than it has in its bank account, up to an agreed limit. Flexible but expensive — interest rates are usually higher than on a loan.",note:""},
+{unit:"3.1.4",term:"Trade credit",def:"An arrangement where a supplier allows a business to receive goods or services now and pay for them later, typically within 30 to 90 days.",note:""},
+{unit:"3.1.4",term:"Debt factoring",def:"Selling unpaid invoices to a third party (a factor) at a discount in exchange for immediate cash. Improves cash flow but reduces total income as the factor keeps a percentage.",note:""},
+{unit:"3.1.4",term:"Crowd funding",def:"Raising small amounts of money from a large number of people, typically through an online platform. Can also help test market demand and build a customer base.",note:""},
+{unit:"3.1.4",term:"Business angel",def:"A wealthy individual who invests their own money in a start-up or small business in exchange for equity. Often provides mentoring and business advice alongside finance.",note:""},
+{unit:"3.1.4",term:"Private equity",def:"Investment from a specialist firm that buys shares in private companies, often to restructure and grow them before selling at a profit.",note:""},
+{unit:"3.1.4",term:"Tax avoidance (A-level only)",def:"Using legal methods to minimise the amount of tax a business pays. Legal but can be seen as unethical, particularly for large multinational companies that shift profits to low-tax countries.",note:"Different from tax evasion, which is illegal."},
+
+// ═══════ 3.2.1 People management ═══════
+{unit:"3.2.1",term:"Employee engagement",def:"The emotional commitment and connection an employee feels towards their organisation and its goals. Engaged employees are more productive, creative and less likely to leave.",note:""},
+{unit:"3.2.1",term:"Employee retention",def:"The ability of a business to keep its employees over time. High retention saves recruitment and training costs and preserves knowledge and experience.",note:""},
+{unit:"3.2.1",term:"Employee turnover",def:"The percentage of staff who leave a business over a given period. Formula: (number of leavers ÷ average number of staff) × 100. Some turnover is healthy, but high rates increase costs.",note:""},
+{unit:"3.2.1",term:"Talent acquisition",def:"The strategic process of identifying, attracting and hiring skilled workers to meet the current and future needs of the business.",note:""},
+{unit:"3.2.1",term:"Employee wellbeing",def:"The physical and mental health and overall welfare of employees. Methods of improvement include flexible working, mental health support, an inclusive work environment and employee voice.",note:""},
+{unit:"3.2.1",term:"Employee voice",def:"The ways in which employees communicate their views, concerns and ideas to management. Channels include employee forums, surveys, trade unions and informal feedback.",note:""},
+{unit:"3.2.1",term:"Employee representation",def:"Structures that allow employees to be formally represented in discussions with management, such as trade unions or employee forums.",note:""},
+{unit:"3.2.1",term:"Employee forum",def:"A body made up of employee and management representatives that meets to discuss workplace issues. An alternative to trade union representation.",note:""},
+{unit:"3.2.1",term:"Trade union",def:"An organised group of workers that negotiates with employers over pay, conditions and workplace issues through collective bargaining.",note:""},
+{unit:"3.2.1",term:"Employer-employee relations",def:"The relationship between management and the workforce. Good relations improve productivity, morale and retention. Poor relations lead to conflict, absenteeism or industrial action.",note:""},
+{unit:"3.2.1",term:"Autocratic leadership",def:"A leadership style where the leader makes decisions without consulting employees. Allows fast decisions but can reduce motivation and creativity.",note:""},
+{unit:"3.2.1",term:"Democratic leadership",def:"A leadership style where the leader involves employees in the decision-making process. Improves motivation and generates ideas but can be slower.",note:""},
+{unit:"3.2.1",term:"Transformational leadership",def:"A leadership style that inspires employees to go beyond their own self-interest for the good of the organisation by creating a shared vision and motivating change.",note:""},
+{unit:"3.2.1",term:"Appraisal",def:"A formal assessment of an employee's performance over a period of time, used to set targets, identify training needs and inform pay or promotion decisions.",note:""},
+{unit:"3.2.1",term:"Hierarchy",def:"The levels of authority within an organisation, from senior management at the top to operational staff at the bottom.",note:""},
+{unit:"3.2.1",term:"Flat structure",def:"An organisational structure with few levels of hierarchy and wide spans of control. Communication is quicker and employees may have more responsibility, but managers can be overloaded.",note:""},
+{unit:"3.2.1",term:"Tall structure",def:"An organisational structure with many levels of hierarchy and narrow spans of control. Clear chains of command but communication can be slow and bureaucratic.",note:""},
+{unit:"3.2.1",term:"Span of control",def:"The number of subordinates directly managed by one person. A wide span means more direct reports; a narrow span means fewer.",note:""},
+{unit:"3.2.1",term:"Centralisation",def:"Decision-making authority is concentrated at the top of the organisation. Ensures consistency but can be slow and reduce motivation at lower levels.",note:""},
+{unit:"3.2.1",term:"Decentralisation",def:"Decision-making authority is delegated to lower levels or regional units. Speeds up decisions and empowers staff but can reduce consistency.",note:""},
+{unit:"3.2.1",term:"Delayering",def:"Removing one or more levels of hierarchy from an organisational structure to create a flatter organisation. Can reduce costs and speed up communication but risks overloading remaining managers.",note:""},
+{unit:"3.2.1",term:"Delegation",def:"Passing authority to a subordinate to carry out a specific task. Frees up the manager's time and can motivate employees, but requires trust and adequate training.",note:""},
+{unit:"3.2.1",term:"Empowerment",def:"Giving employees the authority, skills and freedom to make decisions about their own work. Can increase motivation and responsiveness but requires a supportive culture.",note:""},
+{unit:"3.2.1",term:"Team",def:"A group of people working together towards a shared goal, combining their individual skills and experience. Effective teamwork can improve problem-solving and motivation.",note:""},
+{unit:"3.2.1",term:"Wages",def:"Payment to employees based on the number of hours worked or the amount produced. Usually paid weekly.",note:""},
+{unit:"3.2.1",term:"Salaries",def:"A fixed annual payment to an employee, usually paid monthly regardless of the number of hours worked.",note:""},
+{unit:"3.2.1",term:"Piece rate",def:"Payment per item produced or task completed. Directly links pay to output but can reduce quality and cause stress.",note:"Different from performance-related pay, which is linked to targets or appraisal outcomes."},
+{unit:"3.2.1",term:"Commission",def:"A payment, usually a percentage of sales, made to employees for each sale they complete. Common in sales roles. Incentivises selling but may encourage aggressive tactics.",note:""},
+{unit:"3.2.1",term:"Bonus",def:"An additional payment on top of regular pay, given as a reward for meeting targets or for strong performance.",note:""},
+{unit:"3.2.1",term:"Performance-related pay",def:"A bonus or pay increase linked to meeting targets or achieving good appraisal results. Can motivate but may create unhealthy competition between employees.",note:""},
+{unit:"3.2.1",term:"Fringe benefits",def:"Non-cash rewards given to employees in addition to their pay, such as company cars, private healthcare, gym membership or childcare vouchers.",note:""},
+{unit:"3.2.1",term:"Job enrichment",def:"Giving employees more challenging and meaningful tasks to increase motivation. Linked to Herzberg's motivators such as achievement and responsibility.",note:""},
+{unit:"3.2.1",term:"Flexible employment",def:"Working arrangements that give employees more choice over when, where or how they work, such as part-time, flexitime, compressed hours or term-time working.",note:""},
+{unit:"3.2.1",term:"Remote working",def:"Working from a location outside the traditional workplace, typically from home, using technology to communicate and complete tasks.",note:""},
+{unit:"3.2.1",term:"Hybrid working",def:"A combination of working in the workplace and working remotely. Offers flexibility while maintaining some face-to-face collaboration.",note:""},
+{unit:"3.2.1",term:"Zero-hours contract",def:"A contract where the employer is not obliged to provide a minimum number of hours and the worker is not obliged to accept them. Provides flexibility for the employer but insecurity for the worker.",note:""},
+{unit:"3.2.1",term:"Freelance",def:"A self-employed person who provides services to businesses on a contract-by-contract basis, rather than being permanently employed.",note:""},
+{unit:"3.2.1",term:"Redundancy",def:"When an employee's job no longer exists, usually because of business restructuring, downsizing or technological change. The employee is entitled to redundancy pay.",note:""},
+{unit:"3.2.1",term:"Redeployment",def:"Moving employees to a different role or department within the same organisation, often as an alternative to redundancy.",note:""},
+{unit:"3.2.1",term:"Equality",def:"Treating all employees fairly and giving them the same opportunities regardless of characteristics such as gender, race, disability or age.",note:""},
+{unit:"3.2.1",term:"Diversity",def:"Recognising, valuing and making use of the differences between people in the workforce, such as different backgrounds, experiences and perspectives.",note:""},
+{unit:"3.2.1",term:"Inclusion",def:"Creating a working environment where all employees feel valued, respected and able to contribute fully, regardless of their differences.",note:""},
+{unit:"3.2.1",term:"Belonging",def:"The feeling that an employee is accepted, supported and genuinely part of the team and organisation.",note:""},
+{unit:"3.2.1",term:"Code of conduct (A-level only)",def:"A set of rules or guidelines issued by a business that sets out the standards of behaviour expected of employees.",note:""},
+{unit:"3.2.1",term:"Pay gap (A-level only)",def:"The difference in average pay between two groups, such as men and women, or senior managers and other employees. Can indicate issues of equality within an organisation.",note:""},
+
+// ═══════ 3.2.2 Operations management ═══════
+{unit:"3.2.2",term:"Efficiency",def:"Producing output with the minimum waste of resources such as time, money and materials. A more efficient business has lower unit costs.",note:""},
+{unit:"3.2.2",term:"Productivity",def:"The output per unit of input, such as output per worker or output per machine. Higher productivity means more is produced with the same resources.",note:""},
+{unit:"3.2.2",term:"Capacity utilisation",def:"The percentage of total capacity actually being used. Formula: (actual output ÷ maximum possible output) × 100. Low utilisation raises unit costs because fixed costs are spread over fewer units.",note:""},
+{unit:"3.2.2",term:"Unit cost",def:"The average cost of producing one unit of output. Formula: total costs ÷ total output. Reducing unit costs improves competitiveness and profit margins.",note:""},
+{unit:"3.2.2",term:"Quality",def:"The degree to which a product or service meets customer expectations. Good quality reduces returns and complaints, and builds customer loyalty.",note:""},
+{unit:"3.2.2",term:"Quality control",def:"Inspecting finished products to check they meet the required standard. Catches defects but does not prevent them.",note:""},
+{unit:"3.2.2",term:"Quality assurance",def:"Building quality into every stage of the production process so that defects are prevented rather than detected. Everyone is responsible for quality.",note:"Different from quality control, which is reactive."},
+{unit:"3.2.2",term:"TQM (Total Quality Management)",def:"A management approach where quality is the responsibility of every employee at every stage, aiming for zero defects. Requires a culture of continuous improvement and employee commitment.",note:""},
+{unit:"3.2.2",term:"Quality circles",def:"Small groups of employees who meet regularly to identify and solve quality-related problems in their area of work.",note:""},
+{unit:"3.2.2",term:"Benchmarking",def:"Comparing a business's performance or processes against best practice in the industry, to identify gaps and set improvement targets.",note:""},
+{unit:"3.2.2",term:"Lean production",def:"An approach that aims to minimise waste at every stage of production while maintaining quality. Includes methods such as JIT, kaizen and continuous improvement.",note:""},
+{unit:"3.2.2",term:"Just in time (JIT)",def:"A system where materials arrive exactly when needed in production, reducing the need for large inventory holdings. Reduces storage costs and waste but depends on reliable suppliers.",note:""},
+{unit:"3.2.2",term:"Just in case (JIC)",def:"Holding buffer stock to ensure production can continue even if there are supply disruptions or unexpected increases in demand. Safer but ties up cash and increases storage costs.",note:""},
+{unit:"3.2.2",term:"Kaizen",def:"A philosophy of continuous improvement where all employees contribute small, incremental improvements to processes over time.",note:""},
+{unit:"3.2.2",term:"Inventory",def:"The stock of raw materials, work-in-progress and finished goods held by a business at any point in time.",note:""},
+{unit:"3.2.2",term:"Inventory management",def:"The process of controlling and organising stock levels to minimise costs while ensuring sufficient supply to meet demand.",note:""},
+{unit:"3.2.2",term:"Inventory turnover",def:"How many times stock is sold and replaced in a year. Formula: cost of sales ÷ average inventories held. Higher turnover means stock is moving faster.",note:""},
+{unit:"3.2.2",term:"Economies of scale",def:"A fall in unit costs as a business increases its scale of output. Types include purchasing, technical, financial, managerial and marketing economies.",note:"Different from economies of scope, which arise from producing a range of products."},
+{unit:"3.2.2",term:"Diseconomies of scale",def:"A rise in unit costs as a business becomes too large. Causes include communication problems, coordination difficulties and reduced employee motivation.",note:""},
+{unit:"3.2.2",term:"Outsourcing",def:"Contracting out a business function to an external provider. Can reduce costs and allow focus on core activities, but risks loss of quality control and flexibility.",note:""},
+{unit:"3.2.2",term:"Supply chain",def:"The network of businesses, resources and activities involved in producing and delivering a product from raw materials to the end customer.",note:""},
+{unit:"3.2.2",term:"Supply chain transparency",def:"The extent to which a business and its stakeholders can trace and verify the origins, processes and conditions involved at each stage of the supply chain.",note:""},
+{unit:"3.2.2",term:"Logistics",def:"The management of the flow of goods, information and resources between the point of origin and the point of consumption.",note:""},
+{unit:"3.2.2",term:"Sustainability",def:"Meeting the needs of the present without compromising the ability of future generations to meet their own needs. Involves environmental, social and economic considerations.",note:""},
+{unit:"3.2.2",term:"Sustainable sourcing",def:"Choosing suppliers and materials in a way that considers environmental and social impacts alongside cost and quality.",note:""},
+{unit:"3.2.2",term:"Circularity",def:"An economic model that aims to eliminate waste by keeping products, components and materials in use for as long as possible through reuse, repair, refurbishment and recycling.",note:""},
+{unit:"3.2.2",term:"Carbon footprint",def:"The total amount of greenhouse gases produced directly and indirectly by a business, usually expressed in tonnes of carbon dioxide equivalent.",note:""},
+{unit:"3.2.2",term:"Resource efficiency",def:"Using the minimum amount of materials, energy and water needed to produce goods and services, reducing waste and environmental impact.",note:""},
+{unit:"3.2.2",term:"R&D (Research and Development)",def:"Activities undertaken by a business to innovate and develop new products, services or processes, or to improve existing ones.",note:""},
+{unit:"3.2.2",term:"Intrapreneurship",def:"Entrepreneurial behaviour within an existing organisation, where employees are given resources and autonomy to develop new ideas or projects.",note:""},
+{unit:"3.2.2",term:"Cross-functional teams",def:"Teams made up of employees from different departments or specialisms working together on a specific project or problem.",note:""},
+{unit:"3.2.2",term:"Intellectual property",def:"Legal rights that protect creations of the mind, such as inventions, designs, brand names and artistic works.",note:""},
+{unit:"3.2.2",term:"Patent",def:"A legal right granting exclusive use of an invention for a set period (usually 20 years). Prevents competitors from copying the invention.",note:""},
+{unit:"3.2.2",term:"Copyright",def:"A legal right that protects original creative works such as books, music, software and art from being copied without permission.",note:""},
+{unit:"3.2.2",term:"Infrastructure",def:"The basic physical and organisational structures needed for the operation of a business or economy, such as roads, power supplies, broadband and transport networks.",note:""},
+{unit:"3.2.2",term:"Resource allocation",def:"The process of distributing available resources such as finance, labour and materials among competing uses to achieve business objectives.",note:""},
+{unit:"3.2.2",term:"Network analysis",def:"A project management tool that maps out all the tasks in a project, their durations and dependencies. Identifies the critical path and float times.",note:""},
+{unit:"3.2.2",term:"Network diagram",def:"A visual representation of the tasks, sequence and timing of a project, showing earliest start times, latest finish times and the critical path.",note:""},
+{unit:"3.2.2",term:"Critical path",def:"The longest sequence of dependent tasks through a project, determining the minimum time needed to complete the whole project. Any delay on the critical path delays the project.",note:""},
+{unit:"3.2.2",term:"Float time",def:"The amount of time a non-critical activity can be delayed without delaying the overall project. Formula: latest finish time − duration − earliest start time.",note:""},
+{unit:"3.2.2",term:"Supplier third-party accreditations",def:"Independent certifications that verify a supplier meets certain quality, environmental or ethical standards, such as ISO 9001 or Fairtrade.",note:""},
+{unit:"3.2.2",term:"Supplier audit (A-level only)",def:"A formal inspection of a supplier's operations, processes and standards to check they meet the requirements of the buying business.",note:""},
+{unit:"3.2.2",term:"Supplier code of conduct (A-level only)",def:"A set of rules or principles that a business requires its suppliers to follow, covering areas such as labour standards, environmental practices and ethical behaviour.",note:""},
+
+// ═══════ 3.2.3 Managing business culture (A-level only) ═══════
+{unit:"3.2.3",term:"Business culture",def:"The shared values, beliefs, attitudes and norms that characterise how people behave within an organisation. Influences decision-making, employee behaviour and how the business responds to change.",note:"Factors influencing culture include leadership, mission, reward systems, organisational structure and customer expectations."},
+{unit:"3.2.3",term:"Business values",def:"The core principles and beliefs that guide a business's behaviour and decision-making, such as integrity, sustainability or customer focus.",note:""},
+
+// ═══════ 3.3.1 Business and society ═══════
+{unit:"3.3.1",term:"CSR (Corporate Social Responsibility)",def:"The idea that businesses should consider their impact on society and the environment, not just on shareholders. Can improve reputation and customer loyalty but may increase costs.",note:"Consider Carroll's CSR Pyramid: economic, legal, ethical and philanthropic responsibilities."},
+{unit:"3.3.1",term:"ESG (Environmental, Social and Governance)",def:"A framework for assessing a business's performance in three areas: environmental impact, social responsibility and quality of governance. Increasingly used by investors to evaluate businesses.",note:"ESG measures include emissions, health and safety, resource usage, community investment and board composition."},
+{unit:"3.3.1",term:"Greenwashing",def:"When a business makes misleading claims about its environmental practices or the environmental benefits of its products to appear more sustainable than it actually is.",note:""},
+{unit:"3.3.1",term:"Bluewashing",def:"When a business publicly associates itself with social responsibility initiatives, such as UN goals, without making genuine changes to its practices.",note:""},
+{unit:"3.3.1",term:"Public relations (PR)",def:"The management of a business's image and reputation through communication with the public, media and stakeholders. Differs from advertising because it aims for earned rather than paid coverage.",note:"Consider the difference between genuine CSR and PR-driven activity."},
+
+// ═══════ 3.3.2 Business and the external environment ═══════
+{unit:"3.3.2",term:"Economic growth",def:"An increase in the total output of goods and services in an economy over time, measured by GDP. Growth increases consumer spending and business confidence.",note:""},
+{unit:"3.3.2",term:"Inflation",def:"A sustained increase in the general price level in an economy over time. Increases costs for businesses and reduces the purchasing power of consumers.",note:""},
+{unit:"3.3.2",term:"Interest rates",def:"The cost of borrowing money and the reward for saving, set by the central bank. Higher rates increase borrowing costs and reduce consumer spending. Lower rates encourage spending and investment.",note:""},
+{unit:"3.3.2",term:"Unemployment rate",def:"The percentage of the labour force that is actively seeking work but unable to find employment. High unemployment reduces consumer spending but may make it easier for businesses to recruit.",note:""},
+{unit:"3.3.2",term:"Exchange rate",def:"The price of one currency in terms of another. Appreciation means the currency strengthens (imports cheaper, exports dearer). Depreciation means it weakens (imports dearer, exports cheaper).",note:""},
+{unit:"3.3.2",term:"Direct tax",def:"A tax levied directly on an individual's or business's income or profits, such as income tax or corporation tax.",note:""},
+{unit:"3.3.2",term:"Indirect tax",def:"A tax levied on the sale of goods and services, such as VAT. Paid by the consumer but collected by the business on behalf of the government.",note:""},
+{unit:"3.3.2",term:"Protectionism",def:"Government policies that restrict international trade to protect domestic businesses from foreign competition.",note:""},
+{unit:"3.3.2",term:"Tariff",def:"A tax imposed on imported goods, raising their price and making domestic goods relatively cheaper.",note:""},
+{unit:"3.3.2",term:"Quota",def:"A limit on the quantity of a particular good that can be imported into a country over a given period.",note:""},
+{unit:"3.3.2",term:"Trade agreement",def:"An arrangement between two or more countries to reduce or eliminate trade barriers such as tariffs and quotas.",note:""},
+{unit:"3.3.2",term:"Trade regulations",def:"Rules set by governments or international bodies that control aspects of trade, such as product standards, labelling requirements or customs procedures.",note:""},
+{unit:"3.3.2",term:"Competition policy",def:"Laws and regulations designed to promote fair competition in markets and prevent monopolies, cartels and anti-competitive behaviour.",note:""},
+{unit:"3.3.2",term:"Consumer protection",def:"Laws that protect consumers from unfair business practices, unsafe products and misleading advertising.",note:""},
+{unit:"3.3.2",term:"Employee protection",def:"Laws that protect the rights of employees in the workplace, covering areas such as minimum wage, working hours, health and safety, and discrimination.",note:""},
+{unit:"3.3.2",term:"Environmental protection",def:"Laws and regulations designed to reduce the harmful impact of business activity on the natural environment, such as emissions limits and waste disposal requirements.",note:""},
+{unit:"3.3.2",term:"Demographic factors",def:"Changes in the size, age structure, ethnic composition and geographical distribution of a population that affect consumer demand and the labour market.",note:""},
+{unit:"3.3.2",term:"Consumer values",def:"The beliefs and priorities that influence consumer purchasing decisions, such as sustainability, ethics, health or convenience.",note:""},
+{unit:"3.3.2",term:"Activism",def:"Organised efforts by individuals or groups to put pressure on businesses to change their practices, often on social, environmental or ethical grounds.",note:""},
+{unit:"3.3.2",term:"Digital technologies",def:"Technologies such as artificial intelligence, cloud computing, data analytics and automation that are transforming how businesses operate and compete.",note:""},
+{unit:"3.3.2",term:"Disruptive technologies",def:"New technologies that fundamentally change the way an industry operates, often displacing established businesses and business models.",note:""},
+
+// ═══════ 3.3.3 Strategy ═══════
+{unit:"3.3.3",term:"Strategy",def:"A long-term plan of action designed to achieve the overall aims and objectives of a business.",note:""},
+{unit:"3.3.3",term:"Mission",def:"A statement of the business's core purpose — why it exists and what it aims to achieve. Guides decision-making and communicates values to stakeholders.",note:""},
+{unit:"3.3.3",term:"Vision",def:"A statement of what a business aspires to become in the future. Provides direction and inspiration for strategic planning.",note:""},
+{unit:"3.3.3",term:"The Ansoff Matrix",def:"A model showing four growth strategies based on products and markets. Market penetration (existing/existing), market development (existing products/new markets), product development (new products/existing markets), diversification (new/new).",note:"Know which strategy applies to a given scenario and why. Diversification is the riskiest."},
+{unit:"3.3.3",term:"Positioning",def:"How a business wants its product or brand to be perceived by consumers relative to competitors, in terms of factors like price, quality, features or values.",note:""},
+{unit:"3.3.3",term:"Market mapping",def:"Plotting products or brands on a grid using two variables such as price versus quality, to identify gaps in the market or competitive positions.",note:""},
+{unit:"3.3.3",term:"Stakeholder mapping",def:"A framework that maps stakeholders by their power and interest to help managers decide who to prioritise and how to manage each group.",note:""},
+{unit:"3.3.3",term:"Strategic drift",def:"When a business's strategy fails to keep up with changes in the external environment. The gap between what the business does and what the market needs gradually widens.",note:""},
+{unit:"3.3.3",term:"Horizontal integration",def:"Merging with or acquiring a competitor at the same stage of the supply chain. Can increase market share and achieve economies of scale.",note:""},
+{unit:"3.3.3",term:"Vertical integration",def:"Merging with or acquiring a business at a different stage of the same supply chain. Backward integration is towards suppliers; forward integration is towards customers.",note:""},
+{unit:"3.3.3",term:"Conglomerate integration",def:"Merging with or acquiring a business in a completely different industry. Spreads risk but the business may lack expertise in the new area.",note:""},
+{unit:"3.3.3",term:"Merger",def:"When two businesses agree to combine into a single new entity, sharing ownership and management.",note:""},
+{unit:"3.3.3",term:"Acquisition",def:"When one business buys enough shares in another to take control. Can be agreed (friendly) or hostile (against the wishes of the target's board).",note:""},
+{unit:"3.3.3",term:"Joint venture",def:"Two or more businesses agree to work together on a specific project, sharing costs, risks and profits while retaining their separate identities.",note:""},
+{unit:"3.3.3",term:"Franchising",def:"A business model where one business (the franchisor) licenses another (the franchisee) to trade using its brand, systems and support in exchange for fees and royalties.",note:""},
+{unit:"3.3.3",term:"Licensing",def:"Granting another business the right to use intellectual property such as a patent, trademark or brand in return for a fee or royalty.",note:""},
+{unit:"3.3.3",term:"Exporting",def:"Selling goods or services produced in one country to customers in another country.",note:""},
+{unit:"3.3.3",term:"Direct investment",def:"Setting up or acquiring business operations in another country, such as building a factory or buying a local company.",note:""},
+{unit:"3.3.3",term:"Globalisation",def:"The increasing interconnectedness of world economies through trade, investment, labour mobility and technology.",note:""},
+{unit:"3.3.3",term:"Glocalisation",def:"Adapting a globally marketed product or service to suit local tastes, preferences or regulations in different countries or regions.",note:""},
+{unit:"3.3.3",term:"Digital strategy",def:"A plan for how a business will use digital technologies to achieve its objectives, improve efficiency and gain competitive advantage.",note:""},
+{unit:"3.3.3",term:"Retrenchment",def:"A strategy of cutting back to focus on core activities, reduce costs and improve efficiency. May involve redundancies, selling divisions or exiting markets.",note:""},
+{unit:"3.3.3",term:"Capital expenditure",def:"Spending on long-term assets such as machinery, buildings or vehicles that will be used over several years.",note:""},
+{unit:"3.3.3",term:"Payback",def:"The time it takes for an investment to generate enough cash inflows to repay the initial cost. Quick and easy to calculate but ignores cash flows after payback.",note:""},
+{unit:"3.3.3",term:"Average rate of return (ARR)",def:"The average annual profit from an investment expressed as a percentage of the initial cost. Formula: (average annual profit ÷ initial investment) × 100.",note:"Remember to subtract the initial cost from total returns before calculating average annual profit."},
+{unit:"3.3.3",term:"Net present value (NPV)",def:"The sum of all discounted future cash flows minus the initial investment. A positive NPV means the investment is expected to add value. Accounts for the time value of money.",note:""},
+
+// ═══════ 3.3.4 Change ═══════
+{unit:"3.3.4",term:"Risk",def:"The possibility of a negative outcome occurring, where the probability of different outcomes can be estimated or measured.",note:"Types of risk include financial, strategic, operational, compliance, reputational and cybersecurity risk."},
+{unit:"3.3.4",term:"Uncertainty",def:"A situation where the possible outcomes cannot be predicted or their probabilities estimated. Unlike risk, uncertainty cannot be managed through calculation alone.",note:""},
+{unit:"3.3.4",term:"Forecasting",def:"Using past data, trends and analysis to predict future events such as sales, costs or market changes. Helps with planning but is inherently uncertain.",note:""},
+{unit:"3.3.4",term:"Scenario planning",def:"Developing a range of possible future scenarios and preparing strategies for each, so the business can respond quickly to whichever situation arises.",note:""},
+{unit:"3.3.4",term:"Contingency planning",def:"Preparing for unexpected events by identifying potential risks and creating response plans in advance. Reduces the impact of crises but costs time and resources to develop.",note:""},
+{unit:"3.3.4",term:"Crisis management",def:"The process of preparing for and responding to a sudden and serious event that threatens the business, such as a product recall, data breach or natural disaster.",note:""},
+{unit:"3.3.4",term:"Agile business",def:"A business that can respond quickly and effectively to changes in its environment through flexible structures, empowered employees and adaptable processes.",note:"Ways of becoming more agile include flat structures, empowerment, transformational leadership and cross-functional teams."},
+
+// ═══════ FORMULAE ═══════
+{unit:"Formulae",term:"Market capitalisation",def:"Number of issued shares × Current share price.",note:""},
+{unit:"Formulae",term:"Dividend per share",def:"Total dividend paid ÷ Number of ordinary shares in issue.",note:""},
+{unit:"Formulae",term:"Dividend yield (%)",def:"(Dividend per share in pence ÷ Share price in pence) × 100.",note:""},
+{unit:"Formulae",term:"Market share (%)",def:"(Sales of one product or business ÷ Total sales in the market) × 100.",note:""},
+{unit:"Formulae",term:"Market growth (%)",def:"(Change in market size over a period ÷ Original size of the market) × 100.",note:""},
+{unit:"Formulae",term:"Price elasticity of demand",def:"% change in quantity demanded ÷ % change in price.",note:"Always negative. Ignore the sign when interpreting: >1 = elastic, <1 = inelastic."},
+{unit:"Formulae",term:"Income elasticity of demand",def:"% change in quantity demanded ÷ % change in income.",note:"Positive = normal good. Negative = inferior good. Greater than +1 = luxury."},
+{unit:"Formulae",term:"Variable costs",def:"Variable cost per unit × Number of units sold.",note:""},
+{unit:"Formulae",term:"Total costs",def:"Fixed costs + Variable costs.",note:""},
+{unit:"Formulae",term:"Revenue",def:"Selling price per unit × Number of units sold.",note:""},
+{unit:"Formulae",term:"Contribution per unit",def:"Selling price − Variable costs per unit.",note:""},
+{unit:"Formulae",term:"Total contribution",def:"Contribution per unit × Units sold. OR: Total revenue − Total variable costs.",note:""},
+{unit:"Formulae",term:"Break-even output",def:"Fixed costs ÷ Contribution per unit.",note:""},
+{unit:"Formulae",term:"Margin of safety",def:"Actual level of output − Break-even level of output. Always in UNITS.",note:""},
+{unit:"Formulae",term:"Budget variance",def:"Budgeted figure − Actual figure.",note:""},
+{unit:"Formulae",term:"Payable days",def:"(Payables ÷ Cost of sales) × 365.",note:"Uses cost of sales, NOT revenue."},
+{unit:"Formulae",term:"Receivable days",def:"(Receivables ÷ Revenue) × 365.",note:""},
+{unit:"Formulae",term:"Current ratio",def:"Current assets ÷ Current liabilities.",note:""},
+{unit:"Formulae",term:"Acid test ratio",def:"(Current assets − Inventory) ÷ Current liabilities.",note:""},
+{unit:"Formulae",term:"Profit",def:"Total revenue − Total costs. OR: Total contribution − Fixed costs.",note:""},
+{unit:"Formulae",term:"Gross profit",def:"Revenue − Cost of sales.",note:""},
+{unit:"Formulae",term:"Gross profit margin (%)",def:"(Gross profit ÷ Revenue) × 100.",note:""},
+{unit:"Formulae",term:"Operating profit",def:"Gross profit − Operating expenses.",note:""},
+{unit:"Formulae",term:"Operating profit margin (%)",def:"(Operating profit ÷ Revenue) × 100.",note:""},
+{unit:"Formulae",term:"Profit for year",def:"Operating profit + Profit from other activities − Net finance costs − Tax.",note:""},
+{unit:"Formulae",term:"Profit for year margin (%)",def:"(Profit for year ÷ Revenue) × 100.",note:""},
+{unit:"Formulae",term:"ROCE (%)",def:"(Operating profit ÷ Capital employed) × 100. Capital employed = Total equity + Non-current liabilities.",note:""},
+{unit:"Formulae",term:"Return on marketing spend",def:"(Profit from marketing activities ÷ Amount of marketing spend) × 100.",note:""},
+{unit:"Formulae",term:"ROI (%)",def:"(Profit from the investment ÷ Cost of the investment) × 100.",note:""},
+{unit:"Formulae",term:"Gearing (%)",def:"(Non-current liabilities ÷ Capital employed) × 100. Capital employed = Total equity + Non-current liabilities.",note:""},
+{unit:"Formulae",term:"Employee productivity",def:"Output over a time period ÷ Number of employees.",note:""},
+{unit:"Formulae",term:"Sales per employee",def:"Sales over a time period ÷ Number of employees.",note:""},
+{unit:"Formulae",term:"Employee turnover (%)",def:"(Number of staff leaving ÷ Number of staff employed by the business) × 100.",note:""},
+{unit:"Formulae",term:"Employee costs (% of revenue)",def:"(Employee costs ÷ Revenue) × 100.",note:""},
+{unit:"Formulae",term:"Unit costs (average costs)",def:"Total costs ÷ Number of units of output.",note:""},
+{unit:"Formulae",term:"Capacity utilisation (%)",def:"(Actual output ÷ Maximum possible output) × 100.",note:""},
+{unit:"Formulae",term:"Inventory turnover",def:"Cost of sales ÷ Average inventories held.",note:""},
+{unit:"Formulae",term:"Float time",def:"Latest Finish Time − Duration of activity − Earliest Start Time.",note:""},
+
+// ═══════ KEY DISTINCTIONS ═══════
+{unit:"Distinctions",term:"Cash flow vs profit",def:"Cash flow is the movement of money in and out of the business over time. Profit is revenue minus costs over a period. A profitable business can fail if it runs out of cash.",note:""},
+{unit:"Distinctions",term:"Operating profit vs operating profit margin",def:"Operating profit is the £ amount left after operating expenses. Operating profit margin is that amount expressed as a percentage of revenue. They are different measures.",note:""},
+{unit:"Distinctions",term:"Contribution vs revenue",def:"Revenue = price × quantity (total income from sales). Contribution = selling price − variable costs per unit (what each unit contributes to covering fixed costs).",note:""},
+{unit:"Distinctions",term:"Economies of scale vs economies of scope",def:"Scale: lower unit costs from producing more of the same product. Scope: lower costs from producing a range of different products using shared resources.",note:""},
+{unit:"Distinctions",term:"Quality control vs quality assurance",def:"Quality control: inspecting finished products to find defects (reactive). Quality assurance: building quality into every stage so defects are prevented (proactive).",note:""},
+{unit:"Distinctions",term:"Shareholders vs stakeholders",def:"Shareholders: owners of the company who hold shares. Stakeholders: anyone affected by or with an interest in the business, including shareholders, employees, customers and suppliers.",note:""},
+{unit:"Distinctions",term:"Market penetration vs penetration pricing",def:"Market penetration is an Ansoff growth strategy — selling more existing products in existing markets. Penetration pricing is a pricing tactic — setting a low initial price to gain market share.",note:""},
+{unit:"Distinctions",term:"Strategic drift vs emergent strategy",def:"Strategic drift: strategy fails to adapt to external changes (the gap widens). Emergent strategy: unplanned response to change (adapting as circumstances develop).",note:""},
+{unit:"Distinctions",term:"Risk vs uncertainty",def:"Risk: possible outcomes can be identified and their probabilities estimated. Uncertainty: outcomes and probabilities are unknown and cannot be predicted.",note:""},
+{unit:"Distinctions",term:"Greenwashing vs bluewashing",def:"Greenwashing: misleading claims about environmental practices. Bluewashing: associating with social responsibility initiatives without making genuine changes.",note:""},
+{unit:"Distinctions",term:"Ltd vs plc",def:"Both have limited liability. Ltd: shares sold privately, not on a stock exchange. Plc: shares traded publicly, minimum £50k capital, risk of hostile takeover. Ltd does not mean small.",note:""},
+{unit:"Distinctions",term:"Offshoring vs outsourcing",def:"Offshoring: moving operations to another country (can be done in-house). Outsourcing: contracting work to a different company (can be domestic or overseas). They can overlap but are different.",note:""},
+{unit:"Distinctions",term:"PRP vs piece rate",def:"PRP: bonus or pay increase linked to targets or appraisal outcomes. Piece rate: payment per unit of output produced. PRP is broader; piece rate is purely output-based.",note:""},
+{unit:"Distinctions",term:"Merger vs acquisition",def:"Merger: two businesses agree to combine as equals. Acquisition: one business buys another, taking control. Acquisitions can be hostile; mergers are agreed.",note:""},
+{unit:"Distinctions",term:"Revenue vs retained profit",def:"Revenue: total income from sales. Retained profit: the profit kept in the business after tax and dividends. Retained profit is a source of finance; revenue is not.",note:""}
+];
+
+// ══════════════════════════════════════════════════════════════
+// STATIC MODE LOGIC
+// ══════════════════════════════════════════════════════════════
+const units = [...new Set(CARDS.map(c => c.unit))].sort((a,b) => {
+  const na = parseFloat(a), nb = parseFloat(b);
+  if (!isNaN(na) && !isNaN(nb)) return na - nb;
+  if (!isNaN(na)) return -1;
+  if (!isNaN(nb)) return 1;
+  return a.localeCompare(b);
+});
+let activeUnit = 'all';
+let deck = [];
+let currentIndex = 0;
+let gotIt = new Set();
+
+function buildFilters() {
+  const bar = document.getElementById('filter-bar');
+  let html = '<button class="filter-btn active" data-unit="all">All (' + CARDS.length + ')</button>';
+  units.forEach(u => {
+    const count = CARDS.filter(c => c.unit === u).length;
+    html += `<button class="filter-btn" data-unit="${u}">${u} (${count})</button>`;
+  });
+  bar.innerHTML = html;
+  bar.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      bar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeUnit = btn.dataset.unit;
+      resetDeck();
+    });
+  });
+}
+
+function resetDeck() {
+  deck = activeUnit === 'all' ? [...CARDS] : CARDS.filter(c => c.unit === activeUnit);
+  currentIndex = 0;
+  gotIt.clear();
+  renderCard();
+  updateProgress();
+  document.getElementById('flashcard').classList.remove('flipped');
+}
+
+function renderCard() {
+  if (deck.length === 0) {
+    document.getElementById('card-unit').textContent = '';
+    document.getElementById('card-term').textContent = 'No cards in this category';
+    document.getElementById('card-definition').textContent = '';
+    document.getElementById('card-exam-note').textContent = '';
+    document.getElementById('card-counter').textContent = '0 / 0';
+    return;
+  }
+  const c = deck[currentIndex];
+  document.getElementById('card-unit').textContent = c.unit;
+  document.getElementById('card-term').textContent = c.term;
+  document.getElementById('card-definition').textContent = c.def;
+  document.getElementById('card-exam-note').textContent = c.note || '';
+  document.getElementById('card-counter').textContent = `${currentIndex + 1} / ${deck.length}`;
+  document.getElementById('flashcard').classList.remove('flipped');
+}
+
+function updateProgress() {
+  const total = deck.length;
+  const done = [...gotIt].filter(i => i < total).length;
+  document.getElementById('progress-label').textContent = `${done} / ${total} known`;
+  document.getElementById('progress-fill').style.width = total ? `${(done/total)*100}%` : '0%';
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+document.getElementById('flashcard').addEventListener('click', () => {
+  document.getElementById('flashcard').classList.toggle('flipped');
+});
+document.getElementById('prev-btn').addEventListener('click', () => {
+  if (!deck.length) return;
+  currentIndex = (currentIndex - 1 + deck.length) % deck.length;
+  renderCard();
+});
+document.getElementById('next-btn').addEventListener('click', () => {
+  if (!deck.length) return;
+  currentIndex = (currentIndex + 1) % deck.length;
+  renderCard();
+});
+document.getElementById('got-it-btn').addEventListener('click', () => {
+  if (!deck.length) return;
+  gotIt.add(currentIndex);
+  updateProgress();
+  if (gotIt.size < deck.length) {
+    let next = (currentIndex + 1) % deck.length;
+    while (gotIt.has(next) && gotIt.size < deck.length) next = (next + 1) % deck.length;
+    currentIndex = next;
+    renderCard();
+  } else {
+    document.getElementById('card-unit').textContent = '';
+    document.getElementById('card-term').textContent = 'All done!';
+    document.getElementById('card-definition').textContent = 'You\'ve marked all cards as known. Hit Reset to go again.';
+    document.getElementById('card-exam-note').textContent = '';
+    document.getElementById('flashcard').classList.remove('flipped');
+  }
+});
+document.getElementById('shuffle-btn').addEventListener('click', () => {
+  shuffle(deck); currentIndex = 0; gotIt.clear(); renderCard(); updateProgress();
+});
+document.getElementById('reset-btn').addEventListener('click', resetDeck);
+document.addEventListener('keydown', e => {
+  if (document.getElementById('static-panel').classList.contains('hidden')) return;
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowLeft') document.getElementById('prev-btn').click();
+  if (e.key === 'ArrowRight') document.getElementById('next-btn').click();
+  if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); document.getElementById('flashcard').click(); }
+});
+buildFilters();
+resetDeck();
+
+// ══════════════════════════════════════════════════════════════
+// AI GENERATE MODE
+// ══════════════════════════════════════════════════════════════
+const WORKER_URL = 'https://nishkam-marker.j-kerrisk.workers.dev';
+let aiDeck = [];
+let aiIndex = 0;
+
+document.querySelectorAll('.mode-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const mode = tab.dataset.mode;
+    document.getElementById('static-panel').classList.toggle('hidden', mode !== 'static');
+    const aiPanel = document.getElementById('ai-panel');
+    aiPanel.classList.toggle('visible', mode === 'ai');
+    aiPanel.classList.toggle('ai-panel', mode !== 'ai');
+  });
+});
+
+document.querySelectorAll('.suggestion-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.getElementById('ai-topic').value = chip.textContent;
+    document.getElementById('ai-generate-btn').click();
+  });
+});
+
+document.getElementById('ai-generate-btn').addEventListener('click', async () => {
+  const topic = document.getElementById('ai-topic').value.trim();
+  if (!topic) return;
+  const btn = document.getElementById('ai-generate-btn');
+  const status = document.getElementById('ai-status');
+  btn.disabled = true; btn.textContent = 'Generating...';
+  status.textContent = 'Creating flashcards — this takes a few seconds...';
+  status.classList.remove('error');
+  document.getElementById('ai-card-container').classList.add('hidden');
+  document.getElementById('ai-controls').classList.add('hidden');
+
+  try {
+    const resp = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 3500,
+        messages: [{role:'user',content:`You are an expert AQA A-Level Business Studies teacher. Generate exactly 10 flashcards on the topic: "${topic}".
+
+Rules:
+- Every card must be accurate to the AQA 7138 specification (new spec, first exams June 2027)
+- Use simple, clear language a Year 12 or Year 13 student would understand
+- Definitions should be precise but not overly academic
+- Where relevant, include a short exam note (common mistakes, what examiners look for, or how the concept links to other topics)
+- The new spec units are: 3.1 (3.1.1–3.1.4), 3.2 (3.2.1–3.2.3), 3.3 (3.3.1–3.3.4)
+- Use "stakeholder mapping" not "Mendelow's Matrix"
+- Herzberg: pay is a hygiene factor, NOT a motivator
+- Be accurate with formulae
+
+Return ONLY a JSON array with no other text. Each object must have:
+- "term": the front of the card (a concept, term, formula name, or question)
+- "def": the back of the card (the definition, explanation, or answer)
+- "note": a short exam tip or empty string if none needed
+
+Example format:
+[{"term":"Capacity utilisation","def":"The percentage of total capacity actually being used. Formula: actual output ÷ maximum output × 100.","note":"Low utilisation raises unit costs because fixed costs are spread over fewer units."}]`}]
+      })
+    });
+    if (!resp.ok) throw new Error('Could not reach the server. Try again in a moment.');
+    const data = await resp.json();
+    let text = '';
+    if (data.content && Array.isArray(data.content)) text = data.content.map(b => b.text || '').join('');
+    else if (typeof data === 'string') text = data;
+    else if (data.text) text = data.text;
+    const jsonMatch = text.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) throw new Error('Couldn\'t parse the response. Try again.');
+    aiDeck = JSON.parse(jsonMatch[0]);
+    if (!Array.isArray(aiDeck) || !aiDeck.length) throw new Error('No cards generated. Try a different topic.');
+    aiIndex = 0; renderAiCard();
+    document.getElementById('ai-card-container').classList.remove('hidden');
+    document.getElementById('ai-controls').classList.remove('hidden');
+    status.textContent = `${aiDeck.length} cards generated`;
+  } catch (err) {
+    status.textContent = err.message || 'Something went wrong. Try again.';
+    status.classList.add('error');
+  } finally { btn.disabled = false; btn.textContent = 'Generate'; }
+});
+
+document.getElementById('ai-topic').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('ai-generate-btn').click();
+});
+
+function renderAiCard() {
+  if (!aiDeck.length) return;
+  const c = aiDeck[aiIndex];
+  document.getElementById('ai-card-unit').textContent = 'Generated';
+  document.getElementById('ai-card-term').textContent = c.term || '';
+  document.getElementById('ai-card-definition').textContent = c.def || '';
+  document.getElementById('ai-card-exam-note').textContent = c.note || '';
+  document.getElementById('ai-card-counter').textContent = `${aiIndex + 1} / ${aiDeck.length}`;
+  document.getElementById('ai-flashcard').classList.remove('flipped');
+}
+
+document.getElementById('ai-flashcard').addEventListener('click', () => {
+  document.getElementById('ai-flashcard').classList.toggle('flipped');
+});
+document.getElementById('ai-prev-btn').addEventListener('click', () => {
+  if (!aiDeck.length) return; aiIndex = (aiIndex - 1 + aiDeck.length) % aiDeck.length; renderAiCard();
+});
+document.getElementById('ai-next-btn').addEventListener('click', () => {
+  if (!aiDeck.length) return; aiIndex = (aiIndex + 1) % aiDeck.length; renderAiCard();
+});
+document.getElementById('ai-shuffle-btn').addEventListener('click', () => {
+  shuffle(aiDeck); aiIndex = 0; renderAiCard();
+});
+</script>
+</body>
+</html>
