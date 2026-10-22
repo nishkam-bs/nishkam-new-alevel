@@ -274,7 +274,7 @@ const STAGES = [
       {id:'E',label:'End point',cls:'e',ph:'What does success mean here?',ok:v=>/(sale|revenue|profit|customer|market share|brand|grow|follower|valu)/.test(v),hint:'Make success concrete: sales, profit, customers, brand awareness?'}],
     planOk:'Good. Keep both in front of you while you write.',
     checks:[
-      {k:'one',label:'Starts with one characteristic, not a list',test:x=>{const n=['risk','resilien','focus','passion','innovat','adapt'].filter(w=>x.firstTwo.includes(w)).length;return n===1;}},
+      {k:'one',label:'Starts with one characteristic, not a list',test:x=>{const n=[/risk[- ]?tak/,/resilien/,/\bfocused\b/,/passion/,/innovat/,/adaptab/].filter(r=>r.test(x.firstTwo)).length;return n===1;}},
       {k:'case',label:'Uses at least two details about Ben or Gymshark from the case',test:x=>['pizza','£5','1000','sew','bodybuilding','dropp','university','garage','18 million','influencer','fitness video','tiktok','instagram'].filter(w=>x.low.includes(w)).length>=2},
       {k:'links',label:'At least four linking words between steps',test:x=>(x.low.match(/\b(because|so|therefore|this means|which means|as a result|meaning|leads? to|resulting in|which (allowed|helped|built|meant))\b/g)||[]).length>=4},
       {k:'measure',label:'Names a measure of success (sales, profit, customers...)',test:x=>/(sales|revenue|profit|customers|market share)/.test(x.low)},

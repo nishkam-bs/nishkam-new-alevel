@@ -316,6 +316,7 @@ LEVEL DETERMINATION — start at 0, work upwards.
 21. Level 1 (1–3): limited response, some knowledge, attempt at application, lack of relevant analysis.
 22. Level 2 (4–6): good response, relevant knowledge, effective application throughout, accurate chain of reasoning linking the two key elements.
 22a. Award 6 when ALL of these are present: one clear characteristic or factor taken from the case, case details used to drive the reasoning, and a complete chain reaching a concrete form of the end point (e.g. sales or profit). Do not drop to 5 for missing extra detail, imperfect wording, or a weaker second paragraph.
+22b. FULL MARKS CHECK — do this after choosing the level. Look only at the student's strongest argument. Quote, in the student's own words: (1) where they name the one factor or characteristic they are analysing; (2) a sentence where a detail from THIS case drives a step in the reasoning (not just a repeated fact); (3) the words where the chain reaches a concrete version of the end point in the question (e.g. sales, profit, revenue, the named measure). If you can quote all three and the chain has no material missing step, set full_marks_check.all_met to true and award 6. Be strict about each quote, but if all three are genuinely there, 6 is earned and must be given.
 23. BEST-FIT RULE: If a response genuinely begins to show Level 2 qualities, it may be placed at the lower end of Level 2 even if those qualities are not fully secure throughout. Do not turn this into "every borderline answer gets 4" — there must be identifiable Level 2 evidence.
 24. 6/6 means Level 2 is securely achieved and the learner could not reasonably be expected to do more under examination conditions. Do not hold back 6/6 because the answer is not perfect or because a second, weaker argument follows the first: AQA's commentary placed an answer at the top of Level 2 when its first paragraph had one clear chain applied to the case and linked to a measure of success, even though a second paragraph was undeveloped.
 25. Within each level, 1/2/3 and 4/5/6 indicate increasing security.
@@ -342,7 +343,7 @@ Find the weakest 1–2 sentences. Quote them exactly. Then rewrite them to show 
 
 YOUR RESPONSE MUST BE ONLY A SINGLE JSON OBJECT. No text before it. No text after it. No markdown fences. No explanation. No preamble. If the answer is a photo, read the handwriting first, then produce the JSON. Start your response with the { character.
 
-{"mark":<0-6>,"level":"Level 2"|"Level 1"|"0","start_point":"the factor/concept","end_point":"the exact endpoint","chain":"step → step → ENDPOINT","chain_reached_endpoint":true|false,"segments":[{"text":"exact text","ao":"AO1|AO2|AO3|NONE","quality":"GOOD|WEAK","annotation":"margin note"}],"positive":"2-3 sentences feedback TO the student using you","improve":"2-3 sentences the single most important improvement","improve_heading":"short heading","ao1_diagnostic":"short phrase","ao2_diagnostic":"short phrase","ao3_diagnostic":"short phrase","rewrite_original":"weakest 1-2 sentences quoted exactly","rewrite_improved":"how those sentences could read"}`;
+{"full_marks_check":{"factor_quote":"student's words naming the factor, or empty","case_quote":"student's sentence where a case detail drives a step, or empty","endpoint_quote":"student's words reaching a concrete end point, or empty","all_met":true|false},"mark":<0-6>,"level":"Level 2"|"Level 1"|"0","start_point":"the factor/concept","end_point":"the exact endpoint","chain":"step → step → ENDPOINT","chain_reached_endpoint":true|false,"segments":[{"text":"exact text","ao":"AO1|AO2|AO3|NONE","quality":"GOOD|WEAK","annotation":"margin note"}],"positive":"2-3 sentences feedback TO the student using you","improve":"2-3 sentences the single most important improvement","improve_heading":"short heading","ao1_diagnostic":"short phrase","ao2_diagnostic":"short phrase","ao3_diagnostic":"short phrase","rewrite_original":"weakest 1-2 sentences quoted exactly","rewrite_improved":"how those sentences could read"}`;
 
 /* ═══════════════════════════════════════════
    CASE STUDY + QUESTION BANK (18 businesses, 36 questions)
@@ -584,7 +585,7 @@ async function runMark(){
     if(!resp.ok)throw new Error('API error: '+resp.status);
     const data=await resp.json();
     const txt=data.content.map(c=>c.text||'').join('');
-    const fb=extractJSON(txt);
+    const fb=fullMarks(extractJSON(txt));
     if(!fb||typeof fb.mark==='undefined')throw new Error('The marker did not return valid feedback. Please try again.');
     lastFb=fb;
     showFeedback(fb,qText);
@@ -595,6 +596,15 @@ async function runMark(){
     document.getElementById('fbPanel').style.display='block';
     document.getElementById('fbPanel').innerHTML=`<div class="al al-r"><b>Something went wrong</b><br>${err.message}. Check your internet connection and try again.</div>`;
   }
+}
+
+/* If the marker has quoted all three full-marks features from the student's answer
+   (factor, case detail driving a step, concrete end point) but stopped at 5, award 6.
+   Only lifts 5 to 6; it never changes any other mark. Calibrated against AQA's 7138 6-mark commentary. */
+function fullMarks(fb){
+  const c=fb&&fb.full_marks_check;const ok=s=>String(s||'').trim().length>=12;
+  if(c&&c.all_met===true&&ok(c.factor_quote)&&ok(c.case_quote)&&ok(c.endpoint_quote)&&fb.chain_reached_endpoint===true&&fb.mark===5){fb.mark=6;fb.level='Level 2';fb.full_marks=true;}
+  return fb;
 }
 
 /* ═══ RENDER FEEDBACK ═══ */
