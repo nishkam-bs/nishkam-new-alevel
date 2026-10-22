@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>9-Mark Assess Course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="course-engine.css">
+</head>
+<body>
+<script>
+/* Sources: AQA 7138 specification (command words, 9-mark grid), sample assessment materials
+   (Paper 1 SQP, insert and mark scheme), AQA 7138 answers and commentaries for 9-mark questions (April 2026)
+   and the AQA "Discover the new AS and A-level Business qualification" slides (October 2026).
+   "AQA 7138 specimen" = AQA's wording. "Based on the AQA 7138 specimen" = AQA's question, our wording.
+   "Exam-style" = written for this course. No 7138 examiner reports exist yet. */
+
+const GYM_TEXT = `<div class="card" style="margin-bottom:16px;font-size:.92rem"><span class="src">Source A: Gymshark Ltd (extract from the AQA specimen insert)</span>
+<p>The Gymshark Ltd brand has become a hit with younger gym goers and is doing well in a highly competitive market. Its competitors include Nike, Adidas and Puma. Instead of using traditional advertising or selling in high street shops, Gymshark Ltd has grown by having athletes and social media ‘influencers’ wear its clothes on platforms like Instagram, TikTok, and Facebook. Ben is also well known and still shares his own fitness videos online to promote the brand. The company now has 18 million followers on social media.</p>
+<p>The funds were raised with the aim of expanding the business in North America, where Gymshark Ltd already makes a large part of its sales, and to grow the business rapidly in Asia. Ben has ambitious plans and wants to make the Gymshark Ltd brand the UK equivalent of Nike. The Nike brand was worth $31 billion in 2023 globally; market research suggests that 43% of people who buy Nike sportswear would do so again.</p>
+<p><b>Appendix C: Social networks by number of monthly active users globally, 2024</b><br>Facebook 3.0 billion (highest proportion of users aged 25–34) · Instagram 2.0 billion (25–34) · TikTok 1.6 billion (18–24)</p></div>`;
+
+const GYM_RATIO = `<div class="tablewrap"><table class="d"><thead><tr><th>Gymshark Group Ltd, July 2024</th><th class="r">£000</th></tr></thead><tbody>
+<tr><td>Inventory</td><td class="r">74 210</td></tr><tr><td>Receivables</td><td class="r">13 497</td></tr><tr><td>Cash</td><td class="r">54 676</td></tr>
+<tr><td>Payables due within a year</td><td class="r">191 478</td></tr><tr><td>Other current liabilities</td><td class="r">586</td></tr>
+<tr><td>Industry average current ratio (fictional)</td><td class="r">1.4</td></tr></tbody></table></div>`;
+
+const STAGES = [
+/* ---------------- STAGE 1 ---------------- */
+{ id:1, type:'mcq', title:'What is the question deciding?', blurb:'Find the one issue and the end point you must judge.', pass:5,
+  teach:`<p>"Assess" means weigh up the arguments for and against a particular issue and make a judgement. AQA's mark scheme says the question "requires a decision on this particular issue; it does not require learners to consider other issues".</p>
+  <p>So before you write, find two things: the <b style="color:var(--start)">issue</b> (the one action or factor you are judging) and the <b style="color:var(--end)">end point</b> (what it has to affect). Both sides of your answer, and your judgement, must land on that end point.</p>`,
+  items:[
+    {src:'AQA 7138 specimen · Paper 1 · Q1.3', prompt:'"Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd." What must the judgement decide?',
+     o:['Whether influencers are the best type of promotion for Gymshark','Whether spending more on influencers would raise Gymshark\'s profits','Whether Gymshark should stop using traditional advertising'], a:1,
+     why:'One issue (more influencer spending) and one end point (profits). Comparing it with other kinds of promotion is not what the question asks.'},
+    {src:'AQA 7138 specimen · Paper 1 · Q2.3', prompt:'"Assess whether an increase in spending on market research could be profitable for Apple." Which end point must both sides reach?',
+     o:['Apple\'s market share','Whether the extra spending is profitable: does it add more to profit than it costs?','Whether customers like the Vision Pro'], a:1,
+     why:'"Profitable" means the benefit is bigger than the cost. Both sides have to land there.'},
+    {src:'AQA 7138 specimen · Paper 1 · Q2.4', prompt:'"Assess whether a large investment in new product development is likely to increase Apple\'s market share." Which of these is the end point?',
+     o:['Apple\'s profit','Apple\'s market share','Apple\'s share price'], a:1,
+     why:'Market share, not profit or share price. Selling more does not always raise market share if the whole market grows too.'},
+    {src:'AQA 7138 specimen · Paper 1 · Q1.4', prompt:'"Assess whether Gymshark Ltd\'s current ratio indicates that the business was in a strong financial position in 2024." What else does the question require?',
+     o:['A calculation of the current ratio, used in the argument and the judgement','A calculation of profit','A comparison with Nike\'s current ratio'], a:0,
+     why:'The question tells you to calculate the current ratio. Six of the nine marks are for choosing the formula, calculating, using the result and judging with it.'},
+    {src:'Exam-style', prompt:'"Assess whether opening a second café would increase the owner\'s profit." A student spends a paragraph on whether a food truck would be better. Why is that a problem?',
+     o:['It is not a problem: comparing options always earns marks','The question asks about one decision. A different option is not the other side of this question.','Food trucks are not on the specification'], a:1,
+     why:'The other side is why the second café might NOT raise profit. Comparing alternatives belongs in a 15-mark question.'},
+    {src:'Exam-style', prompt:'"Assess whether becoming a private limited company would benefit the owner of a growing bakery." What does "benefit the owner" mean you must reach?',
+     o:['Something the owner gains or loses: limited liability, finance, control, workload','The bakery\'s customers','The bakery\'s suppliers'], a:0,
+     why:'The end point is the owner. Arguments about customers only count if they come back to the owner.'}
+  ]},
+/* ---------------- STAGE 2 ---------------- */
+{ id:2, type:'drift', title:'Is it really the other side?', blurb:'Spot a genuine counter-argument.', pass:8,
+  labels:['A real counter-argument','Not a real counter-argument'], showLabel:'A sentence from the "against" part of a student\'s answer:',
+  teach:`<p>AQA's commentary marked down an answer because "there is no counter-argument. The response is one sided". For the top level there must be "a weighing up of an argument and counter argument".</p>
+  <p>A counter-argument argues the <b>opposite</b> side with a reason. These do not count: a "however" with nothing after it, a point that still supports the same side, or "it depends on many factors".</p>
+  <p>Each sentence comes after a student has argued that more influencer spending <b>would</b> raise Gymshark's profit. Is it a real counter-argument?</p>`,
+  items:[
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', q:'Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd.',
+     text:'On the other hand, influencers charge more as their following grows, so if extra spending brings in fewer new customers than before, the extra cost could be bigger than the extra contribution and profit could fall.', ok:true,
+     why:'It argues the opposite (profit might not rise) and gives the reason (costs rising faster than contribution).'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', q:'Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd.',
+     text:'However, influencers are also much more engaging than traditional TV advertising.', ok:false,
+     why:'"However" is there, but the point still supports spending on influencers. It is the same side.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', q:'Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd.',
+     text:'However, it depends on many different factors.', ok:false,
+     why:'No reason, no side. This earns nothing.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', q:'Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd.',
+     text:'Gymshark already has 18 million followers, so many of the people extra influencer posts would reach may already know the brand, which means each extra pound spent could win fewer new sales.', ok:true,
+     why:'Diminishing returns: a real reason why the spending might not raise profit, using the case.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', q:'Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd.',
+     text:'In addition, TikTok has 1.6 billion users, so there is a huge audience still to reach.', ok:false,
+     why:'"In addition" gives it away: this adds to the same side.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', q:'Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd.',
+     text:'However, if an influencer Gymshark pays is caught up in a scandal, customers may link the brand with it, so sales could fall and the money spent would be wasted.', ok:true,
+     why:'A risk that could reduce sales and waste the spending: the opposite side, with a reason.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.3', q:'Assess whether an increase in spending on market research could be profitable for Apple.',
+     text:'However, Apple already has a huge database of information about current users, so extra research may tell it little it does not already know, adding cost without much benefit.', ok:true,
+     why:'Uses the case to argue the extra spending might not pay for itself.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.3', q:'Assess whether an increase in spending on market research could be profitable for Apple.',
+     text:'On the other hand, market research is the process of collecting information about customers and markets.', ok:false,
+     why:'A definition, not an argument. It does not say why the spending might not be profitable.'},
+    {src:'Exam-style', q:'Assess whether opening a second café would increase the owner\'s profit.',
+     text:'However, a second site would mean paying a manager, because the owner cannot be in both places, so fixed costs rise and the new café may take months to cover them.', ok:true,
+     why:'Real costs that could stop profit rising, with the reason.'},
+    {src:'Exam-style', q:'Assess whether opening a second café would increase the owner\'s profit.',
+     text:'However, the owner could open a food truck instead.', ok:false,
+     why:'A different option is not the other side of this question. AQA says the question does not require other issues.'}
+  ]},
+/* ---------------- STAGE 3 ---------------- */
+{ id:3, type:'build', title:'Build both sides', blurb:'One chain for, one chain against. One card is a trap.', pass:2,
+  teach:`<p>Each side needs its own chain that reaches the end point. A counter-argument with no chain is just an assertion.</p>
+  <p>Put four cards in order. One card is a trap: it sounds sensible but takes the chain away from the end point. You get two checks per question, and you need it right first time to score.</p>`,
+  items:[
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', q:'Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd. (FOR)',
+     start:'Gymshark spends more on influencers on TikTok', end:'Gymshark\'s profit rises',
+     cards:[
+      {id:'A',t:'Posts reach more 18–24 year olds, TikTok\'s biggest age group',w:'Why? TikTok\'s highest proportion of users is 18–24, Gymshark\'s target market.'},
+      {id:'B',t:'More young gym goers become aware of the brand and try it',w:'Why? Influencers they trust are seen wearing the clothes.'},
+      {id:'C',t:'Sales volume rises, bringing in extra contribution on each item',w:'Why? Each extra sale adds its price minus its variable cost.'},
+      {id:'D',t:'If the extra contribution is bigger than the extra influencer fees, profit rises',w:'Why? Profit only rises if the gain is bigger than the extra cost.'}],
+     decoy:{id:'E',t:'Gymshark\'s brand becomes as valuable as Nike\'s $31 billion brand',w:'Trap: an exaggeration that does not lead to profit.'},
+     order:['A','B','C','D']},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', q:'Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd. (AGAINST)',
+     start:'Gymshark spends more on influencers', end:'Profit may not rise',
+     cards:[
+      {id:'A',t:'Gymshark already has 18 million followers',w:'Why? The brand is already well known among its target market.'},
+      {id:'B',t:'Many people reached by extra posts already know the brand',w:'Why? The same audience sees the posts again.'},
+      {id:'C',t:'Each extra pound spent wins fewer new customers than before',w:'Why? This is diminishing returns.'},
+      {id:'D',t:'The extra cost could be bigger than the extra contribution, so profit could fall',w:'Why? Profit falls if costs rise more than revenue minus variable costs.'}],
+     decoy:{id:'E',t:'Nike, Adidas and Puma also use sponsorship',w:'Trap: true of rivals, but it does not explain why Gymshark\'s profit would not rise.'},
+     order:['A','B','C','D']},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.3', q:'Assess whether an increase in spending on market research could be profitable for Apple. (FOR)',
+     start:'Apple spends more on market research before launching products', end:'The spending is profitable',
+     cards:[
+      {id:'A',t:'Research shows what headset buyers would actually pay',w:'Why? Vision Pro\'s $3,499 price was three times Meta\'s Quest.'},
+      {id:'B',t:'Apple sets prices and features that more buyers want',w:'Why? It is no longer guessing what customers want.'},
+      {id:'C',t:'Fewer expensive launches miss their sales targets',w:'Why? Apple hoped for 3 million first-year sales; some experts expected under 200,000.'},
+      {id:'D',t:'The extra profit from better launches is far bigger than the cost of the research',w:'Why? Over $8 billion was spent developing Vision Pro, so even a small improvement is worth a lot.'}],
+     decoy:{id:'E',t:'Steve Jobs said customers do not know what they want',w:'Trap: this argues against research, so it does not belong in the FOR chain.'},
+     order:['A','B','C','D']}
+  ]},
+/* ---------------- STAGE 4 ---------------- */
+{ id:4, type:'drift', title:'Weighing or summarising?', blurb:'Does the judgement decide which side is stronger, and why?', pass:8,
+  labels:['Weighs the arguments','Just summarises or asserts'], showLabel:'A student\'s judgement:',
+  teach:`<p>AQA's Level 3 needs "evaluation which effectively weighs up the arguments made and reaches a convincing and coherent judgement". The commentary marked one answer down because its final paragraph "just summarises the earlier points made on both sides".</p>
+  <p>Weighing means saying which side is stronger <b>and why</b>, for this business. A judgement that repeats both sides, or picks a side with no reason, is not weighing.</p>`,
+  items:[
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', q:'Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd.',
+     text:'Overall, influencers can raise awareness and sales, but they also cost money and may not reach new customers.', ok:false,
+     why:'Both sides repeated. Nothing says which matters more.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', q:'Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd.',
+     text:'Overall, extra spending is likely to raise profit. Although Gymshark\'s 18 million followers mean diminishing returns at home, the argument for carries greater weight because the money is being raised to expand in North America and Asia, where far fewer people know the brand yet.', ok:true,
+     why:'Picks a side, acknowledges the other, and gives a reason from the case for why one side is stronger.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', q:'Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd.',
+     text:'In conclusion, I think influencers are good for Gymshark.', ok:false,
+     why:'A side is chosen but with no reason, and it does not answer the question about profits.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', q:'Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd.',
+     text:'On balance, profit is unlikely to rise. Gymshark\'s model has worked because influencers were cheap and novel; now that rivals copy the approach, each extra post competes with far more content, so the cost argument outweighs the reach argument.', ok:true,
+     why:'Either side can be the right judgement. This one weighs and explains why the cost argument is stronger.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.3', q:'Assess whether an increase in spending on market research could be profitable for Apple.',
+     text:'In judgement, there are arguments on both sides about market research for Apple.', ok:false,
+     why:'Starting with "In judgement" does not make it a judgement. AQA\'s commentary picked this up exactly.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.3', q:'Assess whether an increase in spending on market research could be profitable for Apple.',
+     text:'Overall, it is likely to be profitable. Research costs are tiny next to the $8 billion spent developing Vision Pro, so even a small rise in the success rate of new products outweighs the cost, although Apple\'s existing customer data means the extra research must ask questions that data cannot answer.', ok:true,
+     why:'Compares the size of the cost with the size of the benefit, which is what "profitable" asks.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.4', q:'Assess whether Gymshark Ltd\'s current ratio indicates that the business was in a strong financial position in 2024.',
+     text:'Overall, with a current ratio of 0.74 against an industry average of 1.4, Gymshark looks weak. But because most sales are paid for online at once while suppliers are paid later, it can run safely on a low ratio, so the ratio overstates the risk.', ok:true,
+     why:'Uses the calculation in the judgement and weighs it against the context. AQA rewarded this kind of challenge to the industry average.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.4', q:'Assess whether Gymshark Ltd\'s current ratio indicates that the business was in a strong financial position in 2024.',
+     text:'Overall, the current ratio is important and Gymshark should look at it carefully.', ok:false,
+     why:'No answer to the question, and no use of the 0.74.'},
+    {src:'Exam-style', q:'Assess whether opening a second café would increase the owner\'s profit.',
+     text:'Overall, the second café is likely to raise profit, but only after the first year. Although the manager\'s salary means it will make a loss at first, the original café already has loyal customers, so the new site should break even faster than a brand-new business would.', ok:true,
+     why:'A clear answer with a time condition and a reason from the context.'},
+    {src:'Exam-style', q:'Assess whether opening a second café would increase the owner\'s profit.',
+     text:'Overall, it depends on many factors, such as costs, demand and competition.', ok:false,
+     why:'"It depends on many factors" is not a judgement. Name the one thing it depends on most, and explain why.'}
+  ]},
+/* ---------------- STAGE 5 ---------------- */
+{ id:5, type:'mcq', title:'What does it depend on?', blurb:'Find the one condition that decides the answer.', pass:5,
+  teach:`<p>A strong judgement often ends by naming what the answer depends on. AQA's guidance mentions qualified judgements such as "it depends on".</p>
+  <p>The condition has to be specific to this business and this question. "It depends on many factors" earns nothing. Choose the condition that really decides the answer.</p>`,
+  items:[
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', prompt:'Influencer spending and Gymshark\'s profit. Which condition decides the answer best?',
+     o:['It depends on many things','It depends on whether the extra spending targets North America and Asia, where far fewer people know the brand, rather than the UK audience it already reaches','It depends on whether Nike uses influencers'], a:1,
+     why:'Specific, linked to the case, and it decides whether extra spending wins new customers.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.3', prompt:'Market research and profit for Apple. Which condition decides the answer best?',
+     o:['It depends on whether Apple acts on what the research shows, given Steve Jobs\' view that customers do not know what they want until Apple makes it','It depends on the economy','It depends on the weather'], a:0,
+     why:'Research only adds profit if the findings change decisions. The insert hints that Apple\'s culture may not.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.4', prompt:'Gymshark\'s current ratio of 0.74. Which condition decides how worrying it is?',
+     o:['It depends on how fast Gymshark turns its £74 million of inventory into cash compared with how soon its £191 million of payables are due','It depends on Ben\'s motivation','It depends on whether Gymshark is a Ltd'], a:0,
+     why:'Liquidity is about timing: can cash come in before the bills fall due?'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.4', prompt:'New product development and Apple\'s market share. Which condition decides the answer best?',
+     o:['It depends on whether new products like Vision Pro sell well against cheaper rivals such as Meta\'s Quest','It depends on Apple\'s dividend','It depends on Apple\'s share price'], a:0,
+     why:'Market share rises only if Apple\'s new products win sales from competitors.'},
+    {src:'Exam-style', prompt:'A second café and profit. Which condition decides the answer best?',
+     o:['It depends on whether the new site is in an area with enough customers to cover the extra manager\'s salary and rent','It depends on the owner\'s personality','It depends on the price of coffee beans worldwide'], a:0,
+     why:'Profit depends on whether extra revenue covers the extra fixed costs.'},
+    {src:'Exam-style', prompt:'Which of these "depends on" sentences is too vague to earn credit?',
+     o:['It depends on whether the price rise is matched by competitors','It depends on lots of different factors','It depends on how loyal Gymshark\'s 18 million followers are'], a:1,
+     why:'Name the factor and explain why it matters.'}
+  ]},
+/* ---------------- STAGE 6 ---------------- */
+{ id:6, type:'weak', title:'Fix the judgement', blurb:'One sentence breaks the answer. Find it and fix it.', pass:4,
+  teach:`<p>Each of these is the end of a 9-mark answer. One sentence lets it down: it repeats instead of weighing, brings in something new, or does not answer the question.</p>
+  <p>Find it, then choose the best replacement. You need both right first time to score.</p>`,
+  items:[
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.3', q:'Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd.',
+     s:['Overall, increasing spending on influencers is likely to raise Gymshark\'s profit.','Influencers are good and diminishing returns are bad.','The money is being raised to grow in North America and Asia, where the brand is less known, so extra posts there should win new customers.','Therefore increasing spending on influencers is likely to lead to higher profits for Gymshark Ltd, as long as it targets those new markets.'],
+     bad:1, problem:'This just lists the two sides. It does not say why one is stronger.',
+     fixes:['Although diminishing returns are a real risk in the UK, the argument for carries greater weight here.','Influencers are a type of promotion used by many businesses.','Gymshark should also open more shops like the one on Regent Street.'], fix:0},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.3', q:'Assess whether an increase in spending on market research could be profitable for Apple.',
+     s:['Overall, more market research is likely to be profitable for Apple.','Although Apple already holds a huge database on its users, research before launching a new type of product can test what buyers will pay.','Apple could also cut its dividend to pay for the research.','Therefore an increase in spending on market research could be profitable for Apple, because its cost is small next to the billions at risk on each new product.'],
+     bad:2, problem:'A new point in the judgement, and not one that helps answer whether the research is profitable.',
+     fixes:['With over $8 billion spent developing Vision Pro, avoiding one weak launch would cover the research many times over.','Apple should also lower the price of Vision Pro.','Market research can be primary or secondary.'], fix:0},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.4', q:'Assess whether Gymshark Ltd\'s current ratio indicates that the business was in a strong financial position in 2024.',
+     s:['Gymshark\'s current ratio is 0.74, well below the industry average of 1.4.','This means Gymshark is very profitable.','But online customers pay straight away, while suppliers are paid later, so a low ratio is less risky for Gymshark than for a shop selling on credit.','Therefore the current ratio suggests some weakness, but not that Gymshark was in a weak financial position overall.'],
+     bad:1, problem:'The current ratio measures liquidity, not profitability. AQA\'s commentary put an answer that made this mistake in Level 1.',
+     fixes:['This means it has only 74p of current assets for every £1 of current liabilities due within a year.','This means Gymshark has a lot of debt.','This means Gymshark\'s share price will fall.'], fix:0},
+    {src:'Exam-style', q:'Assess whether opening a second café would increase the owner\'s profit.',
+     s:['On balance, opening a second café is likely to increase profit.','It depends on lots of factors.','The town centre site has no other independent café, so it should attract customers quickly.','Therefore opening a second café is likely to increase the owner\'s profit within a year, as long as sales cover the manager\'s salary.'],
+     bad:1, problem:'A vague "depends" adds nothing. Name the factor.',
+     fixes:['This depends most on whether the new site brings in enough customers to cover the extra fixed costs of rent and a manager.','Cafés are popular in the UK.','The owner might also want to retire one day.'], fix:0},
+    {src:'Exam-style', q:'Assess whether becoming a private limited company would benefit the owner of a growing bakery.',
+     s:['As a sole trader, the owner has unlimited liability, so her house is at risk if the bakery fails.','Becoming a Ltd gives limited liability and makes it easier to raise money from investors.','However, she must publish accounts and share ownership with any investors.','In conclusion, there are advantages and disadvantages for the owner.'],
+     bad:3, problem:'A summary, not a judgement. It does not decide whether the change benefits her.',
+     fixes:['Therefore the change is likely to benefit the owner, because protecting her house matters more than the paperwork, as long as she keeps more than half the shares and so keeps control.','In conclusion, becoming a Ltd is a big decision.','In conclusion, she could become a plc instead.'], fix:0}
+  ]},
+/* ---------------- STAGE 7 ---------------- */
+{ id:7, type:'calc', title:'Calculate first', blurb:'The figure the question asks for, with fresh numbers each time.', pass:4,
+  teach:`<p>Some 9-markers tell you to calculate something "to support your answer". AQA gives 2 marks for choosing the formula and figures, 2 for the calculation, 1 for using the result in your argument and 1 for using it in your judgement.</p>
+  <p>AQA's commentary calls it good practice to start with the calculation and show the working. If you make a slip, the own figure rule means you can still earn the analysis and evaluation marks.</p>`,
+  items:[
+    {src:'AQA 7138 specimen · Paper 1 · Q1.4', table:GYM_RATIO, prompt:'Calculate Gymshark\'s current ratio in 2024, to two decimal places.', unit:': 1', ans:0.74, tol:0.006,
+     traps:[{v:1.35,m:'You divided current liabilities by current assets. Current ratio = current assets ÷ current liabilities. AQA\'s commentary put an answer with this mistake in Level 1.'},{v:0.68,m:'Check your current assets: receivables are 13 497, not 1 349. AQA\'s commentary shows exactly this slip.'}],
+     work:'Current assets = 74 210 + 13 497 + 54 676 = 142 383. Current liabilities = 191 478 + 586 = 192 064. 142 383 ÷ 192 064 = 0.74.',
+     use:'In the argument: "Gymshark has only 74p of current assets for every £1 it owes in the next year, far below the industry average of 1.4..."'},
+    {src:'Exam-style', prompt:'Calculate the current ratio, to two decimal places.', unit:': 1', tol:0.006,
+     gen(){const ca=[80,95,120,140,160][Math.floor(Math.random()*5)],cl=[60,75,100,110,130][Math.floor(Math.random()*5)];const ans=Math.round(ca/cl*100)/100;
+       return {given:`A retailer has current assets of <b>£${ca}m</b> and current liabilities of <b>£${cl}m</b>.`,ans,traps:[{v:Math.round(cl/ca*100)/100,m:'Upside down: current assets go on top.'}],work:`£${ca}m ÷ £${cl}m = ${ans.toFixed(2)}.`,use:`In the argument: "for every £1 due within a year, the retailer has £${ans.toFixed(2)} of current assets..."`};}},
+    {src:'AQA 7138 specimen insert · Apple, Appendix E', prompt:'Apple\'s share price rose from $142.65 to $171.21. Calculate the percentage increase, to one decimal place.', unit:'%', ans:20.0, tol:0.06,
+     traps:[{v:16.7,m:'You divided by the new price. Percentage change = change ÷ original × 100.'},{v:28.56,m:'That is the change in dollars. Divide it by the original price.'}],
+     work:'Change = 171.21 − 142.65 = 28.56. 28.56 ÷ 142.65 × 100 = 20.0%.',
+     use:'In the argument: "a 20% rise in two years suggests investors expect profits to keep growing..."'},
+    {src:'Exam-style', prompt:'Calculate the percentage change in profit, to one decimal place.', unit:'%', tol:0.06,
+     gen(){const a=[40,50,64,80,120][Math.floor(Math.random()*5)],pct=[5,10,15,20,25,-10][Math.floor(Math.random()*6)];const b=Math.round(a*(1+pct/100)*10)/10;const ans=Math.round((b-a)/a*1000)/10;
+       return {given:`Profit was <b>£${a},000</b> last year and <b>£${b.toLocaleString('en-GB')},000</b> this year.`,ans,traps:[{v:Math.round((b-a)/b*1000)/10,m:'Divide by the original figure (last year), not the new one.'}],work:`(${b} − ${a}) ÷ ${a} × 100 = ${ans}%.`,use:'Use the size of the change, not just its direction, when you weigh it.'};}},
+    {src:'AQA 7138 specimen insert · Apple, Appendix G', prompt:'Region B: market size $15,000m, Apple\'s market share 10%, operating profit margin 22%, initial investment $3,000m. Calculate the return on investment, to the nearest whole number.', unit:'%', ans:11, tol:0.5,
+     traps:[{v:50,m:'You used sales ($1,500m) instead of profit. ROI uses the profit from the investment.'},{v:2.2,m:'Check your working: sales are 10% of $15,000m = $1,500m, then profit is 22% of that.'}],
+     work:'Sales = 10% × $15,000m = $1,500m. Profit = 22% × $1,500m = $330m. ROI = 330 ÷ 3,000 × 100 = 11%.',
+     use:'In the argument: "Region B returns 11%, below Region A\'s 14%, even though the market is twice as big..."'}
+  ]},
+/* ---------------- STAGE 8 ---------------- */
+{ id:8, type:'mcq', title:'Use the figure', blurb:'A calculation alone gets 4 marks at most. Use it.', pass:5,
+  teach:`<p>AQA's mark scheme says a correct calculation with no analysis or evaluation is placed at the bottom of Level 2 (4 marks). The rest comes from using the figure: once in your argument, and again in your judgement.</p>
+  <p>AQA's commentary also rewarded a student who questioned whether the industry average was a fair comparison for Gymshark. Challenging the data is evaluation.</p>`,
+  items:[
+    {src:'AQA 7138 · mark scheme', prompt:'A student calculates the current ratio correctly and writes nothing else. What is the most likely mark?',
+     o:['4 out of 9','6 out of 9','2 out of 9'], a:0,
+     why:'AQA: a correct calculation alone is the bottom of Level 2.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.4', prompt:'Which sentence USES the 0.74 in the argument?',
+     o:['The current ratio is 0.74.','At 0.74, Gymshark has only 74p of current assets for every £1 due within a year, so if suppliers demanded payment quickly it might struggle to pay.','The formula is current assets divided by current liabilities.'], a:1,
+     why:'It explains what the figure means and where it leads.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.4', prompt:'Which sentence challenges the data, as AQA\'s commentary rewarded?',
+     o:['The industry average of 1.4 covers clothing businesses in general, many of which sell through shops and give credit, so it may not be a fair benchmark for an online brand paid upfront.','0.74 is lower than 1.4.','The industry average is 1.4.'], a:0,
+     why:'Questioning whether a benchmark fits the business is a strong evaluative point.'},
+    {src:'AQA 7138 · mark scheme', prompt:'You calculate 0.68 instead of 0.74 because you misread a figure, then analyse 0.68 well. What happens?',
+     o:['You get no marks for the analysis','The own figure rule applies: you lose a calculation mark but can still earn the analysis and evaluation marks','The examiner corrects your figure for you'], a:1,
+     why:'AQA\'s commentary shows exactly this: an answer using 0.68 still reached Level 3.'},
+    {src:'AQA 7138 · mark scheme', prompt:'You cannot remember the formula, so you skip the calculation and write a strong discussion of liquidity. What is the problem?',
+     o:['None, the discussion is enough','The calculation is a fundamental demand of the question. AQA\'s commentary put an answer like this in Level 1.','You lose only 1 mark'], a:1,
+     why:'Always attempt the calculation and show your working, even if unsure.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.4', prompt:'Which final sentence uses the calculation in the judgement?',
+     o:['Therefore Gymshark is a good business.','Therefore, although a current ratio of 0.74 is well below the 1.4 average, it does not mean Gymshark was in a weak financial position in 2024, because its customers pay before its suppliers need paying.','Therefore the current ratio is important.'], a:1,
+     why:'It answers the question in its own words and uses the figure in the judgement.'}
+  ]},
+/* ---------------- STAGE 9 ---------------- */
+{ id:9, type:'timed', title:'Against the clock', blurb:'Twelve mixed questions, 25 seconds each.', pass:10, poolFrom:[2,4,5,8], count:12, seconds:25,
+  teach:`<p>In the exam you have about 13 minutes for a 9-marker. You need to recognise a real counter-argument and a real judgement quickly.</p>
+  <p>This round mixes questions from stages 2, 4, 5 and 8. You have <b>25 seconds</b> for each. You need 10 out of 12.</p>`,
+  items:[]},
+/* ---------------- STAGE 10 ---------------- */
+{ id:10, type:'write', title:'The real question', blurb:'Write a full 9-mark answer to the specimen question.', pass:1,
+  teach:`<p>This is question 1.3 from AQA's specimen Paper 1.</p>
+  <p>Write one argument <b>for</b> with a full chain to profit, one argument <b>against</b> with a full chain to profit, then a weighted judgement. Use the case on both sides.</p>
+  <p>For the judgement: say which side is stronger, why it is stronger for Gymshark, what it depends on, and finish with a sentence starting "Therefore" that uses the words of the question.</p>
+  <p>Write the issue, the end point and your counter-argument first. The answer box unlocks when you have.</p>`,
+  items:[{src:'AQA 7138 specimen · Paper 1 · Q1.3', w:{
+    intro:`${GYM_TEXT}<div class="qbox">Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd. <span style="color:var(--muted);font-weight:400">(9 marks)</span></div>`,
+    plan:[
+      {id:'S',label:'The issue',cls:'s',ph:'What are you judging?',ok:v=>/(influenc|spend)/.test(v),hint:'The issue is more spending on influencers.'},
+      {id:'E',label:'End point',cls:'e',ph:'What must both sides reach?',ok:v=>/profit/.test(v),hint:'Check the end point. Read the last words of the question.'},
+      {id:'A',label:'Your counter-argument',ph:'Why might profit NOT rise?',ok:v=>v.trim().split(/\s+/).length>=3&&/(cost|not|fall|return|already|fewer|risk|scandal|expens|less)/.test(v),hint:'Write one reason why profit might not rise.'}],
+    planOk:'Good. You have both sides planned before you start.',
+    checks:[
+      {k:'case',label:'Uses at least three details from the case',test:x=>['18 million','tiktok','instagram','facebook','1.6 billion','18–24','18-24','nike','31 billion','43%','north america','asia','adidas','puma','regent'].filter(w=>x.low.includes(w)).length>=3},
+      {k:'cost',label:'Deals with costs as well as sales (profit = revenue − costs)',test:x=>/(cost|contribution|fee|expens)/.test(x.low)&&/(sales|revenue|customers)/.test(x.low)},
+      {k:'both',label:'Has a real counter-argument',test:x=>/(on the other hand|however|against this|but )/.test(x.low)&&/(not|fall|less|fewer|diminishing|wasted|risk)/.test(x.low)},
+      {k:'weigh',label:'Judgement weighs the sides (e.g. "carries greater weight because", "outweighs")',test:x=>/(greater weight|outweigh|more important because|stronger because|matters more|more significant)/.test(x.low)},
+      {k:'dep',label:'Names what the answer depends on',test:x=>/depends? on/.test(x.low)&&!/depends? on (many|lots|a lot|various|several) (of )?(different )?factors/.test(x.low)},
+      {k:'end',label:'Last sentence starts "Therefore" and answers the question',test:x=>/^therefore/.test(x.last)&&/profit/.test(x.last)&&/influenc/.test(x.last)}],
+    warn:x=>!/(on the other hand|however|against this|but )/.test(x.low)?{msg:'This reads as one-sided. AQA caps one-sided answers well below the top level.',block:true}
+      :/(in conclusion, there are (advantages|arguments)|both sides)/.test(x.low)?{msg:'Your judgement may be summarising. Say which side is stronger and why.'}:null,
+    minCompare:120, minAi:150,
+    model:`<span class="src">One way to write it</span>
+<p>On one hand, spending more on influencers could raise Gymshark's profit. <span class="hl-d">TikTok has 1.6 billion users and its largest age group is 18–24</span>, which is exactly the young gym goers Gymshark targets. <span class="hl-w">This means</span> paying more influencers to post there puts the brand in front of more potential customers, and because they trust the people they follow, more of them are likely to try the clothes. <span class="hl-w">As a result</span>, sales volume rises, and each extra sale adds contribution. <span class="hl-w">If</span> that extra contribution is bigger than the extra fees, <span class="hl-e">profit rises</span>.</p>
+<p>On the other hand, <span class="hl-d">Gymshark already has 18 million followers</span>, so many people reached by extra posts will already know the brand. <span class="hl-w">This means</span> each extra pound spent is likely to win fewer new customers than the last, while popular influencers charge more as their audiences grow. <span class="hl-w">So</span> the extra cost could rise faster than the extra contribution, and <span class="hl-e">profit could fall</span> even though sales go up.</p>
+<p>Overall, increasing spending on influencers is likely to lead to higher profits. Although diminishing returns are a real risk with an audience Gymshark already reaches, the argument for carries greater weight because <span class="hl-d">the money raised from General Atlantic is meant to expand the business in North America and Asia</span>, where far fewer people know the brand yet. However, this depends on the spending being aimed at those new markets rather than at UK followers who already buy. <span class="hl-w">Therefore</span> increasing spending on influencers is likely to lead to <span class="hl-e">higher profits for Gymshark Ltd</span>, as long as it is used to win new customers abroad.</p>
+      <div class="key"><span><span class="hl-e">coral</span> end point</span><span><span class="hl-w">purple</span> links</span><span><span class="hl-d">underlined</span> case details used</span></div>
+      <p style="margin-top:14px;font-size:.9rem;color:var(--muted)">Notice both sides reach profit, the costs side is there as well as sales, and the judgement says why one side is stronger for Gymshark, not just which.</p>`,
+    ai:`You are an experienced AQA A-level Business teacher giving feedback on a Year 12 student's answer to this 9-mark question from the AQA 7138 specimen Paper 1: "Assess whether increasing spending on influencers would lead to higher profits for Gymshark Ltd."
+Case facts the student may use: Gymshark grew through athletes and influencers on Instagram, TikTok and Facebook instead of traditional advertising; 18 million followers; Ben shares his own fitness videos; competitors Nike, Adidas, Puma; Nike brand worth $31 billion, 43% of Nike buyers would buy again; funds raised from General Atlantic to expand in North America and grow rapidly in Asia; TikTok 1.6 billion users (largest group 18-24), Instagram 2.0 billion (25-34), Facebook 3.0 billion (25-34).
+AQA rules for this question: weigh up the case for and against and reach an overall judgement; for the top level there must be a weighing of an argument and a counter-argument; a one-sided answer cannot reach the top level; a final paragraph that just summarises both sides is not a judgement; the judgement must directly address the impact on profits; profit needs both revenue and costs; repeating case facts without using them is not creditworthy.
+Do not give a mark or level. Write in plain British English, as a teacher speaking to a Year 12 student. No headings, no bullet symbols other than simple dashes, no emoji. Give: one sentence on what works; then two or three improvements, each quoting a short phrase they wrote ("You wrote: ...") and showing a better version ("You could write: ..."). Keep it under 230 words.`,
+    finishLabel:'Finish the course',
+    doneTitle:'Course complete',
+    doneText:'You have written a full 9-mark answer with both sides and a weighted judgement. Before every 9-marker, plan your counter-argument first. Giving the other side a fair hearing is what lets your judgement mean something.'
+  }}]}
+];
+
+window.COURSE={
+  id:'assess9', key:'y12_course_assess9_v1', offset:1100, short:'9-mark',
+  name:'9-Mark Assess Course',
+  hero:{kicker:'9-mark Assess · AQA A-level Business (7138)',
+    title:'Both sides, then <em>decide</em>',
+    lede:'A 9-mark Assess question asks you to weigh the arguments for and against one issue and reach a judgement. This course trains each part using AQA\'s specimen questions and their guidance: a real counter-argument, a judgement that weighs, and using a calculation when the question asks for one.'},
+  stages:STAGES
+};
+</script>
+<script src="course-engine.js"></script>
+</body>
+</html>
