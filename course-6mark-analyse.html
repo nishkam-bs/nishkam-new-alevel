@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>6-Mark Analyse Course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="course-engine.css">
+</head>
+<body>
+<script>
+/* Sources: AQA 7138 specification, sample assessment materials (Paper 1 SQP and insert),
+   and the AQA 7138 answers and commentaries for 6-mark questions (April 2026).
+   "AQA 7138 specimen" = AQA's wording. "Based on the AQA 7138 specimen" = AQA's question, our wording.
+   "Exam-style" = written for this course. No 7138 examiner reports exist yet. */
+
+const GYM_TEXT = `<div class="card" style="margin-bottom:16px;font-size:.92rem"><span class="src">Source A: Gymshark Ltd (extract from the AQA specimen insert)</span>
+<p>Ben Francis was 19 when he asked his parents if he could use their garage to start making gym clothes he had designed. Whilst studying business at university, Ben teamed up with a school friend, and the gymwear business Gymshark Ltd was born. Ben used his £5-an-hour wage at Pizza Hut and £1000 savings to invest in equipment like a sewing machine. Ben taught himself to sew and went to bodybuilding events to raise brand awareness. In 2012, Ben dropped out of university to focus on the business full-time.</p>
+<p>The Gymshark Ltd brand has become a hit with younger gym goers and is doing well in a highly competitive market. Its competitors include Nike, Adidas and Puma. Instead of using traditional advertising or selling in high street shops, Gymshark Ltd has grown by having athletes and social media ‘influencers’ wear its clothes on platforms like Instagram, TikTok, and Facebook. Ben is also well known and still shares his own fitness videos online to promote the brand. The company now has 18 million followers on social media.</p></div>`;
+
+const STAGES = [
+/* ---------------- STAGE 1 ---------------- */
+{ id:1, type:'spot', title:'Read the question', blurb:'Find the start point and the end point.', pass:8,
+  teach:`<p>Every 6-mark Analyse question has two key elements. The <b style="color:var(--start)">start point</b> is the thing you are told to analyse. The <b style="color:var(--end)">end point</b> is where your chain has to finish.</p>
+  <p>AQA's level descriptor for the top level asks for "a chain of reasoning, effectively linking the two key elements of the question". If you misread either one, the chain can't link them.</p>
+  <p>For each question, tap the start point, then the end point. One wrong tap and the question counts as missed, so read to the end first.</p>`,
+  items:[
+    {src:'AQA 7138 specimen · Paper 1 · Q1.1', parts:['Ben Francis has demonstrated several entrepreneurial characteristics in his career. Analyse how ',['one of these entrepreneurial characteristics','s'],' has contributed to ',['the success of Gymshark Ltd','e'],'.'],
+     note:'You choose one characteristic. The chain has to finish on success, and AQA wants a measure of success such as sales or profit.'},
+    {src:'AQA 7138 specimen · Paper 1 · Q1.2', parts:['Ben Francis wants to make the Gymshark Ltd brand as strong as Nike’s. Analyse one way in which ',['having a brand as strong as Nike’s','s'],' could affect ',['the price elasticity of demand for Gymshark Ltd’s products','e'],'.'],
+     note:'The end point is price elasticity of demand, not sales and not profit. Your chain has to say whether demand becomes more or less price elastic.'},
+    {src:'AQA 7138 specimen · Paper 1 · Q2.1', parts:['Apple often sets a high price for its products, such as Vision Pro, compared to its competitors. Analyse one way in which ',['setting a high price','s'],' might affect ',['the revenue Apple earns from its products','e'],'.'],
+     note:'Revenue, not profit. A high price could raise or lower revenue: that depends on how price elastic demand is.'},
+    {src:'AQA 7138 specimen · Paper 1 · Q2.2', parts:['Apple’s share price changed between September 2021 and September 2023 (Appendix E). Analyse ',['one factor','s'],' that might have caused ',['this change in share price','e'],'.'],
+     note:'Here the chain runs backwards: from a cause you pick to the change that has already happened. The share price rose from $142.65 to $171.21.'},
+    {src:'Exam-style', parts:['Analyse one way in which ',['writing a business plan','s'],' might help a new café to ',['raise finance','e'],'.'],
+     note:'Not "succeed" or "make a profit". The chain has to reach the café getting money from a bank or investor.'},
+    {src:'Exam-style', parts:['Analyse one way in which ',['becoming a public limited company','s'],' might affect ',['the control the founders have over the business','e'],'.'],
+     note:'The end point is control. Raising more money is a step on the way, not the finish.'},
+    {src:'Exam-style', parts:['Analyse one way in which ',['primary market research','s'],' might reduce ',['the risk of launching a new protein snack','e'],'.'],
+     note:'The end point is risk. Saying research gives the business "useful information" is only the first step.'},
+    {src:'Exam-style', parts:['Analyse one way in which ',['a fall in its share price','s'],' might affect a plc’s ',['ability to raise finance','e'],'.'],
+     note:'The end point is raising finance, not the shareholders\' wealth.'},
+    {src:'Exam-style', parts:['Analyse one way in which ',['a rise in consumer incomes','s'],' might affect ',['sales of a supermarket’s value own-label products','e'],'.'],
+     note:'Watch the words "value own-label". These may be inferior goods, so sales could fall as incomes rise.'},
+    {src:'Exam-style', parts:['A clothing retailer is offered cotton at a lower price by a supplier with poor working conditions. Analyse one way in which ',['using this supplier','s'],' might affect ',['the retailer’s brand image','e'],'.'],
+     note:'The end point is brand image. Lower costs are true, but they take the chain somewhere else.'}
+  ]},
+/* ---------------- STAGE 2 ---------------- */
+{ id:2, type:'drift', title:'Spot the drift', blurb:'Did the chain finish where the question asked?', pass:8,
+  teach:`<p>A chain can be well explained and still miss the question if it finishes in the wrong place. This is called drifting.</p>
+  <p>You will see a question and the last part of a student's chain. Decide whether it reached the end point or drifted somewhere else.</p>
+  <p>Watch for the usual traps: profit instead of revenue, sales instead of price elasticity, cash instead of profit, and "success" that never says what success is.</p>`,
+  items:[
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.2', q:'Analyse one way in which having a brand as strong as Nike’s could affect the price elasticity of demand for Gymshark Ltd’s products.',
+     lead:'...customers who are loyal to the brand see fewer acceptable alternatives, ', tail:'so a price rise would cause only a small fall in quantity demanded, making demand more price inelastic.', ok:true,
+     why:'This lands on price elasticity of demand and says which way it moves.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.2', q:'Analyse one way in which having a brand as strong as Nike’s could affect the price elasticity of demand for Gymshark Ltd’s products.',
+     lead:'...a stronger brand attracts more customers, ', tail:'so Gymshark sells more units and its revenue rises.', ok:false,
+     why:'It drifted to sales and revenue. The question asked about price elasticity of demand.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.1', q:'Analyse one way in which setting a high price might affect the revenue Apple earns from its products.',
+     lead:'...because many buyers trust the Apple brand and are not willing to switch to Meta, ', tail:'so sales fall only slightly and the high price brings in more revenue per unit sold.', ok:true,
+     why:'Reaches revenue, with the reason why the high price does not lose many sales.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.1', q:'Analyse one way in which setting a high price might affect the revenue Apple earns from its products.',
+     lead:'...each Vision Pro sells for $3,499, ', tail:'so Apple makes a large profit margin on every headset.', ok:false,
+     why:'Profit margin is not revenue. Profit also depends on costs, which the question does not ask about.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.1', q:'Analyse how one of these entrepreneurial characteristics has contributed to the success of Gymshark Ltd.',
+     lead:'...by teaching himself to sew and going to bodybuilding events, ', tail:'Ben showed that he was very passionate.', ok:false,
+     why:'It stops at the characteristic. Nothing links the passion to success, such as brand awareness growing into sales.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.1', q:'Analyse how one of these entrepreneurial characteristics has contributed to the success of Gymshark Ltd.',
+     lead:'...his bodybuilding-event appearances made the brand known among serious gym goers, ', tail:'which built the early customer base and the sales that let Gymshark grow.', ok:true,
+     why:'Success is made concrete: a customer base and sales.'},
+    {src:'Exam-style', q:'Analyse one way in which writing a business plan might help a new café to raise finance.',
+     lead:'...the plan includes a cash flow forecast showing when the loan could be repaid, ', tail:'so the bank is more confident it will get its money back and is more likely to lend.', ok:true,
+     why:'Reaches raising finance, and explains why the lender is persuaded.'},
+    {src:'Exam-style', q:'Analyse one way in which writing a business plan might help a new café to raise finance.',
+     lead:'...writing the plan makes the owner think about the target market, ', tail:'so the café is more likely to be successful.', ok:false,
+     why:'"Successful" is not raising finance. The plan has to reach a lender or investor.'},
+    {src:'Exam-style', q:'Analyse one way in which becoming a public limited company might affect the control the founders have over the business.',
+     lead:'...the company can now sell shares to the public on a stock exchange, ', tail:'so it can raise much more money to expand.', ok:false,
+     why:'It drifted to finance. The end point was the founders\' control.'},
+    {src:'Exam-style', q:'Analyse one way in which a rise in consumer incomes might affect sales of a supermarket’s value own-label products.',
+     lead:'...with more money to spend, some shoppers trade up to branded or premium ranges, ', tail:'so sales of the value own-label range fall.', ok:true,
+     why:'Lands on sales of the value range, and recognises it may be an inferior good.'}
+  ]},
+/* ---------------- STAGE 3 ---------------- */
+{ id:3, type:'mcq', title:'Make the end point concrete', blurb:'Turn "success" or "performance" into something you can measure.', pass:5,
+  teach:`<p>Some end points are broad: "success", "financial performance", "competitiveness". AQA's guidance for the Gymshark question says a top answer links the characteristic to "a measure of success of Gymshark Ltd, such as profit or sales".</p>
+  <p>In AQA's own example answers, a response that left success vague was marked as low Level 2. The commentary said it was not clear what success meant.</p>
+  <p>So when the end point is broad, name something measurable and finish on it.</p>`,
+  items:[
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.1', prompt:'Which final sentence makes "success" concrete?',
+     o:['Therefore this has made Gymshark Ltd successful.','Therefore Ben’s risk-taking contributed to Gymshark’s success, because the time he could give the brand built awareness among young gym goers and grew its sales.','Therefore Ben is a good entrepreneur.'], a:1,
+     why:'The first leaves success undefined. The third is about Ben, not the business. The second names a measure: sales.'},
+    {src:'Exam-style', prompt:'A question ends "...improve the financial performance of a café". Which of these is NOT a measure of financial performance?',
+     o:['Operating profit','Customer satisfaction','Liquidity'], a:1,
+     why:'Customer satisfaction could be a step on the way, but the chain has to keep going until it reaches profit, revenue, margins or cash.'},
+    {src:'Exam-style', prompt:'"...affect the competitiveness of a coffee chain." Which ending lands on competitiveness?',
+     o:['...so its staff are happier at work.','...so it can offer better value than rival chains and win customers from them.','...so its costs fall.'], a:1,
+     why:'Competitiveness is about doing better than rivals. Lower costs might lead there, but the chain has to say so.'},
+    {src:'Exam-style', prompt:'"...reduce the risk of launching a new protein snack." Which ending reaches the end point?',
+     o:['...so the business has more information.','...so the business finds out about its customers.','...so it is less likely to spend money launching a flavour that customers will not buy.'], a:2,
+     why:'Risk means the chance of losing money or failing. The first two stop before they get there.'},
+    {src:'Exam-style', prompt:'"...the control the founders have over the business." Which sentence reaches it?',
+     o:['...so outside shareholders could buy enough shares to outvote the founders on major decisions.','...so the business can raise millions of pounds.','...so the business must publish its accounts.'], a:0,
+     why:'Control is about who makes the decisions. Raising money and publishing accounts are true, but they are not control.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.2', prompt:'"...might have caused this change in share price." Apple\'s share price rose. Which final step completes the chain?',
+     o:['...so Apple made more profit.','...so more investors wanted to buy Apple shares, and higher demand for the shares pushed the price up.','...so Apple is a successful business.'], a:1,
+     why:'Share prices move because of demand for and supply of shares. The chain has to reach investors buying.'}
+  ]},
+/* ---------------- STAGE 4 ---------------- */
+{ id:4, type:'build', title:'Build the chain', blurb:'Put the links in order. One card is a trap.', pass:2,
+  teach:`<p>Now build the chain yourself. Each question has five cards but only four belong. One trap card sounds sensible but takes the chain somewhere else.</p>
+  <p>Tap cards to place them. Tap a placed card to send it back. You get two checks per question. To score, you need it right on the first check.</p>`,
+  items:[
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.2', q:'Analyse one way in which having a brand as strong as Nike’s could affect the price elasticity of demand for Gymshark Ltd’s products.',
+     start:'Gymshark builds a brand as strong as Nike’s', end:'Demand for Gymshark’s products becomes more price inelastic',
+     cards:[
+      {id:'A',t:'More customers become loyal and want the Gymshark name, not just any gymwear',w:'Why? A strong brand gives customers a reason to choose it over similar products.'},
+      {id:'B',t:'Loyal customers see Adidas or Puma as weaker substitutes',w:'Why? If they want this brand, other brands are not a close replacement.'},
+      {id:'C',t:'Fewer customers switch to a rival when Gymshark raises its price',w:'Why? With fewer close substitutes, a price rise drives away fewer buyers.'},
+      {id:'D',t:'The fall in quantity demanded is smaller than the rise in price',w:'Why? That is what price inelastic means: a less than proportionate response.'}],
+     decoy:{id:'E',t:'Gymshark sells more units, so its revenue rises',w:'Trap: this heads to sales and revenue. The end point is price elasticity.'},
+     order:['A','B','C','D']},
+    {src:'Exam-style', q:'Analyse one way in which writing a business plan might help a new café to raise finance.',
+     start:'The owner writes a business plan', end:'The café is more likely to get a bank loan',
+     cards:[
+      {id:'A',t:'The plan includes a cash flow forecast for the first year',w:'Why? Lenders want to see when money will come in and go out.'},
+      {id:'B',t:'The forecast shows the café can afford the monthly repayments',w:'Why? It shows cash left over after paying costs.'},
+      {id:'C',t:'The bank sees less risk that the loan will not be repaid',w:'Why? Evidence of repayment reduces the lender\'s risk.'},
+      {id:'D',t:'The bank is more willing to lend, possibly at a lower interest rate',w:'Why? Lower risk makes the loan more attractive to the bank.'}],
+     decoy:{id:'E',t:'The owner can set SMART objectives for the café',w:'Trap: useful for running the café, but it does not get the chain to raising finance.'},
+     order:['A','B','C','D']},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.1', q:'Analyse one way in which setting a high price might affect the revenue Apple earns from its products.',
+     start:'Apple prices Vision Pro at $3,499, three times Meta’s headset', end:'Apple earns more revenue from the product',
+     cards:[
+      {id:'A',t:'Many buyers trust the Apple brand more than its rivals',w:'Why? The insert says three times as many people would buy a headset from Apple as from its closest competitor.'},
+      {id:'B',t:'So demand for Apple products is likely to be price inelastic',w:'Why? Loyal customers do not see Meta as a close substitute.'},
+      {id:'C',t:'The high price causes a smaller percentage fall in sales than the percentage price rise',w:'Why? That is what inelastic demand means.'},
+      {id:'D',t:'The extra revenue from each unit outweighs the revenue lost from fewer units',w:'Why? Revenue is price × quantity, and price has risen proportionally more.'}],
+     decoy:{id:'E',t:'Apple makes a bigger profit margin on each headset',w:'Trap: margin is about profit and costs. The end point is revenue.'},
+     order:['A','B','C','D']}
+  ]},
+/* ---------------- STAGE 5 ---------------- */
+{ id:5, type:'weak', title:'Find the weak link', blurb:'One step is wrong, missing or just asserted. Find it and fix it.', pass:4,
+  teach:`<p>A chain is only as strong as its weakest step. AQA's mark scheme says that if an answer jumps from one point to another without explaining how, a step is missing.</p>
+  <p>For each chain, tap the weak step, then choose the best replacement. You need both right first time to score.</p>
+  <p>Checking every link like this is slow, careful work. It is also the habit that turns a Level 1 chain into a Level 2 one.</p>`,
+  items:[
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.2', q:'Analyse one way in which having a brand as strong as Nike’s could affect the price elasticity of demand for Gymshark Ltd’s products.',
+     s:['A brand as strong as Nike’s would make many customers loyal to Gymshark.','This makes demand more price elastic, so customers become less sensitive to price.','Loyal customers would keep buying even if Gymshark raised its prices.','Therefore having a brand as strong as Nike’s could make demand for Gymshark’s products more price inelastic.'],
+     bad:1, problem:'Elastic and less sensitive contradict each other. Less sensitive to price means price inelastic.',
+     fixes:['Loyal customers see rival brands as poor substitutes, so they are less sensitive to a change in Gymshark’s price.','This makes demand perfectly elastic, because Nike is a strong brand.','This means Gymshark would sell more products and earn more revenue.'], fix:0},
+    {src:'Exam-style', q:'Analyse one way in which writing a business plan might help a new café to raise finance.',
+     s:['The owner writes a business plan before opening the café.','A business plan is very useful for any new business.','The forecast shows a bank that the café can afford its loan repayments.','Therefore the plan makes it more likely the café can raise the finance it needs.'],
+     bad:1, problem:'This is an assertion. It says the plan is useful without saying how, so the chain jumps.',
+     fixes:['A business plan is a document setting out what a business intends to do.','The plan includes a cash flow forecast showing the money the café expects to receive and pay out each month.','Writing a plan means the café will definitely succeed.'], fix:1},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.1', q:'Analyse one way in which setting a high price might affect the revenue Apple earns from its products.',
+     s:['Apple set Vision Pro’s price at $3,499, three times Meta’s competing headset.','Many buyers trust Apple, so demand for its products is likely to be price inelastic.','This means Apple’s profits will rise.','Therefore setting a high price is likely to increase the revenue Apple earns from Vision Pro.'],
+     bad:2, problem:'Profit is not revenue, and this step skips how the price affects quantity sold.',
+     fixes:['This means sales will rise because people like expensive products.','So sales fall by a smaller percentage than the price rise, and the higher price per unit outweighs the lost sales.','This means Apple pays a higher dividend.'], fix:1},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.1', q:'Analyse how one of these entrepreneurial characteristics has contributed to the success of Gymshark Ltd.',
+     s:['Entrepreneurs have many characteristics, including being risk takers, resilient, focused, passionate, innovative and adaptable.','By going to bodybuilding events, Ben made the brand known to serious gym goers.','These early customers bought the clothes and told others about them.','Therefore Ben’s passion contributed to Gymshark’s success by building the customer base and sales it grew from.'],
+     bad:0, problem:'Listing every characteristic is not a step in the chain. AQA\'s commentary says definitions are not required: knowledge shows through the argument.',
+     fixes:['Ben is passionate about fitness: he taught himself to sew and went to bodybuilding events to promote his clothes.','An entrepreneur is someone who sets up a business.','Many successful entrepreneurs are passionate.'], fix:0},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.2', q:'Analyse one factor that might have caused this change in share price.',
+     s:['Apple’s operating profit rose from $108.9 billion in 2021 to $125.3 billion in 2023.','This means Apple paid more tax, so the share price rose.','Investors buy shares hoping for dividends and a rising share price.','Therefore higher demand for Apple’s shares is likely to have pushed the share price up from $142.65 to $171.21.'],
+     bad:1, problem:'Paying more tax does not push a share price up. The step needs to explain why investors want the shares more.',
+     fixes:['Higher profits suggest Apple can pay bigger dividends in future, so more investors want to buy its shares.','This means Apple made a loss.','This means Apple will sell more Vision Pro headsets.'], fix:0}
+  ]},
+/* ---------------- STAGE 6 ---------------- */
+{ id:6, type:'drift', title:'Use the case', blurb:'Does the sentence use the business, or could it be about any business?', pass:8,
+  labels:['Uses the case in the argument','Does not use the case properly'], showLabel:'A sentence from a student\'s answer:',
+  teach:`<p>AQA says the key to reaching Level 2 is likely to be "greater application to the context". Application means the case is doing work in your argument.</p>
+  <p>Two things do not count: a sentence that could be about any business, and a sentence that just copies a fact from the case without using it. The mark scheme says "simply repeating elements from the case study is not creditworthy".</p>
+  <p>Decide whether each sentence uses the case properly.</p>`,
+  items:[
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.1', q:'Analyse how one of these entrepreneurial characteristics has contributed to the success of Gymshark Ltd.',
+     text:'Entrepreneurs who take risks are more likely to succeed because they spot opportunities that others miss.', ok:false,
+     why:'This could be about any business. Nothing in it comes from Gymshark.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.1', q:'Analyse how one of these entrepreneurial characteristics has contributed to the success of Gymshark Ltd.',
+     text:'Ben used his £5-an-hour Pizza Hut wage and £1000 savings to buy a sewing machine, so he could start making clothes without borrowing money he might not repay.', ok:true,
+     why:'The case facts drive the reasoning: they show the risk he took and why it mattered.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.1', q:'Analyse how one of these entrepreneurial characteristics has contributed to the success of Gymshark Ltd.',
+     text:'Gymshark Ltd is a successful business with 18 million followers on social media.', ok:false,
+     why:'This repeats a fact from the case but does nothing with it. AQA says repeating the case is not creditworthy.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.1', q:'Analyse how one of these entrepreneurial characteristics has contributed to the success of Gymshark Ltd.',
+     text:'Because Ben still shares his own fitness videos, the people watching see the founder actually training in the clothes, which makes the brand feel genuine to young gym goers.', ok:true,
+     why:'It uses a detail from the case and explains why that detail helps the brand.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.1', q:'Analyse one way in which setting a high price might affect the revenue Apple earns from its products.',
+     text:'A high price means each unit sold brings in more revenue.', ok:false,
+     why:'True, but generic. It does not use anything about Apple or Vision Pro.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.1', q:'Analyse one way in which setting a high price might affect the revenue Apple earns from its products.',
+     text:'In a 2021 survey, three times as many people said they would buy a headset from Apple as from its closest competitor, so many buyers may not switch to Meta even at $3,499.', ok:true,
+     why:'The survey is used as evidence for why demand may be price inelastic.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.1', q:'Analyse one way in which setting a high price might affect the revenue Apple earns from its products.',
+     text:'Apple set a high price of $3499.', ok:false,
+     why:'Copied straight from the insert. It needs a "so..." that uses it.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.1', q:'Analyse one way in which setting a high price might affect the revenue Apple earns from its products.',
+     text:'Some experts expected first-year sales below 200,000 against Apple’s hope of 3 million, which suggests the high price may have put off far more buyers than Apple expected.', ok:true,
+     why:'It compares two figures from the case and uses the gap as evidence that demand may be more elastic than Apple hoped.'},
+    {src:'Exam-style', q:'Analyse one way in which writing a business plan might help a new café to raise finance.',
+     text:'Banks usually want to see a business plan before they lend money.', ok:false,
+     why:'Generic. In a real question you would use the café\'s figures, such as the size of the loan or its forecast sales.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.2', q:'Analyse one way in which having a brand as strong as Nike’s could affect the price elasticity of demand for Gymshark Ltd’s products.',
+     text:'Market research suggests 43% of people who buy Nike sportswear would do so again, so a brand that strong keeps nearly half its buyers coming back even if prices rise.', ok:true,
+     why:'The figure is used to show loyalty, which is the link to price elasticity.'}
+  ]},
+/* ---------------- STAGE 7 ---------------- */
+{ id:7, type:'mcq', title:'What a 6-marker needs', blurb:'One argument, no conclusion, no definitions needed.', pass:5,
+  teach:`<p>A 6-mark Analyse question is AO1 2, AO2 2, AO3 2. There is no evaluation mark.</p>
+  <p>AQA's commentary is clear: "Only one argument is needed for top marks." A second argument uses time you need for the 9 and 15-markers, and only the stronger one is credited.</p>
+  <p>Definitions are not required either. Knowledge shows through the argument.</p>`,
+  items:[
+    {src:'AQA 7138 · 6-mark commentary', prompt:'How many arguments do you need for 6 out of 6?',
+     o:['One developed argument','Two arguments','Three shorter points'], a:0,
+     why:'AQA: only one argument is needed for top marks. If you write more, the strongest one is credited.'},
+    {src:'AQA 7138 · 6-mark commentary', prompt:'A student starts: "An entrepreneurial characteristic is a trait or quality that an entrepreneur has." Is this needed?',
+     o:['Yes. Without a definition there is no AO1.','No. Definitions are not required; knowledge is shown through the argument as a whole.','Yes. The definition is worth 2 marks on its own.'], a:1,
+     why:'AQA\'s commentary on this exact opening: definitions are "not required or expected".'},
+    {src:'AQA 7138 · specification', prompt:'Should a 6-mark answer end with a judgement weighing up both sides?',
+     o:['Yes, otherwise it cannot reach Level 2.','No. There is no AO4 on a 6-marker, so finish on the end point instead.','Only if there is time left.'], a:1,
+     why:'Analyse questions test AO1, AO2 and AO3. Finish with a sentence that answers the question using its words.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.1', prompt:'Which opening gets the chain moving fastest?',
+     o:['There are many characteristics of entrepreneurs, such as risk taking, passion and innovation.','Ben is a risk taker: he dropped out of university in 2012 to work on Gymshark full-time.','An entrepreneur is a person who sets up a business.'], a:1,
+     why:'It names one characteristic and uses the case straight away. The others spend time before the chain starts.'},
+    {src:'AQA 7138 · mark scheme', prompt:'An answer has good knowledge and a good chain, but never uses the business in the case. What is the most it can score?',
+     o:['6','4','2'], a:1,
+     why:'The mark scheme: good AO1 and AO3 with no application to the context can gain a maximum of 4 marks.'},
+    {src:'AQA 7138 · mark scheme', prompt:'An answer only explains what the concept means. There is no context and no chain. What is the most it can score?',
+     o:['2','3','4'], a:0,
+     why:'The mark scheme: a response that shows only knowledge and understanding (AO1) can receive a maximum of 2 marks.'}
+  ]},
+/* ---------------- STAGE 8 ---------------- */
+{ id:8, type:'mcq', title:'Data in the chain', blurb:'Use the numbers in the case, and get them right.', pass:5,
+  teach:`<p>A figure from the case is one of the strongest pieces of application you can use, as long as it does some work in the chain and is accurate.</p>
+  <p>These use figures from the AQA specimen inserts for Gymshark and Apple. Use a calculator if you need one.</p>`,
+  items:[
+    {src:'AQA 7138 specimen insert · Gymshark', prompt:'"Market research suggests that 43% of people who buy Nike sportswear would do so again." Which sentence uses this best in a chain about price elasticity?',
+     o:['43% of Nike buyers would buy again.','Nearly half of Nike buyers come back, so a brand that strong keeps many customers even after a price rise, which makes demand less price elastic.','Nike has a 43% market share.'], a:1,
+     why:'The first just quotes. The third misreads the figure: it is about repeat buying, not market share.'},
+    {src:'AQA 7138 specimen insert · Apple, Appendix E', prompt:'Apple’s share price went from $142.65 to $171.21. What is the percentage change?',
+     o:['An increase of about 20%','An increase of about 29%','An increase of about 17%'], a:0,
+     why:'(171.21 − 142.65) ÷ 142.65 × 100 = 20.0%. 17% comes from dividing by the new price instead of the original.'},
+    {src:'AQA 7138 specimen insert · Apple, Appendix D', prompt:'Operating profit rose from $108,949m in 2021 to $125,344m in 2023. Which statement is correct?',
+     o:['It rose by about 15%.','It rose by about 13%.','It rose by $16,395.'], a:0,
+     why:'16,395 ÷ 108,949 × 100 = 15.0%. 13% divides by the 2023 figure. The third forgets the figures are in millions.'},
+    {src:'AQA 7138 specimen insert · Apple', prompt:'Apple hoped to sell 3 million Vision Pro headsets in the first year. Some experts expected under 200,000. Which use of these numbers is correct?',
+     o:['Expected sales were under 7% of Apple’s target.','Expected sales were about 70% of Apple’s target.','Expected sales were 2.8 million higher than the target.'], a:0,
+     why:'200,000 ÷ 3,000,000 = 0.067, so under 7%. That gap is strong evidence that the high price may have put buyers off.'},
+    {src:'AQA 7138 specimen insert · Gymshark', prompt:'Ben owns 70% of Gymshark and General Atlantic owns just over 20%. In a chain about selling shares, which link uses this best?',
+     o:['Ben owns 70% of Gymshark.','Because Ben still owns 70%, he keeps majority control, so he can raise money by selling shares and still make the key decisions.','General Atlantic now controls Gymshark.'], a:1,
+     why:'The figure is used to explain control. The third is wrong: just over 20% is not control.'},
+    {src:'AQA 7138 specimen insert · Apple', prompt:'"This price was three times more expensive than Meta’s competing headset." How should you use this?',
+     o:['Copy it into your answer word for word.','Use it as evidence about substitutes: a much cheaper rival exists, so Apple\'s demand depends on how many buyers are loyal enough not to switch.','Ignore it, because 6-markers do not need data.'], a:1,
+     why:'Data earns application marks when it supports a step in your reasoning.'}
+  ]},
+/* ---------------- STAGE 9 ---------------- */
+{ id:9, type:'timed', title:'Against the clock', blurb:'Twelve mixed questions, 25 seconds each.', pass:10, poolFrom:[2,3,6,8], count:12, seconds:25,
+  teach:`<p>In the exam you have about 9 minutes for a 6-marker, so you need to spot the end point and the application quickly.</p>
+  <p>This round mixes questions from stages 2, 3, 6 and 8, picked at random each time. You have <b>25 seconds</b> for each. If the bar runs out, it counts as wrong. You need 10 out of 12.</p>`,
+  items:[]},
+/* ---------------- STAGE 10 ---------------- */
+{ id:10, type:'write', title:'The real question', blurb:'Write a full 6-mark answer to the specimen question.', pass:1,
+  teach:`<p>This is question 1.1 from AQA's specimen Paper 1.</p>
+  <p>Pick <b>one</b> characteristic. Use what Gymshark's case tells you about Ben. Build one chain that finishes on a measure of success, such as sales or brand awareness turning into sales. No definition, no second argument, no conclusion.</p>
+  <p>Write your start point and end point first. The answer box unlocks when you have.</p>`,
+  items:[{src:'AQA 7138 specimen · Paper 1 · Q1.1', w:{
+    intro:`${GYM_TEXT}<div class="qbox">Ben Francis has demonstrated several entrepreneurial characteristics in his career. Analyse how one of these entrepreneurial characteristics has contributed to the success of Gymshark Ltd. <span style="color:var(--muted);font-weight:400">(6 marks)</span></div>`,
+    plan:[
+      {id:'S',label:'Start point',cls:'s',ph:'Which characteristic?',ok:v=>/(risk|resilien|focus|passion|innovat|adapt|determin|hard.?work)/.test(v),hint:'Name one characteristic as your start point.'},
+      {id:'E',label:'End point',cls:'e',ph:'What does success mean here?',ok:v=>/(sale|revenue|profit|customer|market share|brand|grow|follower|valu)/.test(v),hint:'Make success concrete: sales, profit, customers, brand awareness?'}],
+    planOk:'Good. Keep both in front of you while you write.',
+    checks:[
+      {k:'one',label:'Starts with one characteristic, not a list',test:x=>{const n=['risk','resilien','focus','passion','innovat','adapt'].filter(w=>x.firstTwo.includes(w)).length;return n===1;}},
+      {k:'case',label:'Uses at least two details about Ben or Gymshark from the case',test:x=>['pizza','£5','1000','sew','bodybuilding','dropp','university','garage','18 million','influencer','fitness video','tiktok','instagram'].filter(w=>x.low.includes(w)).length>=2},
+      {k:'links',label:'At least four linking words between steps',test:x=>(x.low.match(/\b(because|so|therefore|this means|which means|as a result|meaning|leads? to|resulting in|which (allowed|helped|built|meant))\b/g)||[]).length>=4},
+      {k:'measure',label:'Names a measure of success (sales, profit, customers...)',test:x=>/(sales|revenue|profit|customers|market share)/.test(x.low)},
+      {k:'end',label:'Last sentence starts "Therefore" and answers the question',test:x=>/^therefore/.test(x.last)&&/success/.test(x.last)}],
+    warn:x=>/\b(however|on the other hand|in conclusion|overall)\b/.test(x.low)?{msg:'This looks like evaluation or a conclusion. A 6-marker has no evaluation marks, so finish on the end point.'}
+      :/(is (a )?(trait|quality|person who|someone who))/.test(x.first)?{msg:'Your first sentence is a definition. You do not need one. Start with Ben and the characteristic.'}:null,
+    model:`<span class="src">One way to write it</span><p><span class="hl-s">Ben is innovative</span>: <span class="hl-d">instead of paying for traditional advertising or selling in high street shops, he grew Gymshark by having athletes and influencers wear its clothes on Instagram, TikTok and Facebook</span>. <span class="hl-w">This meant</span> a small business with little money could reach the young gym goers it was aiming at, because those platforms are where they spend their time. <span class="hl-w">As a result</span>, the brand became known far faster and more cheaply than it could have through TV adverts or shop space. People who saw influencers they trusted wearing the clothes were more likely to try them, <span class="hl-w">so</span> sales grew, and every new customer posting in the clothes advertised the brand again. <span class="hl-w">This is shown by</span> <span class="hl-d">Gymshark now having 18 million followers</span>. <span class="hl-w">Therefore</span> Ben's innovation contributed to <span class="hl-e">the success of Gymshark Ltd</span> by building brand awareness cheaply among young gym goers, which turned into the sales that let the business grow.</p>
+      <div class="key"><span><span class="hl-s">teal</span> start point</span><span><span class="hl-e">coral</span> end point</span><span><span class="hl-w">purple</span> links</span><span><span class="hl-d">underlined</span> case details used</span></div>
+      <p style="margin-top:14px;font-size:.9rem;color:var(--muted)">Notice it picks one characteristic, never defines it, and finishes on success made concrete: awareness turning into sales.</p>`,
+    ai:`You are an experienced AQA A-level Business teacher giving feedback on a Year 12 student's answer to this 6-mark question from the AQA 7138 specimen Paper 1: "Ben Francis has demonstrated several entrepreneurial characteristics in his career. Analyse how one of these entrepreneurial characteristics has contributed to the success of Gymshark Ltd."
+Case facts the student may use: Ben started at 19 in his parents' garage; used his £5-an-hour Pizza Hut wage and £1000 savings to buy a sewing machine; taught himself to sew; went to bodybuilding events to raise brand awareness; dropped out of university in 2012; grew through athletes and influencers on Instagram, TikTok and Facebook instead of traditional advertising or high street shops; still shares his own fitness videos; 18 million followers; competitors Nike, Adidas, Puma.
+Rules from AQA for this question: one argument is enough for top marks (if there are two, only the stronger is credited); definitions are not required; there is no evaluation, so never ask for a counter-argument or conclusion; Level 2 needs effective application to Gymshark throughout and a chain that links the characteristic to a measure of success such as sales or profit; repeating case facts without using them is not creditworthy.
+Do not give a mark or level. Write in plain British English, as a teacher speaking to a Year 12 student. No headings, no bullet symbols other than simple dashes, no emoji. Give: one sentence on what works; then two or three improvements, each quoting a short phrase they wrote ("You wrote: ...") and showing a better version ("You could write: ..."). Keep it under 220 words.`,
+    finishLabel:'Finish the course',
+    doneTitle:'Course complete',
+    doneText:'You have built a full 6-mark chain on a real AQA question. Keep the habit: before you write, put the start point and the end point at the top of your plan, and check every link as you go.'
+  }}]}
+];
+
+window.COURSE={
+  id:'analyse6', key:'y12_course_analyse6_v1', offset:1000, short:'6-mark',
+  name:'6-Mark Analyse Course',
+  hero:{kicker:'6-mark Analyse · AQA A-level Business (7138)',
+    title:'From start point to <em>end point</em>',
+    lede:'A 6-mark Analyse question needs one chain of reasoning that links the two key elements of the question, using the business in the case. This course trains that one skill using AQA\'s specimen questions and their guidance. Pass each stage to unlock the next.'},
+  stages:STAGES
+};
+</script>
+<script src="course-engine.js"></script>
+</body>
+</html>

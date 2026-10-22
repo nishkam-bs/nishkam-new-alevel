@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Courses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="course-engine.css">
+<style>
+.courses{display:grid;gap:22px;padding-block:52px 70px;perspective:1100px}
+.course{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:22px;align-items:center;text-decoration:none;color:inherit;
+  background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 28px;box-shadow:var(--shadow);transform-style:preserve-3d;transition:transform .25s ease-out,border-color .25s}
+.course:hover{border-color:var(--gold)}
+.course .num{font:400 3rem "DM Serif Display",Georgia,serif;color:var(--gold);line-height:1;transform:translateZ(30px)}
+.course h2{font-size:1.65rem;margin-bottom:6px;transform:translateZ(20px)}
+.course p{color:var(--muted);font-size:.95rem;max-width:58ch}
+.course .tag{font:500 .72rem "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.prog{display:grid;justify-items:end;gap:8px;min-width:150px}
+.prog .bar{width:150px}
+.prog span{font:500 .78rem "IBM Plex Mono",monospace;color:var(--muted)}
+.go{font-weight:600;font-size:.92rem;color:var(--fg)}
+.intro{color:var(--muted);max-width:62ch}
+.who{margin-top:22px}
+@media (max-width:700px){.course{grid-template-columns:minmax(0,1fr);gap:12px}.prog{justify-items:start}.course .num{font-size:2.2rem}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <canvas id="net" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="kicker">AQA A-level Business (7138) · Courses</div>
+    <h1>Courses</h1>
+    <p class="lead">Each course takes one exam skill and trains it step by step, using AQA&rsquo;s specimen questions and guidance for the new specification. Stages unlock as you pass them. Your progress is saved on this device.</p>
+    <div class="who" id="who"></div>
+  </div>
+</header>
+<main class="wrap">
+  <div class="courses" id="list"></div>
+</main>
+<footer><div class="wrap"><a href="index.html" style="color:var(--muted)">Back to the main site</a><br>Nishkam School West London · Man neeva, mat uchi</div></footer>
+
+<script>
+(function(){
+"use strict";
+const COURSES=[
+  {href:'course-6mark-analyse.html',key:'y12_course_analyse6_v1',offset:1000,stages:10,tag:'6-mark Analyse',title:'6-Mark Analyse Course',
+   text:'Find the start point and end point, spot chains that drift, make "success" concrete, use the case properly and write a full 6-mark answer to the specimen question.'}
+];
+const API='https://nishkam-tracker.alevelnishkam.workers.dev';
+const TRACK=false; /* tracking is off on the 7138 site until Year 12 sign-in is set up */
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, fine=matchMedia('(pointer: fine)').matches;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let auth=null;try{auth=JSON.parse(localStorage.getItem('epc_auth')||'null');}catch(e){}
+if(!TRACK)auth=null;
+
+function local(c){try{const r=localStorage.getItem(auth?c.key+'_'+auth.exam:c.key);return r?JSON.parse(r):null;}catch(e){return null;}}
+function render(server){
+  $('#list').innerHTML=COURSES.map((c,i)=>{
+    const st=local(c),passed=new Set(Object.keys((st&&st.passed)||{}).filter(k=>st.passed[k]).map(Number));
+    if(server)Object.keys(server).forEach(k=>{k=+k;if(k>c.offset&&k<c.offset+100)passed.add(k-c.offset);});
+    const n=passed.size;
+    return `<a class="course reveal" href="${c.href}"><div class="num">${String(i+1).padStart(2,'0')}</div>
+      <div><div class="tag">${esc(c.tag)}</div><h2>${esc(c.title)}</h2><p>${esc(c.text)}</p></div>
+      <div class="prog"><div class="bar"><i style="width:${n/c.stages*100}%"></i></div><span>${n===c.stages?'Complete':n?`${n} of ${c.stages} stages passed`:'Not started'}</span><span class="go">${n?'Continue':'Start'} →</span></div></a>`;
+  }).join('');
+  document.querySelectorAll('.course').forEach(el=>{
+    requestAnimationFrame(()=>el.classList.add('in'));
+    if(fine&&!reduce){el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`rotateX(${-y*6}deg) rotateY(${x*8}deg)`;});el.addEventListener('pointerleave',()=>el.style.transform='');}
+  });
+}
+$('#who').innerHTML=auth?`<div class="who">Signed in as <b>${esc(auth.name)}</b></div>`:(TRACK?`<p style="color:var(--muted);font-size:.92rem">Open any course and sign in with your exam number. You only need to do it once.</p>`:'');
+render(null);
+if(auth){fetch(API+'/progress',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:auth.token})})
+  .then(r=>r.ok?r.json():null).then(d=>{if(d)render(d.passed||{});}).catch(()=>{});}
+
+/* hero network */
+const cv=$('#net'),cx=cv.getContext('2d');let W,H,pts=[],mouse={x:-999,y:-999};
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function size(){const r=cv.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;cx.setTransform(d,0,0,d,0,0);
+  pts=Array.from({length:Math.round(Math.min(70,W*H/12000))},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,k:Math.random()<.12?'s':Math.random()<.14?'e':'c'}));}
+function draw(){cx.clearRect(0,0,W,H);const cs={s:css('--start'),e:css('--end'),c:css('--chain')},lc=css('--muted');
+  for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.hypot(dx,dy);if(d<120&&d>0){p.x+=dx/d;p.y+=dy/d;}}
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<125){cx.globalAlpha=(1-d/125)*.28;cx.strokeStyle=lc;cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke();}}
+  for(const p of pts){cx.globalAlpha=.75;cx.fillStyle=cs[p.k];cx.beginPath();cx.arc(p.x,p.y,p.k==='c'?1.8:3,0,7);cx.fill();}
+  cx.globalAlpha=1;if(!reduce)requestAnimationFrame(draw);}
+size();draw();addEventListener('resize',size);
+const hero=document.querySelector('.hero');hero.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;});hero.addEventListener('pointerleave',()=>{mouse.x=mouse.y=-999;});
+})();
+</script>
+</body>
+</html>
