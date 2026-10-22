@@ -33,7 +33,7 @@ aside .sub-link:hover{color:white}
 .sidebar-footer strong{display:block;color:var(--gold-soft);font-size:12px;margin-bottom:2px}
 .hamburger{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--navy);color:white;border:0;width:44px;height:44px;border-radius:10px;font-size:20px}
 .scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
-main{max-width:1080px;margin:0 auto;padding:48px 40px 80px}
+main{max-width:1080px;margin:0 auto;padding:48px 40px 80px;min-width:0}
 /* Hero */
 .hero{padding:60px 0 48px;border-bottom:1px solid var(--rule);margin-bottom:40px}
 .hero .spec{font-size:13px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
@@ -162,7 +162,8 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
 
 /* Responsive */
 @media(max-width:900px){
-  .layout{grid-template-columns:1fr}
+  .layout{grid-template-columns:minmax(0,1fr)}
+  main{box-sizing:border-box;width:100%}
   aside{position:fixed;left:-320px;z-index:100;width:300px;transition:.3s}
   aside.open{left:0}
   .hamburger{display:grid;place-items:center}
@@ -199,7 +200,11 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
   <a href="#" style="opacity:.5">15-Mark Evaluate Lab</a>
   <a href="redraft.html">Redraft</a>
   <a href="calculation_practice_lab.html">Calculations</a>
-  <a href="courses.html">Courses</a>
+  <h2>Courses</h2>
+  <a class="sub-link" href="courses.html">All courses</a>
+  <a class="sub-link" href="course-6mark-analyse.html">1. 6-Mark Analyse</a>
+  <a class="sub-link" href="course-9mark-assess.html">2. 9-Mark Assess</a>
+  <a class="sub-link" href="course-calculate.html">3. Calculate and Use It</a>
   <a href="flashcards-7138.html">Flashcards</a>
   <a href="#" style="opacity:.5">Knowledge Quiz</a>
   <h2>Unit 3.1</h2>
@@ -232,6 +237,7 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
     <div class="spec">AQA A-Level Business (7138) &middot; First teaching September 2026</div>
     <h2>Your <em>A-Level Business</em> revision hub.</h2>
     <div class="tool-pills">
+      <a href="#courses" class="tool-pill">Courses</a>
       <a href="#flashcards" class="tool-pill">Flashcards</a>
       <a href="six_marker_lab.html" class="tool-pill">6-Mark Analyse Lab</a>
       <a href="nine_mark_lab.html" class="tool-pill">9-Mark Assess Lab</a>
@@ -331,6 +337,44 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
   </div>
 
   <!-- STUDY TOOLS -->
+  <!-- COURSES -->
+  <div id="courses" style="margin-top:48px;padding-top:40px;border-top:1px solid var(--rule)">
+    <div class="section-label">Courses</div>
+    <div class="section-heading">Short courses, ten stages each.</div>
+    <div class="section-sub">Each course works on one exam skill. You go through ten short stages and finish by writing a full answer to an AQA specimen question. Your progress is saved on this device.</div>
+    <div class="tools-grid">
+
+      <a href="course-6mark-analyse.html" class="tool-card featured">
+        <div class="tool-num">Course 1</div>
+        <h3>6-Mark Analyse</h3>
+        <p>Find the start point and end point, spot chains that drift, use the case properly and write a full 6-mark answer to the specimen question.</p>
+        <span class="tool-arrow">Start the course &rarr;</span>
+      </a>
+
+      <a href="course-9mark-assess.html" class="tool-card featured">
+        <div class="tool-num">Course 2</div>
+        <h3>9-Mark Assess</h3>
+        <p>Find the one issue you are judging, write a real counter-argument, weigh the two sides and write a full 9-mark answer.</p>
+        <span class="tool-arrow">Start the course &rarr;</span>
+      </a>
+
+      <a href="course-calculate.html" class="tool-card featured">
+        <div class="tool-num">Course 3</div>
+        <h3>Calculate and Use It</h3>
+        <p>Choose the right formula and figures, get the calculation right, then use the result in your argument and your judgement.</p>
+        <span class="tool-arrow">Start the course &rarr;</span>
+      </a>
+
+      <a href="courses.html" class="tool-card">
+        <div class="tool-num">All courses</div>
+        <h3>Course list</h3>
+        <p>See every course in order and how far you have got with each one. More courses will be added through the year.</p>
+        <span class="tool-arrow">See all courses &rarr;</span>
+      </a>
+
+    </div>
+  </div>
+
   <div id="tools" style="margin-top:48px;padding-top:40px;border-top:1px solid var(--rule)">
     <div class="section-label">Study Tools</div>
     <div class="section-heading">Practice, plan and prepare.</div>

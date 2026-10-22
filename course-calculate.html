@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calculate and Use It Course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="course-engine.css">
+</head>
+<body>
+<script>
+/* Sources: AQA 7138 specification (Unit 3.1 content, Annex 6 quantitative skills, Annex 7 formulae),
+   sample assessment materials (Paper 1 SQP, insert and mark scheme), AQA 7138 answers and commentaries
+   for 9-mark questions (April 2026), and the AQA October 2026 slides on quantitative questions.
+   Every formula here is written as it appears in Annex 7.
+   "AQA 7138 specimen" = AQA's wording or data. "Exam-style" = written for this course. */
+
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const r2=x=>Math.round(x*100)/100, r1=x=>Math.round(x*10)/10;
+
+const GYM_TABLE = `<div class="tablewrap"><table class="d"><thead><tr><th>Gymshark Group Ltd, July 2024 (Appendix A)</th><th class="r">£000</th></tr></thead><tbody>
+<tr><td>Non-current assets</td><td class="r">159 077</td></tr><tr><td>Inventory</td><td class="r">74 210</td></tr><tr><td>Receivables</td><td class="r">13 497</td></tr><tr><td>Cash</td><td class="r">54 676</td></tr>
+<tr><td>Payables due within a year</td><td class="r">191 478</td></tr><tr><td>Other current liabilities</td><td class="r">586</td></tr><tr><td>Non-current liabilities</td><td class="r">102 920</td></tr></tbody></table></div>
+<p style="font-size:.85rem;color:var(--muted);margin:-6px 0 14px">Appendix B: industry average current ratio (fictional) = 1.4</p>`;
+
+const REGION_TABLE = `<div class="tablewrap"><table class="d"><thead><tr><th>Appendix G (fictional)</th><th class="r">Region A</th><th class="r">Region B</th></tr></thead><tbody>
+<tr><td>Initial investment ($m)</td><td class="r">1 200</td><td class="r">3 000</td></tr>
+<tr><td>Market size 2025 ($m)</td><td class="r">7 000</td><td class="r">15 000</td></tr>
+<tr><td>Market share (%)</td><td class="r">–</td><td class="r">10</td></tr>
+<tr><td>Sales ($m)</td><td class="r">–</td><td class="r">1 500</td></tr>
+<tr><td>Return on investment 2025 (%)</td><td class="r">14</td><td class="r">?</td></tr>
+<tr><td>Income elasticity of demand</td><td class="r">Inelastic</td><td class="r">Elastic</td></tr>
+<tr><td>Forecast income growth 2025–30 (%)</td><td class="r">2</td><td class="r">4</td></tr>
+<tr><td>Operating profit margin (%)</td><td class="r">–</td><td class="r">22</td></tr></tbody></table></div>`;
+
+const STAGES = [
+/* ---------------- STAGE 1 ---------------- */
+{ id:1, type:'mcq', title:'Formula and figures', blurb:'The first 2 marks: pick the right formula and the right numbers.', pass:5,
+  teach:`<p>When a 9 or 15-mark question asks you to calculate something, AQA gives 6 marks for quantitative skills:</p>
+  <p><b>2 marks (AO1)</b> for choosing the formula and the right figures. <b>2 marks (AO2)</b> for doing the calculation. <b>1 mark (AO3)</b> for using the result in an argument. <b>1 mark (AO4)</b> for using it in your judgement.</p>
+  <p>This stage is the first 2 marks. AQA's mark scheme says that if the wrong numbers are selected, the calculation is not creditworthy, so choosing the figures matters as much as the arithmetic.</p>`,
+  items:[
+    {src:'AQA 7138 specimen · Paper 1 · Q1.4', table:GYM_TABLE, prompt:'Which figures make up Gymshark\'s current liabilities?',
+     o:['Payables due within a year + other current liabilities','Payables due within a year + non-current liabilities','Payables due within a year only'], a:0,
+     why:'Current liabilities are everything due within a year: 191 478 + 586 = 192 064. Non-current liabilities are due after more than a year.'},
+    {src:'AQA 7138 specimen · Paper 1 · Q1.4', table:GYM_TABLE, prompt:'Which figures make up Gymshark\'s current assets?',
+     o:['Inventory + receivables + cash','Non-current assets + inventory + cash','Inventory + cash'], a:0,
+     why:'74 210 + 13 497 + 54 676 = 142 383. Non-current assets are not current assets.'},
+    {src:'AQA 7138 · Annex 7', prompt:'Which is the dividend yield formula on the specification?',
+     o:['Dividend per share (pence) ÷ share price (pence) × 100','Total dividend ÷ share price × 100','Share price ÷ dividend per share × 100'], a:0,
+     why:'Both in pence. A common slip is mixing pence and pounds.'},
+    {src:'AQA 7138 · Annex 7', prompt:'Which is the budget variance formula as AQA writes it?',
+     o:['Budgeted figure − actual figure','Actual figure ÷ budgeted figure × 100','Actual figure + budgeted figure'], a:0,
+     why:'AQA\'s formula sheet writes it as budgeted − actual. What earns the mark is the size of the difference and saying whether it is adverse or favourable.'},
+    {src:'AQA 7138 specimen · Paper 1 · Q2.5', table:REGION_TABLE, prompt:'To calculate return on investment in Region B, which figures do you need?',
+     o:['Profit from the investment and the cost of the investment','Sales and market size','Market share and income elasticity'], a:0,
+     why:'ROI = profit from the investment ÷ cost of the investment × 100. Profit = 22% of Region B\'s $1 500m sales.'},
+    {src:'AQA 7138 · Annex 7', prompt:'Return on capital employed uses operating profit divided by...',
+     o:['Total equity + non-current liabilities','Total equity only','Current assets − current liabilities'], a:0,
+     why:'Capital employed = total equity + non-current liabilities. Using equity alone is a common mistake.'},
+    {src:'AQA 7138 · Annex 7', prompt:'Market share (%) = ...',
+     o:['Sales of one product, brand or business ÷ total sales in the market × 100','Sales this year ÷ sales last year × 100','Sales of the business ÷ sales of its biggest rival × 100'], a:0,
+     why:'The denominator is the whole market, not last year or one rival.'}
+  ]},
+/* ---------------- STAGE 2 ---------------- */
+{ id:2, type:'calc', title:'Percentages and index numbers', blurb:'The core skills behind most calculations. New numbers each time.', pass:5,
+  teach:`<p>Annex 6 of the specification lists percentages, percentage changes and index numbers as skills you will need. They sit underneath almost every Business calculation.</p>
+  <p>Type your answer as a number. You get one try. After each one you will see the working and how the figure could be used.</p>`,
+  items:[
+    {src:'Exam-style', prompt:'Calculate the percentage change in revenue, to one decimal place.', unit:'%', tol:0.06,
+     gen(){const a=pick([240,320,450,500,640,800]),p=pick([5,8,12,15,-6,-10]);const b=Math.round(a*(1+p/100));const ans=r1((b-a)/a*100);
+       return {given:`Revenue was <b>£${a},000</b> last year and <b>£${b},000</b> this year.`,ans,traps:[{v:r1((b-a)/b*100),m:'Divide the change by the ORIGINAL figure, not the new one.'}],
+       work:`(${b} − ${a}) ÷ ${a} × 100 = ${ans}%.`,use:'Say what the size of the change means for the business, not just that revenue went up or down.'};}},
+    {src:'Exam-style', prompt:'Calculate the original figure before the increase.', pre:'£', tol:0.5,
+     gen(){const orig=pick([40000,50000,60000,75000,120000]),p=pick([10,20,25,50]);const now=orig*(1+p/100);
+       return {given:`After a <b>${p}%</b> increase, sales are now <b>£${now.toLocaleString('en-GB')}</b>.`,ans:orig,traps:[{v:Math.round(now*(1-p/100)),m:'You took the percentage off the new figure. Divide by 1.'+(p<10?'0':'')+p+' instead, because the new figure is '+(100+p)+'% of the original.'}],
+       work:`£${now.toLocaleString('en-GB')} ÷ ${1+p/100} = £${orig.toLocaleString('en-GB')}.`,use:'Reverse percentages often appear when a case gives this year\'s figure and the percentage growth.'};}},
+    {src:'Exam-style', prompt:'An index of sales rose from 118 to 130 (base year = 100). Calculate the percentage increase between the two years, to one decimal place.', unit:'%', ans:10.2, tol:0.06,
+     traps:[{v:12,m:'12 is the change in index points. Divide it by 118, the starting value.'},{v:30,m:'That compares 130 with the base year, not with 118.'}],
+     work:'(130 − 118) ÷ 118 × 100 = 10.2%.',use:'Index points are not percentages unless the starting value is 100.'},
+    {src:'Exam-style', prompt:'A business\'s operating profit margin falls from 12% to 9%. By how many percentage points has it fallen?', unit:'percentage points', ans:3, tol:0,
+     traps:[{v:25,m:'25% is the percentage fall in the margin (3 ÷ 12). The question asks for percentage points.'}],
+     work:'12 − 9 = 3 percentage points. (As a percentage of the original margin that is a 25% fall.)',use:'Say "percentage points" when both figures are already percentages.'},
+    {src:'Exam-style', prompt:'Calculate the percentage of the total that the larger figure makes up, to one decimal place.', unit:'%', tol:0.06,
+     gen(){const a=pick([18,24,35,42,60]),b=pick([12,16,20,30]);const ans=r1(a/(a+b)*100);
+       return {given:`A café's sales were <b>£${a},000</b> from drinks and <b>£${b},000</b> from food.`,ans,traps:[{v:r1(a/b*100),m:'Divide by the total (drinks + food), not by the other part.'}],
+       work:`${a} ÷ (${a} + ${b}) × 100 = ${ans}%.`,use:'Shares of a total show which part of the business matters most.'};}},
+    {src:'AQA 7138 specimen insert · Apple, Appendix D', prompt:'Apple\'s investment in new product development rose from $21 914m in 2021 to $29 915m in 2023. Calculate the percentage increase, to one decimal place.', unit:'%', ans:36.5, tol:0.06,
+     traps:[{v:26.7,m:'You divided by the 2023 figure. Use the starting value.'}],
+     work:'(29 915 − 21 914) ÷ 21 914 × 100 = 36.5%.',use:'In an argument: "Apple raised spending on new products by over a third in two years, so..."'}
+  ]},
+/* ---------------- STAGE 3 ---------------- */
+{ id:3, type:'calc', title:'Marketing numbers', blurb:'Market share, growth, elasticity and return on marketing spend.', pass:5,
+  teach:`<p>Unit 3.1.3 asks you to calculate, interpret and analyse market size, market and sales growth, market share, return on marketing spend, and price and income elasticity.</p>
+  <p>Elasticity answers can be negative. Type a minus sign where you need one.</p>`,
+  items:[
+    {src:'Exam-style', prompt:'Calculate the business\'s market share, to one decimal place.', unit:'%', tol:0.06,
+     gen(){const s=pick([12,18,24,30,45]),m=pick([80,120,150,200,240]);const ans=r1(s/m*100);
+       return {given:`A gym chain's sales were <b>£${s}m</b>. Total sales in the UK gym market were <b>£${m}m</b>.`,ans,traps:r1(m/s)===ans?[]:[{v:r1(m/s),m:'Upside down. Market share = the business\'s sales ÷ total market sales × 100.'}],
+       work:`${s} ÷ ${m} × 100 = ${ans}%.`,use:'Market share can fall even when sales rise, if the whole market grows faster.'};}},
+    {src:'Exam-style', prompt:'The market grew from £240m to £276m. Calculate the market growth.', unit:'%', ans:15, tol:0.05,
+     traps:[{v:36,m:'36 is the change in £m. Divide it by the original market size.'},{v:13,m:'You divided by the new size. Use the original.'}],
+     work:'(276 − 240) ÷ 240 × 100 = 15%.',use:'In an argument: "the market grew by 15%, so a business whose sales grew 10% has actually lost market share."'},
+    {src:'Exam-style', prompt:'Profit from a marketing campaign was £45,000. The campaign cost £30,000. Calculate the return on marketing spend.', unit:'%', ans:150, tol:0.5,
+     traps:[{v:66.7,m:'Upside down. Return on marketing spend = profit from marketing ÷ amount spent × 100.'},{v:50,m:'Use the profit from the campaign as the top line, as Annex 7 does.'}],
+     work:'45,000 ÷ 30,000 × 100 = 150%.',use:'Compare it with other campaigns or channels before judging it.'},
+    {src:'Exam-style', prompt:'Calculate the percentage change in quantity demanded.', unit:'%', tol:0.05,
+     gen(){const ped=pick([-0.4,-0.5,-0.8,-1.5,-2]),p=pick([5,10,-5,-10]);const ans=r1(ped*p);
+       return {given:`Price elasticity of demand is <b>${ped}</b>. The business changes its price by <b>${p>0?'+':''}${p}%</b>.`,ans,traps:[{v:-ans,m:'Check the direction: price and quantity demanded move in opposite directions.'}],
+       work:`% change in quantity = PED × % change in price = ${ped} × ${p} = ${ans}%.`,use:Math.abs(ped)<1?'Demand is price inelastic, so this price change moves revenue in the same direction as price.':'Demand is price elastic, so this price change moves revenue in the opposite direction to price.'};}},
+    {src:'Exam-style', prompt:'Price rises from £20 to £22. Price elasticity of demand is −0.4. Sales were 1,000 units. Calculate the new total revenue.', pre:'£', ans:21120, tol:0.5,
+     traps:[{v:22000,m:'You kept sales at 1,000. Quantity falls by 0.4 × 10% = 4%, to 960.'},{v:20000,m:'That is the old revenue.'}],
+     work:'Price +10%, so quantity −4%: 1,000 × 0.96 = 960 units. Revenue = 960 × £22 = £21,120 (up from £20,000).',use:'Inelastic demand: the price rise increases revenue. This is exactly the link in the Apple 6-marker.'},
+    {src:'Exam-style', prompt:'Calculate the percentage change in quantity demanded.', unit:'%', tol:0.05,
+     gen(){const yed=pick([1.6,0.5,-0.4,2,0.8]),i=pick([3,4,5,-2]);const ans=r1(yed*i);
+       return {given:`Income elasticity of demand is <b>${yed}</b>. Average incomes change by <b>${i>0?'+':''}${i}%</b>.`,ans,traps:ans!==0?[{v:-ans,m:'Check the sign of YED: negative means an inferior good, so demand moves the opposite way to income.'}]:[],
+       work:`% change in quantity = YED × % change in income = ${yed} × ${i} = ${ans}%.`,use:yed<0?'Negative YED: an inferior good. Rising incomes reduce demand.':yed>1?'YED above 1: demand is income elastic, so it changes by more than incomes do.':'Demand is income inelastic, so it changes by less than incomes do.'};}}
+  ]},
+/* ---------------- STAGE 4 ---------------- */
+{ id:4, type:'calc', title:'Shares and dividends', blurb:'Market capitalisation, dividend per share and dividend yield.', pass:3,
+  teach:`<p>Unit 3.1.2 asks you to calculate, interpret and analyse market capitalisation, dividends per share and dividend yield.</p>
+  <p>Watch the units. Share prices are often given in pence, and Annex 7 writes dividend yield with both figures in pence.</p>`,
+  items:[
+    {src:'Exam-style', prompt:'Calculate the market capitalisation in £ million.', pre:true, tol:0.05,
+     gen(){const n=pick([20,40,50,80,120]),p=pick([150,240,320,410]);const ans=r2(n*p/100);
+       return {given:`A plc has <b>${n} million</b> shares in issue. The share price is <b>${p}p</b>.`,ans,traps:[{v:n*p,m:'The price is in pence. Convert to pounds before multiplying.'}],
+       work:`${n}m × £${(p/100).toFixed(2)} = £${ans}m.`,use:'Market capitalisation shows what investors think the whole company is worth today.'};}},
+    {src:'Exam-style', prompt:'A company paid total dividends of £6m. It has 40 million ordinary shares. Calculate the dividend per share in pence.', unit:'p', ans:15, tol:0.05,
+     traps:[{v:0.15,m:'That is in pounds. The question asks for pence.'}],
+     work:'£6m ÷ 40m = £0.15 = 15p.',use:'Dividend per share is what each shareholder actually receives.'},
+    {src:'Exam-style', prompt:'Calculate the dividend yield, to one decimal place.', unit:'%', tol:0.06,
+     gen(){const d=pick([6,9,12,15,20]),p=pick([150,240,300,400]);const ans=r1(d/p*100);
+       return {given:`Dividend per share is <b>${d}p</b>. The share price is <b>£${(p/100).toFixed(2)}</b>.`,ans,traps:[{v:r1(d/(p/100)*100),m:'Mixed units: put both figures in pence. £'+(p/100).toFixed(2)+' = '+p+'p.'}],
+       work:`${d}p ÷ ${p}p × 100 = ${ans}%.`,use:'Compare the yield with interest rates or other shares before saying whether it is attractive.'};}},
+    {src:'AQA 7138 specimen insert · Netflix', prompt:'Netflix "has over 430 million shares". If the share price were $400, what would its market capitalisation be in $ billion?', unit:'$bn', ans:172, tol:0.5,
+     traps:[{v:17.2,m:'Check the zeros: 430 million × 400 = 172,000 million = 172 billion.'}],
+     work:'430m × $400 = $172,000m = $172bn.',use:'The insert says Netflix has never paid a dividend, so its investors are relying on the share price rising.'}
+  ]},
+/* ---------------- STAGE 5 ---------------- */
+{ id:5, type:'calc', title:'Profit, liquidity and returns', blurb:'The finance calculations from the specimen paper and beyond.', pass:5,
+  teach:`<p>These come from Unit 3.1.4. The first two use the data from AQA's specimen Paper 1.</p>
+  <p>AQA's commentary shows the most common slips: turning the ratio upside down, misreading a figure, and giving a ratio in pounds. Show your working: the formula and the right figures earn marks even if the arithmetic goes wrong.</p>`,
+  items:[
+    {src:'AQA 7138 specimen · Paper 1 · Q1.4', table:GYM_TABLE, prompt:'Calculate Gymshark\'s current ratio, to two decimal places.', unit:': 1', ans:0.74, tol:0.006,
+     traps:[{v:1.35,m:'Upside down. AQA\'s commentary put an answer with this mistake in Level 1.'},{v:0.68,m:'Receivables are 13 497, not 1 349. AQA\'s commentary shows this exact slip.'}],
+     work:'(74 210 + 13 497 + 54 676) ÷ (191 478 + 586) = 142 383 ÷ 192 064 = 0.74.',use:'Compare it with the industry average of 1.4, then think about why an online business might manage on less.'},
+    {src:'AQA 7138 specimen · Paper 1 · Q2.5', table:REGION_TABLE, prompt:'Calculate the return on investment in Region B in 2025.', unit:'%', ans:11, tol:0.5,
+     traps:[{v:50,m:'You used sales. ROI uses the profit from the investment: 22% of $1 500m.'},{v:44,m:'Check the profit: 22% × 1 500 = 330, not 1 320.'}],
+     work:'Profit = 22% × $1 500m = $330m. ROI = 330 ÷ 3 000 × 100 = 11%.',use:'Region A returns 14%, so Region B returns less even though its market is more than twice as big.'},
+    {src:'AQA 7138 specimen · Paper 1 · Q1.4 (extension)', table:GYM_TABLE, prompt:'Calculate Gymshark\'s acid test ratio, to two decimal places.', unit:': 1', ans:0.35, tol:0.006,
+     traps:[{v:0.74,m:'That is the current ratio. The acid test takes inventory out of current assets.'}],
+     work:'(142 383 − 74 210) ÷ 192 064 = 68 173 ÷ 192 064 = 0.35.',use:'Half of Gymshark\'s current assets are inventory, so the acid test is much lower than the current ratio.'},
+    {src:'Exam-style', prompt:'Calculate the break-even output.', unit:'units', tol:0,
+     gen(){const p=pick([15,20,25,40]),v=pick([6,8,9,12]),u=pick([2000,3000,4000,5000]);const fc=(p-v)*u;
+       return {given:`Selling price <b>£${p}</b> per unit. Variable cost <b>£${v}</b> per unit. Fixed costs <b>£${fc.toLocaleString('en-GB')}</b>.`,ans:u,traps:[{v:Math.round(fc/p),m:'Divide fixed costs by contribution per unit (price − variable cost), not by price.'}],
+       work:`Contribution per unit = £${p} − £${v} = £${p-v}. Break-even = £${fc.toLocaleString('en-GB')} ÷ £${p-v} = ${u.toLocaleString('en-GB')} units.`,use:'Compare break-even with expected sales to find the margin of safety.'};}},
+    {src:'Exam-style', prompt:'Revenue £500,000. Cost of sales £300,000. Operating expenses £140,000. Calculate the operating profit margin.', unit:'%', ans:12, tol:0.05,
+     traps:[{v:40,m:'That is the gross profit margin. Operating profit also takes off operating expenses.'},{v:20,m:'Operating profit = gross profit (£200,000) − operating expenses (£140,000) = £60,000.'}],
+     work:'Gross profit = £200,000. Operating profit = £200,000 − £140,000 = £60,000. 60,000 ÷ 500,000 × 100 = 12%.',use:'A margin tells you how much of each £1 of sales is left as profit.'},
+    {src:'Exam-style', prompt:'A department budgeted £50,000 for staff costs. It actually spent £56,000. Calculate the size of the variance.', pre:'£', ans:6000, tol:0.5,
+     traps:[{v:106000,m:'Variance is the difference between budget and actual, not the total.'}],
+     work:'Budgeted − actual = £50,000 − £56,000 = −£6,000. Spending was £6,000 more than planned, so this is a £6,000 ADVERSE variance.',use:'Always say whether a variance is adverse or favourable. For costs, spending more than budget is adverse.'}
+  ]},
+/* ---------------- STAGE 6 ---------------- */
+{ id:6, type:'drift', title:'Use the result', blurb:'The AO3 mark: does the sentence use the figure in an argument?', pass:8,
+  labels:['Uses the figure in an argument','Just states the figure'], showLabel:'A sentence from a student\'s answer:',
+  teach:`<p>AQA's mark scheme says a correct calculation with no analysis or evaluation is placed at the bottom of Level 2. One of the six quantitative marks is for "interpreting and using the results in an argument".</p>
+  <p>Using the figure means saying what it means and where it leads. Decide whether each sentence uses the figure or just states it.</p>`,
+  items:[
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.4', q:'Assess whether Gymshark Ltd\'s current ratio indicates that the business was in a strong financial position in 2024.',
+     text:'Gymshark\'s current ratio is 0.74.', ok:false, why:'A correct figure, but nothing is done with it.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.4', q:'Assess whether Gymshark Ltd\'s current ratio indicates that the business was in a strong financial position in 2024.',
+     text:'With a current ratio of 0.74, Gymshark has only 74p of current assets for every £1 it owes in the next year, so if several suppliers asked to be paid at once it might struggle to find the cash.', ok:true,
+     why:'It interprets the figure and takes it to a consequence.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.4', q:'Assess whether Gymshark Ltd\'s current ratio indicates that the business was in a strong financial position in 2024.',
+     text:'The current ratio of 0.74 is lower than the industry average of 1.4.', ok:false,
+     why:'A comparison, but it stops there. Say what being well below the average means for Gymshark.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.4', q:'Assess whether Gymshark Ltd\'s current ratio indicates that the business was in a strong financial position in 2024.',
+     text:'At 0.74, Gymshark\'s ratio is barely half the 1.4 industry average, which suggests suppliers may see it as riskier and offer less generous credit terms.', ok:true,
+     why:'Uses the comparison to explain a consequence.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.5', q:'Evaluate whether Apple should launch the Vision Pro in Region A or Region B.',
+     text:'Region B\'s return on investment is 11%.', ok:false, why:'Stated, not used.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.5', q:'Evaluate whether Apple should launch the Vision Pro in Region A or Region B.',
+     text:'Region B returns 11% against Region A\'s 14%, so although Region B is the bigger market, each dollar Apple invests there earns less in 2025.', ok:true,
+     why:'Compares both figures and draws a conclusion that matters for the decision.'},
+    {src:'Exam-style', q:'Assess whether a price rise would increase the café\'s revenue.',
+     text:'PED is −0.4, which is inelastic.', ok:false, why:'Correct, but it does not say what that means for revenue.'},
+    {src:'Exam-style', q:'Assess whether a price rise would increase the café\'s revenue.',
+     text:'With PED of −0.4, a 10% price rise cuts sales by only about 4%, so the café earns more on each drink than it loses from fewer drinks and revenue rises.', ok:true,
+     why:'Takes the figure all the way to the end point: revenue.'},
+    {src:'Exam-style', q:'Assess whether the gym chain\'s marketing campaign was a success.',
+     text:'The campaign\'s return on marketing spend was 150%, so every £1 spent brought back £1.50 in profit, more than paying for itself.', ok:true,
+     why:'Explains what 150% means in plain terms and uses it.'},
+    {src:'Exam-style', q:'Assess whether the gym chain\'s marketing campaign was a success.',
+     text:'Return on marketing spend = profit from marketing ÷ marketing spend × 100.', ok:false,
+     why:'The formula earns knowledge credit, but it is not using a result.'}
+  ]},
+/* ---------------- STAGE 7 ---------------- */
+{ id:7, type:'mcq', title:'Judge with the result', blurb:'The AO4 mark: use the figure to support a judgement.', pass:5,
+  teach:`<p>The last quantitative mark is for "using the findings to support a judgement". AQA's guidance says top answers compare the figure with other information in the case, consider the context, and may question the data itself.</p>
+  <p>A number is only good or bad compared with something: an average, a target, last year, a rival, or what the business needs.</p>`,
+  items:[
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.4', prompt:'Which sentence uses the 0.74 in a judgement?',
+     o:['Overall, although 0.74 is well below the 1.4 average, Gymshark was not in a weak position, because online customers pay at once while suppliers are paid later, so cash keeps coming in before bills fall due.','Overall, the current ratio is 0.74.','Overall, the current ratio is an important ratio.'], a:0,
+     why:'A judgement that answers the question and uses the figure alongside the context.'},
+    {src:'AQA 7138 · 9-mark commentary', prompt:'AQA\'s commentary praised a student for questioning the 1.4 industry average. Why is that good evaluation?',
+     o:['The average covers clothing businesses in general, many of which sell on credit through shops, so it may not suit an online brand paid upfront.','Industry averages are always wrong.','It avoids having to use the calculation.'], a:0,
+     why:'Questioning whether the benchmark fits is a legitimate way to evaluate the data.'},
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q2.5', prompt:'Region B\'s ROI is 11%; Region A\'s is 14%. Which judgement uses the figures best?',
+     o:['Launch in Region A, because 14% is higher than 11%.','Region A gives the better return in 2025, but Region B has elastic income demand and faster income growth (4% a year), so its return could overtake A\'s later. The choice depends on whether Apple wants the quicker return or the bigger long-term market.','Launch in both regions.'], a:1,
+     why:'Uses the calculation, then weighs it against other data in the table.'},
+    {src:'Exam-style', prompt:'A firm\'s margin of safety is 1,000 units on expected sales of 5,000. Which judgement uses this best?',
+     o:['The margin of safety is 1,000 units.','Sales could fall by 20% before the firm made a loss, which is a reasonable cushion unless demand is very seasonal.','The firm is safe.'], a:1,
+     why:'Turns the figure into a percentage and says when it would or would not be enough.'},
+    {src:'AQA 7138 · mark scheme', prompt:'You calculate the current ratio wrongly as 0.68, then use 0.68 well in your argument and judgement. What happens?',
+     o:['You lose the analysis and judgement marks too','The own figure rule applies: you lose a calculation mark but can still earn the analysis and evaluation marks','Your answer is marked as if you had written 0.74'], a:1,
+     why:'AQA\'s commentary shows an answer using 0.68 that still reached Level 3.'},
+    {src:'Exam-style', prompt:'A café\'s staff costs show a £6,000 adverse variance. Which judgement is strongest?',
+     o:['This is bad for the café.','The overspend is a concern only if it was not planned: if the café hired extra staff for a busy summer that also raised sales, the adverse variance may have paid for itself.','Variances should always be zero.'], a:1,
+     why:'Adverse is not automatically bad. The judgement looks at why it happened.'}
+  ]},
+/* ---------------- STAGE 8 ---------------- */
+{ id:8, type:'weak', title:'Read the number right', blurb:'One step misreads what the figure means. Find it and fix it.', pass:4,
+  teach:`<p>A correct number with the wrong meaning breaks the chain. AQA's commentary put an answer in Level 1 because it treated the current ratio as a measure of profitability.</p>
+  <p>Find the step that misreads the figure, then choose the best replacement.</p>`,
+  items:[
+    {src:'Based on the AQA 7138 specimen · Paper 1 · Q1.4', q:'Assess whether Gymshark Ltd\'s current ratio indicates that the business was in a strong financial position in 2024.',
+     s:['Gymshark\'s current ratio is 142 383 ÷ 192 064 = 0.74.','This shows that Gymshark is not very profitable.','Its customers pay online straight away, while suppliers are paid later.','So the low ratio may be less of a risk than it first looks.'],
+     bad:1, problem:'The current ratio measures liquidity, not profitability.',
+     fixes:['This means Gymshark has 74p of current assets for every £1 of liabilities due within a year.','This means Gymshark made a loss in 2024.','This means Gymshark\'s share price is falling.'], fix:0},
+    {src:'Exam-style', q:'Assess whether raising prices would increase a café\'s revenue.',
+     s:['The café\'s price elasticity of demand is −0.4.','This means demand is price elastic, so customers are very sensitive to price.','A 10% price rise would reduce sales by about 4%.','Therefore the price rise would increase revenue, as the rise in price outweighs the fall in sales.'],
+     bad:1, problem:'−0.4 is less than 1 (ignoring the sign), so demand is price INELASTIC.',
+     fixes:['This means demand is price inelastic: quantity demanded changes by a smaller percentage than price.','This means demand is perfectly elastic.','This means the café should cut its prices.'], fix:0},
+    {src:'Exam-style', q:'Assess whether the gym chain is becoming more competitive.',
+     s:['The chain\'s sales rose by 10% last year.','The whole gym market grew by 15% over the same period.','So the chain has increased its market share.','Therefore the chain may be falling behind its rivals, despite higher sales.'],
+     bad:2, problem:'If the market grew faster than the chain\'s sales, its market share FELL.',
+     fixes:['So the chain\'s market share has fallen, because rivals grew faster.','So the chain\'s profit has risen by 10%.','So the market is now worth 25% more.'], fix:0},
+    {src:'Exam-style', q:'Assess whether the retailer\'s profitability has improved.',
+     s:['Operating profit rose from £2m to £2.25m.','Revenue rose from £20m to £25m.','So the operating profit margin rose, because operating profit went up.','Therefore, although profit grew, the retailer\'s profitability has actually fallen.'],
+     bad:2, problem:'More profit does not mean a higher margin. 2 ÷ 20 = 10%, but 2.25 ÷ 25 = 9%.',
+     fixes:['But the operating profit margin fell from 10% to 9%, because revenue grew faster than profit.','So the gross profit margin must have risen.','So the retailer\'s costs must have fallen.'], fix:0},
+    {src:'Exam-style', q:'Assess whether the business\'s staff costs are under control.',
+     s:['Staff costs were budgeted at £50,000.','The business actually spent £56,000.','This is a favourable variance of £6,000.','Managers should find out why staff costs were higher than planned.'],
+     bad:2, problem:'Spending more than budgeted on a cost is ADVERSE.',
+     fixes:['This is an adverse variance of £6,000, because actual spending was higher than the budget.','This is a favourable variance, because the business spent more on its staff.','This means the budget was wrong.'], fix:0}
+  ]},
+/* ---------------- STAGE 9 ---------------- */
+{ id:9, type:'timed', title:'Against the clock', blurb:'Twelve mixed questions, 25 seconds each.', pass:10, poolFrom:[1,6,7], count:12, seconds:25,
+  teach:`<p>In the exam you need to pick the formula, read the figures and see what a result means quickly.</p>
+  <p>This round mixes questions from stages 1, 6 and 7. You have <b>25 seconds</b> for each. You need 10 out of 12.</p>`,
+  items:[]},
+/* ---------------- STAGE 10 ---------------- */
+{ id:10, type:'write', title:'The real question', blurb:'A full quantitative 9-mark answer to the specimen question.', pass:1,
+  teach:`<p>This is question 1.4 from AQA's specimen Paper 1. AQA's commentary calls it good practice to begin with the calculation and show the working.</p>
+  <p>Write the formula and your working first. Then use the result in an argument, give the other side, and reach a judgement that uses the figure and answers the question.</p>
+  <p>Write the formula and your result in the plan first. The answer box unlocks when you have.</p>`,
+  items:[{src:'AQA 7138 specimen · Paper 1 · Q1.4', w:{
+    intro:`${GYM_TABLE}<div class="qbox">Assess whether Gymshark Ltd's current ratio indicates that the business was in a strong financial position in 2024.<br>Calculate the current ratio for Gymshark Ltd in 2024 to support your answer.<br>Give your answer to two decimal places. <span style="color:var(--muted);font-weight:400">(9 marks)</span></div>`,
+    plan:[
+      {id:'F',label:'Formula',cls:'s',ph:'Current ratio = ?',ok:v=>/current assets/.test(v)&&/current liabilit/.test(v)&&v.indexOf('current assets')<v.indexOf('current liabilit'),hint:'Write the formula: current assets ÷ current liabilities.'},
+      {id:'R',label:'Your result',cls:'e',ph:'To 2 decimal places',ok:v=>/\d\.\d\d/.test(v),hint:'Give the ratio to two decimal places.'}],
+    planOk:'Good. Start your answer with the working.',
+    checks:[
+      {k:'work',label:'Shows the working (current assets and current liabilities)',test:x=>/(142[ ,]?383|74[ ,]?210)/.test(x.low)&&/(192[ ,]?064|191[ ,]?478)/.test(x.low)},
+      {k:'result',label:'States the ratio to two decimal places',test:x=>/0\.\d\d/.test(x.low)},
+      {k:'bench',label:'Compares it with the industry average of 1.4',test:x=>/1\.4/.test(x.low)},
+      {k:'use',label:'Explains what the ratio means for paying short-term debts',test:x=>/(liquid|pay (its|their)|bills|suppliers|short-term|due within)/.test(x.low)},
+      {k:'both',label:'Gives the other side',test:x=>/(however|on the other hand|but )/.test(x.low)},
+      {k:'end',label:'Last sentence starts "Therefore" and answers the question',test:x=>/^therefore/.test(x.last)&&/financial position/.test(x.last)}],
+    warn:x=>/(profitab|profitable)/.test(x.low)&&/current ratio/.test(x.low)&&/(shows|means|suggests)[^.]{0,40}profit/.test(x.low)?{msg:'Check: the current ratio measures liquidity, not profitability.'}
+      :!/(however|on the other hand|but )/.test(x.low)?{msg:'This reads as one-sided. A 9-mark answer needs the other side and a judgement.',block:true}:null,
+    minCompare:100, minAi:130,
+    model:`<span class="src">One way to write it</span>
+<p><span class="hl-d">Current ratio = current assets ÷ current liabilities = (74 210 + 13 497 + 54 676) ÷ (191 478 + 586) = 142 383 ÷ 192 064 = 0.74</span>.</p>
+<p>This suggests Gymshark was not in a strong position. A current ratio of 0.74 means it had only 74p of current assets for every £1 due within a year, <span class="hl-w">so</span> it could not pay all its short-term debts from its current assets if they fell due together. It is also <span class="hl-d">well below the industry average of 1.4</span>, <span class="hl-w">which means</span> suppliers may see Gymshark as riskier than its rivals and offer shorter credit terms, putting more pressure on its cash.</p>
+<p>However, the ratio may not tell the whole story. Gymshark sells mainly online, <span class="hl-w">so</span> customers pay at the time they order, while suppliers are paid later. <span class="hl-w">This means</span> cash keeps coming in before the bills fall due, so it can run safely on a lower ratio than a retailer that sells on credit. The 1.4 average covers the clothing industry as a whole, which may not be a fair comparison for an online brand.</p>
+<p>Overall, the ratio raises a warning but does not show a weak position. Although 0.74 is about half the average, the argument that Gymshark's online model brings cash in quickly carries greater weight, especially as its <span class="hl-d">cash of £54.7 million</span> covers over a quarter of what it owes. However, this depends on sales staying strong: if sales slowed, the £74.2 million of inventory might not turn into cash fast enough. <span class="hl-w">Therefore</span> Gymshark's current ratio does not on its own indicate that the business was in a <span class="hl-e">strong financial position in 2024</span>, but nor does it show a weak one.</p>
+      <div class="key"><span><span class="hl-e">coral</span> end point</span><span><span class="hl-w">purple</span> links</span><span><span class="hl-d">underlined</span> figures</span></div>
+      <p style="margin-top:14px;font-size:.9rem;color:var(--muted)">Notice the calculation comes first, the figure is used in both the argument and the judgement, and the industry average is questioned as well as used.</p>`,
+    ai:`You are an experienced AQA A-level Business teacher giving feedback on a Year 12 student's answer to this quantitative 9-mark question from the AQA 7138 specimen Paper 1: "Assess whether Gymshark Ltd's current ratio indicates that the business was in a strong financial position in 2024. Calculate the current ratio for Gymshark Ltd in 2024 to support your answer. Give your answer to two decimal places."
+Data (£000): inventory 74 210; receivables 13 497; cash 54 676; payables due within a year 191 478; other current liabilities 586; non-current assets 159 077; non-current liabilities 102 920. Industry average current ratio 1.4. Correct answer: 142 383 ÷ 192 064 = 0.74.
+AQA rules: 6 marks are quantitative (2 for formula and figures, 2 for the calculation, 1 for using the result in an argument, 1 for using it in the judgement); a correct calculation alone is the bottom of Level 2; the own figure rule applies to arithmetic slips; the wrong formula is not creditworthy; the current ratio is a measure of liquidity, not profitability; Level 3 needs an argument and a counter-argument weighed in a judgement that uses the calculation; questioning whether the industry average is a fair benchmark is good evaluation.
+Do not give a mark or level. Write in plain British English, as a teacher speaking to a Year 12 student. No headings, no bullet symbols other than simple dashes, no emoji. First say whether their calculation is right (if not, show where it went wrong). Then give one sentence on what works, then two or three improvements, each quoting a short phrase they wrote ("You wrote: ...") and showing a better version ("You could write: ..."). Keep it under 230 words.`,
+    finishLabel:'Finish the course',
+    doneTitle:'Course complete',
+    doneText:'You have written a full quantitative 9-mark answer. Every time a question asks for a calculation: show the formula and working first, then use the figure twice, once in your argument and once in your judgement. Checking each figure carefully is where those first marks are won.'
+  }}]}
+];
+
+window.COURSE={
+  id:'calc', key:'y12_course_calculate_v1', offset:1200, short:'Calculate',
+  name:'Calculate and Use It Course',
+  hero:{kicker:'Quantitative skills · AQA A-level Business (7138)',
+    title:'Calculate it, then <em>use it</em>',
+    lede:'Every paper has calculation questions inside the 9 and 15-markers. AQA gives 6 marks for them: 2 for the formula and figures, 2 for the calculation, 1 for using the result in your argument and 1 for using it in your judgement. This course trains all four, using the formulae in Annex 7 of the specification.'},
+  stages:STAGES
+};
+</script>
+<script src="course-engine.js"></script>
+</body>
+</html>
