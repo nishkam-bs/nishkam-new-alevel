@@ -159,18 +159,6 @@ main h1{font-family:'DM Serif Display',serif;font-size:36px;color:var(--navy);ma
   </div>
 </aside>
 
-<!-- Login -->
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-box">
-    <h2>Redraft</h2>
-    <p class="login-sub">Enter your name and exam number to continue.</p>
-    <input type="text" id="loginName" placeholder="Your name" autocomplete="off"/>
-    <input type="text" id="examNum" placeholder="Exam number" autocomplete="off"/>
-    <button onclick="doLogin()">Continue</button>
-    <div class="err" id="loginErr"></div>
-  </div>
-</div>
-
 <!-- Main -->
 <main id="mainContent">
   <h1>Redraft</h1>
@@ -233,9 +221,7 @@ main h1{font-family:'DM Serif Display',serif;font-size:36px;color:var(--navy);ma
 
 <script>
 const WORKER_URL = 'https://nishkam-marker.alevelnishkam.workers.dev';
-const LOG_URL = 'https://script.google.com/macros/s/AKfycbxg5Mgn342vH-EGawWRJxK-NtgTbz01IHKKkaWiRZo4Z_LCFSzXtArVs6jKZnFHYMTM/exec';
 
-let currentStudent = null;
 let pdfBase64 = null;
 let pdfFileName = '';
 
@@ -245,19 +231,6 @@ const sidebar = document.getElementById('sidebar');
 const scrim = document.getElementById('scrim');
 menuBtn.onclick = () => { sidebar.classList.toggle('open'); scrim.classList.toggle('show'); };
 scrim.onclick = () => { sidebar.classList.remove('open'); scrim.classList.remove('show'); };
-
-/* ── Login ── */
-function doLogin(){
-  const name = document.getElementById('loginName').value.trim();
-  const num = document.getElementById('examNum').value.trim();
-  const err = document.getElementById('loginErr');
-  err.textContent = '';
-  if(!name){ err.textContent = 'Please enter your name.'; return; }
-  if(!num){ err.textContent = 'Please enter your exam number.'; return; }
-  currentStudent = { examNum: num, name: name };
-  document.getElementById('loginOverlay').classList.add('hidden');
-}
-document.getElementById('examNum').addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
 
 /* ── File upload ── */
 const uploadZone = document.getElementById('uploadZone');
@@ -407,7 +380,6 @@ ${isFullEssay ? `{
     const result = JSON.parse(txt);
     clearInterval(interval);
 
-    logRedraft(result, isFullEssay);
     showFeedback(result);
 
   } catch(e){
@@ -474,30 +446,6 @@ function showFeedback(r){
     nf += `<div class="overall-box"><p>${r.overall}</p></div>`;
   }
   document.getElementById('newFeedback').innerHTML = nf;
-}
-
-/* ── Log to sheet ── */
-function logRedraft(r, isFull){
-  try {
-    const data = {
-      name: currentStudent.name,
-      candidateNumber: currentStudent.examNum,
-      question: (pdfFileName.replace('.pdf', '')) + ' (Redraft)',
-      mark: isFull && r.new_mark ? r.new_mark.split('/')[0].trim() : '',
-      maxMark: isFull && r.new_mark && r.new_mark.includes('/') ? r.new_mark.split('/')[1].trim() : '',
-      level: isFull && r.new_level ? r.new_level : '',
-      levelLabel: isFull && r.new_level ? r.new_level : 'Redraft',
-      www1: r.what_is_better || '',
-      www2: '',
-      ebi1: r.still_to_work_on || '',
-      ebi2: '',
-      tool: 'redraft',
-      timestamp: new Date().toISOString()
-    };
-    const params = new URLSearchParams();
-    params.append('payload', JSON.stringify(data));
-    fetch(LOG_URL, { method: 'POST', mode: 'no-cors', body: params }).catch(() => {});
-  } catch(e){ console.log('Sheet log failed:', e); }
 }
 
 /* ── Reset ── */

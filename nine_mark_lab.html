@@ -170,24 +170,7 @@ textarea{min-height:220px;resize:vertical;line-height:1.7}
 </head>
 <body>
 
-<!-- LOGIN -->
-<div class="ov show" id="loginOv">
-  <div class="modal">
-    <div style="text-align:center;margin-bottom:20px">
-      <div style="width:56px;height:56px;border-radius:14px;background:var(--gold);display:inline-grid;place-items:center;font-weight:900;font-size:22px;color:var(--navy);line-height:1.1">9</div>
-      <h2 style="margin-top:12px">9-Mark Assess Lab</h2>
-      <p class="muted" style="margin-top:4px">AQA A-Level Business (7138) — Annotated essay feedback</p>
-    </div>
-    <label class="fl">Your name</label>
-    <input id="loginName" placeholder="e.g. Jasneet" />
-    <label class="fl" style="margin-top:14px">Your exam candidate number</label>
-    <input id="loginNum" placeholder="e.g. 1464" maxlength="6" />
-    <p class="tiny" style="margin-top:6px">Your candidate number is used so your teacher can see your progress.</p>
-    <button class="btn btn-g" style="width:100%;margin-top:18px" id="loginBtn">Enter the Lab</button>
-  </div>
-</div>
-
-<div class="app" style="display:none" id="appShell">
+<div class="app" id="appShell">
 <aside>
   <div class="brand">
     <div class="logo">9</div>
@@ -199,9 +182,6 @@ textarea{min-height:220px;resize:vertical;line-height:1.7}
     <button data-t="train">Exam Technique</button>
     <button data-t="progress">Progress</button>
   </nav>
-  <div class="student-tag" id="sideStudent">
-    <strong id="sideName">&mdash;</strong>
-  </div>
   <div class="side-card">
     <div class="mini">Nishkam School West London</div>
     <strong style="font-size:14px;color:#dbe4f2">Man Neeva, Mat Uchi</strong>
@@ -286,7 +266,7 @@ textarea{min-height:220px;resize:vertical;line-height:1.7}
 <!-- PROGRESS TAB -->
 <section id="progress" class="tab">
   <div class="topbar">
-    <div><div class="eyebrow">Your journey</div><h2>Progress</h2><div class="sub">Every answer you submit is tracked. Your teacher can see this too.</div></div>
+    <div><div class="eyebrow">Your journey</div><h2>Progress</h2><div class="sub">Your marks are saved on this device only. They are not sent to anyone.</div></div>
   </div>
   <div class="grid g3">
     <div class="card" style="text-align:center;padding:20px"><div class="kpi" id="pCount">0</div><p class="tiny mt">Answers marked</p></div>
@@ -568,7 +548,7 @@ qs:[
 ];
 
 /* ═══ STATE ═══ */
-let hist=[],student={name:'',num:''};
+let hist=[];
 let uploadedImages=[];
 let lastFb=null,lastQ='',lastCtx='',lastQType='';
 let markStep='browse';
@@ -576,19 +556,10 @@ let curCase=null,curQ=null,curQType='non-quantitative';
 const PL={1:'Paper 1 — Marketing & finance',2:'Paper 2 — People & operations',3:'Paper 3 — Strategy & change'};
 const PS={1:'Paper 1',2:'Paper 2',3:'Paper 3'};
 
-/* ═══ LOGIN ═══ */
-document.getElementById('loginBtn').onclick=()=>{
-  const n=document.getElementById('loginName').value.trim();
-  const num=document.getElementById('loginNum').value.trim();
-  if(!n||!num){alert('Please enter your name and candidate number.');return;}
-  student={name:n,num:num};
-  document.getElementById('loginOv').classList.remove('show');
-  document.getElementById('appShell').style.display='grid';
-  document.getElementById('sideName').textContent=n+' ('+num+')';
-  loadHist();renderMark();
-};
-function loadHist(){try{const r=localStorage.getItem('n9_'+student.num);if(r)hist=JSON.parse(r);updateProgress();}catch(e){}}
-function saveHist(){try{localStorage.setItem('n9_'+student.num,JSON.stringify(hist));}catch(e){}}
+/* ═══ START ═══ */
+document.addEventListener('DOMContentLoaded',()=>{loadHist();renderMark();});
+function loadHist(){try{const r=localStorage.getItem('n9_history');if(r)hist=JSON.parse(r);updateProgress();}catch(e){}}
+function saveHist(){try{localStorage.setItem('n9_history',JSON.stringify(hist));}catch(e){}}
 
 /* ═══ MARK TAB — THREE-STEP RENDERER ═══ */
 function renderMark(){
@@ -808,21 +779,11 @@ async function runMark(){
     showFeedback(fb,qText);
     hist.push({date:new Date().toISOString().slice(0,10),q:qText.slice(0,60),mark:fb.mark,level:fb.level,qtype:fb.qtype||qType,judgement:fb.judgement_quality});
     saveHist();updateProgress();
-    logToSheet(fb,qText);
   }catch(err){
     document.getElementById('ldPanel').classList.remove('show');
     document.getElementById('fbPanel').style.display='block';
     document.getElementById('fbPanel').innerHTML=`<div class="al al-r"><b>Something went wrong</b>${err.message}. Check your internet connection and try again.</div>`;
   }
-}
-
-/* ═══ LOGGING ═══ */
-async function logToSheet(fb,qText){
-  try{
-    const url='https://script.google.com/macros/s/AKfycbxg5Mgn342vH-EGawWRJxK-NtgTbz01IHKKkaWiRZo4Z_LCFSzXtArVs6jKZnFHYMTM/exec';
-    const payload={tool:'9-Mark Lab',name:student.name,candidateNumber:student.num,question:qText.slice(0,100),mark:fb.mark,maxMark:9,level:fb.level,chains:(fb.chain_for||'')+'|'+(fb.chain_against||''),endpoint:fb.endpoint||'',blocker:fb.blocker_heading||'',tip:fb.improve?fb.improve.slice(0,120):'',qtype:fb.qtype||lastQType,judgement:fb.judgement_quality||''};
-    await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-  }catch(e){}
 }
 
 /* ═══ RENDER FEEDBACK ═══ */
@@ -988,7 +949,7 @@ function generatePDF(){
     doc.setTextColor(255);doc.setFontSize(16);doc.setFont('helvetica','bold');
     doc.text('9-Mark Assess Lab — Feedback',ml,14);
     doc.setFontSize(9);doc.setFont('helvetica','normal');
-    doc.text(student.name+' | '+new Date().toLocaleDateString('en-GB'),ml,22);
+    doc.text(new Date().toLocaleDateString('en-GB'),ml,22);
     doc.text('Nishkam School West London',ml,27);
     doc.setTextColor(0);y=40;
     addText('Question',ml,y,{size:8,style:'bold'});
@@ -1021,7 +982,7 @@ function generatePDF(){
     addText('What you did well',ml,y,{size:8,style:'bold'});if(fb.positive)addText(fb.positive,ml,y,{size:9});
     addText((fb.blocker_heading||"What's stopping you")+': '+(fb.blocker||''),ml,y,{size:9});
     addText('How to upgrade: '+(fb.improve||''),ml,y,{size:9});
-    doc.save(student.name.replace(/\s+/g,'_')+'_9marker_'+new Date().toISOString().slice(0,10)+'.pdf');
+    doc.save('9-mark_feedback_'+new Date().toISOString().slice(0,10)+'.pdf');
   }catch(e){
     console.error('PDF error:',e);
     alert('Could not generate the PDF. Error: '+e.message+'. Please try again or take a screenshot instead.');
