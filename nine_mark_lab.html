@@ -299,6 +299,10 @@ FRAMEWORK
 2. Mark holistically using best fit. Never mechanically add four AO sub-scores.
 3. Read the complete answer before deciding anything. Do not make snap judgements from the opening.
 
+COUNTER-ARGUMENT CHECK — do this FIRST, before deciding anything else.
+A counter-argument is a point that argues AGAINST the main answer the student gives, with at least one reason (for example, if the student argues that more influencer spending would raise profit, a counter-argument explains why it might NOT raise profit). These are NOT counter-arguments: a passing word such as "however" or "although" with no reason after it; a condition placed inside the final judgement ("it depends on..."); a comparison that still supports the same side (for example "influencers are more engaging than traditional media"); a summary that repeats the same side.
+Set "counter_argument_present" to true only if you can quote the student's own words that argue the other side. Put those exact words in "counter_argument_quote". If you cannot quote any, set it to false and leave the quote empty. The page enforces the cap automatically from this field, so be accurate in both directions: do not miss a real counter-argument, and do not invent one.
+
 QUESTION DECODE
 4. Before marking, identify the ISSUE the student must assess and the precise ENDPOINT demanded.
 
@@ -376,7 +380,7 @@ REWRITE:
 Find the weakest 1–2 sentences. Quote them exactly. Then rewrite them to show what stronger work looks like. The rewrite must sound like a good Year 12 student — natural connectives, not academic writing.
 
 RESPOND WITH ONLY THIS JSON (no markdown, no backticks):
-{"mark":<0-9>,"level":"Level 3"|"Level 2"|"Level 1"|"0","qtype":"non-quantitative","issue":"the central issue being assessed","endpoint":"the exact endpoint demanded","chain_for":"step → step → ENDPOINT","chain_against":"step → step → ENDPOINT","judgement_quality":"WEIGHTED|SUPPORTED|ASSERTION|NONE","segments":[{"text":"exact text","ao":"AO1|AO2|AO3|AO4|NONE","quality":"GOOD|WEAK","annotation":"margin note"}],"positive":"2-3 sentences feedback TO the student using you","blocker":"1-2 sentences — the single most important thing stopping a higher level","blocker_heading":"short heading","improve":"2-3 sentences specific advice on HOW to upgrade","ao1_diagnostic":"short phrase","ao2_diagnostic":"short phrase","ao3_diagnostic":"short phrase","ao4_diagnostic":"short phrase","rewrite_original":"weakest 1-2 sentences quoted exactly","rewrite_improved":"how those sentences could read"}`;
+{"counter_argument_present":true|false,"counter_argument_quote":"exact words that argue the other side, or empty","mark":<0-9>,"level":"Level 3"|"Level 2"|"Level 1"|"0","qtype":"non-quantitative","issue":"the central issue being assessed","endpoint":"the exact endpoint demanded","chain_for":"step → step → ENDPOINT","chain_against":"step → step → ENDPOINT","judgement_quality":"WEIGHTED|SUPPORTED|ASSERTION|NONE","segments":[{"text":"exact text","ao":"AO1|AO2|AO3|AO4|NONE","quality":"GOOD|WEAK","annotation":"margin note"}],"positive":"2-3 sentences feedback TO the student using you","blocker":"1-2 sentences — the single most important thing stopping a higher level","blocker_heading":"short heading","improve":"2-3 sentences specific advice on HOW to upgrade","ao1_diagnostic":"short phrase","ao2_diagnostic":"short phrase","ao3_diagnostic":"short phrase","ao4_diagnostic":"short phrase","rewrite_original":"weakest 1-2 sentences quoted exactly","rewrite_improved":"how those sentences could read"}`;
 
 /* ═══════════════════════════════════════════
    FROZEN MARKING RULES — 9-MARK QUANTITATIVE
@@ -394,6 +398,10 @@ FRAMEWORK
    - AO4 (1): using the calculation findings to support a judgement
 3. The remaining 3 marks (AO3=1, AO4=2) come from further qualitative analysis and evaluation.
 4. Mark holistically using best fit. Read the complete answer before deciding.
+
+COUNTER-ARGUMENT CHECK — do this FIRST, before deciding anything else.
+A counter-argument is a point that argues AGAINST the main answer the student gives, with at least one reason (for example, if the student argues that more influencer spending would raise profit, a counter-argument explains why it might NOT raise profit). These are NOT counter-arguments: a passing word such as "however" or "although" with no reason after it; a condition placed inside the final judgement ("it depends on..."); a comparison that still supports the same side (for example "influencers are more engaging than traditional media"); a summary that repeats the same side.
+Set "counter_argument_present" to true only if you can quote the student's own words that argue the other side. Put those exact words in "counter_argument_quote". If you cannot quote any, set it to false and leave the quote empty. The page enforces the cap automatically from this field, so be accurate in both directions: do not miss a real counter-argument, and do not invent one.
 
 QUESTION DECODE
 5. Identify the CALCULATION required, the ISSUE being assessed, and the precise ENDPOINT.
@@ -417,7 +425,7 @@ ANALYSIS AND EVALUATION
 
 AO4 — EVALUATION
 17. Level 3 requires genuine weighing. The student must use the calculation to build one side of the argument and then consider why the calculation alone may not tell the whole story.
-17a. For the top level there must be a clear answer to the question that weighs an argument against a counter-argument. A response with a correct calculation, a basic chain and a judgement but NO counter-argument is Level 2, not Level 3, however accurate it is. (AQA's 7138 commentary placed a correct, short, one-sided answer in Level 2.)
+17a. For the top level there must be a clear answer to the question that weighs an argument against a counter-argument. A response with a correct calculation, a basic chain and a judgement but NO counter-argument is Level 2, not Level 3, however accurate it is: maximum 6 marks. (AQA's 7138 commentary placed a correct, short, one-sided answer in Level 2.)
 17b. If the student uses the wrong formula (for example a ratio upside down) the calculation is not creditworthy and the own figure rule does not apply, because it covers arithmetic slips, not the wrong method. Analysis built on a misunderstanding of what the figure measures (for example treating the current ratio as a measure of profitability) is not creditworthy either. Such a response is Level 1.
 17c. If the question requires a calculation and the student does not attempt it, the response misses a fundamental demand of the question. It cannot gain the quantitative marks and is Level 1 unless the rest of the answer is exceptionally strong.
 18. Reward comparison with benchmarks, industry averages or other case data.
@@ -453,7 +461,7 @@ REWRITE:
 Find the weakest 1–2 sentences. Quote them exactly. Then rewrite them to show what stronger work looks like. The rewrite must sound like a good Year 12 student — natural connectives, not academic writing.
 
 RESPOND WITH ONLY THIS JSON (no markdown, no backticks):
-{"mark":<0-9>,"level":"Level 3"|"Level 2"|"Level 1"|"0","qtype":"quantitative","issue":"the central issue being assessed","endpoint":"the exact endpoint demanded","calculation_correct":true|false,"own_figure_applied":true|false,"calc_comment":"brief note on the calculation","chain_for":"step → step → ENDPOINT","chain_against":"step → step → ENDPOINT","judgement_quality":"WEIGHTED|SUPPORTED|ASSERTION|NONE","segments":[{"text":"exact text","ao":"AO1|AO2|AO3|AO4|NONE","quality":"GOOD|WEAK","annotation":"margin note"}],"positive":"2-3 sentences feedback TO the student using you","blocker":"1-2 sentences — the single most important thing stopping a higher level","blocker_heading":"short heading","improve":"2-3 sentences specific advice on HOW to upgrade","ao1_diagnostic":"short phrase","ao2_diagnostic":"short phrase","ao3_diagnostic":"short phrase","ao4_diagnostic":"short phrase","rewrite_original":"weakest 1-2 sentences quoted exactly","rewrite_improved":"how those sentences could read"}`;
+{"counter_argument_present":true|false,"counter_argument_quote":"exact words that argue the other side, or empty","mark":<0-9>,"level":"Level 3"|"Level 2"|"Level 1"|"0","qtype":"quantitative","issue":"the central issue being assessed","endpoint":"the exact endpoint demanded","calculation_correct":true|false,"own_figure_applied":true|false,"calc_comment":"brief note on the calculation","chain_for":"step → step → ENDPOINT","chain_against":"step → step → ENDPOINT","judgement_quality":"WEIGHTED|SUPPORTED|ASSERTION|NONE","segments":[{"text":"exact text","ao":"AO1|AO2|AO3|AO4|NONE","quality":"GOOD|WEAK","annotation":"margin note"}],"positive":"2-3 sentences feedback TO the student using you","blocker":"1-2 sentences — the single most important thing stopping a higher level","blocker_heading":"short heading","improve":"2-3 sentences specific advice on HOW to upgrade","ao1_diagnostic":"short phrase","ao2_diagnostic":"short phrase","ao3_diagnostic":"short phrase","ao4_diagnostic":"short phrase","rewrite_original":"weakest 1-2 sentences quoted exactly","rewrite_improved":"how those sentences could read"}`;
 
 /* ═══════════════════════════════════════════
    CASE STUDY + QUESTION BANK
@@ -705,7 +713,7 @@ async function runMark(){
     if(!resp.ok)throw new Error('API error: '+resp.status);
     const data=await resp.json();
     const txt=data.content.map(c=>c.text||'').join('');
-    const fb=JSON.parse(txt.replace(/```json|```/g,'').trim());
+    const fb=enforceCaps(JSON.parse(txt.replace(/```json|```/g,'').trim()),qType);
     lastFb=fb;
     showFeedback(fb,qText);
     hist.push({date:new Date().toISOString().slice(0,10),q:qText.slice(0,60),mark:fb.mark,level:fb.level,qtype:fb.qtype||qType,judgement:fb.judgement_quality});
@@ -718,6 +726,25 @@ async function runMark(){
 }
 
 /* ═══ RENDER FEEDBACK ═══ */
+/* Hard caps from the AQA 7138 mark scheme and commentary, applied in code so they cannot be skipped.
+   A one-sided answer (no counter-argument) has nothing to weigh: non-quantitative max 4 (low Level 2),
+   quantitative max 6 (Level 2). Calibrated against AQA's 9-mark answers and commentaries, October 2026. */
+function enforceCaps(fb,qType){
+  const quote=String(fb.counter_argument_quote||'').trim();
+  const oneSided=fb.counter_argument_present===false||(fb.counter_argument_present!==true)||quote.length<12;
+  const cap=(qType==='quantitative'||fb.qtype==='quantitative')?6:4;
+  if(oneSided&&typeof fb.mark==='number'&&fb.mark>cap){
+    fb.mark=cap;
+    fb.level=fb.mark>=7?'Level 3':fb.mark>=4?'Level 2':fb.mark>=1?'Level 1':'0';
+    if(fb.judgement_quality==='WEIGHTED')fb.judgement_quality='SUPPORTED';
+    fb.blocker_heading='Argue the other side';
+    fb.blocker='Your answer only argues one side, so there is nothing to weigh up and it cannot go above '+cap+' out of 9.';
+    fb.improve='Add a developed counter-argument that explains why the opposite could happen, then decide which side is stronger for this business and why. '+(fb.improve||'');
+    fb.capped=true;
+  }
+  return fb;
+}
+
 function showFeedback(fb,qText){
   document.getElementById('ldPanel').classList.remove('show');
   document.getElementById('fbPanel').style.display='block';
