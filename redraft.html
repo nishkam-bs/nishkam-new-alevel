@@ -402,6 +402,11 @@ ${isFullEssay ? `{
     clearInterval(interval);
 
     showFeedback(result);
+    if(window.YTrack){const nm=String(result.new_mark||'');YTrack.mark({tool:'Redraft',question:(pdfFileName.replace(/\.pdf$/i,'')||'Redraft')+' (redraft)',
+      mark:nm.includes('/')?nm.split('/')[0].trim():nm,maxMark:nm.includes('/')?nm.split('/')[1].trim():'',level:result.new_level||'Redraft',
+      www1:result.what_is_better||'',www2:(result.improvements||[]).filter(i=>i.status==='improved').map(i=>i.area).join(', ')?'Improved: '+(result.improvements||[]).filter(i=>i.status==='improved').map(i=>i.area).join(', '):'',
+      ebi1:result.still_to_work_on||'',ebi2:(result.improvements||[]).filter(i=>i.status!=='improved').map(i=>i.area+': '+i.comment).join(' '),
+      answer:essay,panel:'#step2'});}
 
   } catch(e){
     clearInterval(interval);
@@ -486,5 +491,7 @@ function resetPage(){
   document.getElementById('pdfInput').value = '';
 }
 </script>
+<script src="y12-tracker.js"></script>
+<script>if(window.YTrack)YTrack.init('#step1');</script>
 </body>
 </html>

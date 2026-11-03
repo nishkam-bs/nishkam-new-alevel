@@ -54,20 +54,21 @@ document.body.insertAdjacentHTML('afterbegin',`<canvas id="burst" aria-hidden="t
 /* every question gets a label so the teacher dashboard can show which ones are missed */
 STAGES.forEach(s=>s.items.forEach((it,i)=>{it._id=s.id+'.'+(i+1);}));
 
-/* 7138 site: tracking is off until the Year 12 sign-in is set up. Progress is saved on the device only.
-   Do not switch this on with the 7132 tracker: it would log Year 12 students into the Year 13 sheet. */
-const TRACKING_ON=false;
-const HOLIDAY_CODE='';
-const TRACK=TRACKING_ON&&/github\.io$/.test(location.hostname);
-const API='https://nishkam-tracker.alevelnishkam.workers.dev';
+/* 7138 site: results go to the Year 12 tracker Worker (not the 7132 one).
+   Sign-in is stored as y12_auth and shared with the marking tools (y12-tracker.js). */
+const TRACKING_ON=true;
+const TRACK=TRACKING_ON&&(/github\.io$/.test(location.hostname)||/[?&]track=test/.test(location.search));
+const API='https://nishkam-tracker-7138.alevelnishkam.workers.dev';
+const AKEY='y12_auth';
 const KEY=C.key;
 const blank=()=>({best:{},passed:{},draft:''});
 let auth=null;
-try{auth=JSON.parse(localStorage.getItem('epc_auth')||'null');}catch(e){}
+try{auth=JSON.parse(localStorage.getItem(AKEY)||'null');}catch(e){}
 if(!TRACK)auth=null;
 const skey=()=>auth?KEY+'_'+auth.exam:KEY;
 let state=blank();
-function loadState(){state=blank();try{const r=localStorage.getItem(skey());if(r)state=Object.assign(state,JSON.parse(r));}catch(e){}}
+/* progress made before signing in is carried over to the signed-in record */
+function loadState(){state=blank();try{const r=localStorage.getItem(skey())||(auth?localStorage.getItem(KEY):null);if(r)state=Object.assign(state,JSON.parse(r));}catch(e){}}
 loadState();
 const teacher = !TRACK && location.hash==='#teacher';
 function save(){try{localStorage.setItem(skey(),JSON.stringify(state));}catch(e){}}
@@ -80,7 +81,7 @@ async function api(path,body){
   if(!r.ok)throw new Error(d.error||'Something went wrong');
   return d;
 }
-function signOut(msg){auth=null;try{localStorage.removeItem('epc_auth');}catch(e){}loadState();renderAuth(msg);renderMap();}
+function signOut(msg){auth=null;try{localStorage.removeItem(AKEY);}catch(e){}loadState();renderAuth(msg);renderMap();}
 async function syncProgress(){
   if(!auth)return;
   try{const d=await api('/progress',{token:auth.token});
@@ -89,8 +90,8 @@ async function syncProgress(){
     Object.entries(d.best||{}).forEach(([k,v])=>{const s=mine(k);if(s&&(state.best[s]==null||v>state.best[s]))state.best[s]=v;});
     Object.keys(d.passed||{}).forEach(k=>{const s=mine(k);if(s)state.passed[s]=true;});save();renderMap();}catch(e){}
 }
-function pending(){try{return JSON.parse(localStorage.getItem('epc_pending_'+(auth&&auth.exam))||'[]');}catch(e){return [];}}
-function setPending(a){try{localStorage.setItem('epc_pending_'+(auth&&auth.exam),JSON.stringify(a));}catch(e){}}
+function pending(){try{return JSON.parse(localStorage.getItem('y12_cpending_'+(auth&&auth.exam))||'[]');}catch(e){return [];}}
+function setPending(a){try{localStorage.setItem('y12_cpending_'+(auth&&auth.exam),JSON.stringify(a));}catch(e){}}
 async function flush(){
   if(!auth)return;let q=pending();
   while(q.length){try{await api('/log',Object.assign({token:auth.token},q[0]));q.shift();setPending(q);}catch(e){break;}}
@@ -101,12 +102,12 @@ function logResult(row){if(!TRACK||!auth)return;const q=pending();q.push(row);se
 function renderAuth(msg){
   const box=$('#authBox');if(!TRACK){box.hidden=true;return;}box.hidden=false;
   if(auth){box.innerHTML=`<div class="who">Signed in as <b>${esc(auth.name)}</b> <span class="sync" id="syncTxt"></span><button id="soBtn">Not you? Sign out</button></div>`;$('#soBtn').onclick=()=>signOut();return;}
-  box.innerHTML=`<form class="signin" id="siForm"><h3>Sign in to start</h3><p>Enter your exam number. Your progress is saved, so you can carry on from any device.</p>
-    <div class="row"><input class="txt" id="siExam" inputmode="numeric" autocomplete="off" placeholder="Exam number" aria-label="Exam number"><button class="btn" type="submit">Sign in</button></div>
+  box.innerHTML=`<form class="signin" id="siForm"><h3>Sign in to start</h3><p>Enter your exam number and the class code. Your progress is saved, so you can carry on from any device.</p>
+    <div class="row"><input class="txt" id="siExam" inputmode="numeric" autocomplete="off" placeholder="Exam number" aria-label="Exam number"><input class="txt" id="siCode" autocomplete="off" placeholder="Class code" aria-label="Class code"><button class="btn" type="submit">Sign in</button></div>
     <div class="err" aria-live="polite">${msg?esc(msg):''}</div></form>`;
   $('#siForm').onsubmit=async e=>{e.preventDefault();const btn=$('#siForm .btn'),err=$('#siForm .err');btn.disabled=true;err.textContent='';
-    try{const d=await api('/login',{exam:$('#siExam').value.trim(),code:HOLIDAY_CODE});
-      auth={token:d.token,name:d.name,exam:d.exam};try{localStorage.setItem('epc_auth',JSON.stringify(auth));}catch(x){}
+    try{const d=await api('/login',{exam:$('#siExam').value.trim(),code:$('#siCode').value.trim()});
+      auth={token:d.token,name:d.name,exam:d.exam};try{localStorage.setItem(AKEY,JSON.stringify(auth));}catch(x){}
       loadState();renderAuth();renderMap();await syncProgress();flush();
     }catch(x){err.textContent=x.message==='Failed to fetch'?'Could not connect. Check your internet and try again.':x.message;btn.disabled=false;}};
 }

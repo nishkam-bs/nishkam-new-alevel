@@ -267,7 +267,7 @@ textarea{min-height:220px;resize:vertical;line-height:1.7}
 <!-- PROGRESS TAB -->
 <section id="progress" class="tab">
   <div class="topbar">
-    <div><div class="eyebrow">Your journey</div><h2>Progress</h2><div class="sub">Your marks are saved on this device only. They are not sent to anyone.</div></div>
+    <div><div class="eyebrow">Your journey</div><h2>Progress</h2><div class="sub">Your marks are saved on this device. If you are signed in, they are also sent to your teacher.</div></div>
   </div>
   <div class="grid g3">
     <div class="card" style="text-align:center;padding:20px"><div class="kpi" id="pCount">0</div><p class="tiny mt">Answers marked</p></div>
@@ -718,6 +718,10 @@ async function runMark(){
     showFeedback(fb,qText);
     hist.push({date:new Date().toISOString().slice(0,10),q:qText.slice(0,60),mark:fb.mark,level:fb.level,qtype:fb.qtype||qType,judgement:fb.judgement_quality});
     saveHist();updateProgress();
+    if(window.YTrack)YTrack.mark({tool:'9-Mark Lab',question:qText,mark:fb.mark,maxMark:9,level:fb.level,
+      www1:fb.positive||'',www2:fb.judgement_quality?'Judgement: '+String(fb.judgement_quality).toLowerCase():'',
+      ebi1:[fb.blocker_heading,fb.blocker].filter(Boolean).join(': '),ebi2:[fb.improve,fb.rewrite_original&&fb.rewrite_improved?'You wrote: "'+fb.rewrite_original+'" It could read: "'+fb.rewrite_improved+'"':''].filter(Boolean).join(' '),
+      answer:essayText||(uploadedImages.length?'[handwritten answer uploaded as photos]':''),panel:'#fbPanel'});
   }catch(err){
     document.getElementById('ldPanel').classList.remove('show');
     document.getElementById('fbPanel').style.display='block';
@@ -959,5 +963,7 @@ function updateProgress(){
   }
 }
 </script>
+<script src="y12-tracker.js"></script>
+<script>if(window.YTrack)YTrack.init('#markContent');</script>
 </body>
 </html>
