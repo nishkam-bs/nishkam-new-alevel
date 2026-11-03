@@ -267,7 +267,7 @@ const PROXY='https://nishkam-marker.alevelnishkam.workers.dev';
 const MODEL='claude-sonnet-4-6';
 
 /* ═══════════════════════════════════════════
-   FROZEN 31 MARKING RULES — 7 October 2026
+   FROZEN MARKING RULES — 7 October 2026, tightened 3 November 2026
    ═══════════════════════════════════════════ */
 const SYS=`You are a senior AQA A-Level Business (7138) examiner marking a 6-mark "Analyse" question.
 
@@ -290,11 +290,14 @@ AO1 — KNOWLEDGE
 AO2 — APPLICATION
 7. Application must contribute to the reasoning. Simply inserting the business name or copying a case-study fact is NOT effective application. Context must make the reasoning specifically about THIS business. The test: could you remove the business name and the argument still works identically? If yes, application is weak.
 8. Do not count contextual references mechanically — judge their quality and integration.
+8a. Choosing the factor is part of application. If the student picks a factor that does not fit THIS business (for example friends and family finance for a business valued at over $1 billion), application is weak even if the chain is logical.
+8b. Case data used inside the reasoning (a figure compared with another, or worked out, such as "three times higher" or "less than half the industry average") is strong application. A figure copied out and not used is not.
 
 AO3 — ANALYSIS
 9. Analysis means a logical causal chain with no material missing links. Each step must follow from the previous one.
 10. The chain MUST reach the precise endpoint demanded by the question. If the question asks about profit and the chain stops at sales, a step is missing. If it asks about PED, ending with "sales increase" does not answer PED. If it asks about market share, increased sales alone do not necessarily mean increased share because the total market may also change.
 10a. A chain that stops short of the end point, or finishes somewhere else, earns NO AO3 credit for this question, however logical it is. Example from AQA's commentary: asked about teamwork and financial performance, an answer that ends at "labour productivity improves" has no AO3. If such an answer also has no application to the case, it is AO1 only and rule 26 caps it at 2.
+10b. A chain needs at least one linked step between the factor and the end point (factor → consequence → end point). A single leap such as "a strong brand will make demand more price inelastic" or "this will increase profit", with nothing explained in between, is an assertion, not analysis: it earns no AO3.
 11. Where the endpoint is broad (e.g. "success", "financial performance"), reward students who make it concrete (e.g. profit, sales revenue, market share).
 
 NO EVALUATION NEEDED
@@ -343,7 +346,7 @@ Find the weakest 1–2 sentences. Quote them exactly. Then rewrite them to show 
 
 YOUR RESPONSE MUST BE ONLY A SINGLE JSON OBJECT. No text before it. No text after it. No markdown fences. No explanation. No preamble. If the answer is a photo, read the handwriting first, then produce the JSON. Start your response with the { character.
 
-{"full_marks_check":{"factor_quote":"student's words naming the factor, or empty","case_quote":"student's sentence where a case detail drives a step, or empty","endpoint_quote":"student's words reaching a concrete end point, or empty","all_met":true|false},"mark":<0-6>,"level":"Level 2"|"Level 1"|"0","start_point":"the factor/concept","end_point":"the exact endpoint","chain":"step → step → ENDPOINT","chain_reached_endpoint":true|false,"segments":[{"text":"exact text","ao":"AO1|AO2|AO3|NONE","quality":"GOOD|WEAK","annotation":"margin note"}],"positive":"2-3 sentences feedback TO the student using you","improve":"2-3 sentences the single most important improvement","improve_heading":"short heading","ao1_diagnostic":"short phrase","ao2_diagnostic":"short phrase","ao3_diagnostic":"short phrase","rewrite_original":"weakest 1-2 sentences quoted exactly","rewrite_improved":"how those sentences could read"}`;
+{"full_marks_check":{"factor_quote":"student's words naming the factor, or empty","case_quote":"student's sentence where a case detail drives a step, or empty","endpoint_quote":"student's words reaching a concrete end point, or empty","all_met":true|false},"mark":<0-6>,"level":"Level 2"|"Level 1"|"0","start_point":"the factor/concept","end_point":"the exact endpoint","chain":"step → step → ENDPOINT","chain_reached_endpoint":true|false,"chain_steps":<number of linked steps from factor to end point>,"segments":[{"text":"exact text","ao":"AO1|AO2|AO3|NONE","quality":"GOOD|WEAK","annotation":"margin note"}],"positive":"2-3 sentences feedback TO the student using you","improve":"2-3 sentences the single most important improvement","improve_heading":"short heading","ao1_diagnostic":"short phrase","ao2_diagnostic":"short phrase","ao3_diagnostic":"short phrase","rewrite_original":"weakest 1-2 sentences quoted exactly","rewrite_improved":"how those sentences could read"}`;
 
 /* ═══════════════════════════════════════════
    CASE STUDY + QUESTION BANK (18 businesses, 36 questions)
@@ -585,7 +588,7 @@ async function runMark(){
     if(!resp.ok)throw new Error('API error: '+resp.status);
     const data=await resp.json();
     const txt=data.content.map(c=>c.text||'').join('');
-    const fb=fullMarks(extractJSON(txt));
+    const fb=enforceCaps6(fullMarks(extractJSON(txt)));
     if(!fb||typeof fb.mark==='undefined')throw new Error('The marker did not return valid feedback. Please try again.');
     lastFb=fb;
     showFeedback(fb,qText);
@@ -605,6 +608,24 @@ async function runMark(){
 /* If the marker has quoted all three full-marks features from the student's answer
    (factor, case detail driving a step, concrete end point) but stopped at 5, award 6.
    Only lifts 5 to 6; it never changes any other mark. Calibrated against AQA's 7138 6-mark commentary. */
+/* Hard caps applied in code so they cannot be skipped (tightened 3 Nov 2026).
+   1. A chain that does not reach the end point has no AO3 (rule 10a), so the answer cannot be in Level 2: max 3.
+   2. No case detail driving the reasoning means no AO2 (rule 27): max 4. */
+function enforceCaps6(fb){
+  if(!fb||typeof fb.mark!=='number')return fb;
+  const c=fb.full_marks_check||{};const ok=s=>String(s||'').trim().length>=12;
+  if(fb.chain_reached_endpoint===false&&fb.mark>3){
+    fb.mark=3;fb.level='Level 1';fb.capped=true;
+    fb.improve_heading='Reach the end point';
+    fb.improve='Your chain of reasoning stops before it reaches what the question asks about, so it cannot get into Level 2. Add the final step that links your point to the exact words in the question. '+(fb.improve||'');
+  }else if(!ok(c.case_quote)&&fb.mark>4){
+    fb.mark=4;fb.level='Level 2';fb.capped=true;
+    fb.improve_heading='Use the case study';
+    fb.improve='Your reasoning is good, but no detail from the case study is used to drive it, so it cannot go above 4. Use a fact or figure about this business inside your chain. '+(fb.improve||'');
+  }
+  return fb;
+}
+
 function fullMarks(fb){
   const c=fb&&fb.full_marks_check;const ok=s=>String(s||'').trim().length>=12;
   if(c&&c.all_met===true&&ok(c.factor_quote)&&ok(c.case_quote)&&ok(c.endpoint_quote)&&fb.chain_reached_endpoint===true&&fb.mark===5){fb.mark=6;fb.level='Level 2';fb.full_marks=true;}
