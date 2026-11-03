@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>15-Mark Evaluate Lab — AQA A-Level Business</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --navy:#0d1b34;--navy2:#172a4a;--gold:#eeb834;--gold-soft:#fff8e5;
+  --blue:#3a69b4;--green:#288566;--red:#be4848;--cream:#f8f6f0;
+  --ink:#191f2a;--muted:#6a7485;--line:#dfe4ea;--white:#fff;--soft:#f3f5f8;
+  --shadow:0 12px 30px rgba(13,27,52,.08);--radius:16px;
+  --ao1:#534AB7;--ao1-bg:#EEEDFE;
+  --ao2:#185FA5;--ao2-bg:#E6F1FB;
+  --ao3:#E65100;--ao3-bg:#FFF3E0;
+  --ao4:#0E7C5F;--ao4-bg:#E6F6F1;
+  --weak:#C62828;--weak-bg:#FFEBEE;
+}
+*{box-sizing:border-box;margin:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--blue);text-decoration:none}
+.app{min-height:100vh;display:grid;grid-template-columns:260px 1fr}
+aside{background:linear-gradient(180deg,var(--navy),#112442 70%);color:white;padding:24px 18px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+main{padding:32px 38px 80px;max-width:1500px;width:100%;overflow-x:hidden}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.logo{width:46px;height:46px;border-radius:13px;background:var(--gold);display:grid;place-items:center;color:var(--navy);font-weight:900;font-size:18px;text-align:center;line-height:1.1}
+.brand h1{font-size:16px;line-height:1.15;margin:0}.brand span{font-size:11px;color:#aebbd1;display:block;margin-top:2px}
+nav{display:flex;flex-direction:column;gap:4px}
+nav button{width:100%;border:0;background:transparent;color:#dbe4f2;padding:13px 14px;border-radius:11px;text-align:left;font-size:14px;font-weight:600;transition:.15s;display:flex;align-items:center;gap:10px}
+nav button:hover{background:rgba(255,255,255,.08);color:white}
+nav button.on{background:rgba(255,255,255,.12);color:white}
+.side-card{margin-top:auto;padding:15px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:rgba(255,255,255,.04)}
+.side-card .mini{font-size:10px;color:#b8c5d9;text-transform:uppercase;letter-spacing:.1em}
+.student-tag{margin-top:16px;padding:10px 14px;border:1px solid rgba(255,255,255,.1);border-radius:10px;font-size:12px;color:#a4b3cc;display:flex;align-items:center;gap:8px}
+.student-tag strong{color:var(--gold);font-size:13px}
+.tab{display:none}.tab.on{display:block}
+.eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);font-weight:800}
+h2{font-size:30px;font-weight:900;color:var(--navy);margin:5px 0 6px}
+.sub{color:var(--muted);font-size:14px;line-height:1.5}
+h3{font-size:18px;font-weight:800;color:var(--navy);margin:0 0 10px}
+h4{font-size:14px;font-weight:700;color:var(--navy);margin:0 0 6px}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:24px}
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);overflow:hidden;min-width:0}
+.grid{display:grid;gap:18px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.mt{margin-top:18px}
+label.fl{font-size:12px;font-weight:800;color:var(--navy);display:block;margin-bottom:6px}
+input,textarea,select{width:100%;border:1px solid #ccd3dc;border-radius:11px;background:white;padding:12px 14px;font:inherit;font-size:14px;color:var(--ink);outline:0;transition:.15s}
+input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(58,105,180,.12)}
+textarea{min-height:220px;resize:vertical;line-height:1.7}
+.btn{border:0;border-radius:11px;padding:12px 18px;font-weight:800;font-size:14px;transition:.15s}
+.btn-p{background:var(--navy);color:white}.btn-p:hover{background:var(--navy2)}
+.btn-g{background:var(--gold);color:var(--navy)}.btn-g:hover{filter:brightness(1.05)}
+.btn-o{background:var(--soft);color:var(--navy);border:1px solid var(--line)}.btn-o:hover{background:#e8ebf0}
+.btn-sm{padding:8px 13px;font-size:12px;border-radius:9px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tiny{font-size:11px;color:var(--muted)}.muted{color:var(--muted)}
+/* Question list */
+.qlist{display:grid;gap:8px;max-height:420px;overflow-y:auto;padding-right:6px}
+.qopt{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:white;cursor:pointer;font-size:13px;line-height:1.5;text-align:left;transition:.15s;width:100%}
+.qopt:hover{border-color:var(--blue);background:#f5f8fd}
+.qopt.sel{border-color:var(--gold);background:var(--gold-soft);border-width:2px}
+.qopt .qy{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+/* Upload */
+.upload-zone{border:2px dashed var(--line);border-radius:14px;padding:30px;text-align:center;cursor:pointer;transition:.15s;background:var(--soft)}
+.upload-zone:hover{border-color:var(--blue);background:#f0f4fb}
+.upload-previews{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.upload-previews img{width:60px;height:80px;object-fit:cover;border-radius:8px;border:2px solid var(--line)}
+/* Results */
+.mark-num{font-size:64px;font-weight:900;color:var(--navy);letter-spacing:-.04em;line-height:1}
+.mark-level{font-weight:900;font-size:18px;margin-top:8px}
+.mark-bar{height:10px;border-radius:99px;background:#e9edf2;margin:14px auto 0;width:80%;overflow:hidden}
+.mark-bar span{display:block;height:100%;border-radius:99px;transition:width .5s}
+.kpi{font-size:34px;font-weight:900;color:var(--navy);line-height:1}
+.al{padding:15px 16px;border-radius:12px;font-size:13px;line-height:1.6}
+.al b{display:block;margin-bottom:3px;font-size:14px}
+.al-r{background:#fff5f5;border-left:5px solid var(--red)}
+.al-g{background:#f3faf6;border-left:5px solid var(--green)}
+.al-y{background:#fffaf0;border-left:5px solid var(--gold)}
+.al-b{background:#f0f5fc;border-left:5px solid var(--blue)}
+/* Progress table */
+.p-table{width:100%;border-collapse:collapse}
+.p-table td,.p-table th{padding:11px 10px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}
+.p-table th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+/* Spinner */
+.spin{width:40px;height:40px;border:4px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;margin:0 auto 14px}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* Overlays */
+.ov{position:fixed;inset:0;background:rgba(8,18,34,.55);display:none;place-items:center;z-index:100;padding:20px}
+.ov.show{display:grid}
+.modal{width:min(540px,100%);background:white;border-radius:20px;padding:26px;box-shadow:0 30px 80px rgba(0,0,0,.22)}
+.ld{display:none;text-align:center;padding:50px 20px}.ld.show{display:block}
+/* Annotated essay */
+.anno-wrap{display:grid;grid-template-columns:1fr 240px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.anno-essay{padding:24px 28px;border-right:1px solid var(--line);line-height:2;font-size:14px}
+.anno-sidebar{background:var(--soft);padding:20px 14px;position:relative}
+.anno-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
+.seg{padding:1px 3px;border-radius:3px;transition:background .2s}
+.seg-ao1{background:var(--ao1-bg);border-bottom:2px solid var(--ao1)}
+.seg-ao2{background:var(--ao2-bg);border-bottom:2px solid var(--ao2)}
+.seg-ao3{background:var(--ao3-bg);border-bottom:2px solid var(--ao3)}
+.seg-ao4{background:var(--ao4-bg);border-bottom:2px solid var(--ao4)}
+.seg-weak{background:var(--weak-bg);border-bottom:2px solid var(--weak)}
+.seg:hover{filter:brightness(.95)}
+.seg-num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:800;color:#fff;margin-right:3px;vertical-align:middle;line-height:1;flex-shrink:0}
+.seg-ao1 .seg-num{background:var(--ao1)}.seg-ao2 .seg-num{background:var(--ao2)}.seg-ao3 .seg-num{background:var(--ao3)}.seg-ao4 .seg-num{background:var(--ao4)}.seg-weak .seg-num{background:var(--weak)}
+.anno-num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:800;color:#fff;margin-right:5px;vertical-align:middle;flex-shrink:0}
+.anno-note-ao1 .anno-num{background:var(--ao1)}.anno-note-ao2 .anno-num{background:var(--ao2)}.anno-note-ao3 .anno-num{background:var(--ao3)}.anno-note-ao4 .anno-num{background:var(--ao4)}.anno-note-weak .anno-num{background:var(--weak)}
+.anno-note{border-radius:8px;padding:8px 10px;font-size:11px;line-height:1.5;color:#374151;margin-bottom:10px;border-left:3px solid transparent}
+.anno-note .ao-tag{display:inline-block;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.anno-note-ao1{background:var(--ao1-bg);border-left-color:var(--ao1)}.anno-note-ao1 .ao-tag{color:var(--ao1)}
+.anno-note-ao2{background:var(--ao2-bg);border-left-color:var(--ao2)}.anno-note-ao2 .ao-tag{color:var(--ao2)}
+.anno-note-ao3{background:var(--ao3-bg);border-left-color:var(--ao3)}.anno-note-ao3 .ao-tag{color:var(--ao3)}
+.anno-note-ao4{background:var(--ao4-bg);border-left-color:var(--ao4)}.anno-note-ao4 .ao-tag{color:var(--ao4)}
+.anno-note-weak{background:var(--weak-bg);border-left-color:var(--weak)}.anno-note-weak .ao-tag{color:var(--weak)}
+.ao-key{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;margin-bottom:18px}
+.ao-key-item{display:flex;align-items:center;gap:6px}
+.ao-key-swatch{width:14px;height:14px;border-radius:3px;border:2px solid}
+/* Rewrite card */
+.rewrite-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);margin-top:18px}
+.rewrite-card h3{margin-bottom:14px}
+.rw-box{padding:14px 16px;border-radius:10px;font-size:13px;line-height:1.7;margin-bottom:12px}
+.rw-original{background:#fffaf0;border-left:4px solid var(--gold)}
+.rw-improved{background:#f3faf6;border-left:4px solid var(--green)}
+.rw-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.rw-original .rw-label{color:var(--gold)}
+.rw-improved .rw-label{color:var(--green)}
+/* Chain visual */
+.chain-box{background:var(--ao3-bg);border:1px solid #E65100;border-radius:var(--radius);padding:18px 20px;font-size:13px;line-height:1.8;color:var(--ink)}
+.chain-box .chain-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--ao3);margin-bottom:8px}
+/* Case study browse */
+.cs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.cs-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px;cursor:pointer;transition:.15s}
+.cs-card:hover{border-color:var(--gold);box-shadow:0 4px 16px rgba(13,27,52,.07)}
+.cs-card h4{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.cs-card .cs-meta{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.cs-card p{font-size:12px;color:var(--muted);line-height:1.5}
+.cs-card .cs-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.cs-tag{font-size:10px;padding:2px 8px;border-radius:10px;background:var(--soft);color:var(--muted)}
+.filter-bar{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.filter-btn{padding:6px 14px;font-size:12px;font-weight:700;border-radius:16px;border:1px solid var(--line);background:var(--white);color:var(--muted);cursor:pointer;transition:.15s}
+.filter-btn:hover{border-color:var(--blue)}
+.filter-btn.active{background:var(--navy);color:white;border-color:var(--navy)}
+.back-link{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:var(--blue);background:none;border:none;cursor:pointer;margin-bottom:16px;padding:0}
+.back-link:hover{color:var(--navy)}
+.cs-box{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
+.cs-toggle{width:100%;padding:14px 18px;font-size:13px;font-weight:700;color:var(--navy);background:none;border:none;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between}
+.cs-toggle .arr{font-size:10px;color:var(--muted);transition:transform .2s}
+.cs-toggle.open .arr{transform:rotate(180deg)}
+.cs-body{display:none;padding:0 18px 18px;font-size:13px;line-height:1.7;color:var(--ink)}
+.cs-body.open{display:block}
+.q-pick{padding:12px 14px;background:var(--soft);border-radius:10px;margin-bottom:8px;cursor:pointer;font-size:13px;line-height:1.5;color:var(--navy);font-weight:600;transition:.15s;border:1px solid transparent}
+.q-pick:hover{background:var(--gold-soft);border-color:var(--gold)}
+.q-pick .q-src{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.q-display{background:var(--soft);border-left:4px solid var(--gold);padding:14px 18px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:16px}
+.q-display p{font-size:14px;color:var(--navy);font-weight:600;margin:0}
+.q-display .q-marks{font-size:12px;color:var(--muted);margin-top:4px}
+/* Type badge */
+.type-badge{display:inline-block;font-size:10px;font-weight:800;padding:3px 10px;border-radius:8px;text-transform:uppercase;letter-spacing:.06em}
+.type-qual{background:#E6F1FB;color:#185FA5}
+.type-quant{background:#E6F6F1;color:#0E7C5F}
+/* Blocker card */
+.blocker-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);margin-top:18px;border-top:4px solid var(--red)}
+/* Responsive */
+@media(max-width:1050px){.app{grid-template-columns:1fr}aside{height:auto;position:relative;flex-direction:row;align-items:center;gap:12px;padding:14px 16px}aside nav{display:flex;overflow-x:auto;gap:4px;flex:1}.brand{margin-bottom:0}.side-card,.student-tag{display:none}.g3,.g2,.g4{grid-template-columns:1fr 1fr}.cs-grid{grid-template-columns:1fr 1fr}.anno-wrap{grid-template-columns:1fr}}
+@media(max-width:700px){main{padding:20px 14px}.g3,.g2,.g4,.cs-grid{grid-template-columns:1fr}.topbar{flex-direction:column}.anno-wrap{grid-template-columns:1fr}.anno-sidebar{border-top:1px solid var(--line);border-right:none}}
+</style>
+</head>
+<body>
+
+<div class="app" id="appShell">
+<aside>
+  <div class="brand">
+    <div class="logo">15</div>
+    <div><h1>AQA Business<br>15-Mark Lab</h1><span>Evaluate questions</span></div>
+  </div>
+  <nav>
+    <button class="on" data-t="mark">Mark My Answer</button>
+    <button data-t="feedback">Annotated Feedback</button>
+    <button data-t="train">Exam Technique</button>
+    <button data-t="progress">Progress</button>
+  </nav>
+  <div class="side-card">
+    <div class="mini">Nishkam School West London</div>
+    <strong style="font-size:14px;color:#dbe4f2">Man Neeva, Mat Uchi</strong>
+  </div>
+</aside>
+
+<main>
+
+<!-- MARK TAB -->
+<section id="mark" class="tab on">
+  <div id="markContent"></div>
+</section>
+
+<!-- FEEDBACK TAB -->
+<section id="feedback" class="tab">
+  <div class="topbar">
+    <div><div class="eyebrow">Annotated Feedback</div><h2>How did I do?</h2><div class="sub">Your answer with AO colour-coding and examiner-style margin notes.</div></div>
+  </div>
+  <div class="ld" id="ldPanel"><div class="spin"></div><p style="font-weight:700;color:var(--navy);font-size:16px">Marking your answer...</p><p class="muted" style="margin-top:4px">Reading every sentence. Tracing both options. Checking the calculation, the evaluation and your recommendation.</p></div>
+  <div id="fbPanel">
+    <p class="muted" style="padding:40px 0;text-align:center">Submit an answer on the Mark tab first. Your annotated feedback will appear here.</p>
+  </div>
+</section>
+
+<!-- TRAIN TAB -->
+<section id="train" class="tab">
+  <div class="topbar">
+    <div><div class="eyebrow">Exam technique</div><h2>How to answer a 15-marker</h2><div class="sub">Evaluate two options, then recommend one.</div></div>
+  </div>
+  <div class="card">
+    <h3>What the question wants</h3>
+    <p style="font-size:13px;line-height:1.7">Every 15-mark question asks you to <strong>evaluate two options and recommend one</strong>. Sometimes you are given the two options (Region A or Region B). Sometimes you choose them yourself ("Evaluate two ways…"). If you choose, pick two that clearly fit this business.</p>
+    <p style="font-size:13px;line-height:1.7;margin-top:8px">The marks are AO1 = 3, AO2 = 3, AO3 = 4 and AO4 = 5. Evaluation is worth the most, so the quality of your judgement is what moves you up the levels.</p>
+  </div>
+  <div class="grid g2 mt">
+    <div class="card">
+      <h3>The structure we use</h3>
+      <p style="font-size:13px;line-height:1.7"><strong>1. Argument for the first option.</strong> Build a chain with 5–6 analysis connectives: <em>this means that, as a result, therefore, this could lead to, causing</em>. Use the case study and a worked figure. Finish with a sentence that uses the words of the question.</p>
+      <p style="font-size:13px;line-height:1.7;margin-top:6px"><strong>2. Evaluation of the first option.</strong> Start with "However…". Think about cost, risk, what the data does not show.</p>
+      <p style="font-size:13px;line-height:1.7;margin-top:6px"><strong>3. Argument for the second option.</strong> Same again: connectives, case study, data, a model if it helps.</p>
+      <p style="font-size:13px;line-height:1.7;margin-top:6px"><strong>4. Evaluation of the second option.</strong></p>
+      <p style="font-size:13px;line-height:1.7;margin-top:6px"><strong>5. Conclusion.</strong> Overall, I would recommend… → Although…, … carries greater weight because… → However, this ultimately depends on… → Therefore, [answer in the words of the question].</p>
+      <p class="tiny mt">AQA does not insist on this order, so the lab checks it separately and it never changes your mark. It is the most reliable way to hit every AO.</p>
+    </div>
+    <div class="card">
+      <h3>Questions with a calculation</h3>
+      <p style="font-size:13px;line-height:1.7">Six of the fifteen marks are for quantitative skills: formula and figures (AO1, 2), the calculation (AO2, 2), using the result in an argument (AO3, 1) and using it in your judgement (AO4, 1).</p>
+      <p style="font-size:13px;line-height:1.7;margin-top:8px">Do the calculation first and show your working. Then ask what the figure means for this business and which option it supports.</p>
+      <p style="font-size:13px;line-height:1.7;margin-top:8px"><strong>If you do not use the calculation, the answer cannot get above 9.</strong> AQA says this in its mark scheme.</p>
+      <p style="font-size:13px;line-height:1.7;margin-top:8px"><strong>Own figure rule:</strong> if your arithmetic goes wrong but you use your figure sensibly, you still get credit for the analysis and evaluation.</p>
+    </div>
+  </div>
+  <div class="card mt">
+    <h3>The levels</h3>
+    <div class="grid g3 mt">
+      <div class="al al-r"><b>Levels 1–2 (1–6)</b>Mostly knowledge, little use of the case study, basic or missing chains. Judgement is asserted or has limited support.</div>
+      <div class="al al-y"><b>Levels 3–4 (7–12)</b>Developed chains, at Level 4 for both options with the case study used throughout. A judgement with some balance, but not fully weighed or not tied to the business's priorities.</div>
+      <div class="al al-g"><b>Level 5 (13–15)</b>Well-developed chains for both options, case study used throughout, and a recommendation that weighs both options and fits this business's situation. Models used well are typical here.</div>
+    </div>
+  </div>
+  <div class="grid g2 mt">
+    <div class="card">
+      <h3>What holds answers back</h3>
+      <div class="al al-r mt"><b>Only one option properly analysed</b>Both options need a developed argument. Otherwise the maximum is 9.</div>
+      <div class="al al-r mt"><b>No recommendation</b>The question says "recommend". Without one, the maximum is 9.</div>
+      <div class="al al-r mt"><b>Summarising instead of weighing</b>Saying the good and bad points of each again is not a judgement. Explain why one carries greater weight. Otherwise the maximum is 12.</div>
+      <div class="al al-r mt"><b>A judgement that could be about any business</b>Level 5 needs a recommendation that fits this business's situation and priorities.</div>
+    </div>
+    <div class="card">
+      <h3>Models and theory</h3>
+      <p style="font-size:13px;line-height:1.7">Ansoff, Porter's Five Forces, the Boston Matrix, PED, Maslow, Herzberg and break-even are typical of Level 5 answers when they move your argument on. Use one where it explains <em>why</em>, not as a label.</p>
+      <p style="font-size:13px;line-height:1.7;margin-top:14px">A good recommendation is honest about its weaknesses. Say what it depends on and what could go wrong &mdash; the same humility we try to show when we make any decision that affects other people.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRESS TAB -->
+<section id="progress" class="tab">
+  <div class="topbar">
+    <div><div class="eyebrow">Your journey</div><h2>Progress</h2><div class="sub">Your marks are saved on this device. If you are signed in, they are also sent to your teacher.</div></div>
+  </div>
+  <div class="grid g3">
+    <div class="card" style="text-align:center;padding:20px"><div class="kpi" id="pCount">0</div><p class="tiny mt">Answers marked</p></div>
+    <div class="card" style="text-align:center;padding:20px"><div class="kpi" id="pAvg">&mdash;</div><p class="tiny mt">Average mark</p></div>
+    <div class="card" style="text-align:center;padding:20px"><div class="kpi" id="pBest">&mdash;</div><p class="tiny mt">Best mark</p></div>
+  </div>
+  <div class="card mt">
+    <h3>Submission history</h3>
+    <div id="pHist"><p class="muted" style="padding:12px 0">No answers marked yet.</p></div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+const PROXY='https://nishkam-marker.alevelnishkam.workers.dev';
+const MODEL='claude-sonnet-4-6';
+
+/* ═══════════════════════════════════════════
+   FROZEN MARKING RULES — 15-MARK EVALUATE (NON-QUANTITATIVE)
+   Written 3 November 2026 from the AQA 7138 sample mark schemes (Papers 1–3)
+   and AQA's 15-mark answers and commentaries (April 2026).
+   ═══════════════════════════════════════════ */
+const SHARED_STRUCTURE=`NISHKAM STRUCTURE CHECK — feedback only. This NEVER changes the mark. It holds the student to the structure their teacher expects:
+(1) argument for the first option, (2) evaluation of the first option, (3) argument for the second option, (4) evaluation of the second option, (5) a conclusion that follows four steps.
+Fill the "structure" object honestly from the student's own words:
+- For each argument (arg1, arg2): set "present" and quote its opening words. List in "connectives" every analysis connective in that argument that is followed by genuine reasoning: "this means that", "as a result", "therefore", "this could lead to", "which leads to", "causing", "which causes", "this is because", "because", "consequently", "so", "which results in". Copy each exactly as the student wrote it, once per use. Do NOT list a connective that is followed by a bare claim with no reason (rule on connective words below). Set "links_to_question" true only if the LAST sentence of that argument reaches the end point using the words of the question.
+- For each evaluation (eval1, eval2): set "present" true only if there is a clear evaluative passage on THAT option (a "However…" point that limits it, a condition, a risk, a challenge to the data) with at least one reason. Quote its opening words.
+- "data": count in "worked_figures" the figures the student has worked out or compared (for example "26% higher", "three times as many", "a fall of over 60%", "8.8 percentage points below"), not figures simply copied from the case. Give one example in "example". For a question with a required calculation, set "calculation_shown" true only if the formula and working are shown; otherwise false. For a question without one, set it to null.
+- "conclusion": set each step true only if it is genuinely there, and quote it: "overall" (a clear recommendation such as "Overall, I would recommend…"), "although_weight" (the other option is acknowledged and the chosen one is said to carry greater weight, with a reason), "depends_on" (one specific condition the recommendation depends on, explained), "therefore_question" (a final sentence answering in the words of the question).`;
+
+const SHARED_TAIL=`SEGMENT AND ANNOTATE THE ANSWER:
+Break the answer into segments at natural sentence boundaries. For each segment identify:
+- Which AO it primarily demonstrates: AO1, AO2, AO3, AO4, or NONE
+- Quality: GOOD or WEAK (assertion, error, drift, repetition, generic)
+- A short annotation — like a teacher's margin note. Keep it natural and specific (max 18 words).
+All segment texts joined must equal the full answer. Aim for 8–20 segments.
+
+REWRITE:
+Find the weakest 1–2 sentences. Quote them exactly. Then rewrite them to show what stronger work looks like. The rewrite must sound like a good Year 12 student — natural connectives, not academic writing.
+
+FEEDBACK LANGUAGE: write to the student as a teacher would speak to a Year 12 class. Short, clear sentences. Be specific: name the paragraph, the missing step or the figure they should have used. Do not use the words "mechanism", "causal chain", "endpoint discipline" or "contextual integration".`;
+
+const JSON_COMMON=`"option_1":"the first option or way the student analyses","option_2":"the second option or way","both_options_analysed":true|false,"recommendation_quote":"the student's words recommending one option, or empty","weighing_quote":"the student's words weighing one option against the other with a reason, or empty","priorities_quote":"the student's words linking the recommendation to this business's situation or priorities, or empty","structure":{"arg1":{"present":true|false,"quote":"","connectives":["…"],"links_to_question":true|false},"eval1":{"present":true|false,"quote":""},"arg2":{"present":true|false,"quote":"","connectives":["…"],"links_to_question":true|false},"eval2":{"present":true|false,"quote":""},"data":{"worked_figures":<number>,"example":"","calculation_shown":true|false|null},"conclusion":{"overall":true|false,"although_weight":true|false,"depends_on":true|false,"therefore_question":true|false,"quotes":{"overall":"","although_weight":"","depends_on":"","therefore_question":""}}},"mark":<0-15>,"level":"Level 5"|"Level 4"|"Level 3"|"Level 2"|"Level 1"|"0","endpoint":"what the question asks the student to decide","chain_option_1":"step → step → ENDPOINT","chain_option_2":"step → step → ENDPOINT","judgement_quality":"WEIGHTED|SUPPORTED|ASSERTION|NONE","sophisticated_concepts":["any models or theories used well"],"segments":[{"text":"exact text","ao":"AO1|AO2|AO3|AO4|NONE","quality":"GOOD|WEAK","annotation":"margin note"}],"positive":"2-3 sentences feedback TO the student using you","blocker":"1-2 sentences — the single most important thing stopping a higher level","blocker_heading":"short heading","improve":"2-3 sentences specific advice on HOW to upgrade","ao1_diagnostic":"short phrase","ao2_diagnostic":"short phrase","ao3_diagnostic":"short phrase","ao4_diagnostic":"short phrase","rewrite_original":"weakest 1-2 sentences quoted exactly","rewrite_improved":"how those sentences could read"`;
+
+const SYS15_QUAL=`You are a senior AQA A-Level Business (7138) examiner marking a 15-mark "Evaluate" question (non-quantitative).
+
+MARKING RULES — follow every one of these exactly.
+
+FRAMEWORK
+1. This is a 15-mark Evaluate question: AO1=3, AO2=3, AO3=4, AO4=5. Evaluation is the biggest AO and is what moves an answer up the levels.
+2. Mark holistically using best fit. Never mechanically add four AO sub-scores.
+3. Read the complete answer before deciding anything.
+
+QUESTION DECODE
+4. Identify the type of question. PROBLEM-SOLVING: the student chooses two ways (for example "Evaluate two ways Netflix could increase motivation"). DECISION-MAKING: the student is given two options (for example "Region A or Region B"). In both, the student must evaluate two options and recommend one.
+5. Identify the END POINT the recommendation must answer (for example increasing motivation, the better supplier, reducing risk).
+
+CHOOSING THE OPTIONS (problem-solving questions)
+6. Accept any relevant ways. Choosing ways that fit THIS business is part of application: an option that clearly does not suit the business (for example friends and family finance for a business valued at over $1 billion) weakens AO2 even if it is explained well.
+7. Two genuinely different options are needed. If the "two" options are really the same idea, treat it as one option.
+
+AQA CHECKS — fill these fields accurately. The page enforces caps from them, so be accurate in both directions.
+- "both_options_analysed": true only if BOTH options have a developed chain of reasoning (not just a sentence each). AQA's Level 4 requires "analysis of both options".
+- "recommendation_quote": the student's own words recommending one option. Empty if there is no recommendation.
+- "weighing_quote": the student's own words that compare the two options and say why one is better (for example "Although…, training carries greater weight because…"). A conclusion that only restates the points for each option is NOT weighing. Empty if none.
+- "priorities_quote": the student's own words that tie the recommendation to this business's particular situation or priorities (for example its fast-fashion model, its cash position, its creative staff, short-term vs long-term needs). AQA's Level 5 guidance expects the judgement to consider "the highest priority to the business given the context". Empty if none.
+
+AO1 — KNOWLEDGE (3 marks)
+8. Knowledge must be accurate and relevant. A textbook definition is NOT required; knowledge can show through the argument.
+
+AO2 — APPLICATION (3 marks)
+9. Application must drive the reasoning. Inserting the business name or copying a fact is not effective application. The test: could you remove the business name and the argument still works identically? If yes, application is weak.
+10. Level 4 and 5 need application THROUGHOUT the answer, in both options and in the judgement.
+11. Case data used inside the reasoning (worked out or compared, such as "26% higher" or "twice the industry average") is strong application.
+
+AO3 — ANALYSIS (4 marks)
+12. Analysis means logical chains with no material missing links, each reaching the end point of the question. A chain that stops short (for example at "sales" when the question is about profit or market share) is incomplete.
+13. Level 5 needs "well-developed, logical chains of reasoning of both options". Level 4 needs "logical, developed, relevant chains for both options". Level 3 needs only "some" developed chains.
+14. Sophisticated concepts (relevant theories, models or frameworks such as Ansoff, Porter's Five Forces, the Boston Matrix, PED, break-even, Maslow, Herzberg) are a typical feature of Level 5 when used to move the analysis on. They are rewarded but NEVER required: a Level 5 answer can have none. Name-dropping a model earns nothing.
+
+AO4 — EVALUATION (5 marks)
+15. Evaluation must weigh up BOTH options. Level 5: "well supported, weighs up both options, provides a coherent overarching judgement and fully addresses the question". Level 4: "supported, has some balance… and has a focus on the question". Level 3: "has some support but may lack balance… not fully focused on the question".
+16. Top-level answers show evaluative thinking throughout, not just at the end: limits, conditions, risks and challenges to the data after each option.
+17. A conditional judgement ("it depends on…") is valuable when the condition is specific and explained. "It depends on lots of factors" is worthless.
+18. Challenging assumptions is credited: questioning how reliable the data is, what it leaves out, or how the external environment could change it.
+19. A conclusion that summarises both options without deciding between them is NOT weighing.
+
+POSITIVE MARKING
+20. Do not reward length, paragraph count or number of points. Credit any valid business argument even if it differs from published indicative content.
+21. Mark positively. Do not pick holes in insignificant weaknesses.
+22. No compulsory structure. AQA does not require a particular order. The Nishkam structure check below is feedback only and must NOT change the mark.
+23. Qualified language ("may", "could", "if") is legitimate business reasoning.
+
+LEVEL DETERMINATION (AQA 7138 15-mark grid)
+24. Level 1 (1–3): weak response, basic application, lack of relevant analysis, evaluation based on assertion.
+25. Level 2 (4–6): limited response, some basic relevant chains, evaluation with limited support. Much of the answer may be generic. (AQA's Level 2 example made basic for-and-against points for each option with little use of the context.)
+26. Level 3 (7–9): reasonable response, some developed chains, evaluation with some support but may lack balance and not be fully focused on the question. (AQA's Level 3 example developed both options but its judgement had limited support and balance.)
+27. Level 4 (10–12): good response, application throughout, developed chains for both options, supported evaluation with some balance and focus on the question. (AQA's Level 4 example had a judgement with some balance but not fully supported.)
+28. Level 5 (13–15): excellent response fully focused on the question. Application throughout, well-developed chains for both options, evaluation that weighs both options and reaches a coherent overarching judgement tied to the business's priorities. The key difference from Level 4 is the quality of the analysis and evaluation, including the overall judgement.
+29. Within a level, the lowest mark means the level is only just reached, the top mark means it is secure. Award 15 when every Level 5 quality is securely there: full marks are achievable and must be given when earned.
+
+CAPS — obey only these (the page also enforces them):
+30. Only one option analysed (both_options_analysed false) = maximum 9.
+31. No recommendation = maximum 9.
+32. A recommendation that does not weigh one option against the other = maximum 12.
+33. A judgement not tied to this business's situation or priorities = maximum 12.
+34. AO1 only = maximum 3. Do NOT invent any other caps.
+
+ANALYSIS DISCIPLINE
+35. Do not reward connective words unless genuine causal reasoning follows them.
+36. NEVER supply missing reasoning on the student's behalf.
+37. But do not demand microscopic links where the reasoning is already clear to a reasonable reader.
+
+ZERO MARKS
+38. Award 0 if the response is blank, irrelevant, a restatement of the question, or shows no relevant knowledge at all. Do not award 1 mark "for the sake of it".
+
+${SHARED_STRUCTURE}
+
+${SHARED_TAIL}
+
+YOUR RESPONSE MUST BE ONLY A SINGLE JSON OBJECT. No text before or after it. No markdown fences. If the answer is a photo, read the handwriting first. Start your response with the { character.
+{"qtype":"non-quantitative",${JSON_COMMON}}`;
+
+const SYS15_QUANT=`You are a senior AQA A-Level Business (7138) examiner marking a 15-mark "Evaluate" question with a quantitative focus.
+
+MARKING RULES — follow every one of these exactly.
+
+FRAMEWORK
+1. This is a 15-mark quantitative Evaluate question: AO1=3, AO2=3, AO3=4, AO4=5.
+2. 6 of the 15 marks are for quantitative skills:
+   - AO1 (2): knowing the formula and selecting the right figures
+   - AO2 (2): performing the calculation correctly
+   - AO3 (1): interpreting the result and using it in an argument
+   - AO4 (1): using the result to support the judgement
+3. The other 9 marks (AO1=1, AO2=1, AO3=3, AO4=4) are for further qualitative analysis and evaluation.
+4. AQA's typical AO profile by level: Level 5 = AO1 3, AO2 3, AO3 4, AO4 5; Level 4 = 3, 3, 3, 3; Level 3 = 3, 2, 2, 2; Level 2 = 2, 2, 1, 1; Level 1 = 2, 1, 0, 0. Use this as a guide to best fit, never as a points total.
+5. Mark holistically. Read the complete answer before deciding.
+
+QUESTION DECODE
+6. Identify the CALCULATION required, the TWO OPTIONS being evaluated, and the END POINT the recommendation must answer.
+
+CALCULATION
+7. Formula + correct figures + correct arithmetic = AO1 and AO2 for the calculation.
+8. Correct figures but an arithmetic slip, or wrong units: AO1 stands, the calculation is inaccurate, and the own figure rule applies.
+9. Wrong figures selected, or the wrong formula (for example a ratio upside down): the calculation is not creditworthy and the own figure rule does not apply.
+10. OWN FIGURE RULE: if the student interprets and uses their own (wrong) figure correctly, credit that analysis and evaluation in full. Do not cascade errors. The overall mark will be lower than for a correct calculation used in the same way, but Level 4 is still possible. (AQA placed an answer with an incorrect capacity utilisation figure at low Level 4.)
+11. "calculation_attempted": false if there is no attempt at the required calculation.
+12. "calculation_used": true only if the student uses the figure (their own or the correct one) in their analysis AND/OR their judgement. A figure written down and then ignored is not used.
+13. AQA: "Responses that do not make use of the calculations cannot be awarded above 9 marks (low Level 4)." This is an explicit demand of the question. (AQA placed an otherwise strong answer with no calculation in Level 3.)
+14. A correct calculation with no relevant analysis or evaluation from it belongs at the bottom of Level 2. A correct calculation used for only one factor, with no other factors considered, is Level 2. (AQA placed such an answer in Level 2.)
+
+AQA CHECKS — fill these fields accurately. The page enforces caps from them, so be accurate in both directions.
+- "both_options_analysed": true only if BOTH options have a developed chain of reasoning.
+- "recommendation_quote": the student's own words recommending one option. Empty if none.
+- "weighing_quote": the student's own words that compare the two options and say why one is better. A summary of each option is NOT weighing. Empty if none.
+- "priorities_quote": the student's own words tying the recommendation to this business's situation or priorities (for example short-term vs long-term returns, its growth plans, its cost model). Empty if none.
+
+ANALYSIS AND EVALUATION
+15. Level 5: correct calculation with effective analysis from it, analysis of the OTHER information in the case, and a well-supported recommendation that considers the business's priorities and uses the calculation.
+16. Level 4: correct calculation with effective analysis; other information analysed effectively but perhaps not fully used in the recommendation; a judgement that weighs the two options but without the clear focus on the business's priorities seen at Level 5.
+17. Level 3: calculation may be wrong (own figure rule) with relevant chains from it, or correct with less developed analysis; some imbalance between options; judgement with some justification and some reference to the calculation.
+18. Level 2: a calculation attempted with at least partial knowledge (formula or figures); basic analysis; incomplete chains; context has lower consideration.
+19. Level 1: incorrect calculation with no relevant analysis; judgements are assertions not derived from the numbers or the context.
+20. Reward comparison of the figure with other case data (the other option's figure, an industry average, a target). Reward challenge of the data (what it leaves out, how reliable it is, how things could change).
+21. Sophisticated concepts (for example Porter's Five Forces, economies of scale, PED, ESG) are typical of Level 5 when used to move the analysis on. Rewarded, never required.
+
+AO2, AO3, AO4 PRINCIPLES
+22. Application must drive the reasoning; inserting the business name is not enough. Worked or compared figures are strong application.
+23. Chains must reach the end point of the question.
+24. A conclusion that summarises both options without deciding between them is not weighing. A conditional judgement is valuable only when the condition is specific.
+
+POSITIVE MARKING
+25. Mark positively. Credit any valid argument. Do not reward length.
+26. No compulsory structure. The Nishkam structure check below is feedback only and must NOT change the mark.
+
+LEVELS
+27. Level 1 (1–3), Level 2 (4–6), Level 3 (7–9), Level 4 (10–12), Level 5 (13–15). Within a level the lowest mark means only just reached and the top mark means secure. Award 15 when every Level 5 quality is securely there.
+
+CAPS — obey only these (the page also enforces them):
+28. Calculation not attempted, or not used in the analysis or judgement = maximum 9.
+29. Only one option analysed = maximum 9.
+30. No recommendation = maximum 9.
+31. A recommendation that does not weigh one option against the other = maximum 12.
+32. A judgement not tied to the business's situation or priorities = maximum 12.
+33. Do NOT invent any other caps.
+
+ANALYSIS DISCIPLINE
+34. Do not reward connective words unless genuine causal reasoning follows them. Never supply missing reasoning for the student. Do not demand microscopic links where the reasoning is already clear.
+
+ZERO MARKS
+35. Award 0 if the response is blank, irrelevant, a restatement of the question, or shows no relevant knowledge at all.
+
+${SHARED_STRUCTURE}
+
+${SHARED_TAIL}
+
+YOUR RESPONSE MUST BE ONLY A SINGLE JSON OBJECT. No text before or after it. No markdown fences. If the answer is a photo, read the handwriting first. Start your response with the { character.
+{"qtype":"quantitative","calculation_attempted":true|false,"calculation_correct":true|false,"own_figure_applied":true|false,"calculation_used":true|false,"calc_comment":"brief note on the calculation",${JSON_COMMON}}`;
+
+/* ═══════════════════════════════════════════
+   CASE STUDY + QUESTION BANK
+   ═══════════════════════════════════════════ */
+const CASES=[
+{"id": "gymshark", "paper": 1, "title": "Gymshark Ltd", "desc": "A fast-growing gymwear brand built on social media and influencers.", "tags": ["Sources of finance", "Growth", "Ownership", "Risk"], "ctx": "Source A: Gymshark Ltd.\n\nBen Francis was 19 when he asked his parents if he could use their garage to start making gym clothes he had designed. Whilst studying business at university, Ben teamed up with a school friend, and the gymwear business Gymshark Ltd was born. Ben used his £5-an-hour wage at Pizza Hut and £1000 savings to invest in equipment like a sewing machine. Ben taught himself to sew and went to bodybuilding events to raise brand awareness. In 2012, Ben dropped out of university to focus on the business full-time.\n\nThe Gymshark Ltd brand has become a hit with younger gym goers and is doing well in a highly competitive market. Its competitors include Nike, Adidas and Puma. Instead of using traditional advertising or selling in high street shops, Gymshark Ltd has grown by having athletes and social media ‘influencers’ wear its clothes on platforms like Instagram, TikTok, and Facebook. Ben is also well known and still shares his own fitness videos online to promote the brand. The company now has 18 million followers on social media.\n\nGymshark Ltd is a private limited company. In 2021, it raised £200 million by selling shares to a company called General Atlantic. This made Gymshark Ltd one of relatively few British businesses valued at over $1 billion. Ben still owns a 70% stake in the company and has a clear vision of how he wants the business to develop. General Atlantic owns just over 20%. Managers at Gymshark Ltd own 10%. The funds were raised with the aim of expanding the business in North America, where Gymshark Ltd already makes a large part of its sales, and to grow the business rapidly in Asia. Ben has ambitious plans and wants to make the Gymshark Ltd brand the UK equivalent of Nike. The Nike brand was worth $31 billion in 2023 globally; market research suggests that 43% of people who buy Nike sportswear would do so again.\n\nIn October 2022, Gymshark Ltd made a significant investment and opened its first physical store on Regent Street in London.\n\nAppendix A: Extracts from Gymshark Group Ltd's statement of financial position as at July 2024 (£000)\nNon-current assets: 159 077\nInventory: 74 210\nReceivables: 13 497\nCash: 54 676\nPayables due within a year: 191 478\nOther current liabilities: 586\nNon-current liabilities: 102 920\nSource: Companies House\n\nAppendix B: UK clothing industry fictional financial information\nIndustry average current ratio = 1.4\nSource: Analyst\n\nAppendix C: Social networks by number of monthly active users globally, 2024\nFacebook: 3.0 billion users; age range with the highest proportion of users 25–34\nInstagram: 2.0 billion users; 25–34\nTikTok: 1.6 billion users; 18–24\nSource: Statista, 2024\n\nFrom the AQA A-level Business (7138) sample assessment materials.", "qs": [{"q": "Ben Francis has ambitious plans for Gymshark Ltd.\nEvaluate two sources of external finance that Ben could use to fund these plans and recommend which one he should choose.", "src": "AQA Paper 1 SAM", "quant": false}]},
+{"id": "apple", "paper": 1, "title": "Apple’s Vision Pro", "desc": "Apple’s high-price virtual reality headset, launched against strong competition from Meta.", "tags": ["ROI", "Market size", "YED", "Decision-making"], "ctx": "Source B: Apple’s Vision Pro\n\nIn September 2023, Apple launched the Vision Pro in North America. Vision Pro is a virtual reality (VR) headset. Unlike rival headsets which require hand-held controllers, Vision Pro is controlled by hand movements, voice commands and eye tracking. Analysts estimated over $8 billion had been spent developing Vision Pro over five years.\n\nThe Vision Pro may turn out to be one of Apple’s lowest-selling products. Apple reportedly hoped to sell 3 million units in the first year. Some experts expected sales would be below 200,000 units in this period – lower than any of Apple’s other major product launches. Others were more optimistic about Vision Pro’s long-term sales. Apple set a high price of $3499. This price was three times more expensive than Meta’s competing headset, the Quest. Other issues with the product included a battery that lasted only two-hours and a headset that some users said was awkward to wear.\n\nApple was keen to release the Vision Pro because of strong competition, especially from Meta. Meta had been selling the Quest at a loss to increase its market share.\n\nSteve Jobs, Apple’s founder, once said that customers do not know what they want until Apple makes it.\n\nOver 2 billion Apple devices are in use around the world. Apple also has:\n• a huge database of information about current users of its products.\n• a wide product portfolio including iPads, Mac computers, iPods, Apple TV, and the Apple watch.\n• a trusted brand. In a 2021 survey, three times as many people said they would buy a headset from Apple compared to its closest competitor.\n\nIn 2023, Apple increased its dividend payments to about 15% of its yearly profits.\nSource: Apple, 2024\n\nAppendix D: Selected financial data for Apple in 2021 and 2023 ($ millions)\nSales: 2021 365 817; 2023 394 328\nOperating profit: 2021 108 949; 2023 125 344\nInvestment in new product development: 2021 21 914; 2023 29 915\nSource: Apple, 2024\n\nAppendix E: Apple share price\n30 September 2021: $142.65\n29 September 2023: $171.21\nSource: Apple\n\nAppendix F: Apple sales by product, 2003–2023 (a line chart in the insert; the main points are summarised here)\niPhone sales rose from almost nothing in 2007 to about $120 billion by 2014 and about $220 billion by 2023. Mac, iPad and Accessories (Watches and AirPods) each stayed below about $35 billion a year. iPod sales fell to zero.\nSource: Apple\n\nAppendix G: Fictional market and financial data for launching Vision Pro in Region A and Region B\nInitial investment into the market ($ million): Region A 1 200; Region B 3 000\nMarket size 2025 ($ million): Region A 7 000; Region B 15 000\nMarket share (%): Region A –; Region B 10\nSales ($ million): Region A –; Region B 1 500\nReturn on investment into the market in 2025 (%): Region A 14; Region B ?\nIncome elasticity of demand: Region A inelastic; Region B elastic\nForecast average annual income growth 2025–2030 (%): Region A 2; Region B 4\nOperating profit margin (%): Region A –; Region B 22\n\nFrom the AQA A-level Business (7138) sample assessment materials.", "qs": [{"q": "Appendix G shows market and financial data for launching the Vision Pro in two regions.\nEvaluate whether Apple should launch the Vision Pro in Region A or Region B.\nCalculate the return on investment in Region B in 2025 to support your answer.", "src": "AQA Paper 1 SAM", "quant": true}]},
+{"id": "greggs", "paper": 1, "title": "Greggs plc", "desc": "The UK value bakery chain, growing through new shops while profit comes under pressure.", "tags": ["Ansoff", "PED", "Distribution", "Loyalty apps"], "ctx": "Source A: Greggs plc\n\nIn late May 2026, passengers flying home from Tenerife South Airport found something familiar next to passport control: a Greggs. The shop, run in partnership with the airport retailer Lagardère Travel Retail, sells sausage rolls and steak bakes alongside a Spanish omelette roll, fresh orange juice and draught beer. It is Greggs' only shop outside the UK. Chief executive Roisin Currie described it as a way to \"test spreading our wings\" overseas.\n\nGreggs has been here before. It ran a small chain of shops in Belgium, but the business made losses and was closed in 2008.\n\nAt home, Greggs is one of the best-known food-to-go brands in the UK and employs over 30,000 people. It positions itself on value, and YouGov tracking shows customers have rated it ahead of the wider fast food and coffee sector on value for three years running. Competitors include McDonald's, Pret A Manger, Costa, Subway and the meal deals sold by supermarkets.\n\nMost of Greggs' recent growth has come from opening shops. It opened 207 new shops in 2025 and closed 86, many of them relocations to better sites. It now has around 2,770 shops and believes there is room for \"significantly more than 3,000\" in the UK. Newer shops are increasingly in train stations, airports, retail parks and drive-thrus rather than traditional high streets. In 2025 it also trialled 'Bitesize Greggs', a much smaller shop for busy sites with little space.\n\nThe business is also trying to persuade existing customers to visit more often. The Greggs App gives one free item for every nine stamps and is now scanned in almost a third of transactions in company-managed shops. Evening trade, helped by pizza, wedges and later opening hours, is its fastest-growing part of the day. New products such as the chicken sausage roll and a salad range were credited with improving sales in 2026.\n\nHowever, 2025 was a difficult year. Consumer confidence was weak, the number of visits to food-to-go outlets fell, and costs rose sharply, including wages and the cost of two new distribution centres in Derby and Kettering. Although sales rose, profit fell and Greggs' share price fell by close to two-fifths during the year. The company has reduced its target for new shop openings in 2026 to between 100 and 110.\n\nAppendix A: Selected data for Greggs plc (2024; 2025)\nTotal sales (£ million): 2,014; 2,151\nUnderlying operating profit (£ million): 195.3; 187.5\nLike-for-like sales growth in company-managed shops (%): 5.5; 2.4\nNumber of shops at year end: 2,618; 2,739\nNet cash at year end (£ million): 125; 47\nEvening sales as % of company-managed shop sales: 9.0; 9.4\nApp scanned as % of company-managed shop transactions: 20.1; 26.7\nLike-for-like sales compare shops that were open for the whole of both years. App use reached 31% in the first half of 2026.\n\nAppendix B: The UK food-to-go market, 12 months to June 2026\nChange in total visits to food-to-go outlets: −1.9%\nGreggs' share of food-to-go visits: 8.7% (up 0.3 percentage points)\n\nAppendix C: Tenerife South Airport\nPassengers in 2025: just over 14 million\nPassengers travelling to or from the UK: about 5.5 million\nSeats in the Greggs shop: 92\n\nSources: Greggs plc results and trading updates 2025–26; Circana; Lagardère Travel Retail.", "qs": [{"q": "Greggs wants to increase its sales revenue.\nEvaluate two ways Greggs could increase its sales revenue and recommend which one it should choose.", "src": "Nishkam exam-style question", "quant": false}]},
+{"id": "primark", "paper": 1, "title": "Primark", "desc": "The value fashion retailer facing falling sales in Europe and rapid growth in the US.", "tags": ["PED", "Porter's five forces", "Boston Matrix", "Market share"], "ctx": "Primark\n\nIn September 2026, Primark reported that its new store in Manhattan was trading \"exceptionally well\". Six more American stores had opened in the previous three months, taking the total in the US to 47. Sales in the US were growing at around 12% a year, faster than anywhere else in the business.\n\nThe rest of the news was less positive. Primark, which started as a single shop in Dublin in 1969 and still trades as Penneys in Ireland, is owned by Associated British Foods (ABF). For the second year running, its like-for-like sales were falling. The problem was worst in continental Europe, where like-for-like sales fell by around 5.7% in the 16 weeks to January 2026 as consumer confidence stayed weak. Primark had to discount heavily to clear stock, and its profit margin fell.\n\nPrimark's business model is built on low prices and high volumes. It buys in huge quantities, keeps its stores simple and has traditionally spent very little on advertising. It does not offer home delivery, because the cost of picking, packing and delivering low-priced clothes would wipe out its profit on many orders. Instead, it offers Click + Collect, which is now available in all of its British stores, and in 2026 it launched a mobile app and its first TV advertising campaigns. Visits to its website rose by 37% in the first half of 2026.\n\nCompetition has changed. Online businesses such as SHEIN and Temu sell clothes at prices that are often as low as, or lower than, Primark's, and deliver straight to the customer's door. High street rivals including H&M and Zara are also fighting for the same customers. In response, Primark has started cutting prices, improving its stores and spending more on digital marketing in Spain, France and Italy.\n\nThe US is a very different challenge. It accounted for only 5% of Primark's sales in 2024, and many American shoppers have never heard of it. Its large stores are mostly in shopping malls on the east coast, though it has recently opened in states such as Texas and Tennessee. Management has described US consumers as \"volatile\", with footfall rising and falling sharply.\n\nAll of this matters more than usual because ABF plans to separate Primark from the rest of the group and list it as its own company by the end of 2027. Investors will be watching closely to see whether Primark can return to growth.\n\nAppendix A: Selected data for Primark (years end in September) (2024; 2025; 2026 expected)\nTotal sales (£ billion): 9.4; 9.5; about 9.7\nTotal sales growth (%): 6; 1; about 2\nLike-for-like sales growth (%): 1.2; −2.3; about −2.6\nAdjusted operating profit margin (%): 11.7; 11.9; about 10\n\nAppendix B: Share of Primark's sales by market, 2024 (%)\nUK and Ireland 47; Spain and Portugal 17; France and Italy 16; Rest of Europe 15; United States 5\n\nAppendix C (fictional): Price trial on 300 everyday lines in 20 Spanish stores (before trial; during trial)\nAverage selling price per item (€): 10.00; 9.00\nAverage items sold per week: 50,000; 57,000\nAverage cost per item (€): 5.00; 5.00\n\nAppendix D (fictional): Estimated costs of a home delivery service in Spain, France and Italy\nSet-up cost (website, warehouse, systems): €40 million\nAverage value of an online order: €28.00\nAverage cost of picking, packing and delivering one order: €6.50\nExpected share of online orders returned: 25%\n\nAppendix E (fictional): Survey of clothing shoppers, 2026 (UK; US)\nHave heard of Primark (%): 94; 28\nHave shopped at Primark in the last year (%): 61; 9\n\nSources: Associated British Foods results and trading updates 2024–26; Retail Week. Appendices C, D and E contain fictional data.", "qs": [{"q": "Primark wants to stop the fall in its like-for-like sales in continental Europe. It is considering two options:\nOption A: cut prices by 10% on 300 everyday lines in its stores in Spain, France and Italy.\nOption B: launch a home delivery service in Spain, France and Italy.\nEvaluate both options and recommend which one Primark should choose.\nCalculate the price elasticity of demand for the lines in the price trial (Appendix C) to support your answer.", "src": "Nishkam exam-style question", "quant": true}, {"q": "Primark sees the US as its biggest opportunity for growth.\nEvaluate two ways Primark could increase its market share in the US and recommend which one it should choose.", "src": "Nishkam exam-style question", "quant": false}]},
+{"id": "ironbridge", "paper": 1, "title": "Ironbridge Brewing Co.", "desc": "A craft brewery seeking finance to expand into supermarket distribution.", "tags": ["Sources of finance", "Break-even", "Cash flow", "Start-ups"], "ctx": "Ironbridge Brewing Co. is a craft brewery based in Shropshire. It was founded three years ago by two friends, Priya and Tom, who invested £40,000 of their own savings. The business is a private limited company.\n\nThe brewery produces four core beers and two seasonal specials. It sells directly to local pubs and restaurants, and through its own taproom which opens at weekends. Revenue has grown from £95,000 in Year 1 to £210,000 in Year 3. However, the business has not yet made an annual profit. Fixed costs are high because the brewery rents industrial premises and purchased specialist brewing equipment using a £60,000 bank loan.\n\nVariable costs per unit are approximately £1.80 and the average selling price per unit is £3.40. The brewery currently produces around 85,000 units per year but has capacity for 140,000 units.\n\nPriya and Tom want to start selling through supermarkets, which would require significant investment in bottling equipment (approximately £90,000) and working capital to cover the 60-day payment terms that supermarkets typically demand. They are considering a business angel, a further bank loan, or a crowdfunding campaign.\n\nThe craft beer market in the UK is worth approximately £1.2 billion. However, growth has slowed and competition from larger breweries launching their own craft ranges has intensified. Ironbridge’s taproom has built a loyal local following and the brewery has 8,500 followers on Instagram.", "qs": [{"q": "Priya and Tom need finance to start selling through supermarkets.\nEvaluate two sources of finance they could use and recommend which one they should choose.", "src": "Nishkam exam-style question", "quant": false}]},
+{"id": "glowhaus", "paper": 1, "title": "GlowHaus", "desc": "An online beauty brand using social media and data analytics to drive sales.", "tags": ["Digital marketing", "PED", "Brand loyalty", "Data analytics"], "ctx": "GlowHaus is an online beauty brand that sells skincare and cosmetics directly to consumers through its website and app. It was founded in 2020 by Amara Chen and is a private limited company.\n\nThe brand targets 18–30 year olds and has built a strong social media presence, with 2.4 million followers on TikTok and 1.1 million on Instagram. GlowHaus uses influencer partnerships, short-form video content and user-generated reviews as its main marketing tools. It spends nothing on traditional advertising.\n\nRevenue was £6.2 million in the most recent year. The average order value is £28. Approximately 42% of sales come from repeat customers. GlowHaus tracks detailed data including click-through rates, conversion rates, and customer acquisition cost. Its customer acquisition cost is currently £11 per new customer, which Amara considers too high.\n\nThe skincare market is highly competitive with strong brands such as The Ordinary, CeraVe and Drunk Elephant. Many competitors have similar price points. GlowHaus’s most popular product, a vitamin C serum, is priced at £18 — similar to The Ordinary’s equivalent at £12 but significantly cheaper than Drunk Elephant’s at £62.\n\nGlowHaus has recently introduced dynamic pricing on its website, adjusting prices based on demand data. It has also started using AI-powered personalisation to recommend products based on individual browsing and purchasing history.", "qs": [{"q": "Amara thinks GlowHaus’s customer acquisition cost is too high.\nEvaluate two ways GlowHaus could reduce its customer acquisition cost and recommend which one it should choose.", "src": "Nishkam exam-style question", "quant": false}]},
+{"id": "shein", "paper": 2, "title": "SHEIN", "desc": "An online fast-fashion retailer with a lean production model and a new focus on sustainability.", "tags": ["Capacity utilisation", "Suppliers", "Sustainability", "Decision-making"], "ctx": "Source A: SHEIN\n\nSHEIN is an online fashion retailer. It has nearly 10 000 employees, sells in over 150 countries and operates in over 20 languages.\n\nSHEIN’s annual revenue target for 2025 is $58.5 billion, up from $22.7 billion in 2022. That would exceed the existing combined sales of its main competitors, H&M and Zara.\n\nThe average price of an item sold by SHEIN is just £7.90. The company’s website has over 600 000 items on sale. It adds 6 000 new items each day.\n\nSHEIN has a lean production model. It only produces 100 to 200 pieces of any item when launched and responds with increased production only if demand justifies it. The company uses computer models to try and estimate future sales accurately and match production to demand more closely than its competitors. Through its on-demand production, SHEIN is able to consistently limit the amount of excess inventory to a level that is much lower than traditional retailers.\n\nThe company supports its suppliers with training and investment in advanced technology. SHEIN ships orders to its customers directly, mostly from one huge warehouse near Guangzhou in China. This means that deliveries to customers around the world are slower than those of some competitors who have warehouses in different countries.\n\nThe fast fashion business model that SHEIN adopts has been widely criticised. It has been suggested that 8% of global carbon emissions are produced by the fashion industry. Fast fashion businesses are also criticised for encouraging consumers to replace, rather than repair or reuse clothing. Fast fashion allows customers to buy cheap products which they then discard, before quickly buying something new. There have also been criticisms of conditions in some of SHEIN’s suppliers’ factories in China.\n\nSHEIN has now decided to focus more on environmental sustainability. It states, “Our operations are guided by a sustainability mindset tackling waste and circularity at every stage”. The company aims to optimise the efficiency of its processes to conserve water, energy and raw materials while minimising waste. In September 2022, as part of its sustainability approach, SHEIN committed to reducing absolute (total) greenhouse gas emissions by 25% by 2030, when those of the industry are predicted to rise by 45% by 2030.\n\nSHEIN has strict quality standards. Its approach includes a quality-check process where products are examined when they arrive at the warehouse. Factors tested include tear-strength and whether the colour of an item will fade when washed. Departments within the business are treated as if they are customers as part of its quality assurance approach.\n\nSHEIN’s values for employees include being good team-players who work well in a collaborative environment.\n\nIf SHEIN was seeking to launch a new range of clothing in 2026, it might consider two new suppliers: Xpress and Reliont. Appendix A shows information on these suppliers. The expected orders for the product in the first year would total 2.4 million units.\nSource: Shein, 2024\n\nAppendix A: Fictional information on two potential suppliers\nLocation: Xpress Jiangsu, China; Reliont Braga, Portugal\nTotal annual current production before SHEIN order (million units): Xpress 12; Reliont 36\nLead time (days): Xpress 9; Reliont 15\nProportion of items produced with defects: Xpress 2.43%; Reliont 1.25%\nAnnual maximum possible output (million units): Xpress 15; Reliont 50\nTotal annual CO2 emissions from manufacturing (kg): Xpress 50 000; Reliont 65 000\nCurrent number of customers before SHEIN order: Xpress 10; Reliont 2\nPayment terms (days): Xpress 15; Reliont 30\n\nFrom the AQA A-level Business (7138) sample assessment materials.", "qs": [{"q": "If SHEIN is seeking to launch a new range of clothing in 2026, it might consider two new suppliers: Xpress and Reliont.\nEvaluate both suppliers and recommend which one would be the better choice to produce the new range for SHEIN.\nCalculate Xpress’ expected capacity utilisation to support your answer.", "src": "AQA Paper 2 SAM", "quant": true}]},
+{"id": "netflix", "paper": 2, "title": "Netflix", "desc": "A global streaming service with a distinctive culture, planning a major new series.", "tags": ["Motivation", "Maslow", "Herzberg", "Culture"], "ctx": "Source B: Netflix\n\nNetflix is one of the world's leading entertainment services. It employs around 13 000 people. The company has over 430 million shares. It has never paid a dividend. It has more than 247 million paid memberships in over 190 countries. Members enjoy TV series, films and games across a wide variety of genres and in over 30 languages. Members can play, pause and resume watching Netflix’s content as much as they want: anytime and anywhere. Netflix’s competitors include Disney+, Amazon Prime, HBO and Paramount.\n\nThe use of advanced digital technology affects all aspects of Netflix’s operations. For example, it:\n• enables the smooth streaming of content\n• adjusts the quality of the video for the platform it is viewed on\n• enables the production of high-quality content\n• enhances users’ experience on the Netflix site through features such as efficient search functions and personalised recommendations of content.\n\nNetflix aims for diversity in its workforce. Its employees are paid top rates for what they do. Netflix claims it has a unique culture. Netflix’s leaders highlight the importance of collaboration and creativity. 3% of Netflix employees work remotely compared to a national average of 14%. There are very few rules at the business because Netflix trusts employees to make the right choices. Employees are empowered and given the freedom to decide what to do and delegation is high but, in return, must take responsibility for their actions. The company expects employees to be high performers and excellent team players. Underperformers are asked to leave. For every significant decision, Netflix identifies an “informed captain of the ship”. This person is an expert in their area and is responsible for listening to other people’s views and then making a judgment call on the right way forward.\n\nAppendix B shows a fictional network diagram with an example of a major new series that Netflix could launch.\n\nIn this example, if the series is released within 15 months, it will coincide with the peak viewing period, which could result in subscription revenue of approximately $350 million in the first year. A financial assistant has provided an estimate of how any delay might reduce this year’s income from subscriptions. A production director has also suggested that additional resources could be allocated to the project if necessary. If the series is successful, it may continue to be shown in future years and could lead to the development of a second season.\nSource: information sourced from Netflix, 2024\n\nAppendix B: A fictional network diagram for potential development of a new series (activity durations in months; written out here from the diagram in the insert)\nA Planning and financing: 4 months. Starts the project.\nB Market research: 4 months. Follows A.\nC Scriptwriting: 3 months. Follows A.\nD Casting: 1 month. Follows B.\nE Filming: 4 months. Follows C and D.\nF Pre-release promotion: 2 months. Follows C and D.\nG Screen-testing: 3 months. Follows C and D.\nH Post-production: 2 months. Follows E, F and G.\nNode times (earliest start / latest finish): after A 4/4; after B 8/8; after C and D 9/9; after E, F and G 13/13; end 15/15.\n\nAppendix C: Projected fictional impact of delays to the series development project (expected impact on this year’s subscriptions revenue from this series)\nDelay of 1 month after the 15 month launch target: –10%\n2 months: –20%\n3 months: –30%\n4 months: –45%\n5 months: –55%\n6 months: –70%\n\nAppendix D: Netflix share price 2019–2023 (a line chart in the insert; the main points are summarised here)\nThe share price rose from about $250–$300 in 2019 to a peak of almost $700 in late 2021, fell to below $200 in mid-2022, then recovered to about $400 by the end of 2023.\n\nFrom the AQA A-level Business (7138) sample assessment materials.", "qs": [{"q": "Evaluate two ways Netflix could increase employees’ motivation and recommend which one it should choose.", "src": "AQA Paper 2 SAM", "quant": false}]},
+{"id": "grandview", "paper": 2, "title": "Grandview Hotels", "desc": "A mid-range hotel chain facing high employee turnover and considering changes to motivation.", "tags": ["Motivation", "Employee turnover", "Training", "Leadership"], "ctx": "Grandview Hotels is a chain of 14 mid-range hotels across England and Wales. The business is a public limited company and employs approximately 1,800 staff, most of whom work in housekeeping, reception and food service roles.\n\nEmployee turnover across the chain is 34%, compared to an industry average of 28%. Exit interviews suggest the main reasons staff leave are low pay, limited career progression and inconsistent management. Staff in some hotels describe their managers as controlling and reluctant to delegate, while other hotels have managers who involve teams in decision-making.\n\nThe average hourly wage at Grandview is £11.50, which is the national minimum wage for workers aged 21 and over. Training for new staff consists of a two-day induction programme. There is no formal ongoing training or appraisal system.\n\nGrandview’s customer satisfaction scores have been declining. Online reviews frequently mention inconsistent service quality across different hotels. Revenue per available room has fallen by 6% over the past two years.\n\nThe new CEO has proposed introducing a formal training and development programme costing approximately £400,000 per year. She has also suggested piloting a more democratic leadership approach in three hotels to measure its impact on staff engagement and customer satisfaction scores.\n\nLabour costs currently represent 38% of revenue. The HR director is concerned that increasing training spend will further increase costs without a guaranteed return.", "qs": [{"q": "Evaluate two ways Grandview Hotels could reduce its employee turnover and recommend which one it should choose.", "src": "Nishkam exam-style question", "quant": false}]},
+{"id": "moorfield", "paper": 2, "title": "Moorfield Foods", "desc": "A ready-meal manufacturer operating at high capacity and considering lean production.", "tags": ["Capacity utilisation", "Lean production", "Quality", "Efficiency"], "ctx": "Moorfield Foods is a ready-meal manufacturer based in Yorkshire. It produces chilled meals for two major supermarket chains under their own-label brands. The business is a private limited company and employs 220 staff across a single factory.\n\nThe factory operates 18 hours per day, six days per week. Capacity utilisation is currently 91%. Revenue is £18.5 million and the operating profit margin is 4.2%, which is below the industry average of 6.1%.\n\nUnit costs have been rising due to increases in raw material prices and energy costs. Moorfield’s unit cost is £2.85, compared to a competitor average of £2.60. The factory produces approximately 6.5 million meals per year.\n\nWaste levels are higher than Moorfield would like. Approximately 7% of raw materials are wasted during production, compared to an industry benchmark of 4%. Defect rates are 3.2%, meaning that roughly 208,000 meals per year fail quality checks and are discarded. Quality control inspectors check meals at the end of the production line.\n\nThe operations director has proposed investing £1.2 million in lean production techniques, including kaizen groups, standardised processes and a move from quality control to quality assurance. He estimates this could reduce waste by 40% and defects by half within two years.\n\nSome production staff are resistant to the proposed changes. Many have worked at the factory for over 10 years and are comfortable with existing processes.", "qs": [{"q": "Moorfield Foods’ operating profit margin is below the industry average.\nEvaluate two ways Moorfield Foods could improve its operating profit margin and recommend which one it should choose.", "src": "Nishkam exam-style question", "quant": false}]},
+{"id": "finlay", "paper": 3, "title": "Finlay’s Farm Ltd", "desc": "A small organic dairy farm in Scotland considering a move into glamping.", "tags": ["Risk", "Succession planning", "Market research", "Strategy"], "ctx": "Source A: Finlay’s Farm Ltd\n\nFinlay’s Farm Ltd is a small family-owned farm in Scotland. It has a herd of 130 cows, and their milk is used to make:\n• Cheese. This is sold both online and through various retail stores.\n• Ice cream. This is sold through retailers.\n\nThe company’s founders are David and Wilma Finlay. They have built strong long-term relationships with its customers. There are two other employees. The dairy industry has been restructuring in recent years with bigger farms buying up smaller ones.\n\nThe company:\n• has high gearing but has also used crowdfunding to raise finance\n• receives government agricultural grants and subsidies\n• exports some of its products; although since the UK left the European Union exporting regulations have been complex.\n\nThe farm is organic. Organic farming aims to ensure that it uses processes that do not harm the environment, plant health or animal welfare. This is important to David and Wilma and its other employees. For example, the cows are fed an organic and natural diet as opposed to animal feed which has been genetically modified. The company aims to reduce energy use and greenhouse emissions and reduce the use of chemicals in farming as much as it can, even if this impacts on productivity. David and Wilma have been asked to speak at a number of environmental events and have been awarded an Outstanding Achievement award for their environmentally friendly practices.\n\nThe company has a good brand image and charges a premium price for its products. Its customers value its niche position in the market. It is said to be operating close to capacity. To increase scale, it would need to buy more cows and invest in new production facilities.\n\nThe farm has a small visitor centre which:\n• sells its products\n• offers food workshops such as ice cream making\n• organises visits for people who want to know more about organic farming and look around the farm.\n\nAnalysts say the key risks facing the company are:\n• changes in market conditions if customers become more price sensitive\n• the retirement of the founders\n• IT issues with its online sales business such as data theft.\n\nOne possible growth option for the business is to open a glamping campsite.\nSource: Information sourced from Finlay’s Farm Ltd\n\nAppendix A: Glamping\nGlamping is a form of camping for those who want more luxury than a traditional outdoor camping experience. It involves outdoor accommodation such as yurts, treehouses or eco-lodges (environmentally friendly huts). Glamping usually involves proper beds, electricity, private bathrooms and kitchen areas.\n• The UK glamping market had sales of approximately £350 million in 2023. It has been growing at an annual rate of around 12–15% in recent years.\n• Demand tends to be seasonal. Peak season: May to September.\n• Many glamping sites emphasise eco-friendly practices and sustainable tourism. They are often independently owned.\n\nAppendix B: Forecast (fictional) financial data for the first year if Finlay’s Farm Ltd decides to set up a glamping site\nCapacity: 8 eco-lodges\nForecast sales in first year: 120 rental weeks of eco-lodges\nForecast profit in first year: £36 000\nInitial investment: £90 000\nTarget profit for first year: £38 000\n\nFrom the AQA A-level Business (7138) sample assessment materials.", "qs": [{"q": "Finlay’s Farm Ltd faces many risks.\nEvaluate two ways the business could reduce the risks it faces and recommend which one Finlay’s Farm Ltd should implement first.", "src": "AQA Paper 3 SAM", "quant": false}]},
+{"id": "farmoor", "paper": 3, "title": "Farmoor Cycles", "desc": "A worker co-operative bicycle retailer with three shops and falling margins.", "tags": ["Performance", "Porter's five forces", "Co-operatives", "Synoptic"], "ctx": "Source B: Farmoor Cycles\n\nFarmoor Cycles is an independent bicycle retailer in the UK. It was established in Oxford in 2002 as a worker cooperative by a group of cycling enthusiasts. It now has two other shops in Birmingham and Manchester. The UK bicycle retail sector has a few large national chains that sell bikes, such as Halfords, Decathlon and Argos, as well as many small independent businesses. The entry threat to the industry is high.\n\nThe mission of Farmoor Cycles is to:\n• provide affordable bicycles for cyclists of all kinds\n• promote the benefits of cycling for cyclists of all kinds\n• build a fairer society through cooperative ownership.\n\nThe business states that ‘we have the passion, specialist expertise and links with the local community that customers want’.\n\nIt values:\n• democracy\n• honesty\n• openness\n• social responsibility\n• caring for others.\n\nThe business is considering investing in a new inventory management system (Appendix C) which has a forecast life span of 4 years. It usually aims for an average rate of return on its investments of at least 10%. The current rate of interest for taking out a bank loan is 8%.\n\nAppendix C: Investment in a new inventory management system (net inflows, £000)\nYear 0: (50)\nYear 1: (20)\nYear 2: 20\nYear 3: 40\nYear 4: 50\nSource: based on calculations of Farmoor Cycles’ Operations Manager using data provided by the supplier of the equipment\n\nAppendix D: Farmoor Cycles’ data (2023; 2024)\nRevenue: £1 904 000; £1 880 000\nMarketing spending (percentage of revenue): 5%; 4%\nNumber of employees: 30; 32\nEmployee costs as percentage of revenue: 25%; 27%\nOperating profit margins: 3%; 2%\nCashflow: £125 000; (£5 000)\nAverage spending per employee on training: £2 000; £750\nAverage time for customers to pay: 6 months; 6 months\nAverage payment time to suppliers: 4 weeks; 3 weeks\n\nAppendix E: Farmoor Cycles’ product information (proportion of inventory held in Farmoor Cycles’ shops; forecast average annual UK sales growth rate 2025–2028)\nRoad: 55%; –0.1%\nMountain: 30%; 2%\nE bikes: 15%; 8%\n\nAppendix F: Farmoor Cycles’ marketing data, 2024\nOnline sales as percentage of total sales: 15%\nStore sales as a percentage of total sales: 85%\nSpending on digital marketing as a percentage of revenue: 2%\nAverage cost per click-through from digital adverts to website: £7.80\nIndex of customer service rating (base year 2022=100): 82\n\nAppendix G: UK bicycle retail industry data\nAnnual growth of the UK bicycle retail market: 3%\nIndustry average marketing spending as percentage of revenue: 10%\nIndustry average employee costs as percentage of revenue: 18%\nOperating profit margins: 6%\nOnline sales as percentage of revenue: 40%\nSpending on digital marketing as a percentage of revenue: 4%\nAverage cost per click through from digital adverts to website: £2.50\nForecast annual growth in store sales (2024–2027): 2%\nForecast annual growth in digital sales (2024–2027): 12%\nReceivables days: 90 days\nPayables days: 30 days\n\nSource B is a fictional business.\n\nFrom the AQA A-level Business (7138) sample assessment materials.", "qs": [{"q": "Farmoor Cycles wants to improve the performance of the business.\nEvaluate two actions the business should take to improve its performance and recommend which one it should focus on first.\nUse information from the appendices to support your answer.", "src": "AQA Paper 3 SAM", "quant": false}]},
+{"id": "chapters", "paper": 3, "title": "Chapters Books", "desc": "A high-street bookshop chain facing intense online competition.", "tags": ["Competitive environment", "Porter's Five Forces", "Digital strategy", "Strategy"], "ctx": "Chapters Books is a chain of 22 independent bookshops across the UK. It has been trading for 18 years and is a private limited company. Revenue in the most recent year was £14.2 million, down from £16.8 million three years ago. Operating profit margin has fallen from 5.5% to 2.1%.\n\nThe UK book market is worth approximately £6.9 billion. Online sales now account for over 50% of all book purchases, with Amazon dominating with an estimated 40–50% market share. Supermarkets also sell bestsellers at heavily discounted prices.\n\nChapters differentiates itself through in-store events (author signings, reading groups, children’s storytimes), knowledgeable staff recommendations, and a curated selection. Customer loyalty is strong among existing customers — 61% of sales come from loyalty card holders.\n\nHowever, footfall in Chapters’ stores has declined by 18% over three years. Rent and rates account for 28% of operating costs. The company’s website allows customers to browse stock but not to purchase online. Chapters does not currently offer e-books.\n\nThe board is debating two strategic options: invest £800,000 in a full e-commerce platform and begin selling e-books and audiobooks, or focus resources on making physical stores more experiential by adding café areas and expanding events programmes. Some board members believe trying to compete with Amazon online is futile and that the future lies in making shops destinations.", "qs": [{"q": "Evaluate whether Chapters Books should invest in a full e-commerce platform or make its stores more experiential, and recommend which option it should choose.", "src": "Nishkam exam-style question", "quant": false}]},
+{"id": "peakfit", "paper": 3, "title": "PeakFit Gyms", "desc": "A gym chain weighing expansion against consolidation in an increasingly competitive market.", "tags": ["Strategic planning", "SWOT", "Growth", "Risk vs uncertainty"], "ctx": "PeakFit Gyms is a chain of eight gyms in the North of England. The business was founded 12 years ago and is a private limited company owned by two directors, Marcus and Aisha. Revenue is £9.4 million and operating profit margin is 11%.\n\nMembership stands at 18,500 across all sites. Average monthly membership fee is £42. Retention rate is 71%, meaning roughly 29% of members cancel each year. The fitness industry has grown but competition has intensified, particularly from budget gym chains such as PureGym and The Gym Group, which offer memberships from £15–£20 per month.\n\nPeakFit differentiates itself through personal training, group classes and a community atmosphere. Its Net Promoter Score is 62, which is well above the industry average of 38.\n\nA recent SWOT analysis identified the following:\nStrengths: strong brand locally, loyal customer base, well-trained staff.\nWeaknesses: higher prices than budget competitors, ageing equipment in three sites, no app or online booking system.\nOpportunities: growing demand for health and wellness, potential to open in two nearby towns with no PeakFit presence, corporate wellness partnerships.\nThreats: expansion of budget chains, rising energy costs (up 35% in two years), potential economic downturn reducing discretionary spending.\n\nMarcus wants to open two new gyms at a total cost of £2.4 million, financed by a bank loan. Aisha is concerned about the risk given economic uncertainty and suggests instead investing £600,000 in upgrading existing sites and developing a member app.", "qs": [{"q": "Evaluate whether PeakFit Gyms should open two new gyms or upgrade its existing sites and develop a member app, and recommend which option it should choose.", "src": "Nishkam exam-style question", "quant": false}]}
+];
+
+/* ═══ STATE ═══ */
+let hist=[];
+let uploadedImages=[];
+let lastFb=null,lastQ='',lastCtx='',lastQType='';
+let markStep='browse';
+let curCase=null,curQ=null,curQType='non-quantitative';
+const PL={1:'Paper 1 — Marketing & finance',2:'Paper 2 — People & operations',3:'Paper 3 — Strategy & change'};
+const PS={1:'Paper 1',2:'Paper 2',3:'Paper 3'};
+
+/* ═══ START ═══ */
+document.addEventListener('DOMContentLoaded',()=>{loadHist();renderMark();});
+function loadHist(){try{const r=localStorage.getItem('n15_history');if(r)hist=JSON.parse(r);updateProgress();}catch(e){}}
+function saveHist(){try{localStorage.setItem('n15_history',JSON.stringify(hist));}catch(e){}}
+
+/* ═══ MARK TAB — THREE-STEP RENDERER ═══ */
+function renderMark(){
+  const mc=document.getElementById('markContent');
+  if(markStep==='browse') renderBrowse(mc);
+  else if(markStep==='case') renderCaseView(mc);
+  else if(markStep==='write') renderWrite(mc);
+}
+
+function renderBrowse(mc){
+  mc.innerHTML=`
+  <div class="topbar"><div><div class="eyebrow">15-Mark Lab</div><h2>Choose a case study</h2><div class="sub">Pick a case study, read it, then choose a 15-mark Evaluate question to practise. Questions are labelled as non-quantitative or quantitative so you know which type you are doing.</div></div></div>
+  <div class="filter-bar" id="filters">
+    <button class="filter-btn active" data-f="all">All</button>
+    <button class="filter-btn" data-f="1">Paper 1</button>
+    <button class="filter-btn" data-f="2">Paper 2</button>
+    <button class="filter-btn" data-f="3">Paper 3</button>
+    <button class="filter-btn" data-f="custom">Your own question</button>
+  </div>
+  <div id="caseGrid" class="cs-grid"></div>
+  <div id="customArea" style="display:none" class="card">
+    <h3>Your own question</h3>
+    <div class="row" style="margin-bottom:12px">
+      <label style="font-size:12px;font-weight:800;color:var(--navy)">Question type:</label>
+      <button class="btn btn-o btn-sm cq-type on" data-ct="non-quantitative">Non-quantitative</button>
+      <button class="btn btn-o btn-sm cq-type" data-ct="quantitative">Quantitative (includes calculation)</button>
+    </div>
+    <label class="fl">Your 15-mark question</label>
+    <input type="text" id="cqInput" placeholder="Evaluate two ways... and recommend which one..." />
+    <label class="fl" style="margin-top:12px">Case study / source material</label>
+    <textarea id="ccInput" style="min-height:100px" placeholder="Paste the case study text here. The marker needs this to judge AO2."></textarea>
+    <button class="btn btn-g mt" id="cqGo">Start writing</button>
+  </div>`;
+  renderCaseGrid('all');
+  let customType='non-quantitative';
+  mc.querySelector('#filters').addEventListener('click',e=>{
+    if(!e.target.classList.contains('filter-btn'))return;
+    mc.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    const f=e.target.dataset.f;
+    if(f==='custom'){mc.querySelector('#caseGrid').style.display='none';mc.querySelector('#customArea').style.display='block';}
+    else{mc.querySelector('#caseGrid').style.display='grid';mc.querySelector('#customArea').style.display='none';renderCaseGrid(f);}
+  });
+  mc.querySelectorAll('.cq-type').forEach(b=>b.onclick=()=>{
+    mc.querySelectorAll('.cq-type').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    customType=b.dataset.ct;
+  });
+  mc.querySelector('#cqGo').onclick=()=>{
+    const q=mc.querySelector('#cqInput').value.trim();
+    const c=mc.querySelector('#ccInput').value.trim();
+    if(!q){alert('Please enter a question.');return;}
+    curCase={id:'custom',title:'Custom question',ctx:c||'No case study provided.',qs:[],paper:0,desc:'',tags:[]};
+    curQ=q;
+    curQType=customType;
+    markStep='write';renderMark();
+  };
+}
+
+function renderCaseGrid(filter){
+  const grid=document.getElementById('caseGrid');
+  const cases=filter==='all'?CASES:CASES.filter(c=>c.paper===parseInt(filter));
+  grid.innerHTML=cases.map(c=>{
+    const qCount=c.qs.length;
+    const hasQuant=c.qs.some(q=>q.quant);
+    const hasQual=c.qs.some(q=>!q.quant);
+    let typeBadges='';
+    if(hasQual) typeBadges+='<span class="type-badge type-qual">Non-quant</span> ';
+    if(hasQuant) typeBadges+='<span class="type-badge type-quant">Quantitative</span>';
+    return `
+    <div class="cs-card" data-id="${c.id}">
+      <div class="cs-meta">${PL[c.paper]} · ${qCount} question${qCount===1?"":"s"}</div>
+      <h4>${c.title}</h4>
+      <p>${c.desc}</p>
+      <div style="margin-top:6px">${typeBadges}</div>
+      <div class="cs-tags">${c.tags.map(t=>`<span class="cs-tag">${t}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('.cs-card').forEach(card=>{
+    card.onclick=()=>{curCase=CASES.find(c=>c.id===card.dataset.id);markStep='case';renderMark();window.scrollTo({top:0,behavior:'smooth'});};
+  });
+}
+
+function renderCaseView(mc){
+  const c=curCase;
+  mc.innerHTML=`
+  <button class="back-link" id="backBrowse">&larr; Back to case studies</button>
+  <div class="topbar"><div><div class="eyebrow">${PS[c.paper]}</div><h2>${c.title}</h2><div class="sub">${c.desc}</div></div></div>
+  <div class="cs-box">
+    <button class="cs-toggle open" id="csTog">Read the case study <span class="arr">&#9660;</span></button>
+    <div class="cs-body open" id="csBody">${c.ctx.replace(/\\n|\n/g,'<br>')}</div>
+  </div>
+  <h3 style="margin-top:20px">Choose a question</h3>
+  <div id="qPicks" style="margin-top:10px">
+    ${c.qs.map((q,i)=>{
+      const badge=q.quant?'<span class="type-badge type-quant" style="margin-right:8px">Quantitative</span>':'<span class="type-badge type-qual" style="margin-right:8px">Non-quantitative</span>';
+      return `<div class="q-pick" data-qi="${i}"><div class="q-src">${q.src} ${badge}</div>${q.q.replace(/\\n|\n/g,' ')}</div>`;
+    }).join('')}
+  </div>`;
+  mc.querySelector('#backBrowse').onclick=()=>{markStep='browse';renderMark();};
+  mc.querySelector('#csTog').onclick=function(){this.classList.toggle('open');mc.querySelector('#csBody').classList.toggle('open');};
+  mc.querySelectorAll('.q-pick').forEach(el=>{
+    el.onclick=()=>{
+      const qi=parseInt(el.dataset.qi);
+      curQ=c.qs[qi].q;
+      curQType=c.qs[qi].quant?'quantitative':'non-quantitative';
+      markStep='write';renderMark();window.scrollTo({top:0,behavior:'smooth'});
+    };
+  });
+}
+
+function renderWrite(mc){
+  const c=curCase;
+  uploadedImages=[];
+  const isQuant=curQType==='quantitative';
+  const badge=isQuant?'<span class="type-badge type-quant">Quantitative</span>':'<span class="type-badge type-qual">Non-quantitative</span>';
+  mc.innerHTML=`
+  <button class="back-link" id="backCase">&larr; Back to ${c.title}</button>
+  <div class="cs-box">
+    <button class="cs-toggle" id="csTog2">Read the case study <span class="arr">&#9660;</span></button>
+    <div class="cs-body" id="csBody2">${c.ctx.replace(/\\n|\n/g,'<br>')}</div>
+  </div>
+  <div class="q-display"><p>${curQ.replace(/\\n|\n/g,'<br>')}</p><div class="q-marks">[15 marks] ${badge}</div></div>
+  ${isQuant?'<div class="al al-b" style="margin-bottom:16px"><b>This is a quantitative question</b>Show your calculation clearly: write the formula, select the correct figures, and show your working. Then use the result in your analysis and evaluation. The own figure rule applies — if you make a calculation error, you can still get credit for correctly interpreting your own result.</div>':''}
+  <div class="card">
+    <h3>Your answer</h3>
+    <p class="tiny" style="margin-bottom:12px">${isQuant?'Start with your calculation. Then argue for each option and evaluate it, using the result. Finish with a weighted recommendation.':'Argue for each option and evaluate it, using the case study. Finish with a recommendation that weighs one option against the other.'}</p>
+    <div class="row" style="margin-bottom:10px">
+      <button class="btn btn-o btn-sm mode-btn2 on" data-m="type">Type</button>
+      <button class="btn btn-o btn-sm mode-btn2" data-m="upload">Upload photos</button>
+    </div>
+    <div id="typeMode2">
+      <textarea id="essay" placeholder="Write your answer here..." style="min-height:260px"></textarea>
+      <div class="row mt"><span class="tiny" id="wc">0 words</span></div>
+    </div>
+    <div id="uploadMode2" style="display:none">
+      <div class="upload-zone" id="dropZone">
+        <p style="font-size:24px;margin-bottom:8px">&#128247;</p>
+        <p style="font-weight:700;color:var(--navy)">Upload photos of your handwritten answer</p>
+        <p class="tiny" style="margin-top:4px">Tap to choose photos or drag and drop. Up to 7 pages.</p>
+        <input type="file" id="fileInput" accept="image/*" multiple style="display:none" />
+      </div>
+      <div class="upload-previews" id="previews"></div>
+    </div>
+    <button class="btn btn-g" style="width:100%;margin-top:14px" id="submitBtn">Mark my answer</button>
+  </div>`;
+  mc.querySelector('#backCase').onclick=()=>{if(c.id==='custom'){markStep='browse';}else{markStep='case';}renderMark();};
+  mc.querySelector('#csTog2').onclick=function(){this.classList.toggle('open');mc.querySelector('#csBody2').classList.toggle('open');};
+  mc.querySelectorAll('.mode-btn2').forEach(b=>b.onclick=()=>{
+    mc.querySelectorAll('.mode-btn2').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    mc.querySelector('#typeMode2').style.display=b.dataset.m==='type'?'block':'none';
+    mc.querySelector('#uploadMode2').style.display=b.dataset.m==='upload'?'block':'none';
+  });
+  mc.querySelector('#essay').addEventListener('input',()=>{const t=mc.querySelector('#essay').value.trim();mc.querySelector('#wc').textContent=(t?t.split(/\s+/).length:0)+' words';});
+  const dz=mc.querySelector('#dropZone');
+  const fi=mc.querySelector('#fileInput');
+  dz.onclick=()=>fi.click();
+  dz.ondragover=e=>{e.preventDefault();dz.style.borderColor='var(--blue)';};
+  dz.ondragleave=()=>{dz.style.borderColor='var(--line)';};
+  dz.ondrop=e=>{e.preventDefault();dz.style.borderColor='var(--line)';handleFiles2(e.dataTransfer.files,mc);};
+  fi.onchange=()=>handleFiles2(fi.files,mc);
+  mc.querySelector('#submitBtn').onclick=()=>{
+    const hasText=mc.querySelector('#essay').value.trim().length>0;
+    const hasImages=uploadedImages.length>0;
+    if(!hasText&&!hasImages){alert('Please write your answer or upload photos of it.');return;}
+    runMark();
+  };
+}
+
+function handleFiles2(files,mc){
+  const previews=mc.querySelector('#previews');
+  for(const f of files){
+    if(uploadedImages.length>=7)break;
+    if(!f.type.startsWith('image/'))continue;
+    const reader=new FileReader();
+    reader.onload=e=>{uploadedImages.push(e.target.result);const img=document.createElement('img');img.src=e.target.result;previews.appendChild(img);};
+    reader.readAsDataURL(f);
+  }
+}
+
+/* ═══ TABS ═══ */
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>openTab(b.dataset.t));
+function openTab(id){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('nav button').forEach(b=>b.classList.remove('on'));document.getElementById(id).classList.add('on');const btn=[...document.querySelectorAll('nav button')].find(b=>b.dataset.t===id);if(btn)btn.classList.add('on');window.scrollTo({top:0,behavior:'smooth'});}
+
+/* ═══ SUBMIT ═══ */
+async function runMark(){
+  openTab('feedback');
+  document.getElementById('ldPanel').classList.add('show');
+  document.getElementById('fbPanel').style.display='none';
+
+  const qText=curQ||'';
+  const ctxText=curCase?curCase.ctx:'No case study provided.';
+  const qType=curQType;
+  lastQ=qText;lastCtx=ctxText;lastQType=qType;
+
+  const essayEl=document.getElementById('essay');
+  const essayText=essayEl?essayEl.value.trim():'';
+  const userMsg=`QUESTION:\n${qText}\n\n[15 marks] [${qType}]\n\nCASE STUDY / SOURCE MATERIAL:\n${ctxText}\n\nSTUDENT ANSWER:\n${essayText||'[See handwritten answer in images]'}`;
+
+  const sysPrompt=qType==='quantitative'?SYS15_QUANT:SYS15_QUAL;
+
+  let messages;
+  if(uploadedImages.length>0&&!essayText){
+    const content=uploadedImages.map(d=>({type:'image',source:{type:'base64',media_type:'image/jpeg',data:d.split(',')[1]}}));
+    content.push({type:'text',text:userMsg});
+    messages=[{role:'user',content:content}];
+  }else{
+    messages=[{role:'user',content:userMsg}];
+  }
+
+  try{
+    const resp=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:6000,system:sysPrompt,messages})});
+    if(!resp.ok)throw new Error('API error: '+resp.status);
+    const data=await resp.json();
+    const txt=data.content.map(c=>c.text||'').join('');
+    const fb=enforceCaps(JSON.parse(txt.replace(/```json|```/g,'').trim()),qType);
+    lastFb=fb;
+    showFeedback(fb,qText);
+    hist.push({date:new Date().toISOString().slice(0,10),q:qText.slice(0,60),mark:fb.mark,level:fb.level,qtype:fb.qtype||qType,judgement:fb.judgement_quality});
+    saveHist();updateProgress();
+    if(window.YTrack)YTrack.mark({tool:'15-Mark Lab',question:qText,mark:fb.mark,maxMark:15,level:fb.level,
+      www1:fb.positive||'',www2:'Structure: '+structSummary(fb),
+      ebi1:[fb.blocker_heading,fb.blocker].filter(Boolean).join(': '),ebi2:[fb.improve,fb.rewrite_original&&fb.rewrite_improved?'You wrote: "'+fb.rewrite_original+'" It could read: "'+fb.rewrite_improved+'"':''].filter(Boolean).join(' '),
+      answer:essayText||(uploadedImages.length?'[handwritten answer uploaded as photos]':''),panel:'#fbPanel'});
+  }catch(err){
+    document.getElementById('ldPanel').classList.remove('show');
+    document.getElementById('fbPanel').style.display='block';
+    document.getElementById('fbPanel').innerHTML=`<div class="al al-r"><b>Something went wrong</b>${err.message}. Check your internet connection and try again.</div>`;
+  }
+}
+
+/* ═══ RENDER FEEDBACK ═══ */
+/* Hard caps from the AQA 7138 15-mark mark schemes and commentary, applied in code so they cannot be skipped.
+   The Nishkam structure check is feedback only and never changes the mark. Written 3 November 2026. */
+function lvl15(m){return m>=13?'Level 5':m>=10?'Level 4':m>=7?'Level 3':m>=4?'Level 2':m>=1?'Level 1':'0';}
+function enforceCaps(fb,qType){
+  if(!fb||typeof fb.mark!=='number')return fb;
+  const has=v=>String(v||'').trim().length>=12;
+  const isQ=(qType==='quantitative'||fb.qtype==='quantitative');
+  const caps=[];
+  if(isQ&&(fb.calculation_attempted===false||fb.calculation_used===false))caps.push([9,'Use the calculation',fb.calculation_attempted===false?'The question asks for a calculation and your answer does not do it. AQA says an answer that does not use the calculation cannot get above 9.':'You worked out the figure but did not use it in your argument or your recommendation. AQA says an answer that does not use the calculation cannot get above 9.','Start with the formula and working, then say what the figure means for this business and which option it supports. Bring it back into your conclusion.']);
+  if(fb.both_options_analysed===false)caps.push([9,'Analyse both options','Only one of your two options has a developed argument, so the answer cannot get above 9.','Give the second option its own paragraph with a full chain of reasoning, the case study and a worked figure, then evaluate it.']);
+  if(!has(fb.recommendation_quote))caps.push([9,'Make a recommendation','The question asks you to recommend one option and you have not, so the answer cannot get above 9.','Finish with "Overall, I would recommend…" and explain why.']);
+  if(!has(fb.weighing_quote))caps.push([12,'Weigh up, don\'t summarise','Your conclusion does not explain why one option is better than the other, so the answer cannot get above 12.','Use "Although [the other option] does…, [your option] carries greater weight because…" and give a reason from the case study.']);
+  if(!has(fb.priorities_quote))caps.push([12,'Make it fit this business','Your recommendation could apply to almost any business. Level 5 needs a judgement tied to this business’s situation and priorities.','Explain why your choice matters most for this business: its finances, its strategy, its customers, or what it needs in the short or long term.']);
+  if(!caps.length)return fb;
+  caps.sort((a,b)=>a[0]-b[0]);
+  const [cap,head,blk,imp]=caps[0];
+  if(fb.mark>cap){
+    fb.mark=cap;fb.level=lvl15(cap);fb.capped=true;
+    if(fb.judgement_quality==='WEIGHTED'&&cap<=12)fb.judgement_quality='SUPPORTED';
+    fb.blocker_heading=head;fb.blocker=blk;fb.improve=imp+' '+(fb.improve||'');
+  }
+  return fb;
+}
+
+/* Nishkam structure check — counts and ticks for feedback only. */
+function connCount(a){return a&&Array.isArray(a.connectives)?a.connectives.length:0;}
+function structSteps(fb){
+  const st=fb.structure||{};const a1=st.arg1||{},a2=st.arg2||{},e1=st.eval1||{},e2=st.eval2||{},d=st.data||{},c=st.conclusion||{};
+  const isQ=fb.qtype==='quantitative';
+  const dataOk=(d.worked_figures||0)>=1&&(!isQ||d.calculation_shown===true);
+  const conclOk=c.overall&&c.although_weight&&c.depends_on&&c.therefore_question;
+  return [
+    {k:'Argument for option 1',ok:!!a1.present&&connCount(a1)>=5&&!!a1.links_to_question,detail:(a1.present?connCount(a1)+' analysis connectives (target 5–6)'+(a1.links_to_question?'; last sentence links to the question':'; last sentence does not link back to the question'):'Not found'),conns:a1.connectives||[]},
+    {k:'Data and calculations',ok:dataOk,detail:(isQ?(d.calculation_shown?'Calculation shown with working. ':'Calculation not shown with formula and working. '):'')+(d.worked_figures||0)+' worked figure'+((d.worked_figures||0)===1?'':'s')+(d.example?' (e.g. "'+d.example+'")':'')},
+    {k:'Evaluation of option 1',ok:!!e1.present,detail:e1.present?'"'+(e1.quote||'')+'…"':'No evaluation paragraph found for this option'},
+    {k:'Argument for option 2',ok:!!a2.present&&connCount(a2)>=5&&!!a2.links_to_question,detail:(a2.present?connCount(a2)+' analysis connectives (target 5–6)'+(a2.links_to_question?'; last sentence links to the question':'; last sentence does not link back to the question'):'Not found'),conns:a2.connectives||[]},
+    {k:'Evaluation of option 2',ok:!!e2.present,detail:e2.present?'"'+(e2.quote||'')+'…"':'No evaluation paragraph found for this option'},
+    {k:'Conclusion steps',ok:!!conclOk,detail:['Overall','Although… carries greater weight','It depends on…','Therefore + question words'].map((t,i)=>([c.overall,c.although_weight,c.depends_on,c.therefore_question][i]?'✓ ':'✗ ')+t).join('   ')}
+  ];
+}
+function structSummary(fb){const s=structSteps(fb);return s.filter(x=>x.ok).length+'/'+s.length+' steps; connectives '+connCount((fb.structure||{}).arg1)+' and '+connCount((fb.structure||{}).arg2);}
+
+function showFeedback(fb,qText){
+  document.getElementById('ldPanel').classList.remove('show');
+  document.getElementById('fbPanel').style.display='block';
+  const col=fb.mark>=10?'var(--green)':fb.mark>=7?'var(--gold)':fb.mark>=1?'var(--red)':'var(--muted)';
+  const pct=Math.round(fb.mark/15*100);
+  const isQuant=fb.qtype==='quantitative';
+
+  let html='';
+
+  // Score + judgement + endpoint
+  html+=`<div class="grid g4">
+    <div class="card" style="text-align:center;padding:24px 16px">
+      <div class="tiny">MARK</div>
+      <div class="mark-num">${fb.mark}/15</div>
+      <div class="mark-level" style="color:${col}">${fb.level}</div>
+      <div class="mark-bar"><span style="width:${pct}%;background:${col}"></span></div>
+    </div>
+    <div class="card" style="padding:20px;border-top:4px solid ${fb.judgement_quality==='WEIGHTED'?'var(--green)':fb.judgement_quality==='SUPPORTED'?'var(--gold)':'var(--red)'}">
+      <h4>Judgement quality</h4>
+      <div style="font-size:16px;font-weight:900;color:${fb.judgement_quality==='WEIGHTED'?'var(--green)':fb.judgement_quality==='SUPPORTED'?'var(--gold)':'var(--red)'};margin:6px 0">${fb.judgement_quality||'None'}</div>
+      <p class="tiny">${fb.judgement_quality==='WEIGHTED'?'You weighed competing arguments and decided which was stronger.':fb.judgement_quality==='SUPPORTED'?'You gave a supported conclusion but did not fully weigh the arguments.':fb.judgement_quality==='ASSERTION'?'Your conclusion was stated without explaining why.':'No clear judgement was made.'}</p>
+    </div>
+    <div class="card" style="padding:20px">
+      <h4>Options evaluated</h4>
+      <p style="font-size:12px;line-height:1.5;margin-top:4px;color:var(--ink)">1. ${fb.option_1||''}<br>2. ${fb.option_2||''}</p>
+      <h4 style="margin-top:10px">Endpoint</h4>
+      <p style="font-size:12px;color:var(--ink)">${fb.endpoint||''}</p>
+    </div>
+    <div class="card" style="padding:20px;border-top:4px solid var(--blue)">
+      <h4>AO diagnostic</h4>
+      <p style="font-size:12px;line-height:1.8;margin-top:6px"><span style="color:var(--ao1);font-weight:700">AO1:</span> ${fb.ao1_diagnostic||''}<br><span style="color:var(--ao2);font-weight:700">AO2:</span> ${fb.ao2_diagnostic||''}<br><span style="color:var(--ao3);font-weight:700">AO3:</span> ${fb.ao3_diagnostic||''}<br><span style="color:var(--ao4);font-weight:700">AO4:</span> ${fb.ao4_diagnostic||''}</p>
+      <p class="tiny mt">This is a diagnostic guide, not how the mark was calculated.</p>
+    </div>
+  </div>`;
+
+  // Quantitative extras
+  if(isQuant&&fb.calculation_correct!==undefined){
+    const calcCol=fb.calculation_correct?'var(--green)':'var(--red)';
+    html+=`<div class="card mt" style="border-top:4px solid ${calcCol};padding:18px 22px">
+      <div class="row" style="gap:16px">
+        <div><h4>Calculation</h4><div style="font-size:16px;font-weight:900;color:${calcCol};margin-top:4px">${fb.calculation_correct?'Correct':'Error found'}</div></div>
+        ${fb.own_figure_applied?'<div style="padding:6px 12px;background:var(--ao2-bg);border-radius:8px;font-size:12px;font-weight:700;color:var(--ao2)">Own figure rule applied</div>':''}
+        <div style="flex:1;font-size:13px;color:var(--ink);line-height:1.5">${fb.calc_comment||''}</div>
+      </div>
+    </div>`;
+  }
+
+  // Chain visuals
+  if(fb.chain_option_1||fb.chain_option_2){
+    html+=`<div class="grid g2 mt">`;
+    if(fb.chain_option_1)html+=`<div class="chain-box"><div class="chain-label">Option 1</div>${fb.chain_option_1}</div>`;
+    if(fb.chain_option_2)html+=`<div class="chain-box"><div class="chain-label">Option 2</div>${fb.chain_option_2}</div>`;
+    html+=`</div>`;
+  }
+
+  // Nishkam structure check (feedback only)
+  const steps=structSteps(fb);
+  html+=`<div class="card mt" style="border-top:4px solid var(--navy)">
+    <div class="row" style="justify-content:space-between;align-items:baseline"><h3>Structure check</h3><span class="tiny">${steps.filter(x=>x.ok).length} of ${steps.length} steps. This does not change your mark.</span></div>
+    <table class="p-table" style="margin-top:8px">${steps.map(x=>`<tr><td style="width:28px;font-size:16px;font-weight:900;color:${x.ok?'var(--green)':'var(--red)'}">${x.ok?'✓':'✗'}</td><td style="font-weight:800;width:190px">${x.k}</td><td style="font-size:12.5px;line-height:1.6">${x.detail}${x.conns&&x.conns.length?`<div style="margin-top:4px">${x.conns.map(w=>`<span style="display:inline-block;background:var(--ao3-bg);border:1px solid var(--ao3);border-radius:6px;padding:1px 7px;margin:2px 4px 2px 0;font-size:11.5px">${w}</span>`).join('')}</div>`:''}</td></tr>`).join('')}</table>
+  </div>`;
+
+  // AO colour key
+  html+=`<div class="ao-key mt">
+    <div class="ao-key-item"><div class="ao-key-swatch" style="background:var(--ao1-bg);border-color:var(--ao1)"></div>Knowledge (AO1)</div>
+    <div class="ao-key-item"><div class="ao-key-swatch" style="background:var(--ao2-bg);border-color:var(--ao2)"></div>Application (AO2)</div>
+    <div class="ao-key-item"><div class="ao-key-swatch" style="background:var(--ao3-bg);border-color:var(--ao3)"></div>Analysis (AO3)</div>
+    <div class="ao-key-item"><div class="ao-key-swatch" style="background:var(--ao4-bg);border-color:var(--ao4)"></div>Evaluation (AO4)</div>
+    <div class="ao-key-item"><div class="ao-key-swatch" style="background:var(--weak-bg);border-color:var(--weak)"></div>Needs work</div>
+  </div>`;
+
+  // Annotated essay
+  if(fb.segments&&fb.segments.length>0){
+    html+=`<div class="anno-wrap mt">
+      <div class="anno-essay"><div class="anno-label">Your answer — annotated</div>`;
+    fb.segments.forEach((seg,i)=>{
+      let cls='';
+      if(seg.quality==='WEAK') cls='seg seg-weak';
+      else if(seg.ao==='AO1') cls='seg seg-ao1';
+      else if(seg.ao==='AO2') cls='seg seg-ao2';
+      else if(seg.ao==='AO3') cls='seg seg-ao3';
+      else if(seg.ao==='AO4') cls='seg seg-ao4';
+      html+=`<span class="${cls}" data-seg="${i}" title="${(seg.annotation||'').replace(/"/g,'&quot;')}"><span class="seg-num">${i+1}</span>${seg.text} </span>`;
+    });
+    html+=`</div><div class="anno-sidebar"><div class="anno-label">Examiner notes</div>`;
+    fb.segments.forEach((seg,i)=>{
+      if(!seg.annotation)return;
+      let ncls='anno-note ';
+      if(seg.quality==='WEAK') ncls+='anno-note-weak';
+      else if(seg.ao==='AO1') ncls+='anno-note-ao1';
+      else if(seg.ao==='AO2') ncls+='anno-note-ao2';
+      else if(seg.ao==='AO3') ncls+='anno-note-ao3';
+      else if(seg.ao==='AO4') ncls+='anno-note-ao4';
+      else ncls+='anno-note-ao1';
+      const tag=seg.quality==='WEAK'?'Needs work':seg.ao;
+      html+=`<div class="${ncls}" data-seg="${i}"><div style="display:flex;align-items:center;gap:4px;margin-bottom:3px"><span class="anno-num">${i+1}</span><span class="ao-tag">${tag}</span></div><div>${seg.annotation}</div></div>`;
+    });
+    html+=`</div></div>`;
+  }
+
+  // Rewrite card
+  if(fb.rewrite_original&&fb.rewrite_improved){
+    html+=`<div class="rewrite-card">
+      <h3>You wrote / It could read</h3>
+      <div class="rw-box rw-original"><div class="rw-label">You wrote</div>${fb.rewrite_original}</div>
+      <div class="rw-box rw-improved"><div class="rw-label">It could read</div>${fb.rewrite_improved}</div>
+    </div>`;
+  }
+
+  // Blocker + improve + positive
+  html+=`<div class="grid g2 mt">
+    <div class="card">
+      <h3>Overall feedback</h3>
+      <p style="font-size:14px;line-height:1.8">${fb.positive||''}</p>
+    </div>
+    <div>
+      <div class="blocker-card" style="margin-top:0">
+        <h3 style="color:var(--red)">${fb.blocker_heading||"What's stopping you"}</h3>
+        <p style="font-size:13px;line-height:1.7">${fb.blocker||''}</p>
+      </div>
+      <div class="card mt">
+        <h3>How to upgrade</h3>
+        <div class="al al-g">${fb.improve||''}</div>
+      </div>
+    </div>
+  </div>`;
+
+  // Action buttons
+  html+=`<div class="card mt" style="text-align:center;padding:30px">
+    <div class="row" style="justify-content:center;gap:14px">
+      <button class="btn btn-p" onclick="generatePDF()">Save feedback as PDF</button>
+      <button class="btn btn-g" onclick="markStep='browse';curCase=null;curQ=null;uploadedImages=[];openTab('mark');renderMark();window.scrollTo({top:0})">Try another question</button>
+    </div>
+  </div>`;
+
+  document.getElementById('fbPanel').innerHTML=html;
+
+  // Hover sync
+  document.querySelectorAll('[data-seg]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{document.querySelectorAll(`[data-seg="${el.dataset.seg}"]`).forEach(x=>x.style.outline='2px solid var(--gold)');});
+    el.addEventListener('mouseleave',()=>{document.querySelectorAll(`[data-seg="${el.dataset.seg}"]`).forEach(x=>x.style.outline='none');});
+  });
+}
+
+/* ═══ PDF ═══ */
+function generatePDF(){
+  try{
+    var jsPDFLib=window.jspdf||window.jsPDF;
+    if(!jsPDFLib){alert('Could not generate the PDF. The PDF library did not load. Please try again or take a screenshot instead.');return;}
+    var JC=jsPDFLib.jsPDF||jsPDFLib;
+    var doc=new JC({orientation:'portrait',unit:'mm',format:'a4'});
+    var pw=210,ml=18,mr=18,mtop=20,usable=pw-ml-mr;
+    var y=mtop;
+    function addText(text,x,yP,opts){
+      opts=opts||{};
+      var size=opts.size||10,style=opts.style||'normal',maxW=opts.maxW||usable;
+      doc.setFontSize(size);doc.setFont('helvetica',style);
+      var lines=doc.splitTextToSize(String(text||''),maxW);var lineH=size*0.45;
+      lines.forEach(function(line){if(y>277){doc.addPage();y=mtop;}doc.text(line,x,y);y+=lineH;});y+=2;
+    }
+    var fb=lastFb;if(!fb)return;
+    doc.setFillColor(13,27,52);doc.rect(0,0,pw,32,'F');
+    doc.setTextColor(255);doc.setFontSize(16);doc.setFont('helvetica','bold');
+    doc.text('15-Mark Evaluate Lab — Feedback',ml,14);
+    doc.setFontSize(9);doc.setFont('helvetica','normal');
+    doc.text(new Date().toLocaleDateString('en-GB'),ml,22);
+    doc.text('Nishkam School West London',ml,27);
+    doc.setTextColor(0);y=40;
+    addText('Question',ml,y,{size:8,style:'bold'});
+    addText(lastQ.replace(/\\n|\n/g,' '),ml,y,{size:10});
+    addText('Type: '+(fb.qtype||lastQType),ml,y,{size:9});
+    doc.setDrawColor(200);doc.line(ml,y,pw-mr,y);y+=4;
+    addText('Mark: '+fb.mark+'/15   Level: '+fb.level+'   Judgement: '+(fb.judgement_quality||''),ml,y,{size:12,style:'bold'});
+    addText('Options: 1. '+(fb.option_1||'')+'   2. '+(fb.option_2||''),ml,y,{size:9});
+    addText('Endpoint: '+(fb.endpoint||''),ml,y,{size:9});
+    if(fb.chain_option_1) addText('Option 1: '+fb.chain_option_1,ml,y,{size:9});
+    if(fb.chain_option_2) addText('Option 2: '+fb.chain_option_2,ml,y,{size:9});
+    addText('Structure check (does not change the mark)',ml,y,{size:8,style:'bold'});
+    structSteps(fb).forEach(function(x){addText((x.ok?'[OK] ':'[ ] ')+x.k+': '+x.detail.replace(/[✓✗]/g,function(c){return c==='✓'?'yes':'no';}),ml,y,{size:9});});
+    if(fb.qtype==='quantitative'){
+      addText('Calculation: '+(fb.calculation_correct?'Correct':'Error')+(fb.own_figure_applied?' (own figure rule applied)':''),ml,y,{size:9});
+      if(fb.calc_comment)addText(fb.calc_comment,ml,y,{size:9});
+    }
+    doc.line(ml,y,pw-mr,y);y+=4;
+    if(fb.segments){
+      addText('Your answer (with notes)',ml,y,{size:8,style:'bold'});
+      fb.segments.forEach(function(seg,i){
+        addText('['+(i+1)+' '+seg.ao+(seg.quality==='WEAK'?' - NEEDS WORK':'')+'] '+seg.text,ml,y,{size:9});
+        if(seg.annotation){doc.setTextColor(100);addText('   ^ '+seg.annotation,ml+4,y,{size:8,style:'italic'});doc.setTextColor(0);}
+      });
+      doc.line(ml,y,pw-mr,y);y+=4;
+    }
+    if(fb.rewrite_original&&fb.rewrite_improved){
+      addText('You wrote:',ml,y,{size:8,style:'bold'});addText(fb.rewrite_original,ml,y,{size:9});y+=2;
+      addText('It could read:',ml,y,{size:8,style:'bold'});addText(fb.rewrite_improved,ml,y,{size:9});
+      doc.line(ml,y,pw-mr,y);y+=4;
+    }
+    addText('What you did well',ml,y,{size:8,style:'bold'});if(fb.positive)addText(fb.positive,ml,y,{size:9});
+    addText((fb.blocker_heading||"What's stopping you")+': '+(fb.blocker||''),ml,y,{size:9});
+    addText('How to upgrade: '+(fb.improve||''),ml,y,{size:9});
+    doc.save('15-mark_feedback_'+new Date().toISOString().slice(0,10)+'.pdf');
+  }catch(e){
+    console.error('PDF error:',e);
+    alert('Could not generate the PDF. Error: '+e.message+'. Please try again or take a screenshot instead.');
+  }
+}
+
+/* ═══ PROGRESS ═══ */
+function updateProgress(){
+  document.getElementById('pCount').textContent=hist.length;
+  if(hist.length){
+    const avg=(hist.reduce((s,h)=>s+h.mark,0)/hist.length).toFixed(1);
+    document.getElementById('pAvg').textContent=avg+'/15';
+    const best=Math.max(...hist.map(h=>h.mark));
+    document.getElementById('pBest').textContent=best+'/15';
+    document.getElementById('pHist').innerHTML='<table class="p-table"><tr><th>Date</th><th>Mark</th><th>Level</th><th>Type</th><th>Judgement</th><th>Question</th></tr>'+hist.slice().reverse().map(h=>`<tr><td>${h.date}</td><td style="font-weight:800">${h.mark}/15</td><td>${h.level}</td><td>${h.qtype==='quantitative'?'Quant':'Non-quant'}</td><td>${h.judgement||'—'}</td><td class="muted" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${h.q}...</td></tr>`).join('')+'</table>';
+  }
+}
+</script>
+<script src="y12-tracker.js"></script>
+<script>if(window.YTrack)YTrack.init('#markContent');</script>
+</body>
+</html>
