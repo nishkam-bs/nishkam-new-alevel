@@ -250,17 +250,18 @@ const COURSES=[['y12_course_analyse6_v1','6-mark Analyse',10,'course-6mark-analy
 /* Switched off until the wording has been approved. Set NOTICE_ON to true to show it. */
 const NOTICE_ON=false;
 const NOTICE={key:'notice:homework-7138-v1',html:`<h2>Weekly homework</h2>
-<p>From now on you will have a set of homework every week. It is all on this site, under <b>My schedule</b>, and it only covers topics we have already done in class.</p>
-<h3>Each week</h3>
-<ul><li><b>Two 6-mark, two 9-mark and two 15-mark questions.</b> Each one opens in the right marking tool with its case study.</li>
-<li><b>10 calculations.</b> Work them out, then pick what the answer means for the business.</li>
-<li><b>A data drill (about 15 minutes):</b> choose which calculations are worth doing for a case study, work them out, say what the numbers show and which question you would use them in.</li>
-<li><b>A knowledge quiz:</b> 20 short questions on the content. Your first answer is the one that counts.</li></ul>
+<p>The homework system on the A-level Business site is now up and running. Click <b>My schedule</b> on the home page to see what is due.</p>
+<h3>Every week you will have</h3>
+<ul><li><b>Two 6-mark, two 9-mark and two 15-mark questions</b> on topics we have already covered. Each one opens in the right marking tool with its case study. Get them marked on the site by typing them or uploading photos of your handwritten answers.</li>
+<li><b>15 calculation questions.</b> Work out the answer, then decide what it means for the business.</li>
+<li><b>A data drill</b> (about 15 mins). Mostly clicking, using a case study: choose the calculations worth doing, work them out, and decide which question you would use them in. Using data well is a big part of every paper.</li>
+<li><b>A 20-question knowledge quiz.</b> Your first answer counts.</li></ul>
 <p>There is no homework in KAT weeks.</p>
-<h3>How it gets ticked off</h3>
-<p>Click Start next to each piece. A written answer is ticked off once it has been marked: type it, or upload photos of your handwritten answer. If you type, the site records whether the answer was typed or pasted in. Calculations, quizzes and drills are ticked off when you finish them.</p>
 <h3>Deadline</h3>
-<p>Everything is due by <b>Wednesday at 11:59pm</b>. Anything not done means a detention on Friday after school. If you were absent, speak to me.</p>`};
+<p><b>Wednesday 11:59pm</b> every week. The first one is <b>Wednesday 2 December</b>.</p>
+<p>Anything missing means a Friday SLT after school. If you are absent, or if anything prevents you from meeting a deadline, you need to tell me in advance so I can decide on next steps.</p>
+<p>Everything is ticked off automatically once it is done, so you can always see where you are. I can see this too, including whether typed answers were written or pasted in (if you have used AI).</p>
+<p>Any problems signing in, message me.</p>`};
 let noticeShown=false;
 function showNotice(){
   if(!NOTICE_ON||noticeShown||!active()||auth.mustChange||get(NOTICE.key))return;noticeShown=true;
