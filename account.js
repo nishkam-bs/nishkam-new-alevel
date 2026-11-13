@@ -258,7 +258,7 @@ const NOTICE={key:'notice:homework-7138-v1',html:`<h2>Weekly homework</h2>
 <li><b>A 20-question knowledge quiz.</b> Your first answer counts.</li></ul>
 <p>There is no homework in KAT weeks.</p>
 <h3>Deadline</h3>
-<p><b>Wednesday 11:59pm</b> every week. The first one is <b>Wednesday 2 December</b>.</p>
+<p><b>Wednesday 11:59pm</b> every week. The first one is <b>Wednesday 9 December</b>.</p>
 <p>Anything missing means a Friday SLT after school. If you are absent, or if anything prevents you from meeting a deadline, you need to tell me in advance so I can decide on next steps.</p>
 <p>Everything is ticked off automatically once it is done, so you can always see where you are. I can see this too, including whether typed answers were written or pasted in (if you have used AI).</p>
 <p>Any problems signing in, message me.</p>`};
