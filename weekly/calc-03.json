@@ -1,0 +1,185 @@
+{
+"title": "Week 3: calculations",
+"items": [
+{
+"q": "Sales of a board game fall from £0.55 million to £0.40 million. What is the percentage change?",
+"opts": [
+"-72.7%",
+"-37.5%",
+"-27.3%",
+"-15%"
+],
+"ans": 2,
+"why": "Change = -0.15. -0.15 ÷ 0.55 × 100 = -27.3%. -37.5% comes from dividing by the new figure.",
+"label": "Calculate"
+},
+{
+"q": "A toy is launched using price skimming at £79.99. Expected first-year sales are 22,000 units. What is the expected revenue?",
+"opts": [
+"£2,159,520",
+"£1,759.78",
+"£1,759,780",
+"£175,978"
+],
+"ans": 2,
+"why": "Revenue = price × quantity = £79.99 × 22,000 = £1,759,780.",
+"label": "Calculate"
+},
+{
+"q": "With penetration pricing at £44.99, expected sales are 48,000 units. How much more revenue is this than skimming at £79.99 and 22,000 units?",
+"opts": [
+"£26,000",
+"£35",
+"£399,740",
+"£2,159,520"
+],
+"ans": 2,
+"why": "48,000 × £44.99 = £2,159,520. £2,159,520 − £1,759,780 = £399,740.",
+"label": "Calculate"
+},
+{
+"q": "Penetration pricing gives more revenue. What else should the business find out before choosing it?",
+"opts": [
+"The share price of its rivals",
+"Whether the product is a cash cow",
+"Nothing, because the option with more revenue always gives more profit",
+"The cost of making each unit, because the lower price leaves a much smaller margin on each one"
+],
+"ans": 3,
+"why": "Profit depends on costs. If each unit costs £31, skimming leaves about £49 per unit and penetration about £14, so the higher revenue may not mean higher profit.",
+"label": "Use the answer"
+},
+{
+"q": "A ready meal costs £2.80 to make. The business uses cost-based pricing with a 40% mark-up. What price does it charge?",
+"opts": [
+"£3.92",
+"£4.67",
+"£3.20",
+"£1.12"
+],
+"ans": 0,
+"why": "Mark-up = 40% of £2.80 = £1.12. Price = £2.80 + £1.12 = £3.92.",
+"label": "Calculate"
+},
+{
+"q": "Rivals sell similar meals for £4.25 to £4.75. What does this suggest about the cost-based price of £3.92?",
+"opts": [
+"The business may be charging less than customers are willing to pay, so it could earn a higher margin by pricing nearer its rivals",
+"The business is making a loss on every meal",
+"The price is too high to sell",
+"Cost-based pricing always gives the best price"
+],
+"ans": 0,
+"why": "Cost-based pricing ignores what customers will pay. Pricing closer to rivals could earn more on each meal, although a lower price might help a new range win customers.",
+"label": "Use the answer"
+},
+{
+"q": "A product has a 21% market share. The largest rival has 12%. How many times larger is the product's share than the rival's?",
+"opts": [
+"33",
+"0.57",
+"9",
+"1.75"
+],
+"ans": 3,
+"why": "21 ÷ 12 = 1.75. The product's share is 1.75 times the rival's, so it is the market leader.",
+"label": "Calculate"
+},
+{
+"q": "Pocket Pals has sales of £0.9 million and a 3% share of the collectable figures market. What is the size of the market?",
+"opts": [
+"£0.027 million",
+"£3 million",
+"£2.7 million",
+"£30 million"
+],
+"ans": 3,
+"why": "If 3% = £0.9 million, the market = 0.9 ÷ 0.03 = £30 million.",
+"label": "Calculate"
+},
+{
+"q": "A business's four products have sales of £6.1m, £2.2m, £0.9m and £0.4m. What percentage of total sales comes from the £6.1m product?",
+"opts": [
+"27.7%",
+"61%",
+"63.5%",
+"36.5%"
+],
+"ans": 2,
+"why": "Total = £9.6 million. 6.1 ÷ 9.6 × 100 = 63.5%.",
+"label": "Calculate"
+},
+{
+"q": "Why might relying on one product for 63.5% of sales be a risk?",
+"opts": [
+"It means the business has no competitors",
+"It means the product is a dog",
+"It is not a risk if the product is a cash cow",
+"If that product goes into decline, most of the business's revenue is at risk"
+],
+"ans": 3,
+"why": "Most revenue depends on one product. If sales start to fall, for example because of new rivals or changing tastes, the business may not have other products ready to replace it.",
+"label": "Use the answer"
+},
+{
+"q": "A racing set's price falls from £40 to £36. Its PED is -1.4. By what percentage does revenue change?",
+"opts": [
+"A fall of 4%",
+"A rise of 2.6%",
+"A rise of 14%",
+"A fall of 10%"
+],
+"ans": 1,
+"why": "Price falls 10%, so quantity rises 1.4 × 10 = 14%. New revenue = 0.9 × 1.14 = 1.026 of the old revenue, a rise of 2.6%.",
+"label": "Calculate"
+},
+{
+"q": "A market grows from £45 million to £53.1 million. What is the market growth?",
+"opts": [
+"118%",
+"15.3%",
+"18%",
+"8.1%"
+],
+"ans": 2,
+"why": "8.1 ÷ 45 × 100 = 18%.",
+"label": "Calculate"
+},
+{
+"q": "A product has the largest share in a market growing at 18% a year. Where does it sit on the Boston Matrix?",
+"opts": [
+"Star",
+"Dog",
+"Question mark",
+"Cash cow"
+],
+"ans": 0,
+"why": "High market share in a high-growth market is a star. Stars earn a lot but often need heavy spending to keep their position.",
+"label": "Use the answer"
+},
+{
+"q": "A business sold 12,000 units at £25 last year and 11,000 units at £28 this year. What is the percentage change in sales value?",
+"opts": [
+"+12%",
+"+2.7%",
+"-8.3%",
+"-2.7%"
+],
+"ans": 1,
+"why": "Last year: 12,000 × £25 = £300,000. This year: 11,000 × £28 = £308,000. 8,000 ÷ 300,000 × 100 = +2.7%. Sales volume fell by 8.3%.",
+"label": "Calculate"
+},
+{
+"q": "Sales volume fell but sales value rose after the price rise. What does this suggest about demand?",
+"opts": [
+"Demand is price elastic",
+"Demand is price inelastic",
+"The product is an inferior good",
+"The market is shrinking"
+],
+"ans": 1,
+"why": "A price rise of 12% led to a fall in volume of only 8.3%, so revenue went up. That fits price inelastic demand (PED of about -0.7).",
+"label": "Use the answer"
+}
+]
+}

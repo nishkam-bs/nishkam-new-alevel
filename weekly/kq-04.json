@@ -1,0 +1,245 @@
+{
+"title": "Week 4: knowledge quiz",
+"items": [
+{
+"q": "In SMART objectives, what does the T stand for in the AQA specification?",
+"opts": [
+"Time specific",
+"Tested",
+"Truthful",
+"Targeted"
+],
+"ans": 0,
+"why": "The specification lists Specific, Measurable, Accountable, Realistic, Time specific.",
+"label": "3.1.1"
+},
+{
+"q": "What is the main benefit of limited liability for shareholders?",
+"opts": [
+"They get guaranteed dividends",
+"They never pay tax",
+"They can borrow without limit",
+"They can only lose the money they invested, so their personal possessions are protected"
+],
+"ans": 3,
+"why": "Limited liability encourages people to invest because the risk to them is capped.",
+"label": "3.1.2"
+},
+{
+"q": "How do shareholders control a plc?",
+"opts": [
+"They have no control",
+"By managing the business day to day",
+"By setting prices",
+"By voting on decisions, such as electing directors, at meetings like the AGM"
+],
+"ans": 3,
+"why": "Shareholders own the company and vote, usually one vote per share. Directors and managers run it day to day.",
+"label": "3.1.2"
+},
+{
+"q": "Which of these is a reason to buy shares?",
+"opts": [
+"To receive dividends and possibly sell the shares later for more than you paid",
+"To avoid all risk",
+"To become an employee",
+"To lend money that must be repaid with interest"
+],
+"ans": 0,
+"why": "Shareholders hope for dividends and a rise in the share price. Neither is guaranteed.",
+"label": "3.1.2"
+},
+{
+"q": "What is an ethical dilemma in business?",
+"opts": [
+"A legal problem",
+"A choice between two equally profitable options",
+"A disagreement between two managers",
+"A choice where the most profitable option may not be the morally right one"
+],
+"ans": 3,
+"why": "The specification mentions profit vs ethics as an example.",
+"label": "3.1.1"
+},
+{
+"q": "What is one advantage of secondary market research?",
+"opts": [
+"It is usually quicker and cheaper to get than primary research",
+"Competitors cannot see it",
+"It is always up to date",
+"It is collected for the business's exact purpose"
+],
+"ans": 0,
+"why": "Secondary data already exists, but it may be out of date or not quite fit what the business needs.",
+"label": "3.1.3"
+},
+{
+"q": "Which of these is quantitative data?",
+"opts": [
+"62% of customers would visit a shop",
+"A customer's review explaining why they returned a product",
+"Customers said the mugs feel 'lovely to hold'",
+"Notes from a focus group"
+],
+"ans": 0,
+"why": "Quantitative data is numerical. The others are qualitative.",
+"label": "3.1.3"
+},
+{
+"q": "How does a business decide what to put on the axes of a market map?",
+"opts": [
+"It picks them at random",
+"It always uses sales and profit",
+"It chooses two features that matter to customers, such as price and quality",
+"It uses the Boston Matrix axes"
+],
+"ans": 2,
+"why": "The axes should reflect what customers care about when choosing between products.",
+"label": "3.1.3"
+},
+{
+"q": "What does return on marketing spend measure?",
+"opts": [
+"The number of customers reached",
+"The profit made from marketing compared with the amount spent on it",
+"The revenue from all sales",
+"The total marketing budget"
+],
+"ans": 1,
+"why": "Return on marketing spend = profit from marketing activities ÷ marketing spend × 100.",
+"label": "3.1.3"
+},
+{
+"q": "What does an index number show?",
+"opts": [
+"How a figure has changed compared with a base year, which is set at 100",
+"The number of products sold",
+"A business's ranking in its market",
+"The exact value of sales"
+],
+"ans": 0,
+"why": "An index of 120 means 20% higher than the base year.",
+"label": "3.1.3"
+},
+{
+"q": "When will cutting the price increase a business's revenue?",
+"opts": [
+"When the product is an inferior good",
+"When demand is price inelastic",
+"When demand is price elastic",
+"Always"
+],
+"ans": 2,
+"why": "With elastic demand, quantity rises by a larger percentage than price falls.",
+"label": "3.1.3"
+},
+{
+"q": "What YED would you expect for a supermarket's value own-label range?",
+"opts": [
+"Low or negative",
+"Very high and positive",
+"It has no YED",
+"Exactly +1"
+],
+"ans": 0,
+"why": "Value ranges are often inferior goods: when incomes rise, some customers trade up to branded or premium products.",
+"label": "3.1.3"
+},
+{
+"q": "A sportswear brand targeting teenagers mainly uses TikTok rather than newspaper adverts. What is this an example of?",
+"opts": [
+"Market mapping",
+"Price skimming",
+"Adapting the marketing mix for the target market",
+"An extension strategy"
+],
+"ans": 2,
+"why": "The promotion is chosen to reach the target market where they spend their time.",
+"label": "3.1.3"
+},
+{
+"q": "Growth in a market slows down. What is likely to happen to competition?",
+"opts": [
+"It stays the same",
+"It increases, because firms can only grow by taking customers from each other",
+"Prices always rise",
+"It disappears"
+],
+"ans": 1,
+"why": "In a slow-growing market, one firm's gain is usually another's loss, so rivalry tends to increase.",
+"label": "3.1.3"
+},
+{
+"q": "What usually happens to a product in the maturity stage?",
+"opts": [
+"Sales are falling sharply",
+"Sales are growing quickly",
+"Sales are at or near their peak and growth slows",
+"The product has not been launched"
+],
+"ans": 2,
+"why": "Many rivals are in the market by now, so the business may use extension strategies.",
+"label": "3.1.3"
+},
+{
+"q": "What is a star in the Boston Matrix?",
+"opts": [
+"A product with a high share in a low-growth market",
+"A product with a low share in a low-growth market",
+"The best-selling product of all time",
+"A product with a high market share in a high-growth market"
+],
+"ans": 3,
+"why": "Stars earn well but often need heavy spending to keep up with the growing market.",
+"label": "3.1.3"
+},
+{
+"q": "What is the main purpose of market research?",
+"opts": [
+"To guarantee that a product will sell",
+"To set the share price",
+"To meet a legal requirement",
+"To reduce the risk of business decisions by understanding customers and markets"
+],
+"ans": 3,
+"why": "Better information lowers risk, but it cannot remove it.",
+"label": "3.1.3"
+},
+{
+"q": "Marketing forecasts a big rise in sales. Which other function is most directly affected?",
+"opts": [
+"None, marketing decisions only affect marketing",
+"Only shareholders",
+"Operations, which may need more capacity, stock and staff",
+"Only the legal department"
+],
+"ans": 2,
+"why": "Marketing decisions affect operations, finance and HR. The specification calls this the interrelationship between functions.",
+"label": "3.1.3"
+},
+{
+"q": "What does brand awareness measure?",
+"opts": [
+"How much customers like the product",
+"The number of products sold",
+"The proportion of the target market who recognise or know the brand",
+"The price of the brand"
+],
+"ans": 2,
+"why": "Brand awareness is one of the marketing objectives in the specification.",
+"label": "3.1.3"
+},
+{
+"q": "What is discount pricing?",
+"opts": [
+"Adding a mark-up to cost",
+"Setting a high price at launch",
+"Charging the same as rivals",
+"Setting prices below rivals to attract price-sensitive customers"
+],
+"ans": 3,
+"why": "Discount pricing is a competition-based method. Businesses like Aldi and Lidl use it.",
+"label": "3.1.3"
+}
+]
+}

@@ -1,0 +1,185 @@
+{
+"title": "Week 4: calculations",
+"items": [
+{
+"q": "A plc has 120 million shares and a share price of 245p. What is its market capitalisation?",
+"opts": [
+"£49 million",
+"£29.4 million",
+"£294 million",
+"£2,940 million"
+],
+"ans": 2,
+"why": "120 million × £2.45 = £294 million.",
+"label": "Calculate"
+},
+{
+"q": "The plc pays a dividend of 9.8p per share. Its share price is 245p. What is the dividend yield?",
+"opts": [
+"2.4%",
+"25%",
+"4%",
+"0.4%"
+],
+"ans": 2,
+"why": "9.8 ÷ 245 × 100 = 4%.",
+"label": "Calculate"
+},
+{
+"q": "UK e-bike sales rose from 175,000 units in 2024 to 210,000 units in 2025. What is the market growth?",
+"opts": [
+"16.7%",
+"120%",
+"35%",
+"20%"
+],
+"ans": 3,
+"why": "Change = 35,000. 35,000 ÷ 175,000 × 100 = 20%.",
+"label": "Calculate"
+},
+{
+"q": "Volta sold 7,350 e-bikes in a market of 210,000. What is its market share by volume?",
+"opts": [
+"35%",
+"0.035%",
+"28.6%",
+"3.5%"
+],
+"ans": 3,
+"why": "7,350 ÷ 210,000 × 100 = 3.5%.",
+"label": "Calculate"
+},
+{
+"q": "Volta's sales grew from 5,600 to 7,350 bikes while the market grew by 20%. What happened to Volta's market share?",
+"opts": [
+"It fell, because the market grew",
+"It rose, because Volta's sales grew by 31.25%, faster than the market",
+"You cannot tell without the price",
+"It stayed the same"
+],
+"ans": 1,
+"why": "1,750 ÷ 5,600 × 100 = 31.25%. Volta grew faster than the market (20%), so its share rose (from 3.2% to 3.5%).",
+"label": "Use the answer"
+},
+{
+"q": "Delivery riders buy 16% of the 210,000 e-bikes sold. How many is that?",
+"opts": [
+"3,360",
+"13,125",
+"33,600",
+"176,400"
+],
+"ans": 2,
+"why": "0.16 × 210,000 = 33,600 units.",
+"label": "Calculate"
+},
+{
+"q": "Volta spent £600,000 on marketing and estimates this made £930,000 of profit. What is the return on marketing spend?",
+"opts": [
+"155%",
+"£330,000",
+"55%",
+"64.5%"
+],
+"ans": 0,
+"why": "930,000 ÷ 600,000 × 100 = 155%.",
+"label": "Calculate"
+},
+{
+"q": "Why should Volta be careful about relying on the 155% figure?",
+"opts": [
+"It only measures revenue, not profit",
+"Marketing spending always pays for itself",
+"Return on marketing spend can never be above 100%",
+"The profit from marketing is an estimate, and some sales may have happened without the adverts"
+],
+"ans": 3,
+"why": "It is hard to know which sales were caused by marketing. If the profit figure is too high, the return is overstated.",
+"label": "Use the answer"
+},
+{
+"q": "A business raises its price by 10% and quantity demanded falls by 6%. What is the PED?",
+"opts": [
+"-4",
+"-1.67",
+"-16",
+"-0.6"
+],
+"ans": 3,
+"why": "-6 ÷ 10 = -0.6.",
+"label": "Calculate"
+},
+{
+"q": "Fernhill sells 2.4 million packs at £4.50. PED is -0.6. It raises the price to £4.95. What will revenue be?",
+"opts": [
+"£11,880,000",
+"£10,800,000",
+"£10,152,000",
+"£11,167,200"
+],
+"ans": 3,
+"why": "Price rises 10%, so quantity falls 6% to 2,256,000 packs. Revenue = 2,256,000 × £4.95 = £11,167,200, up from £10,800,000.",
+"label": "Calculate"
+},
+{
+"q": "The premium range also has a YED of +1.6 and incomes are expected to fall by 2%. Which is the best conclusion?",
+"opts": [
+"The price rise will definitely increase revenue by 3.4%",
+"The price rise increases revenue, but falling incomes could cut demand by about 3.2% as well, so the gain may be smaller than expected",
+"YED and PED cannot affect demand at the same time",
+"Falling incomes will increase demand for the premium range"
+],
+"ans": 1,
+"why": "1.6 × -2 = -3.2%. Both the price rise and the fall in incomes push demand down, so the extra revenue from the price rise could be partly or fully lost.",
+"label": "Use the answer"
+},
+{
+"q": "Incomes fall by 2% and a product has a YED of +1.6. What is the change in quantity demanded?",
+"opts": [
+"-1.25%",
+"+3.2%",
+"-3.2%",
+"-0.8%"
+],
+"ans": 2,
+"why": "1.6 × -2 = -3.2%.",
+"label": "Calculate"
+},
+{
+"q": "A business's revenue was £68,000 in 2022 and £296,000 in 2025. Using 2022 = 100, what is the index for 2025? (to the nearest whole number)",
+"opts": [
+"228",
+"435",
+"335",
+"23"
+],
+"ans": 1,
+"why": "296,000 ÷ 68,000 × 100 = 435.3, so 435.",
+"label": "Calculate"
+},
+{
+"q": "What does an index of 435 mean?",
+"opts": [
+"Revenue in 2025 was about 4.35 times the 2022 level, a rise of about 335%",
+"Revenue rose by 435%",
+"Revenue in 2025 was £435",
+"Revenue fell"
+],
+"ans": 0,
+"why": "An index of 435 means 435% of the base year, which is a rise of 335%. Watch out for this: the rise is the index minus 100.",
+"label": "Use the answer"
+},
+{
+"q": "A business's sales are 24% of a £25 million market. What are its sales?",
+"opts": [
+"£6 million",
+"£0.96 million",
+"£1.04 million",
+"£60 million"
+],
+"ans": 0,
+"why": "0.24 × £25 million = £6 million.",
+"label": "Calculate"
+}
+]
+}

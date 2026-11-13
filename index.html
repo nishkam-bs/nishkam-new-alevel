@@ -68,13 +68,13 @@ main{max-width:1080px;margin:0 auto;padding:48px 40px 80px;min-width:0}
 .guide-list{list-style:none;padding:0;margin:0}
 .guide-list li{border-top:1px solid var(--rule)}
 .guide-list li:first-child{border-top:0}
-.guide-list a{display:flex;align-items:center;justify-content:space-between;padding:14px 12px;border-radius:8px;transition:.15s;text-decoration:none;color:var(--ink)}
+.guide-list a,.guide-list span.coming-soon{display:flex;align-items:center;justify-content:space-between;padding:14px 12px;border-radius:8px;transition:.15s;text-decoration:none;color:var(--ink)}
 .guide-list a:hover{background:var(--parchment-warm)}
 .guide-list .guide-name{font-weight:600;font-size:14px}
 .guide-list .guide-spec{font-size:12px;color:var(--muted);margin-left:8px}
 .guide-list .guide-arrow{font-size:12px;color:var(--gold);font-weight:700}
-.guide-list a.coming-soon{pointer-events:none;opacity:.45}
-.guide-list a.coming-soon .guide-arrow{color:var(--muted)}
+.guide-list a.coming-soon,.guide-list span.coming-soon{pointer-events:none;opacity:.45}
+.guide-list .coming-soon .guide-arrow{color:var(--muted)}
 .alevel-tag{display:inline-block;font-size:10px;font-weight:700;color:#7c3aed;background:#ede9fe;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle}
 /* Papers */
 .papers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
@@ -181,6 +181,45 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
   .fc-filter-bar{gap:.3rem}
   .fc-filter-btn{font-size:.72rem;padding:.3rem .55rem}
 }
+:root{--success:#2f7a4f}
+.acct{margin:0 0 40px}
+.acct{margin:0 0 30px}
+.nk-home{background:var(--paper);border:1px solid var(--rule);border-radius:14px;padding:24px 26px;max-width:980px}
+.nk-home h3{font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);font-weight:400;margin-bottom:6px}
+.nk-home h4{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 10px}
+.nk-home p{font-size:14.5px;color:var(--ink-soft);max-width:640px}
+.nk-home form{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:16px}
+.nk-home label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--navy);flex:1 1 200px;max-width:280px}
+.nk-home input{padding:10px 12px;font:inherit;font-weight:400;font-size:15px;border:1px solid var(--rule);border-radius:8px;background:var(--parchment);color:var(--ink)}
+.nk-home input:focus{outline:2px solid var(--gold-soft);border-color:var(--gold)}
+.nk-home form button{padding:11px 22px;border-radius:10px;border:0;background:var(--navy);color:#fff;font-weight:700;font-size:14px}
+.nk-home form button:disabled{opacity:.6}
+.nk-home .nk-err{color:#b23b31;font-size:14px;margin-top:10px;min-height:1em}
+.nk-home .nk-small{font-size:13px;color:var(--muted)}
+.nk-home .nk-link{background:none;border:0;padding:0;font:inherit;font-size:13px;color:var(--navy);text-decoration:underline}
+.nk-week{border:1px solid var(--rule);border-radius:12px;padding:18px 20px;background:var(--parchment)}
+.nk-week-top{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap}
+.nk-due{font-size:13px;color:var(--muted);font-weight:600}
+.nk-count{font-family:'DM Serif Display',serif;font-size:28px;color:var(--navy);line-height:1.2;margin-top:2px}
+.nk-go{display:inline-block;background:var(--navy);color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:11px 20px;border-radius:10px}.nk-go:hover{background:var(--navy-soft)}
+.nk-bar-big{display:block;height:9px;margin:14px 0 14px}
+.nk-groups{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px 18px;margin:0;padding:0}
+.nk-groups li{font-size:14px;color:var(--ink);display:flex;align-items:center;gap:8px}
+.nk-tick{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--rule);font-size:12px;font-weight:700;flex:none}
+.nk-groups li.ok .nk-tick{background:var(--success);border-color:var(--success);color:#fff}
+.nk-head{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-bottom:18px}
+.nk-head h3{margin:0}
+.nk-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px}
+.nk-prog{list-style:none;display:grid;gap:9px}
+.nk-prog li{display:grid;grid-template-columns:150px minmax(60px,1fr) 80px;gap:10px;align-items:center;font-size:14px}
+.nk-prog a{color:var(--navy);font-weight:600;text-decoration:none}.nk-prog a:hover{text-decoration:underline}
+.nk-bar-t{height:7px;border-radius:99px;background:var(--parchment-warm);overflow:hidden}.nk-bar-t i{display:block;height:100%;background:var(--success)}
+.nk-marks{list-style:none;display:grid;gap:6px}
+.nk-marks details{border:1px solid var(--rule);border-radius:8px;padding:8px 12px;font-size:14px}
+.nk-marks summary{cursor:pointer}
+.nk-marks details p{font-size:13.5px;margin-top:6px}
+.nk-marks .nk-q{font-style:italic}
+@media(max-width:760px){.nk-cols{grid-template-columns:1fr}.nk-prog li{grid-template-columns:120px 1fr 70px}.nk-home{padding:20px}}
 </style>
 </head>
 <body>
@@ -194,6 +233,7 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
   </div>
   <h2>Overview</h2>
   <a href="index.html" class="active">Home</a>
+  <a href="schedule.html">My schedule</a>
   <h2>Study Tools</h2>
   <a href="six_marker_lab.html">6-Mark Analyse Lab</a>
   <a href="nine_mark_lab.html">9-Mark Assess Lab</a>
@@ -213,15 +253,6 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
   <a class="sub-link" href="guide_3_1_3_marketing_management.html">3.1.3 Marketing</a>
   <a class="sub-link" href="guide_3_1_4_financial_management.html">3.1.4 Finance</a>
   <a class="sub-link" href="unit31/index.html">Unit 3.1 notes</a>
-  <h2>Unit 3.2</h2>
-  <a class="sub-link" href="guide_3_2_1_people_management.html" style="opacity:.5">3.2.1 People management</a>
-  <a class="sub-link" href="guide_3_2_2_operations_management.html" style="opacity:.5">3.2.2 Operations</a>
-  <a class="sub-link" href="guide_3_2_3_managing_business_culture.html" style="opacity:.5">3.2.3 Business culture</a>
-  <h2>Unit 3.3 <span style="font-size:9px;color:#c8d4e6;text-transform:none;letter-spacing:0;font-weight:400">(A-level)</span></h2>
-  <a class="sub-link" href="guide_3_3_1_business_and_society.html" style="opacity:.5">3.3.1 Business &amp; society</a>
-  <a class="sub-link" href="guide_3_3_2_external_environment.html" style="opacity:.5">3.3.2 External environment</a>
-  <a class="sub-link" href="guide_3_3_3_strategy.html" style="opacity:.5">3.3.3 Strategy</a>
-  <a class="sub-link" href="guide_3_3_4_change.html" style="opacity:.5">3.3.4 Change</a>
   <h2>Resources</h2>
   <a href="#" style="opacity:.5">Sample papers</a>
   <a href="formula_reference.html">Formula reference</a>
@@ -237,6 +268,7 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
     <div class="spec">AQA A-Level Business (7138) &middot; First teaching September 2026</div>
     <h2>Your <em>A-Level Business</em> revision hub.</h2>
     <div class="tool-pills">
+      <a href="schedule.html" class="tool-pill">My schedule</a>
       <a href="#courses" class="tool-pill">Courses</a>
       <a href="#flashcards" class="tool-pill">Flashcards</a>
       <a href="six_marker_lab.html" class="tool-pill">6-Mark Analyse Lab</a>
@@ -248,6 +280,8 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
       <a href="#" class="tool-pill disabled">Knowledge Quiz</a>
     </div>
   </div>
+
+  <div class="acct" id="account" hidden></div>
 
   <!-- ══════════════════════════════════════════════════════ -->
   <!-- EMBEDDED FLASHCARDS                                    -->
@@ -495,18 +529,18 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
       </div>
       <p class="unit-desc">HR objectives, organisational design, leadership, motivation, developing people, operations management and managing business culture.</p>
       <ul class="guide-list">
-        <li><a href="guide_3_2_1_people_management.html" class="coming-soon">
+        <li><span class="coming-soon">
           <span><span class="guide-name">People management</span><span class="guide-spec">3.2.1</span></span>
-          <span class="guide-arrow">Coming soon</span>
-        </a></li>
-        <li><a href="guide_3_2_2_operations_management.html" class="coming-soon">
+          <span class="guide-arrow">Not written yet</span>
+        </span></li>
+        <li><span class="coming-soon">
           <span><span class="guide-name">Operations management</span><span class="guide-spec">3.2.2</span></span>
-          <span class="guide-arrow">Coming soon</span>
-        </a></li>
-        <li><a href="guide_3_2_3_managing_business_culture.html" class="coming-soon">
+          <span class="guide-arrow">Not written yet</span>
+        </span></li>
+        <li><span class="coming-soon">
           <span><span class="guide-name">Managing business culture</span><span class="guide-spec">3.2.3</span><span class="alevel-tag">A-level only</span></span>
-          <span class="guide-arrow">Coming soon</span>
-        </a></li>
+          <span class="guide-arrow">Not written yet</span>
+        </span></li>
       </ul>
     </div>
 
@@ -518,22 +552,22 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
       </div>
       <p class="unit-desc">Corporate social responsibility, sustainability, ESG, the competitive and economic environment, strategic planning and managing change.</p>
       <ul class="guide-list">
-        <li><a href="guide_3_3_1_business_and_society.html" class="coming-soon">
+        <li><span class="coming-soon">
           <span><span class="guide-name">Business and society</span><span class="guide-spec">3.3.1</span></span>
-          <span class="guide-arrow">Coming soon</span>
-        </a></li>
-        <li><a href="guide_3_3_2_external_environment.html" class="coming-soon">
+          <span class="guide-arrow">Not written yet</span>
+        </span></li>
+        <li><span class="coming-soon">
           <span><span class="guide-name">Business and the external environment</span><span class="guide-spec">3.3.2</span></span>
-          <span class="guide-arrow">Coming soon</span>
-        </a></li>
-        <li><a href="guide_3_3_3_strategy.html" class="coming-soon">
+          <span class="guide-arrow">Not written yet</span>
+        </span></li>
+        <li><span class="coming-soon">
           <span><span class="guide-name">Strategy</span><span class="guide-spec">3.3.3</span></span>
-          <span class="guide-arrow">Coming soon</span>
-        </a></li>
-        <li><a href="guide_3_3_4_change.html" class="coming-soon">
+          <span class="guide-arrow">Not written yet</span>
+        </span></li>
+        <li><span class="coming-soon">
           <span><span class="guide-name">Change</span><span class="guide-spec">3.3.4</span></span>
-          <span class="guide-arrow">Coming soon</span>
-        </a></li>
+          <span class="guide-arrow">Not written yet</span>
+        </span></li>
       </ul>
     </div>
   </div>
@@ -1190,5 +1224,8 @@ document.getElementById('fc-ai-shuffle-btn').addEventListener('click', () => {
   fcShuffle(fcAiDeck); fcAiIndex = 0; fcRenderAiCard();
 });
 </script>
+<script src="account.js"></script>
+<script>if(window.Acct)Acct.mountHome('#account');</script>
+<script src="visit.js" defer></script>
 </body>
 </html>

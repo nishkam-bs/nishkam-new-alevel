@@ -1,0 +1,14 @@
+# Tracker for the 7138 site (Year 12). Deployed automatically by Cloudflare from this folder.
+# It has its own D1 database. Never point this at the 7132 database.
+name = "nishkam-tracker-7138"
+main = "src/index.js"
+compatibility_date = "2025-10-01"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGINS = "https://nishkam-bs.github.io,https://nishkam-new-alevel.alevelnishkam.workers.dev"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nishkam-tracker-7138"
+database_id = "PASTE-THE-7138-DATABASE-ID-HERE"

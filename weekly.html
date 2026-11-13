@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Weekly questions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{--bg:#FAF7F1;--bg2:#F3ECDB;--card:#fff;--fg:#1A1A1A;--navy:#0E2A47;--muted:#6B6B6B;--line:#E5DFD2;--ok:#2d7a4f;--ok-soft:rgba(45,122,79,.12);--end:#b23b31;--end-soft:rgba(178,59,49,.1)}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1420;--bg2:#121a28;--card:#172133;--fg:#e9ecf2;--navy:#cfe0f5;--muted:#9aa4b6;--line:rgba(255,255,255,.1);--ok:#5fcf80;--ok-soft:rgba(95,207,128,.14);--end:#ff7d70;--end-soft:rgba(255,125,112,.12);color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
+.wrap{max-width:820px;margin:0 auto;padding:32px max(18px,env(safe-area-inset-right,0px)) 80px max(18px,env(safe-area-inset-left,0px))}
+h1{font-family:"DM Serif Display",Georgia,serif;font-weight:400;color:var(--navy);font-size:2.2rem;margin:6px 0;line-height:1.15}
+.top a{color:var(--muted);font-size:.9rem}
+.lead{color:var(--muted);margin:0 0 18px}
+.prog{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0;border-bottom:1px solid var(--line);margin-bottom:18px;display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:.92rem}
+.prog .bar{flex:1 1 160px;height:8px;border-radius:99px;background:var(--bg2);overflow:hidden}
+.prog .bar i{display:block;height:100%;background:var(--navy);width:0;transition:width .3s}
+.qc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px}
+.qn{font:600 .78rem "IBM Plex Mono",monospace;color:var(--muted);margin-bottom:6px;display:flex;gap:10px}
+.qt{margin:0 0 10px}
+.qt p{margin:0 0 6px}
+.fig{margin:6px 0 12px;color:var(--fg);max-width:560px}
+.fig svg{width:100%;height:auto;display:block}
+.fig img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:#fff}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:10px;padding:10px 12px;font:inherit;cursor:pointer}
+.opt:hover:not([disabled]){border-color:var(--navy)}
+.opt b{font-family:"IBM Plex Mono",monospace;min-width:18px}
+.opt[disabled]{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--end);background:var(--end-soft)}
+.fb{margin-top:12px;padding:10px 14px;border-left:3px solid var(--line);font-size:.94rem}
+.fb.r{border-color:var(--ok)}.fb.w{border-color:var(--end)}
+.fb strong{display:block;margin-bottom:2px}
+.done{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:10px}
+.muted{color:var(--muted)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="schedule.html">Back to my schedule</a></div>
+  <h1 id="title">Weekly questions</h1>
+  <p class="lead" id="lead">Click an answer. You will see straight away whether it is right, with an explanation. Your first answer is the one that counts, so think before you click.</p>
+  <div id="bar"></div>
+  <div class="prog" id="prog" hidden><span id="progTxt"></span><span class="bar"><i id="progBar"></i></span></div>
+  <div id="qs"></div>
+  <div class="done" id="end" hidden></div>
+</div>
+<script src="account.js"></script>
+<script>
+(function(){
+"use strict";
+const Ac=window.Acct,$=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const set=(new URLSearchParams(location.search).get('set')||'').replace(/[^a-z0-9-]/gi,'');
+const KEY='quiz:'+set;
+let Q=null;
+Ac.merge('quiz:',(a,b)=>{const out=Object.assign({},b,a);const n=Math.max((a.a||[]).length,(b.a||[]).length);out.a=[];
+  for(let i=0;i<n;i++){const x=(a.a||[])[i],y=(b.a||[])[i];out.a[i]=x!=null?x:(y!=null?y:null);}
+  out.done=a.done&&b.done?(a.done<b.done?a.done:b.done):(a.done||b.done||null);return score(out);});
+function score(st){if(!Q)return st;st.total=Q.items.length;st.score=(st.a||[]).filter((x,i)=>x!=null&&Q.items[i]&&x===Q.items[i].ans).length;return st;}
+function state(){return Object.assign({a:[]},Ac.get(KEY)||{});}
+const L='ABCD';
+function fmtQ(t){return '<p>'+esc(t).replace(/\s*(Statement [12]:)/g,'\n\n$1').trim().split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean).join('</p><p>')+'</p>';}
+function render(){
+  const st=state();
+  $('#qs').innerHTML=Q.items.map((it,i)=>{
+    const a=st.a[i];const answered=a!=null;
+    return `<div class="qc" id="q${i}"><div class="qn"><span>${i+1} of ${Q.items.length}</span><span>${esc(it.label||'')}</span></div>
+      <div class="qt">${fmtQ(it.q)}</div>${it.svg?`<div class="fig">${it.svg}</div>`:''}${it.img?`<div class="fig"><img src="${esc(it.img)}" alt="${esc(it.alt||'Figure for this question')}"></div>`:''}
+      <div class="opts">${it.opts.map((o,j)=>`<button class="opt${answered&&j===it.ans?' right':''}${answered&&j===a&&a!==it.ans?' wrong':''}" data-i="${i}" data-j="${j}" ${answered?'disabled':''}><b>${L[j]}</b><span>${esc(o)}</span></button>`).join('')}</div>
+      ${answered?`<div class="fb ${a===it.ans?'r':'w'}"><strong>${a===it.ans?'Right.':'Not quite. The answer is '+L[it.ans]+'.'}</strong>${esc(it.why)}</div>`:''}</div>`;}).join('');
+  document.querySelectorAll('.opt:not([disabled])').forEach(b=>b.onclick=()=>choose(+b.dataset.i,+b.dataset.j));
+  progress(st);
+}
+function progress(st){
+  const n=Q.items.length,done=st.a.filter(x=>x!=null).length,right=st.a.filter((x,i)=>x!=null&&x===Q.items[i].ans).length;
+  $('#prog').hidden=false;$('#progTxt').textContent=`${done} of ${n} answered · ${right} right first time`;$('#progBar').style.width=(done/n*100)+'%';
+  const end=$('#end');
+  if(done===n){end.hidden=false;end.innerHTML=`<b>Finished: ${right} out of ${n} right first time.</b><p class="muted" style="margin:6px 0 0">This is ticked off in your schedule. Look back at any you got wrong and read the explanation again. <a href="schedule.html">Back to my schedule</a></p>`;}
+  else end.hidden=true;
+}
+function choose(i,j){
+  const st=state();if(st.a[i]!=null)return;
+  st.a[i]=j;st.a.length=Math.max(st.a.length,Q.items.length);for(let k=0;k<Q.items.length;k++)if(st.a[k]===undefined)st.a[k]=null;
+  if(st.a.every(x=>x!=null)&&!st.done){st.done=new Date().toISOString();try{sessionStorage.removeItem('n8_sched');}catch(e){}}
+  Ac.set(KEY,score(st));
+  const y=document.getElementById('q'+i).getBoundingClientRect().top;render();
+  const el=document.getElementById('q'+i);window.scrollBy(0,el.getBoundingClientRect().top-y);
+}
+async function load(){
+  if(!/^(kq|calc)-\d{2}$/.test(set)){$('#qs').innerHTML='<p class="muted">This set of questions could not be found.</p>';return;}
+  try{const r=await fetch('weekly/'+set+'.json',{cache:'no-cache'});if(!r.ok)throw 0;Q=await r.json();}
+  catch(e){$('#qs').innerHTML='<p class="muted">Could not load the questions. Check your connection and try again.</p>';return;}
+  document.title=Q.title;$('#title').textContent=Q.title;
+  if(/^calc/.test(set))$('#lead').textContent='Work each one out on paper first, then click your answer. Some questions ask what the answer means for the business. The worked solution appears underneath. Your first answer is the one that counts.';
+  render();
+}
+Ac.bar('#bar',{inside:true,text:'Sign in once on the home page so your answers are saved and ticked off in your schedule.'});
+Ac.ready.then(load);Ac.onChange(keys=>{if(Q&&keys.includes(KEY))render();});
+})();
+</script>
+<script src="visit.js" defer></script>
+</body>
+</html>

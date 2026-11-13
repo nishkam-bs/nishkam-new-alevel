@@ -14,7 +14,9 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const C=window.COURSE;
 const STAGES=C.stages;
 const OFFSET=C.offset||0;            // stage numbers in the sheet: course offset + stage (0, 100, 200...)
-const countOf=s=>s.type==='timed'?(s.count||12):s.items.length;
+/* each stage keeps a bank of questions; a run serves `serve` of them (or the whole bank if no serve is set) */
+C.stages.forEach(s=>{s.bank=s.items;});
+const countOf=s=>s.type==='timed'?(s.count||12):s.type==='write'?1:Math.min(s.serve||s.bank.length,s.bank.length);
 
 document.body.insertAdjacentHTML('afterbegin',`<canvas id="burst" aria-hidden="true"></canvas>
 <div id="mapView">
@@ -34,7 +36,7 @@ document.body.insertAdjacentHTML('afterbegin',`<canvas id="burst" aria-hidden="t
       <div class="nodes" id="nodes"></div>
     </div>
   </section>
-  <footer><div class="wrap"><a href="courses.html" style="color:var(--muted)">All courses</a> · <a href="index.html" style="color:var(--muted)">Main site</a><br>Nishkam School West London · Man neeva, mat uchi<br><button id="resetAll">Reset my progress</button></div></footer>
+  <footer><div class="wrap"><a href="courses.html" style="color:var(--muted)">All courses</a> · <a href="index.html" style="color:var(--muted)">Main site</a><br>Nishkam School West London · Man Neeva, Mat Uchi<br><button id="resetAll">Reset my progress</button></div></footer>
 </div>
 <div id="stageView" hidden>
   <div class="stagebar">
@@ -52,65 +54,60 @@ document.body.insertAdjacentHTML('afterbegin',`<canvas id="burst" aria-hidden="t
    STATE
    ===================================================================== */
 /* every question gets a label so the teacher dashboard can show which ones are missed */
-STAGES.forEach(s=>s.items.forEach((it,i)=>{it._id=s.id+'.'+(i+1);}));
+STAGES.forEach(s=>s.bank.forEach((it,i)=>{it._id=s.id+'.'+(i+1);}));
 
-/* 7138 site: results go to the Year 12 tracker Worker (not the 7132 one).
-   Sign-in is stored as y12_auth and shared with the marking tools (y12-tracker.js). */
-const TRACKING_ON=true;
-const TRACK=TRACKING_ON&&(/github\.io$/.test(location.hostname)||/[?&]track=test/.test(location.search));
-const API='https://nishkam-tracker-7138.alevelnishkam.workers.dev';
-const AKEY='y12_auth';
+/* Tracking only runs on the school site. Everywhere else the course works on its own. */
+/* Progress is saved to the student's account (account.js) and follows them between devices.
+   Off the live site (e.g. opened from a file) it is kept in this browser only. */
+const A=window.Acct||{on:false,user:null,get(){},set(){},send(){},merge(){},onChange(){},bar(){return null;},ready:Promise.resolve()};
+const TRACK=A.on;
 const KEY=C.key;
-const blank=()=>({best:{},passed:{},draft:''});
-let auth=null;
-try{auth=JSON.parse(localStorage.getItem(AKEY)||'null');}catch(e){}
-if(!TRACK)auth=null;
-const skey=()=>auth?KEY+'_'+auth.exam:KEY;
+const AKEY='course:'+KEY;
+const blank=()=>({best:{},passed:{},draft:'',seen:{},wrong:{},draftT:0});
+const signedIn=()=>!!A.user;
 let state=blank();
-/* progress made before signing in is carried over to the signed-in record */
-function loadState(){state=blank();try{const r=localStorage.getItem(skey())||(auth?localStorage.getItem(KEY):null);if(r)state=Object.assign(state,JSON.parse(r));}catch(e){}}
+const tidy=s=>{s=Object.assign(blank(),s||{});s.seen=s.seen||{};s.wrong=s.wrong||{};s.best=s.best||{};s.passed=s.passed||{};return s;};
+function legacy(){
+  /* progress saved on this device before accounts (anonymous, or under an exam number) */
+  const out=[];
+  try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k===KEY||k.startsWith(KEY+'_')){const v=JSON.parse(localStorage.getItem(k));if(v&&typeof v==='object')out.push(v);}}}catch(e){}
+  return out;
+}
+function mergeCourse(a,b){
+  a=tidy(a);b=tidy(b);const m=tidy({});
+  new Set([...Object.keys(a.best),...Object.keys(b.best)]).forEach(k=>{m.best[k]=Math.max(a.best[k]??-1,b.best[k]??-1);});
+  new Set([...Object.keys(a.passed),...Object.keys(b.passed)]).forEach(k=>{if(a.passed[k]||b.passed[k])m.passed[k]=true;});
+  new Set([...Object.keys(a.seen),...Object.keys(b.seen)]).forEach(k=>{m.seen[k]=[...new Set([...(a.seen[k]||[]),...(b.seen[k]||[])])];});
+  new Set([...Object.keys(a.wrong),...Object.keys(b.wrong)]).forEach(k=>{m.wrong[k]=[...new Set([...(a.wrong[k]||[]),...(b.wrong[k]||[])])];});
+  /* the essay draft and plan come from whichever copy was edited last */
+  const d=(b.draftT||0)>(a.draftT||0)?b:a;
+  Object.keys(d).forEach(k=>{if(k==='draft'||k==='draftT'||/^plan/.test(k))m[k]=d[k];});
+  return m;
+}
+A.merge(AKEY,mergeCourse);
+function loadState(){
+  if(TRACK){
+    if(signedIn()){
+      state=tidy(A.get(AKEY));
+      if(!localStorage.getItem(KEY+'__moved')){
+        const old=legacy();
+        if(old.length){state=old.reduce((s,o)=>mergeCourse(s,o),state);A.set(AKEY,state);}
+        try{localStorage.setItem(KEY+'__moved','1');}catch(e){}
+      }
+    }else state=blank();
+  }else{state=blank();try{const r=localStorage.getItem(KEY);if(r)state=tidy(JSON.parse(r));}catch(e){}}
+}
 loadState();
 const teacher = !TRACK && location.hash==='#teacher';
-function save(){try{localStorage.setItem(skey(),JSON.stringify(state));}catch(e){}}
-const isUnlocked=id=>teacher||((!TRACK||auth)&&(id===1||!!state.passed[id-1]));
-
-async function api(path,body){
-  const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  const d=await r.json().catch(()=>({}));
-  if(r.status===401&&path!=='/login'){signOut('Your sign-in has expired. Please sign in again.');throw new Error('auth');}
-  if(!r.ok)throw new Error(d.error||'Something went wrong');
-  return d;
-}
-function signOut(msg){auth=null;try{localStorage.removeItem(AKEY);}catch(e){}loadState();renderAuth(msg);renderMap();}
-async function syncProgress(){
-  if(!auth)return;
-  try{const d=await api('/progress',{token:auth.token});
-    /* the sheet stores every course together; keep only this course's stages */
-    const mine=k=>{k=+k;return k>OFFSET&&k<OFFSET+100?k-OFFSET:null;};
-    Object.entries(d.best||{}).forEach(([k,v])=>{const s=mine(k);if(s&&(state.best[s]==null||v>state.best[s]))state.best[s]=v;});
-    Object.keys(d.passed||{}).forEach(k=>{const s=mine(k);if(s)state.passed[s]=true;});save();renderMap();}catch(e){}
-}
-function pending(){try{return JSON.parse(localStorage.getItem('y12_cpending_'+(auth&&auth.exam))||'[]');}catch(e){return [];}}
-function setPending(a){try{localStorage.setItem('y12_cpending_'+(auth&&auth.exam),JSON.stringify(a));}catch(e){}}
-async function flush(){
-  if(!auth)return;let q=pending();
-  while(q.length){try{await api('/log',Object.assign({token:auth.token},q[0]));q.shift();setPending(q);}catch(e){break;}}
-  const el=$('#syncTxt');if(el)el.textContent=q.length?`${q.length} result${q.length>1?'s':''} waiting to send`:'Progress saved';
-}
-function logResult(row){if(!TRACK||!auth)return;const q=pending();q.push(row);setPending(q);flush();}
-
-function renderAuth(msg){
+function save(){if(TRACK){if(signedIn())A.set(AKEY,state);}else{try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}}
+const isUnlocked=id=>teacher||((!TRACK||signedIn())&&(id===1||!!state.passed[id-1]));
+function logResult(row){if(TRACK&&signedIn())A.send('/log',row);}
+let authBar=null;
+function renderAuth(){
   const box=$('#authBox');if(!TRACK){box.hidden=true;return;}box.hidden=false;
-  if(auth){box.innerHTML=`<div class="who">Signed in as <b>${esc(auth.name)}</b> <span class="sync" id="syncTxt"></span><button id="soBtn">Not you? Sign out</button></div>`;$('#soBtn').onclick=()=>signOut();return;}
-  box.innerHTML=`<form class="signin" id="siForm"><h3>Sign in to start</h3><p>Enter your exam number and the class code. Your progress is saved, so you can carry on from any device.</p>
-    <div class="row"><input class="txt" id="siExam" inputmode="numeric" autocomplete="off" placeholder="Exam number" aria-label="Exam number"><input class="txt" id="siCode" autocomplete="off" placeholder="Class code" aria-label="Class code"><button class="btn" type="submit">Sign in</button></div>
-    <div class="err" aria-live="polite">${msg?esc(msg):''}</div></form>`;
-  $('#siForm').onsubmit=async e=>{e.preventDefault();const btn=$('#siForm .btn'),err=$('#siForm .err');btn.disabled=true;err.textContent='';
-    try{const d=await api('/login',{exam:$('#siExam').value.trim(),code:$('#siCode').value.trim()});
-      auth={token:d.token,name:d.name,exam:d.exam};try{localStorage.setItem(AKEY,JSON.stringify(auth));}catch(x){}
-      loadState();renderAuth();renderMap();await syncProgress();flush();
-    }catch(x){err.textContent=x.message==='Failed to fetch'?'Could not connect. Check your internet and try again.':x.message;btn.disabled=false;}};
+  if(!authBar)authBar=A.bar(box,{inside:true,text:'Sign in once on the home page to start. Your progress is saved to your account, so you can carry on from any device.'});
 }
+A.onChange(keys=>{if(keys.includes(AKEY)||keys.includes('*')){if($('#mapView')&&!$('#mapView').hidden){loadState();renderMap();}}});
 
 /* =====================================================================
    HERO NETWORK
@@ -138,11 +135,11 @@ function renderMap(){
   STAGES.forEach(s=>{
     const un=isUnlocked(s.id),ps=!!state.passed[s.id];
     const d=document.createElement('div');d.className='node reveal'+(un?'':' locked')+(ps?' passed':'')+(current&&current.id===s.id?' current':'');
-    const best=state.best[s.id];
-    const cnt=countOf(s);const status=TRACK&&!auth?'Sign in first':!un?'Locked':ps?(s.type==='write'?'Complete':`Passed · ${best}/${cnt}`):(best!=null?`Best ${best}/${cnt}`:'Ready');
+    const best=state.best[s.id]==null?null:Math.min(state.best[s.id],countOf(s));
+    const cnt=countOf(s);const status=TRACK&&!signedIn()?'Sign in first':!un?'Locked':ps?(s.type==='write'?'Complete':`Passed · ${best}/${cnt}`):(best!=null?`Best ${best}/${cnt}`:'Ready');
     d.innerHTML=`<button class="ncard" ${un?'':'aria-disabled="true"'}><div class="top"><span class="n">${ps?'✓':s.id}</span><span class="st">${status}</span></div><h3>${esc(s.title)}</h3><p>${esc(s.blurb)}</p></button>`;
     const c=d.querySelector('.ncard');
-    c.onclick=()=>{if(un)openStage(s.id);else if(TRACK&&!auth){const i=$('#siExam');if(i){i.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});i.focus({preventScroll:true});}}else{c.animate([{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'none'}],{duration:300});}};
+    c.onclick=()=>{if(un)openStage(s.id);else if(TRACK&&!signedIn()){const b=$('#authBox');if(b)b.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});}else{c.animate([{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'none'}],{duration:300});}};
     if(fine&&!reduce){c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`rotateX(${-y*10}deg) rotateY(${x*14}deg) translateZ(10px)`;});c.addEventListener('pointerleave',()=>c.style.transform='');}
     box.append(d);
   });
@@ -172,9 +169,10 @@ let timerId=null;
 function openStage(id){
   const st=STAGES.find(s=>s.id===id);
   if(st.type==='timed'){
-    const pool=st.poolFrom.flatMap(id=>{const src=STAGES.find(x=>x.id===id);return src.items.map(x=>Object.assign({_k:src.type,_from:src},x));});
-    st.items=shuffle(pool).slice(0,countOf(st));
-  }
+    const pool=st.poolFrom.flatMap(id=>{const src=STAGES.find(x=>x.id===id);return src.bank.map(x=>Object.assign({_k:src.type,_from:src},x));});
+    st.items=pickItems(st.id,pool,countOf(st));
+  }else if(st.type!=='write')st.items=pickItems(st.id,st.bank,countOf(st));
+  else st.items=st.bank;
   S={st,i:-1,score:0,streak:0,results:[],t0:0,cd:null};
   $('#mapView').hidden=true;$('#stageView').hidden=false;running=false;
   $('#sTitle').textContent=`Stage ${st.id} · ${st.title}`;
@@ -289,7 +287,7 @@ function itemCalc(it,wrap){
   const inp=$('.num',wrap),btn=$('.btn',wrap);inp.focus({preventScroll:true});
   const go=()=>{const v=parseFloat(inp.value.replace(/[−–]/g,'-').replace(/:\s*1\s*$/,'').replace(/[^0-9.\-]/g,''));if(isNaN(v)){inp.focus();return;}
     inp.disabled=true;btn.disabled=true;const ok=Math.abs(v-it.ans)<=(it.tol||0)+1e-9;
-    const trap=!ok&&(it.traps||[]).find(t=>Math.abs(t.v-v)<=Math.max(0.06,Math.abs(t.v)*0.001));
+    const trap=!ok&&(it.traps||[]).filter(t=>Math.abs(t.v-it.ans)>(it.tol||0)+0.06).find(t=>Math.abs(t.v-v)<=Math.max(0.06,Math.abs(t.v)*0.001));
     record(ok);fb($('.fbz',wrap),ok,ok?'Correct':`Not quite. The answer is ${esc(ansText())}`,(trap?esc(trap.m)+'<br><br>':'')+'<b>Working:</b> '+esc(it.work),it.use?esc(it.use):'');nextBtn(wrap);};
   btn.onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go();};
   wrap._timeout=()=>{inp.disabled=true;btn.disabled=true;fb($('.fbz',wrap),false,`Out of time. The answer is ${esc(ansText())}`,'<b>Working:</b> '+esc(it.work));};
@@ -321,14 +319,14 @@ function itemWrite(it,wrap){
   inputs.forEach(i=>{i.value=state['plan'+i.dataset.p]||'';});
   function doPlan(){
     if(!plan.length)return;
-    inputs.forEach(i=>{state['plan'+i.dataset.p]=i.value;});save();
+    inputs.forEach(i=>{state['plan'+i.dataset.p]=i.value;});state.draftT=Date.now();save();
     const bad=plan.find(p=>!p.ok(String(state['plan'+p.id]||'').toLowerCase()));
     if(!bad){msg.innerHTML=`<span style="color:var(--ok)">${esc(W.planOk||'Good. Keep these in front of you while you write.')}</span>`;ta.disabled=false;}
     else{ta.disabled=!state.draft;msg.textContent=plan.every(p=>!state['plan'+p.id])?'':bad.hint;}
   }
   inputs.forEach(i=>i.oninput=doPlan);doPlan();
   function check(){
-    const v=ta.value,low=v.toLowerCase();state.draft=v;save();
+    const v=ta.value,low=v.toLowerCase();state.draft=v;state.draftT=Date.now();save();
     const words=(v.match(/\b[\w'-]+\b/g)||[]).length;$('.wc',wrap).textContent=words+' words';
     const sents=v.split(/(?<=[.!?])\s+/).map(x=>x.trim()).filter(Boolean);
     const ctx={v,low,words,sents,last:(sents[sents.length-1]||'').toLowerCase(),first:(sents[0]||'').toLowerCase(),firstTwo:sents.slice(0,2).join(' ').toLowerCase()};
@@ -356,6 +354,25 @@ function itemWrite(it,wrap){
   };
 }
 
+/* Choose the questions for a run: ones this student hasn't seen yet come first.
+   Once the whole bank has been seen, a new round starts, with the ones they got wrong first. */
+function pickItems(key,pool,n){
+  const seen=new Set(state.seen[key]||[]),wrong=new Set(state.wrong[key]||[]);
+  const unseen=shuffle(pool.filter(it=>!seen.has(it._id)));
+  let pick;
+  if(unseen.length>=n){pick=unseen.slice(0,n);state.seen[key]=[...seen,...pick.map(it=>it._id)];}
+  else{
+    const rest=shuffle(pool.filter(it=>seen.has(it._id))).sort((a,b)=>(wrong.has(b._id)?1:0)-(wrong.has(a._id)?1:0));
+    pick=[...unseen,...rest].slice(0,n);state.seen[key]=pick.map(it=>it._id);
+  }
+  save();return shuffle(pick);
+}
+function noteWrong(key,items){
+  const w=new Set(state.wrong[key]||[]);
+  items.forEach((it,i)=>{if(S.results[i])w.delete(it._id);else w.add(it._id);});
+  state.wrong[key]=[...w];
+}
+
 /* =====================================================================
    RESULT
    ===================================================================== */
@@ -363,7 +380,7 @@ function finish(writeDone){
   clearInterval(timerId);
   const st=S.st,n=st.items.length,passed=st.type==='write'?!!writeDone:S.score>=st.pass;
   const prevBest=state.best[st.id]??-1;if(S.score>prevBest)state.best[st.id]=S.score;
-  if(passed)state.passed[st.id]=true;save();
+  if(passed)state.passed[st.id]=true;if(st.type!=='write')noteWrong(st.id,st.items);save();
   logResult({stage:OFFSET+st.id,stageTitle:(C.short?C.short+': ':'')+st.title,score:st.type==='write'?1:S.score,total:st.type==='write'?1:n,passed,
     seconds:Math.round((Date.now()-S.t0)/1000),
     missed:st.type==='write'?[]:st.items.filter((it,i)=>!S.results[i]).map(it=>it._id+' '+it.src),
@@ -375,7 +392,7 @@ function finish(writeDone){
   if(st.type==='write'){const W=st.items[0].w;title=W.doneTitle||'Course complete';text=W.doneText||'';}
   else if(passed&&!nextSt){title='Course complete';text=C.doneText||'You have passed every stage.';}
   else if(passed){title=S.score===n?'Full marks':'Stage passed';text=nextSt?`${esc(nextSt.title)} is now unlocked.`:'';}
-  else{title='Not yet';text=`You need ${st.pass} out of ${n} to pass. Look at the ones you missed below, then try again. The order of the answers changes each time.`;}
+  else{title='Not yet';text=`You need ${st.pass} out of ${n} to pass. Look at the ones you missed below, then try again. You will get a different set of questions next time.`;}
   $('#stageBody').innerHTML=`<div class="item result"><div class="ringbox"><svg width="180" height="180" viewBox="0 0 180 180"><circle class="bgc" cx="90" cy="90" r="${r}" fill="none" stroke-width="10"/><circle class="fgc" id="resRing" cx="90" cy="90" r="${r}" fill="none" stroke-width="10" stroke-linecap="round" stroke="${passed?css('--ok'):css('--end')}" stroke-dasharray="${CIRC}" stroke-dashoffset="${CIRC}"/></svg>
     <div class="val"><b>${st.type==='write'?'✓':S.score}</b><span>${st.type==='write'?'done':'out of '+n}</span></div></div>
     <h2>${title}</h2><p>${text}</p>
@@ -406,5 +423,5 @@ if(fine&&!reduce)document.addEventListener('pointermove',e=>{const b=e.target.cl
 
 if(TRACK)$('#resetAll').hidden=true;
 document.title=document.title||C.name;
-renderAuth();renderMap();if(auth){syncProgress();flush();}
+renderAuth();renderMap();A.ready.then(()=>{loadState();renderMap();});
 })();

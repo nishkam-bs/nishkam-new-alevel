@@ -41,6 +41,7 @@
 </main>
 <footer><div class="wrap"><a href="index.html" style="color:var(--muted)">Back to the main site</a><br>Nishkam School West London · Man neeva, mat uchi</div></footer>
 
+<script src="account.js"></script>
 <script>
 (function(){
 "use strict";
@@ -52,15 +53,12 @@ const COURSES=[
   {href:'course-calculate.html',key:'y12_course_calculate_v1',offset:1200,stages:10,tag:'Calculations',title:'Calculate and Use It Course',
    text:'Pick the right formula and figures, get the calculation right, then use the result in your argument and your judgement. Finishes with the Gymshark current ratio 9-marker.'}
 ];
-const API='https://nishkam-tracker-7138.alevelnishkam.workers.dev';
-const TRACK=/github\.io$/.test(location.hostname)||/[?&]track=test/.test(location.search); /* Year 12 tracker Worker; sign-in shared with the courses and marking tools */
+const A=window.Acct||{user:null,get(){},bar(){},ready:Promise.resolve(),onChange(){}};
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, fine=matchMedia('(pointer: fine)').matches;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let auth=null;try{auth=JSON.parse(localStorage.getItem('y12_auth')||'null');}catch(e){}
-if(!TRACK)auth=null;
 
-function local(c){try{const r=localStorage.getItem(auth?c.key+'_'+auth.exam:c.key);return r?JSON.parse(r):null;}catch(e){return null;}}
+function local(c){if(A.user)return A.get('course:'+c.key)||null;try{const r=localStorage.getItem(c.key);return r?JSON.parse(r):null;}catch(e){return null;}}
 function render(server){
   $('#list').innerHTML=COURSES.map((c,i)=>{
     const st=local(c),passed=new Set(Object.keys((st&&st.passed)||{}).filter(k=>st.passed[k]).map(Number));
@@ -75,10 +73,9 @@ function render(server){
     if(fine&&!reduce){el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`rotateX(${-y*6}deg) rotateY(${x*8}deg)`;});el.addEventListener('pointerleave',()=>el.style.transform='');}
   });
 }
-$('#who').innerHTML=auth?`<div class="who">Signed in as <b>${esc(auth.name)}</b></div>`:(TRACK?`<p style="color:var(--muted);font-size:.92rem">Open any course and sign in with your exam number. You only need to do it once.</p>`:'');
+A.bar('#who',{inside:true,text:'Sign in once on the home page and your course progress is saved to your account.'});
 render(null);
-if(auth){fetch(API+'/progress',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:auth.token})})
-  .then(r=>r.ok?r.json():null).then(d=>{if(d)render(d.passed||{});}).catch(()=>{});}
+A.ready.then(()=>render(null));A.onChange(()=>render(null));
 
 /* hero network */
 const cv=$('#net'),cx=cv.getContext('2d');let W,H,pts=[],mouse={x:-999,y:-999};
@@ -94,5 +91,6 @@ size();draw();addEventListener('resize',size);
 const hero=document.querySelector('.hero');hero.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;});hero.addEventListener('pointerleave',()=>{mouse.x=mouse.y=-999;});
 })();
 </script>
+<script src="visit.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>My schedule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{--bg:#FAF7F1;--bg2:#F3ECDB;--card:#fff;--fg:#1A1A1A;--navy:#0E2A47;--muted:#6B6B6B;--line:#E5DFD2;--ok:#2d7a4f;--ok-soft:rgba(45,122,79,.12);--amber:#a7741a;--amber-soft:rgba(183,121,31,.14);--end:#b23b31;--end-soft:rgba(178,59,49,.1)}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1420;--bg2:#121a28;--card:#172133;--fg:#e9ecf2;--navy:#cfe0f5;--muted:#9aa4b6;--line:rgba(255,255,255,.1);--ok:#5fcf80;--ok-soft:rgba(95,207,128,.14);--amber:#e8b04a;--amber-soft:rgba(232,176,74,.14);--end:#ff7d70;--end-soft:rgba(255,125,112,.12);color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:32px max(18px,env(safe-area-inset-right,0px)) 70px max(18px,env(safe-area-inset-left,0px))}
+h1,h2{font-family:"DM Serif Display",Georgia,serif;font-weight:400;color:var(--navy);margin:0;line-height:1.15}
+h1{font-size:2.4rem;margin:6px 0}
+h2{font-size:1.4rem;margin-bottom:4px}
+.top a{color:var(--muted);font-size:.9rem}
+.lead{color:var(--muted);margin:0 0 20px;max-width:660px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:18px}
+.muted{color:var(--muted)}.small{font-size:.86rem}
+.sum{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 16px}
+.sum span{padding:6px 12px;border-radius:999px;background:var(--bg2);font-size:.88rem}
+.how{margin:8px 0 0;padding-left:20px;font-size:.92rem}.how li{margin:5px 0}
+.prog{display:block;height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:12px 0 4px}.prog i{display:block;height:100%;background:var(--ok)}
+.season{font-size:.85rem;color:var(--muted);margin:0 0 6px}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;align-items:start;border-top:1px solid var(--line);padding:12px 0}
+.item:first-of-type{border-top:0}
+.item .t{font-weight:600}
+.item .q{font-size:.92rem;margin-top:2px}
+.item .n{font-size:.82rem;color:var(--muted);margin-top:2px}
+.item .opt{font-size:.92rem;margin-top:8px;padding:8px 12px;border-left:3px solid var(--line)}
+.st{font:600 .75rem "IBM Plex Mono",monospace;padding:4px 9px;border-radius:6px;white-space:nowrap;text-align:center}
+.st.done{background:var(--ok-soft);color:var(--ok)}.st.late{background:var(--amber-soft);color:var(--amber)}.st.missing{background:var(--end-soft);color:var(--end)}.st.todo{background:var(--bg2)}.st.excused{background:var(--bg2);color:var(--muted)}
+.go{display:inline-block;margin-top:6px;padding:7px 14px;border-radius:9px;background:var(--navy);color:var(--card);text-decoration:none;font-weight:600;font-size:.88rem}
+@media (prefers-color-scheme:dark){.go{color:#0e1420}}
+details.wk{border-top:1px solid var(--line);padding:10px 0}
+details.wk summary{cursor:pointer;font-weight:600}
+details.wk summary span{font-weight:400;color:var(--muted);font-size:.88rem;margin-left:8px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="index.html">Back to the main site</a></div>
+  <h1>My schedule</h1>
+  <p class="lead">Your homework, week by week. Everything is due by <b>Wednesday at 11:59pm</b>. Anything not done by then means a detention on Friday after school.</p>
+  <div id="bar"></div>
+  <div id="main" hidden>
+    <div class="card" id="thisWeek"></div>
+    <div class="card"><h2>How it works</h2>
+      <ul class="how">
+        <li><b>6, 9 and 15-mark questions:</b> click Start and the question opens in the right marking tool with its case study. Type your answer or upload photos of a handwritten one, then get it marked.</li>
+        <li><b>Calculations:</b> work each one out, then choose what it means for the business.</li>
+        <li><b>Data drill:</b> the case study opens on screen. You choose answers by clicking and only type the numbers you work out.</li>
+        <li><b>Knowledge quiz:</b> done on the site. Your first answer is the one that counts.</li>
+        <li>Everything is ticked off here automatically once it is done or marked.</li>
+      </ul></div>
+    <div class="card"><h2>Other weeks</h2><div id="weeks"></div></div>
+  </div>
+</div>
+<script src="account.js"></script>
+<script src="exam-bank.js"></script>
+<script src="schedule.js"></script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),S=window.Sched,Ac=window.Acct;
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LABEL={done:'Done',late:'Done late',missing:'Missed',todo:'To do',excused:'Excused'};
+Ac.bar('#bar',{inside:true,text:'Sign in once on the home page to see your schedule.'});
+async function load(){
+  if(!Ac.user){$('#main').hidden=true;return;}
+  let d;try{d=await Ac.call('/sched/mine');}catch(e){$('#main').hidden=false;$('#thisWeek').innerHTML='<p class="muted">Could not load your schedule. Check your connection.</p>';return;}
+  const store={};Object.keys(S.COURSES).forEach(k=>{const v=Ac.get('course:'+k);if(v)store['course:'+k]=v;});(d.items||[]).forEach(i=>{if(i.kind==='quiz'||i.kind==='drill'){const v=Ac.get(i.kind+':'+i.ref);if(v)store[i.kind+':'+i.ref]=v;}});
+  const marks={};(d.marks||[]).forEach(m=>{marks[m.ref]=m.t;});const passes={};(d.passes||[]).forEach(p=>{passes[p.stage]=p.t;});
+  const ctx={marks,passes,store,excused:new Set((d.excused||[]).map(x=>x.sched_id))};
+  const items=d.items||[];
+  $('#main').hidden=false;
+  if(!items.length){$('#thisWeek').innerHTML='<h2>Nothing set yet</h2><p class="muted">Your schedule will appear here.</p>';$('#weeks').innerHTML='';return;}
+  const all=items.map(it=>Object.assign({it,d:S.describe(it)},S.status(it,ctx)));
+  const cur=S.currentDue(items),byDue=due=>all.filter(x=>x.it.due===due);
+  const row=x=>`<div class="item"><div><div class="t">${esc(x.d.title)}</div>${x.d.sub?`<div class="q">${esc(x.d.sub)}</div>`:''}${x.d.needs?`<div class="n">${esc(x.d.needs)}</div>`:''}${x.d.choice?x.d.choice.map(o=>`<div class="opt"><b>${esc(o.title)}</b> ${esc(o.sub)}${x.s==='todo'||x.s==='missing'?`<br><a class="go" href="${o.link}">Start ${esc(o.title)}</a>`:''}</div>`).join(''):(x.s==='todo'||x.s==='missing'?`<a class="go" href="${x.d.link}">Start</a>`:'')}</div><span class="st ${x.s}">${LABEL[x.s]}</span></div>`;
+  const now=all.filter(x=>x.it.due===cur),done=now.filter(x=>x.s==='done'||x.s==='late'||x.s==='excused').length;
+  const info=S.weekInfo(cur);
+  const missed=all.filter(x=>x.s==='missing').length,late=all.filter(x=>x.s==='late').length,ok=all.filter(x=>x.s==='done').length;
+  const past=ok+late+missed;
+  $('#thisWeek').innerHTML=`<h2>This week: due ${esc(S.fmtDay(cur))}, 11:59pm</h2><p class="small muted" style="margin:0">${done===now.length?'All done.':`${done} of ${now.length} done`}${info.note?' · '+esc(info.note):''}</p>
+    <span class="prog"><i style="width:${now.length?Math.round(100*done/now.length):0}%"></i></span>
+    ${past?`<p class="season">So far this year: ${ok} on time, ${late} late, ${missed} missed.</p>`:''}${now.map(row).join('')}`;
+  $('#weeks').innerHTML=S.weeks(items).filter(w=>w!==cur&&byDue(w).length).map(w=>{const xs=byDue(w),dn=xs.filter(x=>x.s!=='todo'&&x.s!=='missing').length,ms=xs.filter(x=>x.s==='missing').length;
+    return `<details class="wk"><summary>Due ${esc(S.fmtDay(w))}<span>${dn} of ${xs.length} done${ms?` · ${ms} missed`:''}${S.weekInfo(w).note?' · '+esc(S.weekInfo(w).note):''}</span></summary>${xs.map(row).join('')}</details>`;}).join('');
+}
+Ac.ready.then(load);Ac.onChange(()=>load());
+})();
+</script>
+<script src="visit.js" defer></script>
+</body>
+</html>

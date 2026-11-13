@@ -1,0 +1,185 @@
+{
+"title": "Week 1: calculations",
+"items": [
+{
+"q": "Lumen Lighting plc has 40 million shares in issue. Its share price is 185p. What is its market capitalisation?",
+"opts": [
+"£740 million",
+"£74 million",
+"£21.6 million",
+"£7.4 million"
+],
+"ans": 1,
+"why": "Market capitalisation = number of issued shares × current share price = 40 million × £1.85 = £74 million. Convert pence to pounds first: 185p is £1.85.",
+"label": "Calculate"
+},
+{
+"q": "Lumen Lighting plc paid a total dividend of £3.6 million. It has 45 million ordinary shares. What is the dividend per share?",
+"opts": [
+"8p",
+"80p",
+"0.8p",
+"12.5p"
+],
+"ans": 0,
+"why": "Dividend per share = total dividend ÷ number of ordinary shares = £3,600,000 ÷ 45,000,000 = £0.08, which is 8p.",
+"label": "Calculate"
+},
+{
+"q": "A company pays a dividend of 8p per share. Its share price is 160p. What is the dividend yield?",
+"opts": [
+"12.5%",
+"0.05%",
+"20%",
+"5%"
+],
+"ans": 3,
+"why": "Dividend yield = dividend per share (pence) ÷ share price (pence) × 100 = 8 ÷ 160 × 100 = 5%. 20% is the answer you get if you divide the wrong way round.",
+"label": "Calculate"
+},
+{
+"q": "The company's share price then falls from 160p to 128p and the dividend stays at 8p. What happens to the dividend yield?",
+"opts": [
+"It rises to 25%, so the shares are now a very safe investment",
+"It falls to 4%, because the business is now worth less",
+"It stays at 5%, because the dividend has not changed",
+"It rises to 6.25%, so each £1 invested now earns more dividend, although the fall in price may be a sign of problems"
+],
+"ans": 3,
+"why": "8 ÷ 128 × 100 = 6.25%. A higher yield looks attractive, but the share price usually falls for a reason, such as lower expected profit, so the dividend may be cut later.",
+"label": "Use the answer"
+},
+{
+"q": "Firm A's sales are £12 million. The total market is worth £150 million. What is Firm A's market share?",
+"opts": [
+"12.5%",
+"0.08%",
+"8%",
+"80%"
+],
+"ans": 2,
+"why": "Market share = sales of the business ÷ total sales in the market × 100 = 12 ÷ 150 × 100 = 8%.",
+"label": "Calculate"
+},
+{
+"q": "The market grows from £150 million to £168 million. What is the market growth?",
+"opts": [
+"12%",
+"112%",
+"10.7%",
+"18%"
+],
+"ans": 0,
+"why": "Market growth = change in market size ÷ original market size × 100 = 18 ÷ 150 × 100 = 12%. Always divide by the original (older) figure.",
+"label": "Calculate"
+},
+{
+"q": "Over the same period Firm A's sales rise from £12 million to £13 million. What has happened to its market share?",
+"opts": [
+"It has risen, because Firm A's sales went up",
+"It has fallen, from 8% to about 7.7%, because the market grew faster than Firm A's sales",
+"It has risen to 13%",
+"It has stayed at 8%, because both figures went up"
+],
+"ans": 1,
+"why": "13 ÷ 168 × 100 = 7.7%. Firm A's sales grew by 8.3% but the market grew by 12%, so it lost share even though sales rose.",
+"label": "Use the answer"
+},
+{
+"q": "A business's sales rise from £2.4 million to £3.0 million. What is the percentage increase in sales?",
+"opts": [
+"0.6%",
+"20%",
+"25%",
+"60%"
+],
+"ans": 2,
+"why": "Percentage change = change ÷ original × 100 = 0.6 ÷ 2.4 × 100 = 25%. 20% comes from dividing by the new figure.",
+"label": "Calculate"
+},
+{
+"q": "In a £200 million market, the three largest brands have sales of £36 million, £28 million and £18 million. What is their combined market share?",
+"opts": [
+"41%",
+"18%",
+"24.4%",
+"82%"
+],
+"ans": 0,
+"why": "Combined sales are £82 million. 82 ÷ 200 × 100 = 41%.",
+"label": "Calculate"
+},
+{
+"q": "What does a combined market share of 41% for the top three brands suggest?",
+"opts": [
+"The market is shrinking",
+"Each of the three brands has 41% of the market",
+"There is no competition in the market",
+"A few large firms have a big share, so a new business may find it hard to win customers from them"
+],
+"ans": 3,
+"why": "41% shared between three brands means a few firms hold a large part of the market. They may have strong brands and bigger budgets, which makes entry harder, although 59% is still spread across smaller firms.",
+"label": "Use the answer"
+},
+{
+"q": "A business sells £4.5 million of goods, which is a 6% share of its market. What is the size of the market?",
+"opts": [
+"£7.5 million",
+"£75 million",
+"£27 million",
+"£0.27 million"
+],
+"ans": 1,
+"why": "If 6% = £4.5 million, the whole market = 4.5 ÷ 0.06 = £75 million.",
+"label": "Calculate"
+},
+{
+"q": "A market sells 80,000 units a year. 35% of units are bought by under-25s. How many units does the under-25 segment buy?",
+"opts": [
+"28,000",
+"2,800",
+"45,000",
+"52,000"
+],
+"ans": 0,
+"why": "Segment size = 35% × 80,000 = 0.35 × 80,000 = 28,000 units.",
+"label": "Calculate"
+},
+{
+"q": "A business's sales were £5 million in 2022. Using 2022 as the base year (index = 100), its sales index for 2025 is 118. What were its sales in 2025?",
+"opts": [
+"£4.24 million",
+"£5.9 million",
+"£5.18 million",
+"£11.8 million"
+],
+"ans": 1,
+"why": "An index of 118 means sales are 18% higher than in the base year. £5 million × 1.18 = £5.9 million.",
+"label": "Calculate"
+},
+{
+"q": "Over the same years, the market's index rose from 100 to 131. What does this tell you?",
+"opts": [
+"The business's sales grew more slowly than the market, so its market share is likely to have fallen",
+"The market grew by 131%",
+"The business sold 131 units",
+"The business grew faster than the market"
+],
+"ans": 0,
+"why": "The market grew by 31% but the business only grew by 18%, so it has probably lost market share.",
+"label": "Use the answer"
+},
+{
+"q": "A business surveys customers and finds 62% would buy a new product. The confidence interval at a 95% confidence level is ±5 percentage points. What is the range?",
+"opts": [
+"52% to 72%",
+"57% to 67%",
+"59.5% to 64.5%",
+"57% to 62%"
+],
+"ans": 1,
+"why": "62 − 5 = 57 and 62 + 5 = 67. The business can be 95% confident the true figure lies between 57% and 67%.",
+"label": "Calculate"
+}
+]
+}

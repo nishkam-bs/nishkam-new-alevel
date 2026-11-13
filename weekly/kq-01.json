@@ -1,0 +1,245 @@
+{
+"title": "Week 1: knowledge quiz",
+"items": [
+{
+"q": "Which of these is a non-financial reason for setting up in business?",
+"opts": [
+"Receiving dividends",
+"Building up wealth to sell the business later",
+"Earning a higher income",
+"Being your own boss"
+],
+"ans": 3,
+"why": "Independence and control over your work are non-financial reasons. The others are all about money.",
+"label": "3.1.1"
+},
+{
+"q": "In SMART objectives, as used in the AQA specification, what does the A stand for?",
+"opts": [
+"Accountable",
+"Achievable",
+"Agreed",
+"Ambitious"
+],
+"ans": 0,
+"why": "The AQA specification uses Accountable: someone is responsible for meeting the objective. Many textbooks say Achievable, so be careful.",
+"label": "3.1.1"
+},
+{
+"q": "What is opportunity cost?",
+"opts": [
+"The cost of starting a business",
+"The money lost when a decision goes wrong",
+"The next best alternative given up when a choice is made",
+"The total cost of all the options available"
+],
+"ans": 2,
+"why": "Opportunity cost is the value of the next best alternative you give up. If a business spends £50,000 on a new machine, the opportunity cost might be the marketing campaign it could have run instead.",
+"label": "3.1.1"
+},
+{
+"q": "Which of these is one of the characteristics of entrepreneurs listed in the specification?",
+"opts": [
+"Risk averse",
+"Resilient",
+"Cautious",
+"Specialised"
+],
+"ans": 1,
+"why": "The specification lists risk taker, resilient, focused, passionate, innovative and adaptable.",
+"label": "3.1.1"
+},
+{
+"q": "What is the main purpose of a business plan?",
+"opts": [
+"To guarantee that a business will succeed",
+"To set out the business's aims, strategy and financial forecasts, which can help it plan and raise finance",
+"To set the prices of the products",
+"To meet a legal requirement for all businesses"
+],
+"ans": 1,
+"why": "A business plan helps the owner think things through and shows lenders and investors that the idea has been planned. It does not guarantee success.",
+"label": "3.1.1"
+},
+{
+"q": "What does competitiveness mean?",
+"opts": [
+"How aggressive a business's adverts are",
+"The number of competitors in a market",
+"The ability of a business or product to outperform its rivals",
+"Selling at the lowest price"
+],
+"ans": 2,
+"why": "Competitiveness is about outperforming rivals, for example through price, quality, brand or service.",
+"label": "3.1.1"
+},
+{
+"q": "What does unlimited liability mean?",
+"opts": [
+"The owner can only lose the money they invested",
+"The business does not have to pay tax",
+"The owner is personally responsible for all of the business's debts",
+"The business can borrow as much as it likes"
+],
+"ans": 2,
+"why": "With unlimited liability, a sole trader's personal possessions, such as their house, can be used to pay the business's debts.",
+"label": "3.1.2"
+},
+{
+"q": "Which form of business can sell shares to the public on a stock exchange?",
+"opts": [
+"Sole trader",
+"Private limited company (Ltd)",
+"Public limited company (plc)",
+"Worker co-operative"
+],
+"ans": 2,
+"why": "Only a plc can offer its shares to the general public. A Ltd can only sell shares privately, for example to family and friends.",
+"label": "3.1.2"
+},
+{
+"q": "Who owns a worker co-operative?",
+"opts": [
+"Shareholders on the stock exchange",
+"The government",
+"The people who work in it",
+"The customers"
+],
+"ans": 2,
+"why": "A worker co-operative is owned and run by its employees. A consumer co-operative is owned by its customers and a producer co-operative by its producers.",
+"label": "3.1.2"
+},
+{
+"q": "Which best describes a social enterprise?",
+"opts": [
+"A business with social or environmental aims that reinvests most of its profit into those aims",
+"A business owned by the government",
+"Any business that uses social media",
+"A charity that does not trade"
+],
+"ans": 0,
+"why": "Social enterprises trade like other businesses, but their main purpose is social or environmental.",
+"label": "3.1.2"
+},
+{
+"q": "Which of these is an external stakeholder?",
+"opts": [
+"Shareholders",
+"Suppliers",
+"Employees",
+"Managers"
+],
+"ans": 1,
+"why": "External stakeholders are outside the business: customers, suppliers, other creditors, the community and the government.",
+"label": "3.1.2"
+},
+{
+"q": "What does dividend yield measure?",
+"opts": [
+"The total profit paid out to shareholders",
+"The change in share price over a year",
+"The number of shares in issue",
+"The annual dividend per share as a percentage of the share price"
+],
+"ans": 3,
+"why": "Dividend yield = dividend per share ÷ share price × 100. It shows the return from dividends for each £1 invested at today's price.",
+"label": "3.1.2"
+},
+{
+"q": "Which of these is most likely to cause a company's share price to fall?",
+"opts": [
+"The company announces a large new contract",
+"The company warns that profit will be lower than expected",
+"The company's main rival goes out of business",
+"Interest rates on savings accounts fall"
+],
+"ans": 1,
+"why": "Share prices reflect what investors expect about future profit. A profit warning lowers those expectations, so demand for the shares falls.",
+"label": "3.1.2"
+},
+{
+"q": "A plc's share price rises by 20% on the stock exchange. What happens to the money the company has?",
+"opts": [
+"Nothing directly. The shares are traded between investors, so the company does not receive the extra money",
+"The company's profit rises by 20%",
+"The company must pay a higher dividend",
+"The company receives 20% more cash"
+],
+"ans": 0,
+"why": "Shares traded on the stock exchange change hands between investors. A higher share price helps the company if it issues new shares later, but it does not receive cash from the rise itself.",
+"label": "3.1.2"
+},
+{
+"q": "What is primary market research?",
+"opts": [
+"Research collected first-hand for a specific purpose",
+"Research that has already been published by others",
+"The first research a business ever does",
+"Research carried out by the government"
+],
+"ans": 0,
+"why": "Primary research, such as surveys, interviews and test marketing, is collected by or for the business for its own purpose.",
+"label": "3.1.3"
+},
+{
+"q": "What is qualitative data?",
+"opts": [
+"Data in the form of numbers and percentages",
+"Data that has been checked for accuracy",
+"Information about opinions, feelings and reasons, which is not usually numerical",
+"Data from secondary sources only"
+],
+"ans": 2,
+"why": "Qualitative data tells you why people think or act as they do. Quantitative data is numerical.",
+"label": "3.1.3"
+},
+{
+"q": "A survey result has a 95% confidence level. What does this mean?",
+"opts": [
+"95% of the people asked agreed",
+"The business can be 95% confident that the true figure for the whole population lies within the confidence interval",
+"The result is 95% accurate",
+"The survey asked 95% of customers"
+],
+"ans": 1,
+"why": "The confidence level tells you how sure you can be that the true value lies inside the confidence interval.",
+"label": "3.1.3"
+},
+{
+"q": "What does a wider confidence interval tell you about a survey result?",
+"opts": [
+"The confidence level is higher",
+"The result is less precise",
+"The result is more accurate",
+"More people agreed"
+],
+"ans": 1,
+"why": "A wide interval means the true figure could be anywhere in a big range. Bigger samples usually give narrower intervals.",
+"label": "3.1.3"
+},
+{
+"q": "What is market mapping used for?",
+"opts": [
+"Planning delivery routes",
+"Showing where products sit compared with rivals on two features, to spot gaps in the market",
+"Working out a business's market share",
+"Finding the location of a business's customers"
+],
+"ans": 1,
+"why": "A market map plots brands on two axes, such as price and quality, to show how they are positioned and where there may be a gap.",
+"label": "3.1.3"
+},
+{
+"q": "Which of these would most reduce the reliability of a survey?",
+"opts": [
+"Using a large random sample",
+"Asking clear questions",
+"A small sample that does not represent the target market",
+"Checking the results against secondary data"
+],
+"ans": 2,
+"why": "If the sample is small or not representative, the results may not reflect what the whole target market thinks.",
+"label": "3.1.3"
+}
+]
+}

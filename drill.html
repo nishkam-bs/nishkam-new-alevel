@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Data drill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{--bg:#FAF7F1;--bg2:#F3ECDB;--card:#fff;--fg:#1A1A1A;--navy:#0E2A47;--muted:#6B6B6B;--line:#E5DFD2;--ok:#2d7a4f;--ok-soft:rgba(45,122,79,.12);--amber:#a7741a;--amber-soft:rgba(183,121,31,.14);--end:#b23b31;--end-soft:rgba(178,59,49,.1)}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1420;--bg2:#121a28;--card:#172133;--fg:#e9ecf2;--navy:#cfe0f5;--muted:#9aa4b6;--line:rgba(255,255,255,.1);--ok:#5fcf80;--ok-soft:rgba(95,207,128,.14);--amber:#e8b04a;--amber-soft:rgba(232,176,74,.14);--end:#ff7d70;--end-soft:rgba(255,125,112,.12);color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif}
+.top{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:10}
+.top a{color:var(--muted);font-size:.9rem}
+.top h1{font:400 1.35rem "DM Serif Display",Georgia,serif;color:var(--navy);margin:0;flex:1;min-width:200px}
+.timer{font:600 1rem "IBM Plex Mono",monospace;padding:4px 10px;border-radius:8px;background:var(--bg2)}
+.timer.over{background:var(--amber-soft);color:var(--amber)}
+.tabs{display:none;gap:6px}
+.tabs button{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--navy);color:var(--card);border-color:var(--navy)}
+.wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);height:calc(100vh - 62px)}
+.case{overflow:auto;border-right:1px solid var(--line);background:#e9e6df;padding:14px}
+@media (prefers-color-scheme:dark){.case{background:#0b1019}}
+.case img{display:block;width:100%;max-width:900px;margin:0 auto 14px;background:#fff;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.work{overflow:auto;padding:18px max(18px,env(safe-area-inset-right,0px)) 80px 22px}
+@media (max-width:900px){.tabs{display:flex}.wrap{display:block;height:auto}.case,.work{height:auto;overflow:visible;border:0}.wrap[data-tab=case] .work,.wrap[data-tab=work] .case{display:none}}
+h2{font:400 1.4rem "DM Serif Display",Georgia,serif;color:var(--navy);margin:6px 0 6px}
+h3{font-size:1rem;margin:18px 0 6px}
+.muted{color:var(--muted)}.small{font-size:.88rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+.qlist{margin:0;padding-left:0;list-style:none}
+.qlist li{margin-bottom:6px;font-size:.92rem}
+.qlist b{font-family:"IBM Plex Mono",monospace}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-bottom:8px;cursor:pointer;background:var(--card)}
+.opt input{margin-top:4px;width:18px;height:18px;flex:none}
+.opt.sel{border-color:var(--navy)}
+.opt.good{border-color:var(--ok);background:var(--ok-soft)}
+.opt.okish{border-color:var(--amber);background:var(--amber-soft)}
+.opt.bad{border-color:var(--end);background:var(--end-soft)}
+.opt.miss{border-style:dashed;border-color:var(--end)}
+.opt .fb{display:block;font-size:.86rem;color:var(--muted);margin-top:3px}
+.opt[aria-disabled=true]{cursor:default}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--card);color:var(--fg);font:inherit;font-size:.88rem;cursor:pointer;text-align:left}
+.chip.sel{border-color:var(--navy);background:var(--bg2)}
+.chip.good{border-color:var(--ok);background:var(--ok-soft)}.chip.okish{border-color:var(--amber);background:var(--amber-soft)}.chip.bad{border-color:var(--end);background:var(--end-soft)}.chip.miss{border-style:dashed;border-color:var(--end)}
+.btn{display:inline-block;border:0;border-radius:9px;background:var(--navy);color:var(--card);padding:9px 18px;font:600 .95rem "IBM Plex Sans",sans-serif;cursor:pointer;margin-top:6px}
+.btn[disabled]{opacity:.5;cursor:default}
+.fbx{margin-top:10px;padding:9px 13px;border-left:3px solid var(--line);font-size:.92rem}
+.fbx.r{border-color:var(--ok)}.fbx.w{border-color:var(--end)}.fbx.a{border-color:var(--amber)}
+.num{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.num input{width:160px;font:600 1.05rem "IBM Plex Mono",monospace;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--fg)}
+.num .u{font-weight:600}
+.pm{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:9px;padding:8px 11px;font:600 1rem "IBM Plex Mono",monospace;cursor:pointer}
+.step{font:600 .78rem "IBM Plex Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.formula{font-family:"IBM Plex Mono",monospace;font-size:.9rem;background:var(--bg2);padding:4px 8px;border-radius:6px;display:inline-block;margin:2px 0 8px}
+.score{font-size:1.05rem}
+.casetext{max-width:760px;margin:0 auto;background:var(--card);color:var(--fg);border-radius:6px;padding:20px 24px;box-shadow:0 1px 4px rgba(0,0,0,.12);font-size:.95rem}
+.casetext h2{margin-top:0}.casetext h3{margin:18px 0 6px}.casetext p{margin:0 0 10px}
+.casetext table{border-collapse:collapse;width:100%;margin:8px 0 14px;font-size:.9rem}
+.casetext th,.casetext td{border:1px solid var(--line);padding:6px 9px;text-align:left}.casetext td.n,.casetext th.n{text-align:right;font-variant-numeric:tabular-nums}
+.casetext caption{text-align:left;font-weight:600;margin-bottom:4px}
+.lock{max-width:560px;margin:60px auto;padding:0 18px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="top"><a href="schedule.html">My schedule</a><h1 id="title">Data drill</h1>
+  <div class="tabs" id="tabs"><button data-t="case" class="on">Case study</button><button data-t="work">Questions</button></div>
+  <span class="timer" id="timer" hidden>0:00</span></div>
+<div class="lock" id="lock"><div id="bar"></div><p class="muted" id="msg">Loading...</p></div>
+<div class="wrap" id="wrap" data-tab="case" hidden>
+  <div class="case" id="case"></div>
+  <div class="work" id="work"></div>
+</div>
+<script src="account.js"></script>
+<script>
+(function(){
+"use strict";
+const Ac=window.Acct,$=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const id=(new URLSearchParams(location.search).get('d')||'').replace(/[^a-z0-9-]/gi,'');
+const KEY='drill:'+id;
+let D=null,timerH=null;
+/* teacher preview: opened from the tracker, nothing is saved to any student's account */
+const PREVIEW=(()=>{try{const p=JSON.parse(localStorage.getItem('n8_teacher_preview')||'null');return p&&p.token&&Date.now()-p.at<12*3600000?p.token:null;}catch(e){return null;}})()&&new URLSearchParams(location.search).get('preview')==='1';
+let mem={};
+const API=(()=>{try{return localStorage.getItem('n8_api')||'https://nishkam-tracker-7138.alevelnishkam.workers.dev';}catch(e){return 'https://nishkam-tracker-7138.alevelnishkam.workers.dev';}})();
+
+/* ---------- state ---------- */
+function st(){return Object.assign({},PREVIEW?mem:(Ac.get(KEY)||{}));}
+function save(s){s.score=scoreOf(s).right;s.total=scoreOf(s).total;if(PREVIEW)mem=s;else Ac.set(KEY,s);}
+/* stable shuffle so options stay in the same order on every device */
+function shuf(arr,seed){const a=arr.map((x,i)=>[x,i]);let h=0;for(const c of id+seed)h=(h*31+c.charCodeAt(0))|0;
+  for(let i=a.length-1;i>0;i--){h=(h*1103515245+12345)|0;const j=Math.abs(h)%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ---------- loading the protected case ---------- */
+function b64u(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return Uint8Array.from(atob(s),c=>c.charCodeAt(0));}
+async function load(){
+  if(!/^(d|p[23])-[0-9a-z-]+$/i.test(id)){$('#msg').textContent='This drill could not be found.';return;}
+  if(!PREVIEW&&!Ac.user){$('#msg').textContent='Sign in on the home page first.';return;}
+  /* Our own drills are plain files. Drills built on AQA papers can be encrypted (.enc) and are unlocked with the key from the tracker. */
+  try{
+    const r=await fetch('drill/'+id+'.json',{cache:'no-cache'});
+    if(r.ok)D=await r.json();
+  }catch(e){}
+  if(!D){
+    let key;
+    try{const tok=PREVIEW?{token:JSON.parse(localStorage.getItem('n8_teacher_preview')).token}:JSON.parse(localStorage.getItem('n8_auth')||'null');
+      const r=await fetch(API+'/content/key',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok&&tok.token})});
+      const j=await r.json();if(!r.ok)throw new Error(j.error||'Could not open the case study.');key=j.key;}
+    catch(e){$('#msg').textContent=e.message==='Failed to fetch'?'Could not connect. Check your internet and try again.':e.message;return;}
+    try{
+      const r=await fetch('drill/'+id+'.enc',{cache:'no-cache'});if(!r.ok)throw 0;const buf=new Uint8Array(await r.arrayBuffer());
+      const k=await crypto.subtle.importKey('raw',b64u(key),'AES-GCM',false,['decrypt']);
+      const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:buf.slice(0,12)},k,buf.slice(12));
+      D=JSON.parse(new TextDecoder().decode(pt));
+    }catch(e){$('#msg').textContent='Could not open this drill. Try again, or tell your teacher.';return;}
+  }
+  document.title=D.title;$('#title').textContent=D.title;
+  $('#case').innerHTML=D.caseHtml?`<div class="casetext">${D.caseHtml}</div>`:(D.pages||[]).map((p,i)=>`<img src="${p}" alt="Case study page ${i+1}">`).join('');
+  $('#lock').hidden=true;$('#wrap').hidden=false;
+  const s=st();if(!s.start){s.start=Date.now();save(s);}
+  tick();timerH=setInterval(tick,1000);
+  render();
+}
+function tick(){const s=st();const end=s.done?Date.parse(s.done):Date.now();const sec=Math.max(0,Math.round((end-(s.start||Date.now()))/1000));
+  const t=$('#timer');t.hidden=false;const lim=(D&&D.mins||15)*60;t.textContent=`${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}${s.done?'':' / '+(lim/60)+':00'}`;t.classList.toggle('over',sec>lim&&!s.done);}
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));$('#wrap').dataset.tab=b.dataset.t;scrollTo(0,0);});
+
+/* ---------- number answers ---------- */
+function parseNum(v){if(v==null)return NaN;v=String(v).replace(/[−–—]/g,'-').replace(/[£€$%,\s]|days?|units?|times|years?|:1|m$|bn$/gi,'');if(/^\(.*\)$/.test(v))v='-'+v.slice(1,-1);return v===''||v==='-'?NaN:Number(v);}
+function numOK(x,c){const v=c.value,dp=c.dp||0;const tol=Math.max(0.5*Math.pow(10,-dp)+1e-9,Math.abs(v)*0.005);return Math.abs(x-v)<=tol;}
+const fmt=(c,x)=>`${c.unit_before||''}${Number(x).toLocaleString('en-GB',{minimumFractionDigits:c.dp||0,maximumFractionDigits:c.dp||0})}${c.unit?(/^([%:]|m$|bn$)/.test(c.unit)?'':' ')+c.unit:''}`;
+function numBox(key,c,ans,onAns){
+  const done=ans!=null&&ans!=='';const ok=done&&numOK(parseNum(ans),c);
+  return `<div class="num">${c.unit_before?`<span class="u">${esc(c.unit_before)}</span>`:''}<input inputmode="decimal" autocomplete="off" data-n="${key}" ${done?'disabled':''} value="${done?esc(ans):''}" placeholder="Your answer"><button class="pm" data-pm="${key}" ${done?'disabled':''} title="Make negative">±</button>${c.unit?`<span class="u">${esc(c.unit)}</span>`:''}
+    ${done?'':`<button class="btn" data-check="${key}" style="margin:0">Check</button>`}</div>
+    ${done?`<div class="fbx ${ok?'r':'w'}"><b>${ok?'Right.':'Not quite. The answer is '+esc(fmt(c,c.value))+'.'}</b> ${esc(c.steps)}</div>`:`<p class="small muted" style="margin:6px 0 0">Give your answer to ${c.dp||0} decimal place${c.dp===1?'':'s'}. Type the number only.</p>`}`;
+}
+
+/* ---------- scoring ---------- */
+function setOK(sel,core,ok){const S=new Set(sel||[]);return core.every(x=>S.has(x))&&[...S].every(x=>core.includes(x)||(ok||[]).includes(x));}
+function scoreOf(s){
+  let right=0,total=0;if(!D)return{right,total};
+  if(D.kind==='p2'){
+    D.calcs.forEach((c,i)=>{total++;if(s.pick&&s.pick.done&&!!(s.pick.sel||[]).includes(i)===!!c.right)right++;});
+    D.calcs.forEach((c,i)=>{if(!c.right)return;total+=3;const a=(s.num||{})[i];if(a!=null&&numOK(parseNum(a),c))right++;
+      if(((s.mean||{})[i])===c.meaning.ans)right++;const u=(s.use||{})[i];if(u&&u.done&&setOK(u.sel,c.use.core,c.use.ok))right++;});
+  }else{
+    D.focus.forEach(q=>{total++;const m=(s.map||{})[q];if(m&&m.done&&setOK(m.sel,D.map[q].core,D.map[q].ok))right++;
+      const cc=D.calcs[q];if(!cc)return;cc.options.forEach((c,i)=>{total++;const p=(s.pick||{})[q];if(p&&p.done&&!!(p.sel||[]).includes(i)===!!c.right)right++;
+        if((c.right&&c.work!==false)){total+=2;const dd=((s.data||{})[q+'.'+i]);const need=c.data.map((x,j)=>x.right?j:null).filter(x=>x!==null);
+          if(dd&&dd.done&&setOK(dd.sel,need,[]))right++;const a=(s.num||{})[q+'.'+i];if(a!=null&&numOK(parseNum(a),c))right++;}});});
+  }
+  return{right,total};
+}
+function allDone(s){
+  if(D.kind==='p2'){if(!(s.pick&&s.pick.done))return false;return D.calcs.every((c,i)=>!c.right||((s.num||{})[i]!=null&&(s.mean||{})[i]!=null&&((s.use||{})[i]||{}).done));}
+  return D.focus.every(q=>(((s.map||{})[q]||{}).done)&&(!D.calcs[q]||(((s.pick||{})[q]||{}).done&&D.calcs[q].options.every((c,i)=>!(c.right&&c.work!==false)||((((s.data||{})[q+'.'+i])||{}).done&&(s.num||{})[q+'.'+i]!=null)))));
+}
+
+/* ---------- rendering ---------- */
+const qText=n=>{const q=D.questions.find(x=>x.num===n);return q?`<b>${esc(q.num)}</b> (${q.marks} marks) ${esc(q.text)}`:esc(n);};
+function checklist(name,items,sel,done,cls){
+  return items.map(([o,i])=>{const on=(sel||[]).includes(i);let c='opt'+(on?' sel':'');let fb='';
+    if(done){const g=cls(o,i,on);c='opt '+g;fb=`<span class="fb">${esc(o.why||'')}</span>`;}
+    return `<label class="${c}" ${done?'aria-disabled="true"':''}><input type="checkbox" data-g="${name}" value="${i}" ${on?'checked':''} ${done?'disabled':''}><span><b>${esc(o.t)}</b>${fb}</span></label>`;}).join('');
+}
+const pickCls=(o,i,on)=>o.right?(on?'good':'miss'):(on?'bad':'');
+function render(){
+  const s=st(),w=$('#work');let h='';
+  if(PREVIEW)h+=`<div class="card" style="padding:10px 14px"><p class="small" style="margin:0"><b>Teacher preview.</b> Nothing you do here is saved or shown in the tracker. <button class="btn" id="pvReset" style="margin:0 0 0 8px;padding:4px 10px">Start again</button></p></div>`;
+  h+=`<p class="small muted" style="margin:0 0 10px">${esc(D.intro||'')}</p>`;
+  if(D.kind==='p2')h+=renderP2(s);else h+=renderP3(s);
+  const sc=scoreOf(s);
+  if(allDone(s)){
+    if(!s.done){s.done=new Date().toISOString();s.secs=Math.round((Date.parse(s.done)-s.start)/1000);save(s);try{sessionStorage.removeItem('n8_sched');}catch(e){}}
+    h+=`<div class="card"><p class="score" style="margin:0"><b>Finished: ${sc.right} out of ${sc.total}.</b> Time taken: ${Math.floor((s.secs||0)/60)} min ${(s.secs||0)%60} s.</p><p class="small muted" style="margin:6px 0 0">This is ticked off in your schedule. Use what you found when you write the answers. <a href="schedule.html">Back to my schedule</a></p></div>`;
+  }
+  const y=w.scrollTop;w.innerHTML=h;w.scrollTop=y;bind();tick();
+  const pr=document.getElementById('pvReset');if(pr)pr.onclick=()=>{mem={start:Date.now()};render();w.scrollTop=0;};
+}
+function renderP2(s){
+  let h=`<div class="card"><div class="step">The questions on this case</div><ul class="qlist">${D.questions.map(q=>`<li>${qText(q.num)}</li>`).join('')}</ul></div>`;
+  const items=shuf(D.calcs,'pick');const pk=s.pick||{};
+  h+=`<div class="card"><div class="step">Step 1 of 3</div><h2>Which calculations would you do?</h2><p class="small muted">Tick every calculation that would help you answer these questions. Some of them are not worth doing, or cannot be done with this data.</p>
+    ${checklist('pick',items,pk.sel,pk.done,pickCls)}${pk.done?`<div class="fbx a small">Ticked and right: green. Should have ticked: dashed red. Should not have ticked: red.</div>`:`<button class="btn" data-submit="pick">Submit</button>`}</div>`;
+  if(!pk.done)return h;
+  const rights=D.calcs.map((c,i)=>[c,i]).filter(x=>x[0].right);
+  h+=`<div class="card"><div class="step">Step 2 of 3</div><h2>Work them out</h2><p class="small muted">Use the case study. Work each one out on paper or with a calculator, then type your answer.</p>`;
+  rights.forEach(([c,i])=>{h+=`<h3>${esc(c.t)}</h3><div class="formula">${esc(c.formula)}</div>${numBox(String(i),c,(s.num||{})[i])}`;});
+  h+=`</div>`;
+  if(!rights.every(([c,i])=>(s.num||{})[i]!=null))return h;
+  h+=`<div class="card"><div class="step">Step 3 of 3</div><h2>What do the numbers mean?</h2>`;
+  rights.forEach(([c,i])=>{
+    const m=c.meaning,ans=(s.mean||{})[i],order=shuf(m.opts,'m'+i);
+    h+=`<h3>${esc(c.t)}: ${esc(fmt(c,c.value))}</h3><p class="small" style="margin:0 0 6px">${esc(m.q||'What does this tell you?')}</p>`;
+    h+=order.map(([o,j])=>{let cl='opt';if(ans!=null){if(j===m.ans)cl+=' good';else if(j===ans)cl+=' bad';}
+      return `<label class="${cl}" ${ans!=null?'aria-disabled="true"':''}><input type="radio" name="m${i}" data-mean="${i}" value="${j}" ${ans===j?'checked':''} ${ans!=null?'disabled':''}><span>${esc(o)}</span></label>`;}).join('');
+    if(ans!=null)h+=`<div class="fbx ${ans===m.ans?'r':'w'} small"><b>${ans===m.ans?'Right.':'Not quite.'}</b> ${esc(m.why)}</div>`;
+    if(ans==null){h+=`<hr style="border:0;border-top:1px solid var(--line);margin:14px 0">`;return;}
+    const u=(s.use||{})[i]||{};
+    h+=`<p class="small" style="margin:12px 0 6px">Which question or questions would you use it in?</p>`;
+    h+=D.questions.map(q=>{const on=(u.sel||[]).includes(q.num);let cl='opt'+(on?' sel':'');
+      if(u.done){cl='opt '+(c.use.core.includes(q.num)?(on?'good':'miss'):(c.use.ok||[]).includes(q.num)?(on?'okish':''):(on?'bad':''));}
+      return `<label class="${cl}" ${u.done?'aria-disabled="true"':''}><input type="checkbox" data-use="${i}" value="${esc(q.num)}" ${on?'checked':''} ${u.done?'disabled':''}><span class="small">${qText(q.num)}</span></label>`;}).join('');
+    h+=u.done?`<div class="fbx ${setOK(u.sel,c.use.core,c.use.ok)?'r':'w'} small">${esc(c.use.why)}${(c.use.ok||[]).length?' Amber means it could also be used there.':''}</div>`:`<button class="btn" data-usesub="${i}">Submit</button>`;
+    h+=`<hr style="border:0;border-top:1px solid var(--line);margin:14px 0">`;
+  });
+  return h+`</div>`;
+}
+function renderP3(s){
+  let h=`<div class="card"><div class="step">The questions</div><ul class="qlist">${D.questions.map(q=>`<li ${D.focus.includes(q.num)?'':'class="muted"'}>${qText(q.num)}</li>`).join('')}</ul>
+    ${D.focus.length<D.questions.length?`<p class="small muted" style="margin:6px 0 0">Question ${D.questions.filter(q=>!D.focus.includes(q.num)).map(q=>+q.num).join(', ')} is left out because it is on a topic no longer in the course.</p>`:''}</div>`;
+  const label=x=>{const sct=D.sections.find(y=>y.id===x);return sct?sct.label:x;};
+  h+=`<div class="card"><div class="step">Step 1 of 3</div><h2>Which parts of the case go with which question?</h2><p class="small muted">For each question, click every part of the insert you would use. Then press Submit.</p>`;
+  D.focus.forEach(q=>{const m=(s.map||{})[q]||{},key=D.map[q];
+    h+=`<h3>Question ${+q}</h3><p class="small" style="margin:0 0 8px">${qText(q)}</p><div class="chips">`;
+    h+=D.sections.map(x=>{const on=(m.sel||[]).includes(x.id);let cl='chip'+(on?' sel':'');
+      if(m.done)cl='chip '+(key.core.includes(x.id)?(on?'good':'miss'):(key.ok||[]).includes(x.id)?(on?'okish':''):(on?'bad':''));
+      return `<button class="${cl}" data-map="${q}" data-sec="${x.id}" ${m.done?'disabled':''} title="${esc(x.text||'')}">${esc(x.label)}${x.short?`<span class="muted">: ${esc(x.short)}</span>`:''}</button>`;}).join('');
+    h+=`</div>`;
+    h+=m.done?`<div class="fbx ${setOK(m.sel,key.core,key.ok)?'r':'w'} small"><b>${setOK(m.sel,key.core,key.ok)?'Right.':'Not quite.'}</b> ${esc(key.why)} Green: needed and ticked. Dashed red: needed but missed. Amber: could be used. Red: not needed.</div>`:`<button class="btn" data-mapsub="${q}">Submit</button>`;
+  });
+  h+=`</div>`;
+  const mapDone=D.focus.every(q=>((s.map||{})[q]||{}).done);
+  if(!mapDone)return h;
+  const cq=D.focus.filter(q=>D.calcs[q]);
+  if(!cq.length)return h;
+  h+=`<div class="card"><div class="step">Step 2 of 3</div><h2>Which calculations would you do?</h2><p class="small muted">For each question, tick every calculation that would help your answer.</p>`;
+  cq.forEach(q=>{const p=(s.pick||{})[q]||{};h+=`<h3>Question ${+q}</h3><p class="small" style="margin:0 0 8px">${qText(q)}</p>`;
+    h+=checklist('pick'+q,shuf(D.calcs[q].options,'p'+q),p.sel,p.done,pickCls);
+    if(!p.done)h+=`<button class="btn" data-submit="pick${q}">Submit</button>`;});
+  h+=`</div>`;
+  if(!cq.every(q=>((s.pick||{})[q]||{}).done))return h;
+  h+=`<div class="card"><div class="step">Step 3 of 3</div><h2>Pick the data and work it out</h2><p class="small muted">Two calculations for each question. Click the figures from the insert you need, then work it out.</p>`;
+  cq.forEach(q=>D.calcs[q].options.forEach((c,i)=>{if(!(c.right&&c.work!==false))return;const k=q+'.'+i,dd=(s.data||{})[k]||{};
+    h+=`<h3>Question ${+q}: ${esc(c.t)}</h3><div class="formula">${esc(c.formula)}</div><div class="chips">`;
+    h+=shuf(c.data,'d'+k).map(([x,j])=>{const on=(dd.sel||[]).includes(j);let cl='chip'+(on?' sel':'');if(dd.done)cl='chip '+(x.right?(on?'good':'miss'):(on?'bad':''));
+      return `<button class="${cl}" data-dk="${k}" data-dj="${j}" ${dd.done?'disabled':''}>${esc(x.label)}</button>`;}).join('')+`</div>`;
+    if(!dd.done){h+=`<button class="btn" data-datasub="${k}">Submit</button>`;return;}
+    const need=c.data.map((x,j)=>x.right?j:null).filter(x=>x!==null);
+    h+=`<div class="fbx ${setOK(dd.sel,need,[])?'r':'w'} small"><b>${setOK(dd.sel,need,[])?'Right.':'Not quite.'}</b> You need: ${esc(c.data.filter(x=>x.right).map(x=>x.label).join('; '))}.</div>`;
+    h+=`<div style="margin-top:10px">${numBox(k,c,(s.num||{})[k])}</div>`;}));
+  return h+`</div>`;
+}
+function bind(){
+  const w=$('#work');
+  w.querySelectorAll('input[type=checkbox][data-g]').forEach(b=>b.onchange=()=>{const s=st(),g=b.dataset.g,key=g==='pick'?'pick':null;
+    const sel=[...w.querySelectorAll(`input[data-g="${g}"]:checked`)].map(x=>+x.value);
+    if(D.kind==='p2'){s.pick=Object.assign({},s.pick,{sel});}else{const q=g.slice(4);s.pick=Object.assign({},s.pick);s.pick[q]=Object.assign({},s.pick[q],{sel});}
+    save(s);b.closest('.opt').classList.toggle('sel',b.checked);});
+  w.querySelectorAll('[data-submit]').forEach(b=>b.onclick=()=>{const s=st(),g=b.dataset.submit;
+    if(D.kind==='p2'){s.pick=Object.assign({sel:[]},s.pick,{done:true});}else{const q=g.slice(4);s.pick=Object.assign({},s.pick);s.pick[q]=Object.assign({sel:[]},s.pick[q],{done:true});}
+    save(s);render();});
+  w.querySelectorAll('[data-pm]').forEach(b=>b.onclick=()=>{const i=w.querySelector(`input[data-n="${b.dataset.pm}"]`);i.value=i.value.trim().startsWith('-')?i.value.trim().slice(1):'-'+i.value.trim();i.focus();});
+  w.querySelectorAll('[data-check]').forEach(b=>{const k=b.dataset.check,inp=w.querySelector(`input[data-n="${k}"]`);
+    const go=()=>{const v=inp.value.trim();if(isNaN(parseNum(v))){inp.focus();inp.style.borderColor='var(--end)';return;}const s=st();s.num=Object.assign({},s.num);s.num[k]=v;save(s);render();};
+    b.onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go();};});
+  w.querySelectorAll('[data-mean]').forEach(r=>r.onchange=()=>{const s=st();s.mean=Object.assign({},s.mean);s.mean[r.dataset.mean]=+r.value;save(s);render();});
+  w.querySelectorAll('[data-use]').forEach(b=>b.onchange=()=>{const s=st(),i=b.dataset.use;s.use=Object.assign({},s.use);
+    s.use[i]={sel:[...w.querySelectorAll(`input[data-use="${i}"]:checked`)].map(x=>x.value)};save(s);b.closest('.opt').classList.toggle('sel',b.checked);});
+  w.querySelectorAll('[data-usesub]').forEach(b=>b.onclick=()=>{const s=st(),i=b.dataset.usesub;s.use=Object.assign({},s.use);s.use[i]=Object.assign({sel:[]},s.use[i],{done:true});save(s);render();});
+  w.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{const s=st(),q=b.dataset.map,id2=b.dataset.sec;s.map=Object.assign({},s.map);const m=Object.assign({sel:[]},s.map[q]);
+    m.sel=m.sel.includes(id2)?m.sel.filter(x=>x!==id2):m.sel.concat(id2);s.map[q]=m;save(s);b.classList.toggle('sel');});
+  w.querySelectorAll('[data-mapsub]').forEach(b=>b.onclick=()=>{const s=st(),q=b.dataset.mapsub;s.map=Object.assign({},s.map);s.map[q]=Object.assign({sel:[]},s.map[q],{done:true});save(s);render();});
+  w.querySelectorAll('[data-dk]').forEach(b=>b.onclick=()=>{const s=st(),k=b.dataset.dk,j=+b.dataset.dj;s.data=Object.assign({},s.data);const d=Object.assign({sel:[]},s.data[k]);
+    d.sel=d.sel.includes(j)?d.sel.filter(x=>x!==j):d.sel.concat(j);s.data[k]=d;save(s);b.classList.toggle('sel');});
+  w.querySelectorAll('[data-datasub]').forEach(b=>b.onclick=()=>{const s=st(),k=b.dataset.datasub;s.data=Object.assign({},s.data);s.data[k]=Object.assign({sel:[]},s.data[k],{done:true});save(s);render();});
+}
+Ac.bar('#bar',{inside:true,text:'Sign in once on the home page to open the case studies.'});
+if(PREVIEW)load();else{Ac.ready.then(load);Ac.onChange(keys=>{if(D&&keys.includes(KEY))render();else if(!D&&Ac.user)load();});}
+})();
+</script>
+<script src="visit.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+{
+"title": "Data drill: Peak Audio Ltd",
+"kind": "p2",
+"mins": 15,
+"intro": "Read the case study first. Then choose which calculations are worth doing, work them out, and decide what the numbers show and where you would use them.",
+"caseHtml": "<h2>Peak Audio Ltd</h2><p>Peak Audio Ltd designs headphones in Manchester and has them made by a partner factory. Its oldest product, the Classic over-ear headphones, launched in 2016. Its wireless earbuds, launched in 2023, are growing but face strong competition from Apple, Samsung and Sony.</p><p>Peak is about to launch new noise-cancelling earbuds called Peak Air. Its managing director, Imran Ali, is choosing between two launch prices.</p><table><caption>Table 1: Sales of Classic over-ear headphones</caption><thead><tr><th></th><th class=\"n\">2024</th><th class=\"n\">2025</th></tr></thead><tbody><tr><td>Sales</td><td class=\"n\">£3.2m</td><td class=\"n\">£2.6m</td></tr></tbody></table><table><caption>Table 2: Wireless earbuds, 2025</caption><thead><tr><th></th><th class=\"n\"></th></tr></thead><tbody><tr><td>Peak Audio sales</td><td class=\"n\">£1.8m</td></tr><tr><td>Peak Audio market share</td><td class=\"n\">4%</td></tr></tbody></table><table><caption>Table 3: Peak Air launch options</caption><thead><tr><th></th><th class=\"n\">Expected first-year sales (units)</th></tr></thead><tbody><tr><td>Price skimming at £149</td><td class=\"n\">15,000</td></tr><tr><td>Penetration pricing at £89</td><td class=\"n\">32,000</td></tr></tbody></table>",
+"questions": [
+{
+"num": "1",
+"marks": 6,
+"text": "Analyse one way in which the product life cycle could help Peak Audio Ltd plan its marketing for the Classic headphones."
+},
+{
+"num": "2",
+"marks": 9,
+"text": "Assess whether Peak Audio Ltd should stop selling the Classic headphones."
+},
+{
+"num": "3",
+"marks": 15,
+"text": "Peak Audio Ltd is choosing between price skimming at £149 and penetration pricing at £89 for Peak Air. Evaluate these two options and recommend which it should choose."
+}
+],
+"calcs": [
+{
+"t": "Percentage change in Classic sales",
+"right": true,
+"why": "Worth doing. Evidence of where Classic is in its life cycle, and whether to drop it.",
+"formula": "(New − old) ÷ old × 100",
+"value": -18.75,
+"dp": 2,
+"unit": "%",
+"unit_before": "",
+"steps": "(2.6 − 3.2) ÷ 3.2 × 100 = -18.75%.",
+"meaning": {
+"q": "What does a fall of 18.75% suggest?",
+"opts": [
+"Classic may be entering the decline stage of its life cycle",
+"Classic is in the growth stage",
+"Classic is a star",
+"The headphone market is growing"
+],
+"ans": 0,
+"why": "A sharp fall in sales after nine years fits decline, although one year of data is not enough to be sure."
+},
+"use": {
+"core": [
+"1",
+"2"
+],
+"ok": [],
+"why": "Evidence of where Classic is in its life cycle, and whether to drop it."
+}
+},
+{
+"t": "First-year revenue with price skimming",
+"right": true,
+"why": "Worth doing. One of the two figures you need to compare the pricing options.",
+"formula": "Price × quantity",
+"value": 2235000,
+"dp": 0,
+"unit": "",
+"unit_before": "£",
+"steps": "£149 × 15,000 = £2,235,000.",
+"meaning": {
+"q": "Compared with penetration pricing, what does this show?",
+"opts": [
+"Skimming gives less revenue in year one, but a much bigger margin on each pair",
+"Skimming gives more revenue",
+"Skimming gives more profit for certain",
+"The two give the same revenue"
+],
+"ans": 0,
+"why": "Penetration gives £2,848,000. Skimming earns less in total but more on each unit, so profit depends on costs."
+},
+"use": {
+"core": [
+"3"
+],
+"ok": [],
+"why": "One of the two figures you need to compare the pricing options."
+}
+},
+{
+"t": "First-year revenue with penetration pricing",
+"right": true,
+"why": "Worth doing. The other figure for comparing the options.",
+"formula": "Price × quantity",
+"value": 2848000,
+"dp": 0,
+"unit": "",
+"unit_before": "£",
+"steps": "£89 × 32,000 = £2,848,000.",
+"meaning": {
+"q": "What else would Imran need to know to choose between the options?",
+"opts": [
+"The cost of each pair, to work out which option gives more profit",
+"Nothing, the higher revenue option is always best",
+"The share price",
+"Last year's sales of Classic"
+],
+"ans": 0,
+"why": "Revenue is not profit. With a low price, the margin on each pair might be small."
+},
+"use": {
+"core": [
+"3"
+],
+"ok": [],
+"why": "The other figure for comparing the options."
+}
+},
+{
+"t": "Size of the wireless earbuds market",
+"right": true,
+"why": "Worth doing. Helps judge whether winning share quickly with a low price is worth it.",
+"formula": "Sales of the business ÷ market share",
+"value": 45,
+"dp": 0,
+"unit": "m",
+"unit_before": "£",
+"steps": "If 4% = £1.8 million, the market = 1.8 ÷ 0.04 = £45 million.",
+"meaning": {
+"q": "What does this tell Peak?",
+"opts": [
+"Peak has a small share of a large market, so there is room to grow if Peak Air can win customers",
+"Peak is the market leader",
+"The market is shrinking",
+"Peak has 45% of the market"
+],
+"ans": 0,
+"why": "A £45 million market with a 4% share leaves a lot of potential customers, but bigger brands hold most of it."
+},
+"use": {
+"core": [
+"3"
+],
+"ok": [
+"2"
+],
+"why": "Helps judge whether winning share quickly with a low price is worth it."
+}
+},
+{
+"t": "Return on capital employed",
+"right": false,
+"why": "There is no information on operating profit or capital employed, and ROCE is not part of these questions."
+},
+{
+"t": "YED for earbuds",
+"right": false,
+"why": "There are no data on changes in income, so YED cannot be calculated."
+}
+]
+}

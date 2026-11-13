@@ -1,0 +1,159 @@
+{
+"title": "Data drill: Tallis & Webb plc",
+"kind": "p2",
+"mins": 15,
+"intro": "Read the case study first. Then choose which calculations are worth doing, work them out, and decide what the numbers show and where you would use them.",
+"caseHtml": "<h2>Tallis & Webb plc</h2><p>Tallis & Webb plc sells greeting cards, wrapping paper and small gifts through 310 high street shops and its website. It has 80 million shares in issue.</p><p>Fewer people are sending paper cards, and online card companies such as Moonpig have taken customers from the high street. In 2025 Tallis & Webb cut its dividend. The chief executive wants to spend £12 million over two years improving the website and app.</p><table><caption>Table 1: Tallis & Webb plc</caption><thead><tr><th></th><th class=\"n\">2024</th><th class=\"n\">2025</th></tr></thead><tbody><tr><td>Share price (January)</td><td class=\"n\">240p</td><td class=\"n\">195p</td></tr><tr><td>Total dividend paid</td><td class=\"n\">£9.6m</td><td class=\"n\">£7.2m</td></tr><tr><td>Revenue</td><td class=\"n\">£126m</td><td class=\"n\">£118m</td></tr></tbody></table><table><caption>Table 2: UK greeting cards market</caption><thead><tr><th></th><th class=\"n\">2024</th><th class=\"n\">2025</th></tr></thead><tbody><tr><td>Market size</td><td class=\"n\">£1,500m</td><td class=\"n\">£1,440m</td></tr></tbody></table>",
+"questions": [
+{
+"num": "1",
+"marks": 6,
+"text": "Analyse one reason why Tallis & Webb plc’s share price might have fallen between 2024 and 2025."
+},
+{
+"num": "2",
+"marks": 9,
+"text": "Assess whether Tallis & Webb plc’s shareholders should be worried about the business’s performance."
+},
+{
+"num": "3",
+"marks": 15,
+"text": "Tallis & Webb plc is choosing between cutting its dividend again to pay for the website, or keeping the dividend at the 2025 level and borrowing the money. Evaluate these two options and recommend which it should choose."
+}
+],
+"calcs": [
+{
+"t": "Market capitalisation in 2025",
+"right": true,
+"why": "Worth doing. The fall in value is direct evidence for whether shareholders should be worried. It can also support Question 1.",
+"formula": "Number of issued shares × current share price",
+"value": 156,
+"dp": 0,
+"unit": "m",
+"unit_before": "£",
+"steps": "80 million × £1.95 = £156 million.",
+"meaning": {
+"q": "In 2024 the market capitalisation was £192 million. What does the change tell you?",
+"opts": [
+"Investors now value the business about £36 million less, because they expect lower profits",
+"The business has £36 million less cash",
+"The business has sold 36 million fewer shares",
+"The business made a loss of £36 million"
+],
+"ans": 0,
+"why": "Market capitalisation is the stock market's valuation of the company. It fell because the share price fell; the company's cash has not changed because of it."
+},
+"use": {
+"core": [
+"2"
+],
+"ok": [
+"1"
+],
+"why": "The fall in value is direct evidence for whether shareholders should be worried. It can also support Question 1."
+}
+},
+{
+"t": "Dividend per share in 2025",
+"right": true,
+"why": "Worth doing. Lower dividends matter to shareholders (Question 2) and show what is at stake if the dividend is cut again (Question 3).",
+"formula": "Total dividend paid ÷ number of ordinary shares",
+"value": 9,
+"dp": 0,
+"unit": "p",
+"unit_before": "",
+"steps": "£7.2 million ÷ 80 million = £0.09, which is 9p. In 2024 it was 12p.",
+"meaning": {
+"q": "What does the change from 12p to 9p mean for shareholders?",
+"opts": [
+"Each share now earns a quarter less in dividends",
+"Shareholders lost 9p per share",
+"The dividend has risen",
+"The share price fell by 9p"
+],
+"ans": 0,
+"why": "3p ÷ 12p × 100 = 25% lower. Shareholders get less income from each share."
+},
+"use": {
+"core": [
+"2",
+"3"
+],
+"ok": [],
+"why": "Lower dividends matter to shareholders (Question 2) and show what is at stake if the dividend is cut again (Question 3)."
+}
+},
+{
+"t": "Dividend yield in 2025",
+"right": true,
+"why": "Worth doing. Useful when judging whether the shares still reward shareholders, and what another cut would do to the yield.",
+"formula": "Dividend per share (pence) ÷ share price (pence) × 100",
+"value": 4.62,
+"dp": 2,
+"unit": "%",
+"unit_before": "",
+"steps": "9 ÷ 195 × 100 = 4.62%.",
+"meaning": {
+"q": "The dividend yield in 2024 was 5%. What does the 2025 figure show?",
+"opts": [
+"The yield has fallen because the dividend was cut by more than the share price fell",
+"Shares are now a better investment",
+"The yield went up",
+"The company is paying out more of its profit"
+],
+"ans": 0,
+"why": "The dividend fell 25% and the share price fell about 19%, so the yield fell from 5% to 4.62%."
+},
+"use": {
+"core": [
+"2",
+"3"
+],
+"ok": [],
+"why": "Useful when judging whether the shares still reward shareholders, and what another cut would do to the yield."
+}
+},
+{
+"t": "Market share in 2025",
+"right": true,
+"why": "Worth doing. A falling share in a falling market helps explain the drop in the share price and supports a judgement on performance.",
+"formula": "Sales of the business ÷ total sales in the market × 100",
+"value": 8.19,
+"dp": 2,
+"unit": "%",
+"unit_before": "",
+"steps": "£118m ÷ £1,440m × 100 = 8.19%. In 2024 it was £126m ÷ £1,500m × 100 = 8.4%.",
+"meaning": {
+"q": "What does the market share figure suggest?",
+"opts": [
+"Tallis & Webb is losing share slightly, as well as being in a shrinking market",
+"Tallis & Webb is gaining share",
+"Tallis & Webb's share is unchanged",
+"The market is growing"
+],
+"ans": 0,
+"why": "Revenue fell 6.3% while the market fell 4%, so its share dropped from 8.4% to 8.19%."
+},
+"use": {
+"core": [
+"1",
+"2"
+],
+"ok": [
+"3"
+],
+"why": "A falling share in a falling market helps explain the drop in the share price and supports a judgement on performance."
+}
+},
+{
+"t": "Break-even output for the shops",
+"right": false,
+"why": "There are no data on fixed costs, selling prices or variable costs, so this cannot be calculated from the case."
+},
+{
+"t": "Price elasticity of demand for cards",
+"right": false,
+"why": "There are no data on price changes and the quantity sold, so PED cannot be calculated."
+}
+]
+}

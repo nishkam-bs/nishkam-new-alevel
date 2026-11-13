@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{--bg:#FAF7F1;--bg2:#F3ECDB;--card:#fff;--fg:#1A1A1A;--navy:#0E2A47;--muted:#6B6B6B;--line:#E5DFD2;--gold:#B08A3E;--ok:#2d7a4f;--ok-soft:rgba(45,122,79,.12);--amber:#a7741a;--amber-soft:rgba(183,121,31,.13);--end:#b23b31;--end-soft:rgba(178,59,49,.1)}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1420;--bg2:#121a28;--card:#172133;--fg:#e9ecf2;--navy:#cfe0f5;--muted:#9aa4b6;--line:rgba(255,255,255,.1);--gold:#e0b553;--ok:#5fcf80;--ok-soft:rgba(95,207,128,.14);--amber:#e8b04a;--amber-soft:rgba(232,176,74,.14);--end:#ff7d70;--end-soft:rgba(255,125,112,.12);color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:32px max(18px,env(safe-area-inset-right,0px)) 70px max(18px,env(safe-area-inset-left,0px))}
+h1,h2{font-family:"DM Serif Display",Georgia,serif;font-weight:400;color:var(--navy);margin:0;line-height:1.15}
+h1{font-size:2.4rem;margin:6px 0 6px}
+h2{font-size:1.45rem;margin-bottom:10px}
+a{color:var(--fg)}
+.top a{color:var(--muted);font-size:.9rem}
+.lead{color:var(--muted);margin:0 0 20px;max-width:640px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:20px}
+.btn{border:0;cursor:pointer;border-radius:10px;padding:10px 18px;font:600 .92rem "IBM Plex Sans",sans-serif;background:var(--navy);color:var(--card)}
+@media (prefers-color-scheme:dark){.btn{color:#0e1420}}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.btn:disabled{opacity:.55;cursor:default}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+.list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.list li{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.list .t{flex:1;min-width:200px}
+.tag{font:600 .74rem "IBM Plex Mono",monospace;padding:3px 8px;border-radius:6px;background:var(--bg2)}
+.tag.done{background:var(--ok-soft);color:var(--ok)}.tag.todo{background:var(--amber-soft);color:var(--amber)}
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.row>div{flex:1 1 130px}
+label.f{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:4px}
+input[type=number],input[type=text],select,textarea{width:100%;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:9px 12px;font:15px "IBM Plex Sans",sans-serif}
+textarea{min-height:120px;line-height:1.6}
+.chk{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.92rem;margin-top:6px}
+.chk label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.q{border-top:1px solid var(--line);padding:18px 0}
+.q:first-of-type{border-top:0}
+.q .meta{font-size:.8rem;color:var(--muted);margin-bottom:6px}
+.q .case{background:var(--bg2);border-radius:10px;padding:12px 14px;margin:0 0 10px;font-size:.95rem}
+.q .stem{font-weight:500;margin-bottom:10px}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-bottom:6px;cursor:pointer}
+.opt input{margin-top:5px}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}.opt.wrong{border-color:var(--end);background:var(--end-soft)}
+.fb{margin-top:10px;font-size:.92rem;border-left:3px solid var(--line);padding:4px 0 4px 12px}
+.fb.good{border-color:var(--ok)}.fb.bad{border-color:var(--end)}.fb.mid{border-color:var(--amber)}
+.score{font:400 2.4rem "DM Serif Display",Georgia,serif;color:var(--navy)}
+.err{color:var(--end)}
+ol.steps{margin:6px 0 0;padding-left:20px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="index.html">Back to the main site</a></div>
+  <h1>Practice</h1>
+  <p class="lead">Work from your teacher, and practice sets you make yourself, aimed at your gaps or any topic you choose.</p>
+  <div id="bar"></div>
+
+  <div id="home" hidden>
+    <div class="card"><h2>From your teacher</h2><ul class="list" id="teacherList"></ul></div>
+
+    <div class="card"><h2>Practise my gaps</h2>
+      <div id="gapInfo" class="small muted">Working out your gaps...</div>
+      <div class="row" style="margin-top:14px">
+        <div><label class="f" for="gM">Multiple choice</label><input type="number" id="gM" min="0" max="15" value="6"></div>
+        <div><label class="f" for="gC">Calculations</label><input type="number" id="gC" min="0" max="8" value="2"></div>
+        <div><label class="f" for="gS">6-mark answers</label><input type="number" id="gS" min="0" max="6" value="1"></div>
+        <div><label class="f" for="gE">Extended answer</label><select id="gE"><option value="0">None</option><option value="9">One 9-marker</option><option value="15">One 15-marker</option></select></div>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:10px;align-items:center"><button class="btn" id="gapGo">Make a set on my gaps</button><span class="small muted" id="gapMsg"></span></div>
+    </div>
+
+    <div class="card"><h2>Make my own</h2>
+      <label class="f" for="mUnit">Unit</label><select id="mUnit"></select>
+      <div class="chk" id="mTopics"></div>
+      <div class="row" style="margin-top:14px">
+        <div><label class="f" for="mM">Multiple choice</label><input type="number" id="mM" min="0" max="15" value="5"></div>
+        <div><label class="f" for="mC">Calculations</label><input type="number" id="mC" min="0" max="8" value="1"></div>
+        <div><label class="f" for="mS">6-mark answers</label><input type="number" id="mS" min="0" max="6" value="2"></div>
+        <div><label class="f" for="mE">Extended answer</label><select id="mE"><option value="0">None</option><option value="9">One 9-marker</option><option value="15">One 15-marker</option></select></div>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:10px;align-items:center"><button class="btn" id="mGo">Make the set</button><span class="small muted" id="mMsg"></span></div>
+    </div>
+
+    <div class="card"><h2>Your practice sets</h2><ul class="list" id="selfList"></ul></div>
+  </div>
+
+  <div id="doView" hidden>
+    <div class="card">
+      <button class="btn ghost" id="doBack" style="margin-bottom:14px">Back to practice</button>
+      <h2 id="doTitle"></h2><p class="small muted" id="doMeta"></p>
+      <div id="doQs"></div>
+      <div id="doEnd" style="margin-top:10px;display:flex;gap:10px;align-items:center"><button class="btn" id="doSubmit">Hand in for marking</button><span class="small muted" id="doMsg"></span></div>
+    </div>
+  </div>
+</div>
+<script src="account.js"></script>
+<script src="taxonomy.js"></script>
+<script src="analysis.js"></script>
+<script src="workgen.js"></script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const A=window.Analysis,W=window.WorkGen,T=window.TAXO,esc=W.esc,Ac=window.Acct;
+let work=[],mine=null,cur=null,answers={},saveT=null;
+const fmt=t=>new Date(t).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+
+Ac.bar('#bar',{inside:true,text:'Sign in once on the home page to use practice. Your sets and marks are saved to your account.'});
+
+async function load(){
+  if(!Ac.user){$('#home').hidden=true;return;}
+  $('#home').hidden=false;
+  try{work=(await Ac.call('/work/mine')).work||[];}catch(e){work=[];}
+  let marks=[];try{marks=(await Ac.call('/mymarks')).marks||[];}catch(e){}
+  const store={};T.courses.forEach(([k])=>{const v=Ac.get('course:'+k);if(v)store['course:'+k]=v;});
+  const bh=Ac.get('blurt:history');if(bh)store['blurt:history']=bh;
+  mine=A.analyse({store,marks,work});
+  lists();gapInfo();
+}
+function lists(){
+  const li=w=>`<li><span class="t"><b>${esc(w.title)}</b><br><span class="small muted">${w.source==='teacher'?'Set':'Made'} ${fmt(w.created)}${w.due&&w.status!=='done'?` · due ${esc(new Date(w.due).toLocaleDateString('en-GB',{day:'numeric',month:'short'}))}`:''} · ${(w.spec.items||[]).length} questions</span></span>
+    ${w.status==='done'?`<span class="tag done">${w.score}/${w.total}</span>`:`<span class="tag todo">${w.status==='started'?'Started':'To do'}</span>`}<button class="btn ghost" data-w="${esc(w.id)}">${w.status==='done'?'See marks':w.status==='started'?'Carry on':'Start'}</button></li>`;
+  const t=work.filter(w=>w.source==='teacher'),s=work.filter(w=>w.source==='self');
+  $('#teacherList').innerHTML=t.length?t.map(li).join(''):'<li class="muted">Nothing set at the moment.</li>';
+  $('#selfList').innerHTML=s.length?s.map(li).join(''):'<li class="muted">Sets you make appear here.</li>';
+  $$('[data-w]').forEach(b=>b.onclick=()=>open(work.find(w=>w.id===b.dataset.w)));
+}
+function gapInfo(){
+  const g=mine.gaps.slice(0,5),steps=A.nextSteps(mine);
+  $('#gapInfo').innerHTML=g.length?`From your courses and marked answers, these topics need the most work:<ol class="steps">${g.map(x=>`<li>${esc(x.ref+' '+x.title)} <span class="muted">(${Math.round(x.score*100)}%)</span></li>`).join('')}</ol>${steps[2]&&!/^Revise/.test(steps[2])?`<p style="margin:8px 0 0">${esc(steps[2])}</p>`:''}`
+    :'There is not enough evidence yet to find your gaps. Do some courses or use the marking labs first, or make your own set below. A set on your gaps will cover a spread of topics until then.';
+}
+
+/* own topics */
+$('#mUnit').innerHTML=T.units.map(u=>`<option value="${u.unit}">${u.unit} ${esc(u.title)}</option>`).join('');
+const showTopics=()=>{const u=$('#mUnit').value;$('#mTopics').innerHTML=T.topics.filter(t=>t[1]===u).map(([id,,ref,title])=>`<label><input type="checkbox" value="${id}"> ${esc(ref+' '+title)}</label>`).join('');};
+$('#mUnit').onchange=showTopics;showTopics();
+
+async function make(btn,msg,topics,counts,ext,about){
+  const total=counts.mcq+counts.calc+counts.short+counts.extended;
+  if(!total){msg.textContent='Choose at least one question.';return;}
+  btn.disabled=true;msg.textContent='Writing your questions. This takes about half a minute...';
+  try{
+    const spec=await W.generate({topics,counts,extendedMarks:ext||9,about});
+    const r=await Ac.call('/work/self',{title:spec.title,spec});
+    await load();msg.textContent='';open(work.find(w=>w.id===r.id));
+  }catch(e){msg.textContent=e.message;}
+  btn.disabled=false;
+}
+const cnt=p=>({mcq:+$('#'+p+'M').value||0,calc:+$('#'+p+'C').value||0,short:+$('#'+p+'S').value||0,extended:+$('#'+p+'E').value?1:0});
+$('#gapGo').onclick=()=>make($('#gapGo'),$('#gapMsg'),mine?mine.gaps.slice(0,4).map(g=>g.id):[],cnt('g'),+$('#gE').value,mine?A.summary(mine,6):'');
+$('#mGo').onclick=()=>{const t=$$('#mTopics input:checked').map(c=>c.value);if(!t.length){$('#mMsg').textContent='Tick at least one topic.';return;}make($('#mGo'),$('#mMsg'),t,cnt('m'),+$('#mE').value,'');};
+
+/* doing a set */
+function open(w){
+  if(!w)return;cur=w;answers=Object.assign({},w.answers||{});
+  $('#home').hidden=true;$('#doView').hidden=false;scrollTo({top:0});
+  $('#doTitle').textContent=w.title;
+  $('#doMeta').textContent=(w.source==='teacher'?'Set by your teacher':'Made by you')+' · '+fmt(w.created)+(w.status==='done'?` · marked: ${w.score}/${w.total}`:' · your answers save as you go');
+  draw();
+}
+function draw(){
+  const w=cur,done=w.status==='done',res=done&&w.result?w.result.items:[];
+  $('#doQs').innerHTML=(done?`<p><span class="score">${w.score}/${w.total}</span> <span class="muted">${Math.round(w.score/Math.max(1,w.total)*100)}%</span></p>`:'')+
+  w.spec.items.map((it,i)=>{const a=answers[i],r=res[i];
+    const fb=r?`<div class="fb ${r.ok>=.75?'good':r.ok>=.4?'mid':'bad'}">${r.marks}/${r.max}${it.type==='mcq'?(r.ok?' - right.':` - the answer is: ${esc(it.options[it.answer])}.`):''}${it.type==='calc'?(r.ok?' - right.':` - the answer is ${it.answer} ${esc(it.unit)}.`):''}
+      ${it.explain?` ${esc(it.explain)}`:''}${it.working?`<br><span class="muted">Working: ${esc(it.working)}</span>`:''}${r.feedback?`<br>${esc(r.feedback)}`:''}${r.better?`<br><span class="muted">It could read: ${esc(r.better)}</span>`:''}</div>`:'';
+    return `<div class="q"><div class="meta">${i+1}. ${W.typeName[it.type]}${it.marks?` · ${it.marks} marks`:''}</div>${it.case?`<div class="case">${esc(it.case)}</div>`:''}<div class="stem">${esc(it.q)}</div>
+    ${it.type==='mcq'?it.options.map((o,oi)=>`<label class="opt${done?(oi===it.answer?' right':(+a===oi?' wrong':'')):''}"><input type="radio" name="q${i}" value="${oi}" ${+a===oi&&a!==''&&a!=null?'checked':''} ${done?'disabled':''}> <span>${esc(o)}</span></label>`).join(''):''}
+    ${it.type==='calc'?`<div style="display:flex;gap:8px;align-items:center;max-width:320px"><input type="text" inputmode="decimal" data-i="${i}" value="${esc(a||'')}" ${done?'disabled':''} placeholder="Your answer"> <span>${esc(it.unit)}</span></div>`:''}
+    ${it.type==='short'||it.type==='extended'?`<textarea data-i="${i}" ${done?'disabled':''} style="min-height:${it.type==='extended'?260:120}px" placeholder="Write your answer">${esc(a||'')}</textarea>`:''}${fb}</div>`;}).join('');
+  $('#doEnd').hidden=done;$('#doMsg').textContent='';
+  if(!done){
+    $$('#doQs input[type=radio]').forEach(r=>r.onchange=()=>{answers[+r.name.slice(1)]=+r.value;saveSoon();});
+    $$('#doQs [data-i]').forEach(t=>t.oninput=()=>{answers[+t.dataset.i]=t.value;saveSoon();});
+  }
+}
+function saveSoon(){clearTimeout(saveT);saveT=setTimeout(()=>{Ac.call('/work/save',{id:cur.id,answers}).then(()=>{cur.answers=Object.assign({},answers);if(cur.status==='set')cur.status='started';$('#doMsg').textContent='Saved';}).catch(()=>{$('#doMsg').textContent='Not saved - check your connection';});},1200);}
+$('#doSubmit').onclick=async()=>{
+  const n=cur.spec.items.length,blank=cur.spec.items.filter((it,i)=>answers[i]==null||String(answers[i]).trim()==='').length;
+  if(blank&&!confirm(`${blank} of ${n} questions have no answer. Hand in anyway?`))return;
+  const btn=$('#doSubmit');btn.disabled=true;$('#doMsg').textContent='Marking...';
+  try{
+    const result=await W.mark(cur.spec,answers);
+    await Ac.call('/work/submit',{id:cur.id,answers,result,score:result.score,total:result.total});
+    Object.assign(cur,{status:'done',result,score:result.score,total:result.total,answers});
+    open(cur);
+  }catch(e){$('#doMsg').textContent=e.message;}
+  btn.disabled=false;
+};
+$('#doBack').onclick=()=>{clearTimeout(saveT);if(cur&&cur.status!=='done')Ac.call('/work/save',{id:cur.id,answers}).catch(()=>{});$('#doView').hidden=true;load();};
+Ac.ready.then(load);
+})();
+</script>
+<script src="visit.js" defer></script>
+</body>
+</html>

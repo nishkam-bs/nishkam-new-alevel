@@ -1,0 +1,245 @@
+{
+"title": "Week 3: knowledge quiz",
+"items": [
+{
+"q": "What is the correct order of the product life cycle stages in the specification?",
+"opts": [
+"Development, growth, introduction, maturity, decline",
+"Introduction, development, growth, decline, maturity",
+"Growth, introduction, maturity, decline, development",
+"Development, introduction, growth, maturity, decline"
+],
+"ans": 3,
+"why": "The specification lists development, introduction, growth, maturity, decline.",
+"label": "3.1.3"
+},
+{
+"q": "In which stages of the product life cycle is cash flow from a product usually negative?",
+"opts": [
+"Growth and maturity",
+"Only decline",
+"Maturity and decline",
+"Development and introduction"
+],
+"ans": 3,
+"why": "Money is spent developing and launching the product before sales build up.",
+"label": "3.1.3"
+},
+{
+"q": "Which of these is an extension strategy listed in the specification?",
+"opts": [
+"Lead generation",
+"Market mapping",
+"Rebranding",
+"Price skimming"
+],
+"ans": 2,
+"why": "The specification lists advertising, rebranding, lowering the price and adapting the product.",
+"label": "3.1.3"
+},
+{
+"q": "What are the two axes of the Boston Matrix?",
+"opts": [
+"Cost and revenue",
+"Market growth and market share",
+"Sales and profit",
+"Price and quality"
+],
+"ans": 1,
+"why": "Products are placed by the growth of their market and their share of it.",
+"label": "3.1.3"
+},
+{
+"q": "What is a cash cow?",
+"opts": [
+"A product with a low share in a high-growth market",
+"A product with a high market share in a low-growth market",
+"A product with a low share in a low-growth market",
+"A product with a high share in a high-growth market"
+],
+"ans": 1,
+"why": "Cash cows earn a lot and need little spending, so they generate cash.",
+"label": "3.1.3"
+},
+{
+"q": "What is a question mark (problem child)?",
+"opts": [
+"A product with a high share in a high-growth market",
+"A product that is about to be withdrawn",
+"A product with a low market share in a high-growth market",
+"A product with a high share in a low-growth market"
+],
+"ans": 2,
+"why": "The market is attractive but the product has not yet won much share. It may need heavy spending to grow.",
+"label": "3.1.3"
+},
+{
+"q": "How do businesses often use the cash from their cash cows?",
+"opts": [
+"To support question marks and stars",
+"It must all be paid out as dividends",
+"To lower prices on cash cows",
+"To pay for dogs indefinitely"
+],
+"ans": 0,
+"why": "Cash from mature products can fund products that could become the next stars or cash cows.",
+"label": "3.1.3"
+},
+{
+"q": "What is a dog?",
+"opts": [
+"A new product in development",
+"A product with a low share in a high-growth market",
+"A product with a low market share in a low-growth market",
+"A product with a high share in a low-growth market"
+],
+"ans": 2,
+"why": "Dogs often earn little and may be dropped, although some still make a profit or support other products.",
+"label": "3.1.3"
+},
+{
+"q": "What is one of the main challenges of new product development?",
+"opts": [
+"It is always quick",
+"It is expensive and many new products fail",
+"It removes all risk",
+"Competitors cannot copy new products"
+],
+"ans": 1,
+"why": "NPD needs research, design and testing, and there is no guarantee customers will buy the result.",
+"label": "3.1.3"
+},
+{
+"q": "What is one value of new product development?",
+"opts": [
+"It reduces all costs",
+"It guarantees a higher share price",
+"It creates new sources of revenue to replace products in decline",
+"It means the business no longer needs marketing"
+],
+"ans": 2,
+"why": "New products can keep the business competitive as older products reach maturity and decline.",
+"label": "3.1.3"
+},
+{
+"q": "What is price skimming?",
+"opts": [
+"Setting a high price at launch and lowering it over time",
+"Matching rivals' prices",
+"Setting a low price to win market share quickly",
+"Changing price with demand in real time"
+],
+"ans": 0,
+"why": "Skimming targets customers who will pay more to have the product first.",
+"label": "3.1.3"
+},
+{
+"q": "What is penetration pricing?",
+"opts": [
+"Adding a mark-up to cost",
+"Charging more than rivals",
+"Setting a high price at launch",
+"Setting a low price at launch to win market share quickly"
+],
+"ans": 3,
+"why": "The low price attracts customers fast. The price may rise once the product is established.",
+"label": "3.1.3"
+},
+{
+"q": "Which of these is an example of dynamic pricing?",
+"opts": [
+"A newspaper that is always £1.50",
+"Train fares that change depending on how many seats are left and when you book",
+"A supermarket matching a rival's price",
+"A product priced at £9.99 instead of £10"
+],
+"ans": 1,
+"why": "Dynamic pricing changes prices in response to demand, often automatically using data.",
+"label": "3.1.3"
+},
+{
+"q": "What is cost-based pricing?",
+"opts": [
+"Adding a mark-up to the cost of making the product",
+"Setting a price below cost",
+"Changing price with demand",
+"Setting the price at the same level as rivals"
+],
+"ans": 0,
+"why": "It is simple and makes sure each unit covers its cost, but it ignores what customers will pay.",
+"label": "3.1.3"
+},
+{
+"q": "What is going rate pricing?",
+"opts": [
+"Setting the highest price in the market",
+"Adding a percentage to cost",
+"Setting a price similar to rivals' prices",
+"Setting a price that changes every hour"
+],
+"ans": 2,
+"why": "Going rate pricing is common where products are similar and customers compare prices.",
+"label": "3.1.3"
+},
+{
+"q": "Under which method of pricing does the specification list premium pricing?",
+"opts": [
+"Cost based",
+"Dynamic",
+"Demand based",
+"Competition based"
+],
+"ans": 3,
+"why": "The specification lists premium, going rate and discount as competition-based methods.",
+"label": "3.1.3"
+},
+{
+"q": "When is price skimming most likely to work?",
+"opts": [
+"When there are many identical rivals",
+"When the business wants market share quickly",
+"When demand is very price elastic",
+"When the product is new or unique and some customers will pay a lot to have it first"
+],
+"ans": 3,
+"why": "Skimming needs customers who are not very sensitive to price, which is more likely when there is little competition.",
+"label": "3.1.3"
+},
+{
+"q": "What is one risk of penetration pricing?",
+"opts": [
+"It always leads to a loss",
+"Low margins, and customers may resist when the price is raised later",
+"Too few customers",
+"Rivals cannot respond"
+],
+"ans": 1,
+"why": "The business earns little on each unit, and customers who joined for the low price may leave when it rises.",
+"label": "3.1.3"
+},
+{
+"q": "Which of these is an influence on price listed in the specification?",
+"opts": [
+"The number of employees",
+"The age of the business",
+"The business's legal form",
+"Competitors' actions"
+],
+"ans": 3,
+"why": "The specification lists marketing objectives, target market, level of demand, PED, costs, competitors' actions and the marketing mix.",
+"label": "3.1.3"
+},
+{
+"q": "A business raises its price and its costs stay the same. What happens to the profit margin on each unit?",
+"opts": [
+"It becomes negative",
+"It falls",
+"It rises",
+"It stays the same"
+],
+"ans": 2,
+"why": "The gap between price and cost per unit gets bigger, although the business may sell fewer units.",
+"label": "3.1.3"
+}
+]
+}

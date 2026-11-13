@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Student Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{--bg:#f6f4ee;--bg2:#efece3;--card:#fff;--fg:#17202e;--muted:#5d6676;--line:rgba(23,32,46,.12);--gold:#a8790f;--gold-soft:rgba(168,121,15,.12);
+  --ok:#2f8a4a;--ok-soft:rgba(47,138,74,.14);--amber:#b7791f;--amber-soft:rgba(183,121,31,.15);--end:#c8463c;--end-soft:rgba(200,70,60,.11);--shadow:0 1px 2px rgba(23,32,46,.06),0 8px 28px rgba(23,32,46,.07)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1420;--bg2:#121a28;--card:#172133;--fg:#e9ecf2;--muted:#9aa4b6;--line:rgba(255,255,255,.09);--gold:#e0b553;--gold-soft:rgba(224,181,83,.13);
+  --ok:#5fcf80;--ok-soft:rgba(95,207,128,.14);--amber:#e8b04a;--amber-soft:rgba(232,176,74,.14);--end:#ff7d70;--end-soft:rgba(255,125,112,.12);--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2{font-family:"DM Serif Display",Georgia,serif;font-weight:400;margin:0;line-height:1.15}
+.wrap{max-width:1200px;margin:0 auto;padding:32px max(16px,env(safe-area-inset-right,0px)) 60px max(16px,env(safe-area-inset-left,0px))}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.top h1{font-size:2.2rem}
+.top p{color:var(--muted);margin:4px 0 0}
+.btn{border:0;cursor:pointer;border-radius:999px;padding:9px 18px;font:600 .9rem "IBM Plex Sans",sans-serif;background:var(--fg);color:var(--bg)}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:default}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
+.login{max-width:420px;margin:12vh auto 0}
+.login h1{font-size:1.9rem;margin-bottom:6px}
+.login p{color:var(--muted);margin:0 0 16px}
+input{width:100%;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:11px 13px;font:16px "IBM Plex Sans",sans-serif;margin-bottom:12px}
+.err{color:var(--end);font-size:.9rem;min-height:1.3em;margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.stat b{display:block;font:400 2rem "DM Serif Display",Georgia,serif}
+.stat span{color:var(--muted);font-size:.85rem}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
+.side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+th{font-weight:600;font-size:.75rem;color:var(--muted)}
+th.l,td.l{text-align:left}
+td.l button{border:0;background:none;color:var(--fg);font:600 .9rem "IBM Plex Sans",sans-serif;cursor:pointer;padding:0;text-align:left}
+td.l button:hover{text-decoration:underline}
+.cell{display:inline-block;min-width:44px;padding:3px 6px;border-radius:6px;font:600 .78rem "IBM Plex Mono",monospace}
+.cell.p{background:var(--ok-soft);color:var(--ok)}
+.cell.a{background:var(--amber-soft);color:var(--amber)}
+.cell.n{color:var(--line)}
+.muted{color:var(--muted)}
+h2{font-size:1.35rem;margin-bottom:12px}
+.bars{display:grid;gap:8px}
+.barrow{display:grid;grid-template-columns:120px minmax(0,1fr) 44px;gap:10px;align-items:center;font-size:.85rem}
+.barrow .t{height:10px;border-radius:9px;background:var(--line);overflow:hidden}
+.barrow .t i{display:block;height:100%;background:var(--ok);border-radius:9px}
+.miss{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.miss li{display:flex;gap:10px;font-size:.85rem;align-items:baseline}
+.miss .c{font:600 .8rem "IBM Plex Mono",monospace;color:var(--end);min-width:28px}
+.detail{margin-top:20px}
+.attempt{padding:10px 0;border-bottom:1px solid var(--line);font-size:.88rem}
+.attempt:last-child{border-bottom:0}
+.answer{white-space:pre-wrap;background:var(--bg2);border-radius:10px;padding:14px;margin-top:8px;line-height:1.7}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-top:10px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+select{border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:8px 10px;font:inherit}
+[hidden]{display:none!important}
+@media (max-width:900px){.side{grid-template-columns:minmax(0,1fr)}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div id="loginView" class="login card">
+  <h1>Student tracker</h1>
+  <p>Homework, courses, marked answers and student accounts for the 7138 class. Teacher access only.</p>
+  <form id="lf"><input type="password" id="pw" placeholder="Teacher password" autocomplete="current-password" aria-label="Teacher password"><button class="btn" type="submit">Open</button><div class="err" id="lerr"></div></form>
+</div>
+
+<div id="dash" hidden>
+  <div class="top">
+    <div><h1>This week</h1><p id="updated"></p></div>
+    <div style="display:flex;gap:10px"><button class="btn ghost" id="refresh">Refresh</button><button class="btn ghost" id="logout">Sign out</button></div>
+  </div>
+  <div class="stats">
+    <div class="card stat"><b id="sStarted">0</b><span id="lStarted">students started</span></div>
+    <div class="card stat"><b id="sDone">0</b><span id="lDone">finished all 10 stages</span></div>
+    <div class="card stat"><b id="sAvg">0</b><span id="lAvg">average stages passed</span></div>
+    <div class="card stat"><b id="sWeek">0</b><span id="lWeek">attempts in the last 7 days</span></div>
+  </div>
+  <div id="scView" hidden><div id="scSel" style="margin-bottom:14px"></div><div id="scRoot"></div></div>
+  <div id="ovView" hidden><div id="ovSel" style="margin-bottom:14px"></div><div id="ovRoot"></div></div>
+  <div class="card" id="acctView" hidden>
+    <h2>Add students</h2>
+    <p class="muted" style="margin:0 0 10px">Type one name per line. Each student gets a username and a one-time password. They sign in on the home page and then choose their own password. The one-time passwords are only shown here once, so download or print the list before you leave this page.</p>
+    <textarea id="newNames" rows="6" placeholder="First name and initial, one per line" style="width:100%;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg);padding:11px 13px;font:15px 'IBM Plex Sans',sans-serif"></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px"><button class="btn" id="addBtn">Create accounts</button><span class="muted" id="addMsg" style="align-self:center;font-size:.9rem"></span></div>
+    <div id="newCreds" hidden style="margin-top:18px">
+      <h2>New sign-in details</h2>
+      <div class="tablewrap"><table id="credTbl"></table></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn" id="dlCsv">Download for Excel</button><button class="btn ghost" id="printSlips">Print sign-in slips</button></div>
+    </div>
+    <h2 style="margin-top:26px">All accounts</h2>
+    <div class="tablewrap"><table id="acctTbl"></table></div>
+    <p class="muted" style="font-size:.85rem;margin:12px 0 0">If a student forgets their password, reset it here and give them the new one-time password. Resetting signs them out on every device. Their saved work is kept.</p>
+  </div>
+  <div class="grid2" id="mainGrid">
+    <div>
+      <div class="card">
+        <div class="filters" id="mainFilters"><select id="course" aria-label="Choose course"><option value="s">This week</option><option value="o">Overview</option><option value="1000">6-Mark Analyse Course</option><option value="1100">9-Mark Assess Course</option><option value="1200">Calculate and Use It Course</option><option value="m">Marked answers (6, 9 and 15-mark labs)</option><option value="a">Student accounts</option></select><select id="sort" aria-label="Sort students"><option value="name">Sort by name</option><option value="prog">Sort by progress</option><option value="recent">Sort by last active</option></select></div>
+        <div class="tablewrap"><table id="tbl"></table></div>
+        <div class="legend" id="legend"><span><span class="cell p">8/10</span> passed (best score)</span><span><span class="cell a">5/10</span> tried, not passed yet</span><span>Click a name to see attempts and written answers</span></div>
+      </div>
+      <div class="card detail" id="detail" hidden></div>
+    </div>
+    <div class="side" id="side">
+      <div class="card"><h2>Pass rate by stage</h2><div class="bars" id="bars"></div></div>
+      <div class="card"><h2>Most missed questions</h2><ul class="miss" id="miss"></ul><p class="muted" style="font-size:.8rem;margin:12px 0 0">Counts every attempt. The number before the source is stage.question.</p></div>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+(function(){
+"use strict";
+const API=(()=>{try{return localStorage.getItem('n8_api');}catch(e){return null;}})()||'https://nishkam-tracker-7138.alevelnishkam.workers.dev';
+const COURSES={
+  1000:{name:'6-Mark Analyse Course',stages:[[1,'Read the question',10],[2,'Spot the drift',10],[3,'Make the end point concrete',6],[4,'Build the chain',3],[5,'Find the weak link',5],[6,'Use the case',10],[7,'What a 6-marker needs',6],[8,'Data in the chain',6],[9,'Against the clock',12],[10,'The real question',1]]},
+  1100:{name:'9-Mark Assess Course',stages:[[1,'What is the question deciding?',6],[2,'Is it really the other side?',10],[3,'Build both sides',3],[4,'Weighing or summarising?',10],[5,'What does it depend on?',6],[6,'Fix the judgement',5],[7,'Calculate first',5],[8,'Use the figure',6],[9,'Against the clock',12],[10,'The real question',1]]},
+  1200:{name:'Calculate and Use It Course',stages:[[1,'Formula and figures',7],[2,'Percentages and index numbers',6],[3,'Marketing numbers',6],[4,'Shares and dividends',4],[5,'Profit, liquidity and returns',6],[6,'Use the result',10],[7,'Judge with the result',6],[8,'Read the number right',5],[9,'Against the clock',12],[10,'The real question',1]]}
+};
+let OFF=1000,STAGES=COURSES[1000].stages,WRITE_STAGE=10;
+/* stage numbers: 1001-1010 = 6-mark Analyse, 1101-1110 = 9-mark Assess, 1201-1210 = Calculate and use it */
+const courseOf=st=>st>=100?Math.floor(st/100)*100:0;
+
+function howObj(m){try{return m.how?JSON.parse(m.how):null;}catch(e){return null;}}
+function howLine(m){const h=howObj(m);if(!h)return '';if(h.m==='photo')return `Handwritten: ${h.pg} photo page${h.pg>1?'s':''}.`;const tot=(h.k||0)+(h.p||0),pc=tot?Math.round(100*(h.p||0)/tot):0;
+  return `Typed: ${h.w} words, ${pc}% pasted${h.big?` (largest paste ${h.big} characters)`:''}, about ${Math.max(1,Math.round((h.s||0)/60))} min of typing.`;}
+function howCell(m){const h=howObj(m);if(!h)return '<span class="muted">not recorded</span>';if(h.m==='photo')return '<span style="color:#2f6fdb;font-weight:600">Handwritten</span>';
+  const tot=(h.k||0)+(h.p||0);const pz=((h.p||0)>=300&&(h.p||0)>=tot*0.5)||(h.big||0)>=500;
+  return pz?`<span style="color:#c0392b;font-weight:600" title="${esc(howLine(m))}">Mostly pasted</span>`:`<span class="muted" title="${esc(howLine(m))}">Typed</span>`;}
+function rowsFor(){return data.rows.filter(r=>courseOf(r.stage)===OFF).map(r=>Object.assign({},r,{stage:r.stage-OFF}));}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let token=null,data=null;
+try{token=sessionStorage.getItem('ct8_token');}catch(e){}
+
+async function api(path,body){
+  const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok){const e=new Error(d.error||'Something went wrong');e.status=r.status;throw e;}
+  return d;
+}
+$('#lf').onsubmit=async e=>{e.preventDefault();$('#lerr').textContent='';
+  try{const d=await api('/teacher',{password:$('#pw').value});token=d.token;try{sessionStorage.setItem('ct8_token',token);}catch(x){}$('#pw').value='';load();}
+  catch(x){$('#lerr').textContent=x.message==='Failed to fetch'?'Could not connect.':x.message;}};
+$('#logout').onclick=()=>{token=null;try{sessionStorage.removeItem('ct8_token');localStorage.removeItem('n8_teacher_preview');}catch(e){}$('#dash').hidden=true;$('#loginView').hidden=false;};
+$('#refresh').onclick=()=>load();
+$('#sort').onchange=()=>render();
+let MODE='s';
+$('#course').onchange=e=>{const v=e.target.value;$('#detail').hidden=true;
+  if(v==='m'){MODE='m';document.querySelector('#dash h1').textContent='Marked answers';render();return;}
+  if(v==='b'){MODE='b';document.querySelector('#dash h1').textContent='Blurting';render();return;}
+  if(v==='a'){MODE='a';document.querySelector('#dash h1').textContent='Student accounts';render();return;}
+  if(v==='o'){MODE='o';document.querySelector('#dash h1').textContent='Overview';render();return;}
+  if(v==='s'){MODE='s';document.querySelector('#dash h1').textContent='This week';render();return;}
+  MODE='c';OFF=+v;STAGES=COURSES[OFF].stages;WRITE_STAGE=10;document.querySelector('#dash h1').textContent=COURSES[OFF].name;render();};
+
+async function load(){
+  $('#refresh').disabled=true;
+  try{data=await api('/dashboard',{token});$('#loginView').hidden=true;$('#dash').hidden=false;if(MODE==='o')document.querySelector('#dash h1').textContent='Overview';if(MODE==='s')document.querySelector('#dash h1').textContent='This week';render();
+    $('#updated').textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
+  catch(x){if(x.status===401){$('#logout').click();$('#lerr').textContent='Please sign in again.';}else alert(x.message);}
+  $('#refresh').disabled=false;
+}
+
+function students(){
+  const m={};
+  Object.entries(data.roster).forEach(([exam,name])=>{m[exam]={exam,name,rows:[]};});
+  rowsFor().forEach(r=>{(m[r.exam]=m[r.exam]||{exam:r.exam,name:r.name,rows:[]}).rows.push(r);});
+  return Object.values(m).map(s=>{
+    const st={};s.rows.forEach(r=>{const x=st[r.stage]=st[r.stage]||{best:-1,passed:false,tries:0};x.tries++;if(r.score>x.best)x.best=r.score;if(r.passed)x.passed=true;});
+    const passedN=Object.values(st).filter(x=>x.passed).length;
+    const last=s.rows.reduce((a,r)=>r.t>a?r.t:a,'');
+    return Object.assign(s,{st,passedN,last});
+  });
+}
+function render(){
+  const isA=MODE==='a',isO=MODE==='o',isS=MODE==='s';$('#acctView').hidden=!isA;$('#ovView').hidden=!isO;$('#scView').hidden=!isS;$('#mainGrid').hidden=isA||isO||isS;$('#dash>.stats').hidden=isA||isO||isS;$('#sort').hidden=isA||isO||isS;
+  if(isS){$('#scSel').append($('#course'));if(window.SchedView)SchedView.render($('#scRoot'));return;}
+  /* the course picker sits inside the main grid; keep it reachable in the other views */
+  if(isA){$('#acctView').prepend($('#course'));$('#course').style.marginBottom='16px';renderAccounts();return;}
+  if(isO){$('#ovSel').append($('#course'));if(window.Overview)Overview.render($('#ovRoot'));return;}
+  if($('#course').parentNode.id!=='mainFilters')$('.filters').prepend($('#course'));
+  if(MODE==='b'){$('#side').hidden=true;$('#legend').hidden=true;renderBlurts();return;}
+  const isM=MODE==='m';$('#side').hidden=isM;$('#legend').hidden=isM;
+  [['lStarted','students started','students with a marked answer'],['lDone','finished all 10 stages','answers marked in total'],['lAvg','average stages passed','average mark (%)'],['lWeek','attempts in the last 7 days','answers marked in the last 7 days']].forEach(([id,a,b])=>{$('#'+id).textContent=isM?b:a;});
+  if(isM){renderMarks();return;}
+  const list=students(),sort=$('#sort').value;
+  list.sort(sort==='prog'?(a,b)=>b.passedN-a.passedN||a.name.localeCompare(b.name):sort==='recent'?(a,b)=>(b.last||'').localeCompare(a.last||''):(a,b)=>a.name.localeCompare(b.name));
+  const started=list.filter(s=>s.rows.length);
+  $('#sStarted').textContent=`${started.length} / ${list.length}`;
+  $('#sDone').textContent=list.filter(s=>s.passedN===10).length;
+  $('#sAvg').textContent=list.length?(list.reduce((a,s)=>a+s.passedN,0)/list.length).toFixed(1):'0';
+  const wk=Date.now()-7*86400000;$('#sWeek').textContent=rowsFor().filter(r=>Date.parse(r.t)>wk).length;
+
+  $('#tbl').innerHTML=`<thead><tr><th class="l">Student</th>${STAGES.map(s=>`<th title="${esc(s[1])}">${s[0]}</th>`).join('')}<th>Last active</th></tr></thead><tbody>${list.map(s=>`<tr><td class="l"><button data-e="${esc(s.exam)}">${esc(s.name)}</button> <span class="muted">${esc(s.exam)}</span></td>${STAGES.map(([id,,tot])=>{const x=s.st[id];
+    if(!x)return '<td><span class="cell n">·</span></td>';const lab=id===WRITE_STAGE?(x.passed?'Done':'Tried'):`${x.best}/${tot}`;
+    return `<td><span class="cell ${x.passed?'p':'a'}" title="${x.tries} attempt${x.tries>1?'s':''}">${lab}</span></td>`;}).join('')}<td class="muted">${s.last?ago(s.last):'Not started'}</td></tr>`).join('')}</tbody>`;
+  document.querySelectorAll('#tbl button').forEach(b=>b.onclick=()=>detail(list.find(s=>s.exam===b.dataset.e)));
+
+  $('#bars').innerHTML=STAGES.map(([id,t])=>{const tried=list.filter(s=>s.st[id]).length,p=list.filter(s=>s.st[id]&&s.st[id].passed).length,pct=tried?Math.round(p/tried*100):0;
+    return `<div class="barrow"><span title="${esc(t)}">${id}. ${esc(t)}</span><div class="t"><i style="width:${pct}%"></i></div><span class="muted">${tried?pct+'%':'–'}</span></div>`;}).join('');
+
+  const miss={};rowsFor().forEach(r=>r.missed.forEach(m=>{miss[m]=(miss[m]||0)+1;}));
+  const top=Object.entries(miss).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  $('#miss').innerHTML=top.length?top.map(([m,c])=>`<li><span class="c">${c}</span><span>${esc(m)}</span></li>`).join(''):'<li class="muted">Nothing yet.</li>';
+}
+function detail(s){
+  const d=$('#detail');d.hidden=false;
+  const rows=s.rows.slice().sort((a,b)=>b.t.localeCompare(a.t));
+  d.innerHTML=`<h2>${esc(s.name)} <span class="muted" style="font-size:1rem">${esc(s.exam)}</span></h2>${rows.length?rows.map(r=>`<div class="attempt"><b>Stage ${r.stage}</b> · ${r.stage===WRITE_STAGE?(r.passed?'completed':'not completed'):`${r.score}/${r.total} ${r.passed?'passed':'not passed'}`} · ${Math.round(r.seconds/60)} min · <span class="muted">${new Date(r.t).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</span>
+    ${r.missed.length?`<div class="muted" style="font-size:.82rem;margin-top:4px">Missed: ${r.missed.map(esc).join('; ')}</div>`:''}${r.answer?`<div class="answer">${esc(r.answer)}</div>`:''}</div>`).join(''):'<p class="muted">No attempts yet.</p>'}`;
+  d.scrollIntoView({behavior:'smooth',block:'start'});
+}
+const pct=m=>{const x=String(m).match(/(\d+(?:\.\d+)?)\s*\/\s*(\d+)/);return x&&+x[2]?+x[1]/+x[2]*100:null;};
+function renderMarks(){
+  const marks=(data.marks||[]).slice(),sort=$('#sort').value,roster=data.roster||{};
+  marks.sort(sort==='name'?(a,b)=>a.name.localeCompare(b.name)||b.t.localeCompare(a.t):(a,b)=>b.t.localeCompare(a.t));
+  const who=new Set(marks.map(m=>m.exam));
+  $('#sStarted').textContent=`${who.size} / ${Object.keys(roster).length||who.size}`;
+  $('#sDone').textContent=marks.length;
+  const ps=marks.map(m=>pct(m.mark)).filter(x=>x!=null);$('#sAvg').textContent=ps.length?Math.round(ps.reduce((a,b)=>a+b,0)/ps.length)+'%':'–';
+  const wk=Date.now()-7*86400000;$('#sWeek').textContent=marks.filter(m=>Date.parse(m.t)>wk).length;
+  $('#tbl').innerHTML=marks.length?`<thead><tr><th class="l">Student</th><th class="l">Date</th><th class="l">Tool</th><th class="l">Question</th><th>Mark</th><th class="l">Level</th><th class="l">How</th></tr></thead><tbody>${marks.map((m,i)=>`<tr><td class="l"><button data-i="${i}">${esc(m.name)}</button> <span class="muted">${esc(m.exam)}</span></td><td class="l muted">${new Date(m.t).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</td><td class="l">${esc(m.tool)}</td><td class="l" style="white-space:normal;min-width:240px;max-width:420px">${esc(m.question.length>140?m.question.slice(0,140)+'…':m.question)}</td><td><span class="cell ${(pct(m.mark)??0)>=50?'p':'a'}">${esc(m.mark)}</span></td><td class="l muted">${esc(m.level)}</td><td class="l">${howCell(m)}</td></tr>`).join('')}</tbody>`:'<tbody><tr><td class="l muted">No marked answers yet. Students\' results appear here when they use the 25-mark lab, Open essay lab, 9-mark lab or Redraft while signed in.</td></tr></tbody>';
+  document.querySelectorAll('#tbl button').forEach(b=>b.onclick=()=>markDetail(marks[+b.dataset.i]));
+}
+function markDetail(m){
+  const d=$('#detail');d.hidden=false;
+  d.innerHTML=`<h2>${esc(m.name)} <span class="muted" style="font-size:1rem">${esc(m.exam)} · ${esc(m.tool)} · ${new Date(m.t).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</span></h2>
+    <p><b>${esc(m.mark)}</b> ${esc(m.level)}</p><p class="muted" style="margin:6px 0 12px">${esc(m.question)}</p>
+    ${m.how?`<p class="muted">${esc(howLine(m))}</p>`:''}${m.well?`<p><b>What went well:</b> ${esc(m.well)}</p>`:''}${m.improve?`<p><b>To improve:</b> ${esc(m.improve)}</p>`:''}${m.answer?`<div class="answer">${esc(m.answer)}</div>`:''}`;
+  d.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ---------- blurting ---------- */
+function renderBlurts(){
+  const bl=(data.blurts||[]).slice(),roster=data.roster||{},sort=$('#sort').value;
+  bl.sort(sort==='name'?(a,b)=>a.name.localeCompare(b.name)||b.t.localeCompare(a.t):(a,b)=>b.t.localeCompare(a.t));
+  [['lStarted','students who have blurted'],['lDone','topics blurted in total'],['lAvg','average points recalled'],['lWeek','blurts in the last 7 days']].forEach(([id,t])=>{$('#'+id).textContent=t;});
+  const topics=bl.filter(b=>b.kind==='blurt');
+  $('#sStarted').textContent=`${new Set(bl.map(b=>b.exam)).size} / ${Object.keys(roster).length}`;
+  $('#sDone').textContent=topics.length;
+  const ps=topics.filter(b=>b.total).map(b=>b.got/b.total*100);$('#sAvg').textContent=ps.length?Math.round(ps.reduce((a,b)=>a+b,0)/ps.length)+'%':'–';
+  const wk=Date.now()-7*86400000;$('#sWeek').textContent=bl.filter(b=>Date.parse(b.t)>wk).length;
+  $('#tbl').innerHTML=bl.length?`<thead><tr><th class="l">Student</th><th class="l">Date</th><th class="l">Type</th><th class="l">Topic</th><th>Score</th></tr></thead><tbody>${bl.map(b=>{
+    let d={};try{d=JSON.parse(b.detail||'{}');}catch(e){}
+    return `<tr><td class="l">${esc(b.name)} <span class="muted">${esc(b.exam)}</span></td><td class="l muted">${new Date(b.t).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</td><td class="l">${b.kind==='rapid'?'Rapid fire':'Blurt'+(d.ai?' (AI checked)':'')}</td><td class="l" style="white-space:normal">${esc((b.ref?b.ref+' ':'')+b.topic)}</td><td><span class="cell ${b.total&&b.got/b.total>=.7?'p':'a'}">${b.got}/${b.total}</span></td></tr>`;}).join('')}</tbody>`
+    :'<tbody><tr><td class="l muted">No blurting saved yet.</td></tr></tbody>';
+}
+
+/* ---------- accounts ---------- */
+let fresh=[];
+/* ---------- import from the old sheet ---------- */
+let imp=null;
+const b64u=s=>Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')+'==='.slice((s.length+3)%4)),c=>c.charCodeAt(0));
+function matchAccount(full,accs){
+  const n=full.toLowerCase(),[f,...rest]=n.split(' '),sur=rest.join(' ');
+  let m=accs.filter(a=>a.name.toLowerCase()===n);if(m.length===1)return m[0];
+  m=accs.filter(a=>{const x=a.name.toLowerCase().split(' ');return x[0]===f&&x.length>1&&(x.slice(1).join(' ')===sur||x[1][0]===sur[0]&&x[1].replace('.','').length<=2);});
+  if(m.length===1)return m[0];
+  m=accs.filter(a=>a.name.toLowerCase().split(' ')[0]===f);
+  if(m.length===1)return m[0];
+  m=accs.filter(a=>a.name.toLowerCase().includes(f)&&a.name.toLowerCase().includes(sur));
+  return m.length===1?m[0]:null;
+}
+function renderAccounts(){
+  const acc=(data.accounts||[]).slice().sort((a,b)=>a.name.localeCompare(b.name));
+  $('#acctTbl').innerHTML=acc.length?`<thead><tr><th class="l">Name</th><th class="l">Username</th><th class="l">Password</th><th class="l">Last signed in</th><th></th></tr></thead><tbody>${acc.map(a=>`<tr data-u="${esc(a.username)}">
+    <td class="l">${esc(a.name)}</td><td class="l" style="font-family:'IBM Plex Mono',monospace">${esc(a.username)}</td>
+    <td class="l">${a.mustChange?'<span class="cell a">Not set yet</span>':'<span class="cell p">Set</span>'}</td><td class="l muted">${a.lastSeen?ago(a.lastSeen):'Never'}</td>
+    <td class="l"><button class="btn ghost" data-act="reset" style="padding:5px 12px">Reset password</button> <button class="btn ghost" data-act="rename" style="padding:5px 12px">Rename</button> <button class="btn ghost" data-act="delete" style="padding:5px 12px">Delete</button></td></tr>`).join('')}</tbody>`
+    :'<tbody><tr><td class="l muted">No accounts yet. Add your class above.</td></tr></tbody>';
+  document.querySelectorAll('#acctTbl [data-act]').forEach(b=>b.onclick=()=>acctAction(b.dataset.act,b.closest('tr').dataset.u));
+}
+async function acctAction(act,u){
+  const a=data.accounts.find(x=>x.username===u);if(!a)return;
+  try{
+    if(act==='reset'){if(!confirm(`Reset the password for ${a.name}? They will be signed out and need the new one-time password.`))return;
+      const d=await api('/accounts/reset',{token,username:u});fresh=[d];showFresh();}
+    else if(act==='rename'){const n=prompt('New name',a.name);if(!n||!n.trim())return;await api('/accounts/rename',{token,username:u,name:n.trim()});}
+    else if(act==='delete'){if(!confirm(`Delete ${a.name}'s account and all of their saved work and results? This cannot be undone.`))return;
+      if(prompt(`Type DELETE to confirm`)!=='DELETE')return;await api('/accounts/delete',{token,username:u});}
+    await load();
+  }catch(x){alert(x.message);}
+}
+$('#addBtn').onclick=async()=>{
+  const names=$('#newNames').value.split('\n').map(x=>x.trim()).filter(Boolean);
+  if(!names.length){$('#addMsg').textContent='Type at least one name.';return;}
+  const existing=new Set((data.accounts||[]).map(a=>a.name.toLowerCase()));
+  const dup=names.filter(n=>existing.has(n.toLowerCase()));
+  if(dup.length&&!confirm(`These names already have an account: ${dup.join(', ')}. Create another account for them anyway?`))return;
+  $('#addBtn').disabled=true;fresh=[];
+  for(let i=0;i<names.length;i++){
+    $('#addMsg').textContent=`Creating ${i+1} of ${names.length}...`;
+    try{fresh.push(await api('/accounts/create',{token,name:names[i]}));}
+    catch(x){$('#addMsg').textContent=`Stopped at ${names[i]}: ${x.message}`;break;}
+  }
+  if(fresh.length){$('#addMsg').textContent=`${fresh.length} account${fresh.length>1?'s':''} created.`;$('#newNames').value='';}
+  $('#addBtn').disabled=false;showFresh();await load();
+};
+function showFresh(){
+  $('#newCreds').hidden=!fresh.length;
+  $('#credTbl').innerHTML=`<thead><tr><th class="l">Name</th><th class="l">Username</th><th class="l">One-time password</th></tr></thead><tbody>${fresh.map(f=>`<tr><td class="l">${esc(f.name)}</td><td class="l" style="font-family:'IBM Plex Mono',monospace">${esc(f.username)}</td><td class="l" style="font-family:'IBM Plex Mono',monospace">${esc(f.password)}</td></tr>`).join('')}</tbody>`;
+  $('#newCreds').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+$('#dlCsv').onclick=()=>{
+  const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+  const csv='﻿'+['Name,Username,One-time password,Site'].concat(fresh.map(f=>[f.name,f.username,f.password,SITE].map(q).join(','))).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=`7138 sign-in details ${new Date().toISOString().slice(0,10)}.csv`;a.click();
+};
+const SITE='https://nishkam-bs.github.io/nishkam-alevel/';
+$('#printSlips').onclick=()=>{
+  const w=window.open('','_blank');if(!w){alert('Allow pop-ups for this page and try again.');return;}
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sign-in slips</title><style>
+body{font-family:Arial,sans-serif;margin:12mm}.slip{border:1px dashed #888;padding:10px 14px;margin:0 0 8mm;break-inside:avoid;font-size:12pt;line-height:1.6}
+.slip b{font-family:"Courier New",monospace;font-size:14pt}.slip .s{font-size:10pt;color:#444}</style></head><body>
+${fresh.map(f=>`<div class="slip">${esc(f.name)}<br>Website: ${SITE}<br>Username: <b>${esc(f.username)}</b><br>One-time password: <b>${esc(f.password)}</b><br>
+<span class="s">Sign in on the home page. You will then choose your own password. Keep this slip private.</span></div>`).join('')}
+<script>window.onload=()=>setTimeout(()=>window.print(),300);<\/script></body></html>`);w.document.close();
+};
+window.TR={get data(){return data;},get token(){return token;},api,esc,ago:t=>ago(t),reload:()=>load()};
+function ago(t){const m=Math.round((Date.now()-Date.parse(t))/60000);if(m<60)return m+' min ago';const h=Math.round(m/60);if(h<24)return h+' h ago';return Math.round(h/24)+' days ago';}
+if(token)load();
+})();
+</script>
+<script src="taxonomy.js"></script>
+<script src="analysis.js"></script>
+<script src="workgen.js"></script>
+<script src="tracker-overview.js"></script>
+<script src="exam-bank.js"></script>
+<script src="schedule.js"></script>
+<script src="tracker-schedule.js"></script>
+</body>
+</html>

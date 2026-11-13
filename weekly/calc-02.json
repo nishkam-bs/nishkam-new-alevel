@@ -1,0 +1,185 @@
+{
+"title": "Week 2: calculations",
+"items": [
+{
+"q": "A business raises its price by 8%. Quantity demanded falls by 12%. What is the price elasticity of demand?",
+"opts": [
+"-0.96",
+"-1.5",
+"-4",
+"-0.67"
+],
+"ans": 1,
+"why": "PED = % change in quantity demanded ÷ % change in price = -12 ÷ 8 = -1.5.",
+"label": "Calculate"
+},
+{
+"q": "A café raises the price of a lunch deal from £5.00 to £5.50. Daily sales fall from 400 to 376. What is the PED?",
+"opts": [
+"-1.67",
+"-0.6",
+"-6",
+"-0.06"
+],
+"ans": 1,
+"why": "% change in price = 0.50 ÷ 5.00 × 100 = 10%. % change in quantity = -24 ÷ 400 × 100 = -6%. PED = -6 ÷ 10 = -0.6.",
+"label": "Calculate"
+},
+{
+"q": "What happens to the café's daily revenue from the lunch deal?",
+"opts": [
+"It falls, because fewer lunch deals are sold",
+"It rises from £2,000 to £2,068, because demand is price inelastic",
+"It stays the same, because the price rise and the fall in sales cancel out",
+"It rises by 10%, the same as the price"
+],
+"ans": 1,
+"why": "Before: 400 × £5.00 = £2,000. After: 376 × £5.50 = £2,068. With inelastic demand, the higher price more than makes up for the fall in sales.",
+"label": "Use the answer"
+},
+{
+"q": "The PED for a product is -2.5. The business cuts its price by 4%. What is the change in quantity demanded?",
+"opts": [
+"A rise of 10%",
+"A rise of 6.5%",
+"A fall of 10%",
+"A rise of 1.6%"
+],
+"ans": 0,
+"why": "% change in quantity = PED × % change in price = -2.5 × -4 = +10%.",
+"label": "Calculate"
+},
+{
+"q": "A business sells 30,000 units. PED is -0.8. It raises its price by 5%. How many units will it now sell?",
+"opts": [
+"24,000",
+"28,800",
+"31,200",
+"28,500"
+],
+"ans": 1,
+"why": "% change in quantity = -0.8 × 5 = -4%. 30,000 × 0.96 = 28,800 units.",
+"label": "Calculate"
+},
+{
+"q": "A shop sells 1,000 units a week at £10. PED is -2. It cuts the price to £9. What is the new weekly revenue?",
+"opts": [
+"£12,000",
+"£10,800",
+"£8,000",
+"£9,000"
+],
+"ans": 1,
+"why": "The price falls by 10%, so quantity rises by -2 × -10 = 20%, to 1,200 units. Revenue = 1,200 × £9 = £10,800.",
+"label": "Calculate"
+},
+{
+"q": "Revenue rises by £800 a week after the price cut. Why might profit not rise by the same amount?",
+"opts": [
+"Revenue and profit are always the same",
+"Profit always falls when price is cut",
+"PED only affects profit, not revenue",
+"The shop has to buy or make 200 extra units each week, which adds to its costs"
+],
+"ans": 3,
+"why": "Profit = revenue − costs. Selling 200 more units means more stock or materials, so costs rise too. Whether profit goes up depends on the cost of each extra unit.",
+"label": "Use the answer"
+},
+{
+"q": "Average incomes rise by 4%. Demand for a product rises by 6%. What is its income elasticity of demand?",
+"opts": [
+"+24",
+"+2",
+"+0.67",
+"+1.5"
+],
+"ans": 3,
+"why": "YED = % change in quantity demanded ÷ % change in income = 6 ÷ 4 = +1.5.",
+"label": "Calculate"
+},
+{
+"q": "Incomes rise by 5% and demand for a budget brand falls by 2%. What is the YED?",
+"opts": [
+"+0.4",
+"-0.1",
+"-2.5",
+"-0.4"
+],
+"ans": 3,
+"why": "YED = -2 ÷ 5 = -0.4.",
+"label": "Calculate"
+},
+{
+"q": "What does a YED of -0.4 tell the business selling the budget brand?",
+"opts": [
+"Demand does not change at all when income changes",
+"It is a luxury, so demand is very sensitive to income",
+"The business should raise its price",
+"It is an inferior good, so demand is likely to rise when incomes fall"
+],
+"ans": 3,
+"why": "A negative YED means an inferior good. If incomes fall, for example in a recession, customers switch towards it and demand rises.",
+"label": "Use the answer"
+},
+{
+"q": "A product has a YED of +2.2. Incomes are expected to fall by 3%. The business sells 50,000 units. What is the expected sales volume?",
+"opts": [
+"46,700",
+"48,500",
+"53,300",
+"43,400"
+],
+"ans": 0,
+"why": "% change in quantity = 2.2 × -3 = -6.6%. 50,000 × 0.934 = 46,700 units.",
+"label": "Calculate"
+},
+{
+"q": "Which response makes most sense for the business selling the product with a YED of +2.2?",
+"opts": [
+"Plan for lower sales, for example by reducing production or targeting customers whose incomes are less likely to fall",
+"Raise the price, because income elastic products always have inelastic demand",
+"Expect sales to rise, because the YED is positive",
+"Do nothing, because YED only matters when incomes rise"
+],
+"ans": 0,
+"why": "A large positive YED means demand falls sharply when incomes fall. The business should plan for this rather than assume sales will hold up.",
+"label": "Use the answer"
+},
+{
+"q": "The price of a product rises from £3.60 to £3.96. What is the percentage increase?",
+"opts": [
+"9.1%",
+"10%",
+"36%",
+"0.36%"
+],
+"ans": 1,
+"why": "Change = £0.36. 0.36 ÷ 3.60 × 100 = 10%.",
+"label": "Calculate"
+},
+{
+"q": "A business spends £60,000 on a marketing campaign. It estimates the campaign made £84,000 of profit. What is the return on marketing spend?",
+"opts": [
+"40%",
+"71%",
+"140%",
+"£24,000"
+],
+"ans": 2,
+"why": "Return on marketing spend = profit from marketing activities ÷ amount of marketing spend × 100 = 84,000 ÷ 60,000 × 100 = 140%.",
+"label": "Calculate"
+},
+{
+"q": "A second campaign cost £40,000 and made £50,000 of profit. Which statement is right?",
+"opts": [
+"You cannot compare them because they cost different amounts",
+"The first campaign gave a better return (140% compared with 125%), although the profit figures are only estimates",
+"The second campaign was better because it cost less",
+"The second campaign gave a higher return"
+],
+"ans": 1,
+"why": "50,000 ÷ 40,000 × 100 = 125%, lower than 140%. Return on marketing spend lets you compare campaigns of different sizes, but the profit is usually an estimate, so treat the comparison with care.",
+"label": "Use the answer"
+}
+]
+}

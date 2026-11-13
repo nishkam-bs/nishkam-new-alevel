@@ -1,0 +1,160 @@
+{
+"title": "Data drill: Crumb & Co",
+"kind": "p2",
+"mins": 15,
+"intro": "Read the case study first. Then choose which calculations are worth doing, work them out, and decide what the numbers show and where you would use them.",
+"caseHtml": "<h2>Crumb & Co Ltd</h2><p>Crumb & Co Ltd runs three bakeries in Reading. It is known for its sourdough bread and its celebration cakes, which customers order online for birthdays and weddings.</p><p>In March 2025 Crumb & Co raised the price of a sourdough loaf. The owner, Hannah Price, is thinking about raising it again in 2026, and wants to grow sales of celebration cakes.</p><table><caption>Table 1: Sourdough loaves</caption><thead><tr><th></th><th class=\"n\">Before March 2025</th><th class=\"n\">After March 2025</th></tr></thead><tbody><tr><td>Price per loaf</td><td class=\"n\">£3.20</td><td class=\"n\">£3.60</td></tr><tr><td>Loaves sold per week</td><td class=\"n\">4,000</td><td class=\"n\">3,700</td></tr></tbody></table><p>Average incomes in Reading rose by 3% in 2025. Over the same period, orders for celebration cakes rose by 7.5%.</p><table><caption>Table 2: Weekly bakery sales in Reading town centre, 2025</caption><thead><tr><th></th><th class=\"n\">Sales</th></tr></thead><tbody><tr><td>Crumb & Co</td><td class=\"n\">£31,000</td></tr><tr><td>All bakeries</td><td class=\"n\">£124,000</td></tr></tbody></table>",
+"questions": [
+{
+"num": "1",
+"marks": 6,
+"text": "Analyse one way in which the price elasticity of demand for sourdough might affect Crumb & Co’s decision to raise its price again."
+},
+{
+"num": "2",
+"marks": 9,
+"text": "Assess whether Crumb & Co should rely on celebration cakes to grow its revenue."
+},
+{
+"num": "3",
+"marks": 15,
+"text": "Crumb & Co wants to increase its revenue. Evaluate two ways it could do this and recommend which is most suitable."
+}
+],
+"calcs": [
+{
+"t": "PED for sourdough loaves",
+"right": true,
+"why": "Worth doing. This is the key figure for Question 1 and supports a price rise as one option in Question 3.",
+"formula": "% change in quantity demanded ÷ % change in price",
+"value": -0.6,
+"dp": 1,
+"unit": "",
+"unit_before": "",
+"steps": "% change in price = 0.40 ÷ 3.20 × 100 = 12.5%. % change in quantity = -300 ÷ 4,000 × 100 = -7.5%. PED = -7.5 ÷ 12.5 = -0.6.",
+"meaning": {
+"q": "What does a PED of -0.6 tell Hannah?",
+"opts": [
+"Demand is price inelastic, so a price rise is likely to increase revenue from sourdough",
+"Demand is price elastic, so she should cut the price",
+"Sourdough is an inferior good",
+"Price changes have no effect on sales"
+],
+"ans": 0,
+"why": "Quantity changes by a smaller percentage than price, so revenue rises when price rises. This may not hold if the price keeps going up."
+},
+"use": {
+"core": [
+"1",
+"3"
+],
+"ok": [],
+"why": "This is the key figure for Question 1 and supports a price rise as one option in Question 3."
+}
+},
+{
+"t": "Change in weekly revenue from sourdough",
+"right": true,
+"why": "Worth doing. Shows the effect of the last price rise, which is useful evidence for the next one.",
+"formula": "Revenue = price × quantity; new revenue − old revenue",
+"value": 520,
+"dp": 0,
+"unit": "",
+"unit_before": "£",
+"steps": "Before: 4,000 × £3.20 = £12,800. After: 3,700 × £3.60 = £13,320. Change = £520 a week.",
+"meaning": {
+"q": "What does the £520 rise show?",
+"opts": [
+"The price rise increased revenue, but Crumb & Co sells 300 fewer loaves a week",
+"The price rise reduced revenue",
+"Profit rose by exactly £520",
+"Sales volume rose"
+],
+"ans": 0,
+"why": "Revenue went up even though volume fell. Profit probably rose by more than £520, because 300 fewer loaves means lower costs."
+},
+"use": {
+"core": [
+"1",
+"3"
+],
+"ok": [
+"2"
+],
+"why": "Shows the effect of the last price rise, which is useful evidence for the next one."
+}
+},
+{
+"t": "YED for celebration cakes",
+"right": true,
+"why": "Worth doing. Central to whether relying on cakes is wise.",
+"formula": "% change in quantity demanded ÷ % change in income",
+"value": 2.5,
+"dp": 1,
+"unit": "",
+"unit_before": "",
+"steps": "7.5 ÷ 3 = +2.5.",
+"meaning": {
+"q": "What does a YED of +2.5 mean for Crumb & Co?",
+"opts": [
+"Cake sales are very sensitive to income, so they would rise fast when incomes grow but could fall sharply in a downturn",
+"Cakes are an inferior good",
+"Cake sales do not depend on income",
+"Cakes are price inelastic"
+],
+"ans": 0,
+"why": "A YED above +1 means demand changes by more than income. Good when incomes rise, risky when they fall."
+},
+"use": {
+"core": [
+"2"
+],
+"ok": [
+"3"
+],
+"why": "Central to whether relying on cakes is wise."
+}
+},
+{
+"t": "Crumb & Co's share of town-centre bakery sales",
+"right": true,
+"why": "Worth doing. Supports an argument about how much power Crumb & Co has over price.",
+"formula": "Sales of the business ÷ total sales in the market × 100",
+"value": 25,
+"dp": 0,
+"unit": "%",
+"unit_before": "",
+"steps": "£31,000 ÷ £124,000 × 100 = 25%.",
+"meaning": {
+"q": "What does a 25% share suggest?",
+"opts": [
+"Crumb & Co is a major bakery in the town centre, which may help it raise prices without losing many customers",
+"Crumb & Co has no competition",
+"Crumb & Co is a small player",
+"The market is growing by 25%"
+],
+"ans": 0,
+"why": "A quarter of the market is a strong position, which supports the inelastic PED. Customers still have other bakeries to choose from."
+},
+"use": {
+"core": [
+"3"
+],
+"ok": [
+"1"
+],
+"why": "Supports an argument about how much power Crumb & Co has over price."
+}
+},
+{
+"t": "Market capitalisation",
+"right": false,
+"why": "Crumb & Co is a private limited company. Its shares are not traded on a stock exchange, so there is no share price to use."
+},
+{
+"t": "Dividend yield",
+"right": false,
+"why": "There is no share price or dividend information, and Crumb & Co is not a plc."
+}
+]
+}
