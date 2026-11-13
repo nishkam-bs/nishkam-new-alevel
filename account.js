@@ -254,7 +254,7 @@ const COURSES=[['y12_course_analyse6_v1','6-mark Analyse',10,'course-6mark-analy
 
 /* ---------- one-off notice on the home page (shown once per student, on any device) ---------- */
 /* Switched off until the wording has been approved. Set NOTICE_ON to true to show it. */
-const NOTICE_ON=false;
+const NOTICE_ON=true;
 const NOTICE={key:'notice:homework-7138-v1',html:`<h2>Weekly homework</h2>
 <p>The homework system on the A-level Business site is now up and running. Click <b>My schedule</b> on the home page to see what is due.</p>
 <h3>Every week you will have</h3>
@@ -265,6 +265,7 @@ const NOTICE={key:'notice:homework-7138-v1',html:`<h2>Weekly homework</h2>
 <p>There is no homework in KAT weeks.</p>
 <h3>Deadline</h3>
 <p><b>Wednesday 11:59pm</b> every week. The first one is <b>Wednesday 9 December</b>.</p>
+<p>The first week's homework is officially set for the week of 1 December, but it is already on My schedule so you can get ahead if you want to. It must be submitted by Wednesday 9 December.</p>
 <p>Anything missing means a Friday SLT after school. If you are absent, or if anything prevents you from meeting a deadline, you need to tell me in advance so I can decide on next steps.</p>
 <p>Everything is ticked off automatically once it is done, so you can always see where you are. I can see this too, including whether typed answers were written or pasted in (if you have used AI).</p>
 <p>Any problems signing in, message me.</p>`};
