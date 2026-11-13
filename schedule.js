@@ -14,6 +14,8 @@ function lastSunday(y,m){const d=new Date(Date.UTC(y,m+1,0));d.setUTCDate(d.getU
 function ukOffsetHours(y,m,d){const t=Date.UTC(y,m,d,12);const s=lastSunday(y,2).getTime()+3600000,e=lastSunday(y,9).getTime()+3600000;return t>=s&&t<e?1:0;}
 function deadline(due){const [y,m,d]=due.split('-').map(Number);return Date.UTC(y,m-1,d,23,59,59)-ukOffsetHours(y,m-1,d)*3600000;}
 function releaseOf(due){const w=(window.SCHED_PLAN&&SCHED_PLAN.weeks||[]).find(x=>x.due===due);return w?w.release:null;}
+/* a planned week only appears to students from its release date (00:00 UK time); work the teacher adds appears straight away */
+function released(it,now){const r=releaseOf(it.due);if(!r)return true;const [y,m,d]=r.split('-').map(Number);return (now||Date.now())>=Date.UTC(y,m-1,d)-ukOffsetHours(y,m-1,d)*3600000;}
 const fmtDay=due=>new Date(due+'T12:00:00Z').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'});
 
 function labFor(marks){return marks===15?'fifteen_mark_lab.html':marks===9?'nine_mark_lab.html':'six_marker_lab.html';}
@@ -58,5 +60,5 @@ function weeks(items){const s=new Set((items||[]).map(i=>i.due));(window.SCHED_P
 function currentDue(items,now){now=now||Date.now();return weeks(items).find(d=>deadline(d)>=now)||weeks(items).slice(-1)[0];}
 function lastDue(items,now){now=now||Date.now();return weeks(items).filter(d=>deadline(d)<now).slice(-1)[0]||null;}
 function weekInfo(due){return (window.SCHED_PLAN&&SCHED_PLAN.weeks||[]).find(w=>w.due===due)||{due,note:''};}
-window.Sched={EX,COURSES,deadline,describe,status,ctxFrom,weeks,currentDue,lastDue,weekInfo,fmtDay,labFor,releaseOf};
+window.Sched={EX,COURSES,deadline,describe,status,ctxFrom,weeks,currentDue,lastDue,weekInfo,fmtDay,labFor,releaseOf,released};
 })();

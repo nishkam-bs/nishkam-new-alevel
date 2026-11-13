@@ -159,11 +159,17 @@ let schedInfo=null;
 const CO={y12_course_analyse6_v1:1000,y12_course_assess9_v1:1100,y12_course_calculate_v1:1200};
 function ukDeadline(due){const [y,m,d]=due.split('-').map(Number);const ls=mm=>{const x=new Date(Date.UTC(y,mm+1,0));x.setUTCDate(x.getUTCDate()-x.getUTCDay());return x.getTime()+3600000;};
   const t=Date.UTC(y,m-1,d,12),bst=t>=ls(2)&&t<ls(9);return Date.UTC(y,m-1,d,23,59,59)-(bst?3600000:0);}
+const SELF=(document.currentScript&&document.currentScript.src)||'account.js';
+let planP=null;
+function plan(){if(window.SCHED_PLAN)return Promise.resolve();if(!planP)planP=new Promise(r=>{const sc=document.createElement('script');sc.src=new URL('exam-bank.js',SELF).href;sc.onload=sc.onerror=()=>r();document.head.appendChild(sc);});return planP;}
+function released(i){const w=((window.SCHED_PLAN||{}).weeks||[]).find(x=>x.due===i.due);if(!w)return true;const [y,m,d]=w.release.split('-').map(Number);
+  const t=Date.UTC(y,m-1,d,12),ls=mm=>{const x=new Date(Date.UTC(y,mm+1,0));x.setUTCDate(x.getUTCDate()-x.getUTCDay());return x.getTime()+3600000;};
+  return Date.now()>=Date.UTC(y,m-1,d)-((t>=ls(2)&&t<ls(9))?3600000:0);}
 async function loadSched(force){
   if(!active())return null;
   try{const c=JSON.parse(sessionStorage.getItem('n8_sched')||'null');if(!force&&c&&c.u===auth.username&&Date.now()-c.at<300000){schedInfo=c.v;return schedInfo;}}catch(e){}
   try{
-    const d=await api('/sched/mine',{});const now=Date.now();
+    const d=await api('/sched/mine',{});await plan();d.items=(d.items||[]).filter(released);const now=Date.now();
     const dues=[...new Set((d.items||[]).map(i=>i.due))].sort();const due=dues.find(x=>ukDeadline(x)>=now);
     if(!due){schedInfo=null;}else{
       const mk=new Set((d.marks||[]).map(m=>m.ref)),ps=new Set((d.passes||[]).map(p=>+p.stage)),ex=new Set((d.excused||[]).map(x=>x.sched_id));

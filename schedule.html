@@ -76,9 +76,9 @@ async function load(){
   const store={};Object.keys(S.COURSES).forEach(k=>{const v=Ac.get('course:'+k);if(v)store['course:'+k]=v;});(d.items||[]).forEach(i=>{if(i.kind==='quiz'||i.kind==='drill'){const v=Ac.get(i.kind+':'+i.ref);if(v)store[i.kind+':'+i.ref]=v;}});
   const marks={};(d.marks||[]).forEach(m=>{marks[m.ref]=m.t;});const passes={};(d.passes||[]).forEach(p=>{passes[p.stage]=p.t;});
   const ctx={marks,passes,store,excused:new Set((d.excused||[]).map(x=>x.sched_id))};
-  const items=d.items||[];
+  const items=(d.items||[]).filter(i=>S.released(i));
   $('#main').hidden=false;
-  if(!items.length){$('#thisWeek').innerHTML='<h2>Nothing set yet</h2><p class="muted">Your schedule will appear here.</p>';$('#weeks').innerHTML='';return;}
+  if(!items.length){$('#thisWeek').innerHTML='<h2>Nothing set yet</h2><p class="muted">Homework starts the week of 1 December. It will appear here then.</p>';$('#weeks').innerHTML='';return;}
   const all=items.map(it=>Object.assign({it,d:S.describe(it)},S.status(it,ctx)));
   const cur=S.currentDue(items),byDue=due=>all.filter(x=>x.it.due===due);
   const row=x=>`<div class="item"><div><div class="t">${esc(x.d.title)}</div>${x.d.sub?`<div class="q">${esc(x.d.sub)}</div>`:''}${x.d.needs?`<div class="n">${esc(x.d.needs)}</div>`:''}${x.d.choice?x.d.choice.map(o=>`<div class="opt"><b>${esc(o.title)}</b> ${esc(o.sub)}${x.s==='todo'||x.s==='missing'?`<br><a class="go" href="${o.link}">Start ${esc(o.title)}</a>`:''}</div>`).join(''):(x.s==='todo'||x.s==='missing'?`<a class="go" href="${x.d.link}">Start</a>`:'')}</div><span class="st ${x.s}">${LABEL[x.s]}</span></div>`;
