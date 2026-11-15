@@ -700,6 +700,13 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>openTab(b.datas
 function openTab(id){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('nav button').forEach(b=>b.classList.remove('on'));document.getElementById(id).classList.add('on');const btn=[...document.querySelectorAll('nav button')].find(b=>b.dataset.t===id);if(btn)btn.classList.add('on');window.scrollTo({top:0,behavior:'smooth'});}
 
 /* ═══ SUBMIT ═══ */
+function extractJSON(txt){
+  const t=String(txt||'').replace(/```json|```/g,'').trim();
+  const a=t.indexOf('{'),b=t.lastIndexOf('}');
+  if(a===-1||b<=a)throw new Error('The marker did not send back any feedback');
+  return JSON.parse(t.slice(a,b+1));
+}
+
 async function runMark(){
   openTab('feedback');
   document.getElementById('ldPanel').classList.add('show');
@@ -712,7 +719,7 @@ async function runMark(){
 
   const essayEl=document.getElementById('essay');
   const essayText=essayEl?essayEl.value.trim():'';
-  const userMsg=`QUESTION:\n${qText}\n\n[9 marks] [${qType}]\n\nCASE STUDY / SOURCE MATERIAL:\n${ctxText}\n\nSTUDENT ANSWER:\n${essayText||'[See handwritten answer in images]'}`;
+  const userMsg=`QUESTION:\n${qText}\n\n[9 marks] [${qType}]\n\nCASE STUDY / SOURCE MATERIAL:\n${ctxText}\n\nSTUDENT ANSWER:\n${essayText||'[See handwritten answer in images]'}\n\nReply with the JSON object only: your first character must be { and your last must be }.`;
 
   const sysPrompt=qType==='quantitative'?SYS_QUANT:SYS_QUAL;
 
@@ -729,8 +736,10 @@ async function runMark(){
     const resp=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:4000,system:sysPrompt,messages})});
     if(!resp.ok)throw new Error('API error: '+resp.status);
     const data=await resp.json();
-    const txt=data.content.map(c=>c.text||'').join('');
-    const fb=enforceCaps(JSON.parse(txt.replace(/```json|```/g,'').trim()),qType);
+    if(data.error)throw new Error('The marker is busy at the moment');
+    if(data.stop_reason==='max_tokens')throw new Error('The feedback was too long to finish');
+    const txt=(data.content||[]).map(c=>c.text||'').join('');
+    const fb=enforceCaps(extractJSON(txt),qType);
     lastFb=fb;
     showFeedback(fb,qText);
     hist.push({date:new Date().toISOString().slice(0,10),q:qText.slice(0,60),mark:fb.mark,level:fb.level,qtype:fb.qtype||qType,judgement:fb.judgement_quality});
@@ -742,7 +751,7 @@ async function runMark(){
   }catch(err){
     document.getElementById('ldPanel').classList.remove('show');
     document.getElementById('fbPanel').style.display='block';
-    document.getElementById('fbPanel').innerHTML=`<div class="al al-r"><b>Something went wrong</b>${err.message}. Check your internet connection and try again.</div>`;
+    document.getElementById('fbPanel').innerHTML=`<div class="al al-r"><b>Something went wrong</b>${err.message}. Your answer is still there. Go back to Mark My Answer and try again.</div>`;
   }
 }
 

@@ -559,7 +559,7 @@ async function runMark(){
 
   const essayEl=document.getElementById('essay');
   const essayText=essayEl?essayEl.value.trim():'';
-  const userMsg=`QUESTION:\n${qText}\n\n[6 marks]\n\nCASE STUDY / SOURCE MATERIAL:\n${ctxText}\n\nSTUDENT ANSWER:\n${essayText||'[See handwritten answer in images]'}`;
+  const userMsg=`QUESTION:\n${qText}\n\n[6 marks]\n\nCASE STUDY / SOURCE MATERIAL:\n${ctxText}\n\nSTUDENT ANSWER:\n${essayText||'[See handwritten answer in images]'}\n\nReply with the JSON object only: your first character must be { and your last must be }.`;
 
   let messages;
   if(uploadedImages.length>0&&!essayText){
@@ -601,7 +601,7 @@ async function runMark(){
   }catch(err){
     document.getElementById('ldPanel').classList.remove('show');
     document.getElementById('fbPanel').style.display='block';
-    document.getElementById('fbPanel').innerHTML=`<div class="al al-r"><b>Something went wrong</b><br>${err.message}. Check your internet connection and try again.</div>`;
+    document.getElementById('fbPanel').innerHTML=`<div class="al al-r"><b>Something went wrong</b><br>${err.message}. Your answer is still there. Go back to Mark My Answer and try again.</div>`;
   }
 }
 
