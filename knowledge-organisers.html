@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Knowledge Organisers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="course-engine.css">
+<style>
+.sec{padding-block:44px 8px}
+.sec h2.title{font-size:clamp(1.7rem,4vw,2.2rem);margin-bottom:10px}
+.sec .intro{color:var(--muted);max-width:62ch;margin-bottom:22px}
+.layout-key{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:10px;margin-bottom:8px}
+.layout-key div{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--card);font-size:.9rem;color:var(--muted)}
+.layout-key b{display:block;color:var(--fg);font-size:.95rem;margin-bottom:2px}
+.tips{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px;counter-reset:t}
+.tips li{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 20px 18px 58px;box-shadow:var(--shadow);counter-increment:t}
+.tips li::before{content:counter(t);position:absolute;left:18px;top:16px;font:400 1.9rem "DM Serif Display",Georgia,serif;color:var(--gold);line-height:1}
+.tips h3{font-size:1.2rem;margin-bottom:6px}
+.tips p{color:var(--muted);font-size:.93rem}
+.list{display:grid;gap:16px;padding-bottom:20px;perspective:1100px}
+.ko{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:20px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px;box-shadow:var(--shadow);transform-style:preserve-3d;transition:transform .25s ease-out,border-color .25s}
+.ko:hover{border-color:var(--gold)}
+.ko .num{font:400 2.3rem "DM Serif Display",Georgia,serif;color:var(--gold);line-height:1;min-width:2.4ch}
+.ko .tag{font:500 .72rem "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ko h2{font-size:1.45rem;margin-bottom:6px}
+.ko p{color:var(--muted);font-size:.93rem;max-width:58ch}
+.ko details{margin-top:10px;font-size:.9rem}
+.ko summary{cursor:pointer;color:var(--fg);font-weight:500}
+.ko ol{margin:8px 0 0;padding-left:22px;color:var(--muted);columns:2 220px;column-gap:28px}
+.ko li{break-inside:avoid;margin-bottom:2px}
+.dl{align-self:center;display:grid;justify-items:center;gap:2px;text-decoration:none;font-weight:600;font-size:.92rem;color:var(--bg);background:var(--fg);border-radius:12px;padding:11px 18px;white-space:nowrap;transition:transform .2s,background .2s}
+.dl span{font:500 .7rem "IBM Plex Mono",monospace;opacity:.75}
+.dl:hover{background:var(--gold);transform:translateY(-2px)}
+.dl:focus-visible,.ko summary:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.all{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:26px}
+.all .dl{padding:13px 22px}
+.all small{color:var(--muted)}
+@media (max-width:700px){.ko{grid-template-columns:minmax(0,1fr);gap:10px}.ko .num{font-size:1.8rem}.dl{justify-self:start}}
+@media (prefers-reduced-motion: reduce){.ko,.dl{transition:none}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <canvas id="net" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="kicker">AQA A-level Business 7138</div>
+    <h1>Knowledge Organisers</h1>
+    <p class="lead">One page for each part of the specification, covering what you need to know, the mistake to avoid, an analysis chain and the point that lifts your evaluation. Download a unit, print it or keep it on your phone.</p>
+    <div class="all">
+      <a class="dl" href="knowledge-organisers/7138_All_Knowledge_Organisers.pdf" download>Download all 37 pages<span>167 KB</span></a>
+      <small>Or choose a unit below.</small>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <section class="sec">
+    <h2 class="title">How each page works</h2>
+    <p class="intro">Every knowledge organiser has the same layout, so you always know where to look.</p>
+    <div class="layout-key">
+      <div><b>Five content boxes</b>The knowledge for that topic, including any formulas.</div>
+      <div><b>Exam trap</b>A mistake that loses students marks, and how to avoid it.</div>
+      <div><b>Analysis chain</b>A worked chain of reasoning you can adapt for any business.</div>
+      <div><b>A/A* connection</b>What the answer depends on - the starting point for your judgement.</div>
+    </div>
+  </section>
+  <section class="sec">
+    <h2 class="title">How to use them</h2>
+    <p class="intro">Reading a knowledge organiser is not the same as learning it. Use them actively. For quick recall, try the <a href="blurting.html" style="color:var(--fg)">blurting</a> page.</p>
+    <ol class="tips"><li class="reveal"><h3>Cover it and write it out</h3><p>Cover one box, write down everything you can remember on paper, then check. Add what you missed in a different colour. The gaps are what you revise next.</p></li><li class="reveal"><h3>Use the formulas</h3><p>Where a page has a formula, make up some numbers and work it out. Then say what the answer would mean for the business.</p></li><li class="reveal"><h3>Learn the exam trap</h3><p>Each page has a common mistake to avoid. Explain to yourself, or a friend, why the wrong version is wrong.</p></li><li class="reveal"><h3>Write your own analysis chain</h3><p>Take the chain on the page and rewrite it for a different business - one from a case study or one you know. Every step needs a reason, and the last step should link back to the question.</p></li><li class="reveal"><h3>Use the A/A* box for judgement</h3><p>This box tells you what the answer depends on. Practise turning it into a one-paragraph conclusion that makes a clear decision.</p></li><li class="reveal"><h3>Little and often</h3><p>One or two pages a day works better than a whole unit the night before. Come back to the same page a week later and test yourself again.</p></li></ol>
+  </section>
+  <section class="sec">
+    <h2 class="title">Units</h2>
+    <p class="intro">Each unit downloads as one PDF. Open "What's inside" to see the topics.</p>
+    <div class="list"><article class="ko reveal">
+  <div class="num">3.1</div>
+  <div class="body">
+    <div class="tag">Unit 3.1</div>
+    <h2>What is business? Managing marketing and finance</h2>
+    <p>21 knowledge organisers, one per page.</p>
+    <details><summary>What's inside (21 pages)</summary><ol><li>Entrepreneurs</li><li>Business Planning, Decisions &amp; Objectives</li><li>Forms of Business</li><li>Stakeholders</li><li>Market Research &amp; Customer Needs</li><li>Markets &amp; Marketing Data</li><li>Demand, PED &amp; YED</li><li>Segmentation, Target Markets &amp; Positioning</li><li>Marketing Objectives &amp; Planning</li><li>Marketing Mix: Product</li><li>Marketing Mix: Price</li><li>Marketing Mix: Distribution (Place)</li><li>Marketing Mix: Promotion &amp; Branding</li><li>Digital Technology &amp; Marketing</li><li>International &amp; Ethical Marketing (A-level only)</li><li>Financial Objectives &amp; Sources of Finance</li><li>Break-even</li><li>Profit &amp; Profitability</li><li>Budgets &amp; Variances</li><li>Cash Flow &amp; Liquidity</li><li>Financial Reporting &amp; Performance</li></ol></details>
+  </div>
+  <a class="dl" href="knowledge-organisers/7138_Unit_3.1_Knowledge_Organisers.pdf" download>Download PDF<span>101 KB</span></a>
+</article><article class="ko reveal">
+  <div class="num">3.2</div>
+  <div class="body">
+    <div class="tag">Unit 3.2</div>
+    <h2>Managing people and operations</h2>
+    <p>16 knowledge organisers, one per page.</p>
+    <details><summary>What's inside (16 pages)</summary><ol><li>HR Objectives &amp; Planning</li><li>HR Data</li><li>Organisational Design</li><li>Leadership &amp; Developing People</li><li>Teamwork &amp; Motivation</li><li>Methods of Rewarding People</li><li>Wellbeing, Employee Relations &amp; Ethics in HR</li><li>Managing Operations &amp; Operations Data</li><li>Efficiency &amp; Lean Production</li><li>Quality</li><li>Environmental Impact of Operations</li><li>Matching Output to Demand</li><li>Supply Chain &amp; Inventory Management</li><li>Innovation &amp; Project Management</li><li>Scale, Technology &amp; Ethics in Operations</li><li>Managing Business Culture (A-level only)</li></ol></details>
+  </div>
+  <a class="dl" href="knowledge-organisers/7138_Unit_3.2_Knowledge_Organisers.pdf" download>Download PDF<span>67 KB</span></a>
+</article><article class="ko reveal">
+  <div class="num">3.3</div>
+  <div class="body">
+    <div class="tag">Unit 3.3 · Year 13</div>
+    <h2>Business and society, the external environment and strategy</h2>
+    <p>Not written yet. These will be added before we start Unit 3.3.</p>
+  </div>
+</article></div>
+  </section>
+</main>
+<footer><div class="wrap"><a href="index.html" style="color:var(--muted)">Back to the main site</a><br>Nishkam School West London · Man Neeva, Mat Uchi</div></footer>
+<script>
+(function(){
+"use strict";
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, fine=matchMedia('(pointer: fine)').matches;
+const io=('IntersectionObserver' in window)?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.08}):null;
+document.querySelectorAll('.reveal').forEach(el=>io?io.observe(el):el.classList.add('in'));
+if(fine&&!reduce)document.querySelectorAll('.ko').forEach(el=>{
+  el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`rotateX(${-y*4}deg) rotateY(${x*5}deg)`;});
+  el.addEventListener('pointerleave',()=>el.style.transform='');});
+const cv=document.getElementById('net'),cx=cv.getContext('2d');let W,H,pts=[],mouse={x:-999,y:-999};
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function size(){const r=cv.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;cx.setTransform(d,0,0,d,0,0);
+  pts=Array.from({length:Math.round(Math.min(70,W*H/12000))},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,k:Math.random()<.12?'s':Math.random()<.14?'e':'c'}));}
+function draw(){cx.clearRect(0,0,W,H);const cs={s:css('--start'),e:css('--end'),c:css('--chain')},lc=css('--muted');
+  for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.hypot(dx,dy);if(d<120&&d>0){p.x+=dx/d;p.y+=dy/d;}}
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<125){cx.globalAlpha=(1-d/125)*.28;cx.strokeStyle=lc;cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke();}}
+  for(const p of pts){cx.globalAlpha=.75;cx.fillStyle=cs[p.k];cx.beginPath();cx.arc(p.x,p.y,p.k==='c'?1.8:3,0,7);cx.fill();}
+  cx.globalAlpha=1;if(!reduce)requestAnimationFrame(draw);}
+size();draw();addEventListener('resize',size);
+const hero=document.querySelector('.hero');hero.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;});hero.addEventListener('pointerleave',()=>{mouse.x=mouse.y=-999;});
+})();
+</script>
+<script src="visit.js" defer></script>
+</body>
+</html>
