@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Blurting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="course-engine.css">
+<style>
+.sec{padding-block:44px 8px}
+.sec h2.title{font-size:clamp(1.7rem,4vw,2.2rem);margin-bottom:10px}
+.sec .intro{color:var(--muted);max-width:62ch;margin-bottom:22px}
+.steps{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:12px;counter-reset:s}
+.steps li{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;box-shadow:var(--shadow);counter-increment:s}
+.steps li::before{content:counter(s);display:block;font:400 1.8rem "DM Serif Display",Georgia,serif;color:var(--gold);line-height:1;margin-bottom:8px}
+.steps h3{font-size:1.1rem;margin-bottom:4px}
+.steps p{color:var(--muted);font-size:.9rem}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.tabs{display:flex;flex-wrap:wrap;border-bottom:1px solid var(--line);background:var(--bg2)}
+.tabs button{flex:1 1 auto;border:0;background:none;padding:14px 16px;font-weight:600;font-size:.95rem;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--gold);background:var(--card)}
+.tab{padding:24px}
+label.f{display:block;font-size:.85rem;font-weight:600;margin-bottom:6px}
+select,input[type=number],textarea{width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{min-height:240px;resize:vertical;line-height:1.55}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:14px;margin-bottom:16px}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.b{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:10px;padding:10px 16px;font-weight:600;font-size:.92rem;cursor:pointer}
+.b.p{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.b.g{background:var(--gold);color:#fff;border-color:var(--gold)}
+.b:disabled{opacity:.45;cursor:not-allowed}
+.b:focus-visible,.tabs button:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.units{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.units label{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-size:.88rem;cursor:pointer;background:var(--bg)}
+.topic-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:10px;margin:6px 0 12px}
+.topic-head h3{font-size:1.5rem}
+.topic-head .ref{font:500 .78rem "IBM Plex Mono",monospace;color:var(--muted)}
+.timer{font:600 1.6rem "IBM Plex Mono",monospace;color:var(--gold)}
+.timer.out{color:var(--end)}
+.small{font-size:.85rem;color:var(--muted)}
+.check{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:6px}
+.check li{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.check li.got{border-color:var(--ok);background:var(--ok-soft)}
+.check li.part{border-color:var(--gold);background:var(--gold-soft)}
+.check input{margin-top:4px;width:18px;height:18px;flex:none}
+.check .tagx{margin-left:auto;font:500 .7rem "IBM Plex Mono",monospace;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.score{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:18px}
+.score b{font:400 2.2rem "DM Serif Display",Georgia,serif}
+.box{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:14px;background:var(--bg)}
+.box h4{margin:0 0 6px;font-size:.95rem}
+.box.err{border-color:var(--end);background:var(--end-soft)}
+.box ul{margin:6px 0 0;padding-left:20px}
+.card3{perspective:1000px;margin:6px auto 0;max-width:560px}
+.flip{position:relative;min-height:220px;transform-style:preserve-3d;transition:transform .5s}
+.flip.on{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;display:grid;place-content:center;text-align:center;padding:24px;border-radius:16px;border:1px solid var(--line);background:var(--bg)}
+.face.back{transform:rotateY(180deg);background:var(--card)}
+.face .ttl{font:500 .75rem "IBM Plex Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.face .cue{font:400 1.7rem "DM Serif Display",Georgia,serif}
+.face .ans{font-size:1.05rem;max-width:44ch}
+.rf-stats{display:flex;justify-content:center;gap:18px;margin-top:14px;font:500 .85rem "IBM Plex Mono",monospace;color:var(--muted)}
+.dlt{width:100%;border-collapse:collapse;font-size:.93rem}
+.dlt td,.dlt th{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.dlt th{font:500 .72rem "IBM Plex Mono",monospace;text-transform:uppercase;color:var(--muted)}
+.dlt a{font-weight:600;color:var(--fg);text-decoration:none;border-bottom:2px solid var(--gold-soft)}
+.dlt a:hover{border-color:var(--gold)}
+.preview{margin-top:16px}
+.preview ol{padding-left:22px;color:var(--muted)}
+.tl{margin:2px 0 0}
+.tl details{border-bottom:1px solid var(--line);padding:10px 2px}
+.tl summary{cursor:pointer;font-weight:600}
+.tl summary span{font-weight:400;color:var(--muted);font-size:.85rem;margin-left:6px}
+.tl table{margin-top:8px}
+.tl td{padding:7px 8px}
+.topic-dl{margin-top:10px}
+.topic-dl a{color:var(--fg);font-weight:600}
+.box .fix{margin:8px 0 0;padding-left:0;list-style:none}
+.box .fix li{margin:0 0 10px}
+.box .fix .w{color:var(--muted)}
+#printArea{display:none}
+@media (prefers-reduced-motion: reduce){.flip{transition:none}}
+@media print{
+  body>*:not(#printArea){display:none!important}
+  #printArea{display:block!important;color:#000;font:11pt/1.45 "IBM Plex Sans",Arial,sans-serif}
+  #printArea h1{font:700 15pt Arial,sans-serif;margin:0 0 4pt;color:#193e68}
+  #printArea .meta{font-size:9pt;color:#555;margin-bottom:10pt}
+  #printArea .pt{break-inside:avoid;margin-top:12pt}
+  #printArea h2{font:700 11.5pt Arial,sans-serif;color:#193e68;margin:0 0 2pt}
+  #printArea .hint{font-size:8.5pt;color:#666}
+  #printArea .ln{border-bottom:0.6pt solid #aab;height:24pt}
+  #printArea ul{margin:3pt 0 0;padding-left:16pt}
+  body::before{display:none}
+  @page{size:A4;margin:15mm}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <canvas id="net" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="kicker">AQA A-level Business 7138</div>
+    <h1>Blurting</h1>
+    <p class="lead">Blurting means writing down everything you can remember about a topic, without notes, then checking what you missed. It is one of the quickest ways to find the gaps in your knowledge. Everything on this page covers the whole specification.</p>
+  </div>
+</header>
+<main class="wrap">
+  <section class="sec">
+    <h2 class="title">How to blurt</h2>
+    <ol class="steps">
+      <li><h3>Pick one topic</h3><p>Keep it small - one topic, not a whole unit.</p></li>
+      <li><h3>Blurt</h3><p>Notes away. Write everything you can remember in five or ten minutes: terms, lists, formulas, models.</p></li>
+      <li><h3>Check</h3><p>Compare with the blurt sheet. Add what you missed in a different colour.</p></li>
+      <li><h3>Revise the gaps</h3><p>Only the gaps. Don't reread what you already know.</p></li>
+      <li><h3>Blurt it again</h3><p>Same topic a few days later. The gaps should shrink each time.</p></li>
+    </ol>
+  </section>
+
+  <section class="sec">
+    <h2 class="title">Blurt tools</h2>
+    <p class="intro">Blurt a topic on screen and check it, build a random blurt sheet to print, or test yourself with quick prompts.</p>
+    <div class="panel">
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-t="t1">Blurt a topic</button>
+        <button role="tab" aria-selected="false" data-t="t2">Mixed blurt sheet</button>
+        <button role="tab" aria-selected="false" data-t="t3">Rapid fire</button>
+      </div>
+
+      <div class="tab" id="t1">
+        <div id="b-setup">
+          <div class="row">
+            <div><label class="f" for="b-unit">Unit</label><select id="b-unit"></select></div>
+            <div><label class="f" for="b-topic">Topic</label><select id="b-topic"></select></div>
+            <div><label class="f" for="b-time">Timer</label><select id="b-time"><option value="180">3 minutes</option><option value="300" selected>5 minutes</option><option value="600">10 minutes</option><option value="0">No timer</option></select></div>
+          </div>
+          <div class="btns"><button class="b p" id="b-start">Start blurting</button><button class="b g" id="b-random">Random topic</button></div>
+          <p class="small" style="margin-top:10px">Random topic picks from the unit you have chosen, or from the whole course if you choose "All units".</p>
+          <p class="small topic-dl" id="b-dl"></p>
+          <p class="small" id="b-resume" hidden></p>
+        </div>
+        <div id="b-run" hidden>
+          <div class="topic-head"><div><div class="ref" id="b-ref"></div><h3 id="b-title"></h3></div><div class="timer" id="b-timer"></div></div>
+          <p class="small" id="b-count"></p>
+          <label class="f" for="b-text" style="margin-top:10px">Type your blurt</label>
+          <textarea id="b-text" placeholder="Write everything you can remember about this topic. Notes away."></textarea>
+          <p class="small" style="margin-top:8px">Blurted on paper? You can photograph it instead and use the AI check: <label class="b" style="display:inline-block;padding:6px 12px;margin-left:4px">Add photo<input type="file" id="b-photo" accept="image/*" hidden></label> <span id="b-photo-name"></span></p>
+          <div class="btns"><button class="b p" id="b-done">I've finished - show the checklist</button><button class="b" id="b-back">Choose a different topic</button></div>
+        </div>
+        <div id="b-check" hidden>
+          <h3 style="font-size:1.3rem;margin-top:22px">Checklist</h3>
+          <p class="small">Tick each point you included. Give yourself the tick only if you had the meaning right, not just the word.</p>
+          <ul class="check" id="b-list"></ul>
+          <div class="score"><b id="b-score"></b><span class="small" id="b-score-txt"></span></div>
+          <div class="btns"><button class="b g" id="b-ai">Check my blurt with AI</button><button class="b" id="b-print">Print the points I missed</button><button class="b" id="b-again">Blurt this topic again</button><button class="b" id="b-new">New topic</button></div>
+          <div id="b-ai-out"></div>
+        </div>
+      </div>
+
+      <div class="tab" id="t2" hidden>
+        <p class="small" style="margin-bottom:12px">Choose the units, and the generator picks topics at random from across them. Print the blank sheet, blurt on it, then print the answers to check.</p>
+        <div class="units" id="m-units"></div>
+        <div class="row">
+          <div><label class="f" for="m-n">Number of topics</label><select id="m-n"><option>3</option><option>4</option><option selected>5</option><option>6</option><option>8</option><option>10</option></select></div>
+        </div>
+        <div class="btns"><button class="b p" id="m-gen">Generate</button><button class="b g" id="m-blank" disabled>Print blank sheet</button><button class="b" id="m-ans" disabled>Print answers</button></div>
+        <div class="preview" id="m-prev"></div>
+      </div>
+
+      <div class="tab" id="t3" hidden>
+        <p class="small" style="margin-bottom:12px">A term or list comes up. Say or write the answer, then turn the card over. Be honest - if you only half knew it, mark it as missed.</p>
+        <div class="units" id="r-units"></div>
+        <div class="card3"><div class="flip" id="r-card"><div class="face front"><div class="ttl" id="r-topic"></div><div class="cue" id="r-cue"></div></div><div class="face back"><div class="ttl" id="r-topic2"></div><div class="ans"><b id="r-cue2"></b><br><span id="r-ans"></span></div></div></div></div>
+        <div class="btns" style="justify-content:center"><button class="b p" id="r-flip">Turn over</button><button class="b" id="r-got" hidden>Got it</button><button class="b" id="r-miss" hidden>Missed it</button></div>
+        <div class="rf-stats"><span id="r-s1">0 got</span><span id="r-s2">0 missed</span><span id="r-s3"></span></div>
+        <div id="r-missed"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2 class="title">Blurt sheets to print</h2>
+    <p class="intro">The blurt sheet has the key points - information only. The blank sheet has the same headings with space to write, and tells you how many points to aim for. There is a sheet for each whole unit and a one-page sheet for each topic.</p>
+    <div class="panel" style="padding:8px 18px 14px"><h3 style="font-size:1.05rem;margin:10px 0 2px">Whole units</h3><table class="dlt"><thead><tr><th>Unit</th><th>Blurt sheet</th><th>Blank sheet</th></tr></thead><tbody id="dl"></tbody></table>
+    <h3 style="font-size:1.05rem;margin:22px 0 2px">Single topics</h3><p class="small">Open a unit to see its topics.</p><div class="tl" id="dl-topics"></div></div>
+  </section>
+  <section class="sec" style="padding-bottom:40px">
+    <p class="intro">For longer notes with worked examples and exam questions, use the exam guides on the <a href="index.html#guides" style="color:var(--fg)">main site</a>.</p>
+  </section>
+</main>
+<footer><div class="wrap"><a href="index.html" style="color:var(--muted)">Back to the main site</a><br>Nishkam School West London · Man Neeva, Mat Uchi</div></footer>
+<div id="printArea"></div>
+
+<script src="account.js"></script>
+<script>
+(function(){
+"use strict";
+const DATA=[{"unit": "3.1", "title": "What is business? Managing marketing and finance", "topics": [{"ref": "3.1.1", "title": "Entrepreneurs", "points": [["Entrepreneur", "a person who takes calculated risks to turn a new idea into a business, showing resilience, focus and passion"], ["Financial reasons for setting up", "to earn a higher income, build wealth, or sell the business later"], ["Non-financial reasons", "independence, being your own boss, following a passion, flexibility, or social and ethical aims"], ["Characteristics in the specification", "risk taker, resilient, focused, passionate, innovative, adaptable"], ["Challenges of setting up", "raising finance, winning customers from established rivals, managing cash flow, lack of experience, long hours"], ["Change in role as the business grows", "moves from doing everything to delegating, managing people and setting strategy; may need to bring in professional managers"]], "id": "3.1.1a"}, {"ref": "3.1.1", "title": "Business planning and decisions", "points": [["Business plan", "a document setting out the business's goals, strategies and financial forecasts"], ["Value of a business plan", "helps raise finance from lenders and investors, makes the owner think through risks, gives a benchmark to measure progress"], ["Limitations of a business plan", "forecasts may be wrong; the plan can go out of date as conditions change"], ["Competitiveness", "the ability of a business or product to outperform its rivals"], ["Influences on business decisions", "objectives, risk, reward, resources, market conditions, ethics, opportunity costs"], ["Risk and reward", "options with higher potential rewards usually carry more risk"], ["Opportunity cost", "the next best alternative given up when a choice is made"], ["Ethical dilemma", "a choice where the most profitable option may not be the right one, e.g. profit vs ethics"]], "id": "3.1.1b"}, {"ref": "3.1.1", "title": "Business objectives", "points": [["Business objectives", "clear, measurable goals that help a business achieve its mission"], ["Purpose of objectives", "give direction, coordinate departments, guide decisions, allow performance to be measured, motivate staff"], ["SMART", "Specific, Measurable, Accountable, Realistic, Time specific"], ["Accountable", "a named person or team is responsible for achieving the objective"], ["Value depends on", "whether staff understand and accept them, and whether they are updated when conditions change"], ["Conflict", "objectives can conflict, e.g. fast growth may reduce short-term profit"]], "id": "3.1.1c"}, {"ref": "3.1.2", "title": "Forms of business", "points": [["Sole trader", "one owner with full control who keeps all the profit; unlimited liability"], ["Private limited company (Ltd)", "shares sold privately, e.g. to family and friends; limited liability; owners keep control"], ["Public limited company (plc)", "shares sold to the public on a stock exchange; can raise large sums but risks loss of control and takeover"], ["Co-operatives", "owned by members who share decisions and profits: worker (employees), consumer (customers), producer (producers)"], ["Social enterprise", "trades to meet social or environmental aims and reinvests most of its profit in those aims"], ["Unlimited liability", "the owner is personally responsible for all the business's debts"], ["Limited liability", "owners can only lose the money they invested; personal assets are protected"], ["Comparing forms of business", "control, objectives, sources of finance, distribution of profits, liability"]], "id": "3.1.2a"}, {"ref": "3.1.2", "title": "Shares, share prices and dividends", "points": [["Reasons to buy shares", "dividend income, a rise in the share price (capital gain), and a vote in company decisions"], ["Influences on share price", "expected profits, company news, the state of the economy, interest rates, investor confidence"], ["Significance of share price changes", "shows how investors value the company; affects ability to raise new share capital and the risk of a takeover"], ["A rise in share price", "the company does not receive the money unless it issues new shares; existing shareholders are wealthier"], [null, "Market capitalisation = number of issued shares × current share price"], [null, "Dividend per share = total dividend paid ÷ number of ordinary shares in issue"], [null, "Dividend yield (%) = dividend per share (pence) ÷ share price (pence) × 100"]], "id": "3.1.2c"}, {"ref": "3.1.2", "title": "Stakeholders", "points": [["Stakeholder", "any individual or group with an interest in, or affected by, the business"], ["Internal stakeholders", "employees, owners and shareholders"], ["External stakeholders", "customers, suppliers, other creditors, the community, the government"], ["Impact of business activity", "decisions can help some stakeholders and harm others, e.g. cutting costs may raise profit but lose jobs"], ["Stakeholder conflict", "e.g. shareholders want higher dividends while employees want higher pay"], ["Ethical responsibilities", "treating employees fairly, paying suppliers on time, being honest with customers, limiting harm to the community and environment"]], "id": "3.1.2b"}, {"ref": "3.1.3", "title": "Market research", "points": [["Purpose of market research", "to identify, anticipate and understand customer needs and reduce the risk of decisions"], ["Primary research", "collected first-hand for a specific purpose; up to date and relevant but costly and slow"], ["Secondary research", "already exists; quick and cheap but may be out of date or not fit the purpose"], ["Quantitative and qualitative data", "numbers that can be analysed vs opinions and reasons that explain why"], ["Confidence level", "how sure you can be that the true value lies within the confidence interval, e.g. 95%"], ["Confidence interval", "the range the true value is likely to fall within; a wider interval means a less precise result"], ["Market mapping", "plots products on two features customers care about to show positioning and spot gaps"], ["Influences on how research is conducted", "risk, cost, time, need for reliability"]], "id": "3.1.3a"}, {"ref": "3.1.3", "title": "Markets and marketing data", "points": [["Types of market", "business to business (B2B), business to consumer (B2C), consumer to consumer (C2C), goods vs services"], ["Market conditions", "degree of competition, competitive behaviour, market growth"], ["Sales volume and sales value", "units sold vs money received; they can move in different directions when price changes"], ["Correlation", "positive or negative, strong or weak; shows a link but not that one thing causes the other"], [null, "Market share (%) = sales of one product, brand or business ÷ total sales in the market × 100"], [null, "Market growth (%) = change in the size of the market over a period ÷ original size of the market × 100"], [null, "Return on marketing spend = profit from marketing activities ÷ amount of marketing spend × 100"], ["Index numbers", "show change compared with a base year set at 100"]], "id": "3.1.3b"}, {"ref": "3.1.3", "title": "Demand and elasticity", "points": [["Influences on demand", "price, prices of substitutes and complements, incomes, tastes, marketing, seasons, the economy"], [null, "Price elasticity of demand = % change in quantity demanded ÷ % change in price"], ["Price elastic (PED beyond -1)", "a price rise reduces revenue; a price cut increases revenue"], ["Price inelastic (PED between 0 and -1)", "a price rise increases revenue; a price cut reduces revenue"], [null, "Income elasticity of demand = % change in quantity demanded ÷ % change in income"], ["Positive YED", "normal good: demand rises when incomes rise; above +1 is income elastic, e.g. luxuries"], ["Negative YED", "inferior good: demand falls when incomes rise and rises when incomes fall"]], "id": "3.1.3c"}, {"ref": "3.1.3", "title": "Target market", "points": [["Market segmentation", "dividing a market into groups of customers with similar needs or characteristics"], ["Types of segmentation", "demographic, geographic, psychographic (lifestyle and values), behavioural (usage, loyalty, occasion)"], ["Value of segmentation", "better-targeted marketing, products that fit needs, less wasted spending"], ["Influences on choosing a target market", "size and growth of the segment, competition, the business's resources and strengths"], ["Niche market", "small, specialised; less competition and higher prices possible, but limited growth and higher risk if tastes change"], ["Mass market", "large; economies of scale and high volumes, but strong competition and pressure on price"], ["Adapting the marketing mix", "changing product, price, place and promotion to suit the target market"]], "id": "3.1.3d"}, {"ref": "3.1.3", "title": "Marketing objectives and planning", "points": [["Marketing objectives in the specification", "lead generation, sales, market share, brand awareness, customer retention, engagement, conversion"], ["Influences on marketing objectives", "corporate objectives, finance available, competitors, the market, stage of the product life cycle"], ["Marketing budget", "the money available for marketing; depends on finance, objectives, rivals' spending and expected returns"], ["Changes in demand", "a rise or fall in demand, cyclical demand and seasonal demand all need changes to the marketing mix"], ["Interrelationship with other functions", "marketing plans affect operations (capacity), finance (budgets, cash) and HR (staffing)"], ["Effect on competitiveness", "well-targeted marketing decisions can build brand, share and customer loyalty"]], "id": "3.1.3e"}, {"ref": "3.1.3", "title": "Marketing mix: product", "points": [["Product life cycle stages", "development, introduction, growth, maturity, decline"], ["Significance of the life cycle", "helps plan marketing, cash flow, capacity and when to launch new products"], ["Extension strategies", "advertising, rebranding, lowering the price, adapting the product"], ["Boston Matrix", "plots products by market growth and market share"], ["Boston Matrix categories", "stars (high share, high growth), cash cows (high share, low growth), question marks (low share, high growth), dogs (low share, low growth)"], ["Value of portfolio analysis", "helps balance the portfolio and decide where to spend; cash from cash cows can fund question marks"], ["New product development", "creates new sources of revenue and keeps the business competitive, but is costly and many products fail"]], "id": "3.1.3f"}, {"ref": "3.1.3", "title": "Marketing mix: price", "points": [["Influences on price", "marketing objectives, target market, level of demand, price elasticity of demand, costs, competitors' actions, the marketing mix"], ["Impact of price", "on sales volume, revenue and profit margins"], ["Cost-based pricing", "adds a mark-up to cost; covers costs but ignores what customers will pay"], ["Penetration pricing", "low launch price to win market share quickly; low margins at first"], ["Price skimming", "high launch price lowered over time; suits new or unique products"], ["Dynamic pricing", "prices change with demand in real time, often using data, e.g. train fares"], ["Competition-based pricing", "premium (above rivals), going rate (similar to rivals), discount (below rivals)"]], "id": "3.1.3g"}, {"ref": "3.1.3", "title": "Marketing mix: distribution", "points": [["Distribution channel", "the route a product takes from producer to customer"], ["Purpose of a distribution channel", "to get the product to customers in the right place, at the right time, in the right condition"], ["Direct distribution, including e-commerce", "keeps the whole margin and controls the customer relationship, but the business does all the work and must build traffic itself"], ["Intermediaries", "wholesalers and retailers"], ["Using intermediaries", "wider reach and expertise, but they take a share of the margin and the business has less control"], ["Multi-channel distribution", "sells through several channels; reaches more customers but is harder and costlier to manage"]], "id": "3.1.3h"}, {"ref": "3.1.3", "title": "Marketing mix: promotion", "points": [["Purpose of promotion", "to inform and persuade customers and build awareness and loyalty"], ["Advertising", "paid messages through media; wide reach but can be costly and hard to measure"], ["Social media and influencers", "targeted and two-way, but the business has less control and risks damage to its reputation"], ["Sales promotions", "short-term offers to boost sales; can reduce margins and cheapen the brand"], ["Sponsorship", "links the brand to an event or team to raise awareness"], ["Personal selling", "direct contact, including account managers and sales teams who manage client relationships, especially in B2B"], ["Branding", "a strong brand builds loyalty and allows higher prices; own-label brands are retailers' own products"], ["Influences on the promotional mix", "target market, budget, product, competitors, stage of the life cycle"]], "id": "3.1.3i"}, {"ref": "3.1.3", "title": "Digital technology and marketing", "points": [["Uses of digital technology, including AI", "social media campaigns, content marketing, search engine optimisation (SEO), pay per click (PPC), website cookies"], ["Measures of success", "search performance, click-through rates, time spent on a site, conversion rates, number of users or subscribers, advertising revenue"], ["Customer Relationship Management (CRM)", "customer acquisition, customer retention, lead generation, pipeline management"], ["Data analytics in marketing", "segmentation, campaign performance tracking, personalisation, predictions, dynamic pricing"], ["Effect on competitiveness", "better targeting and lower costs per customer, but rivals have the same tools and data rules must be followed"]], "id": "3.1.3j"}, {"ref": "3.1.3", "title": "International marketing and ethics", "points": [["Purpose of marketing internationally", "new customers, growth when the home market is saturated, spreading risk"], ["Challenges", "different cultures, languages, laws and tastes, exchange rates, local competitors"], ["Adapting the marketing mix", "changing the product, price, place or promotion to suit each country"], ["Ethical issues in product decisions", "product safety, sustainability, honest labelling"], ["Ethical issues in promotion", "misleading claims, targeting children or vulnerable people, greenwashing"], ["Ethical issues in pricing", "price gouging, hidden charges, exploiting loyal customers"]], "id": "3.1.3k"}, {"ref": "3.1.4", "title": "Financial objectives", "points": [["Financial objectives in the specification", "profit, profitability, cash flow, liquidity, levels of borrowing"], ["Significance", "they give targets for managers and allow financial performance to be judged"], ["Influences on financial objectives", "corporate objectives, owners' expectations, the economy, competitors, the business's current financial position"], ["Interrelationship with other functions", "financial decisions limit or enable marketing, operations and HR plans"], ["Effect on competitiveness", "e.g. strong cash flow lets a business invest; high borrowing can limit it"]], "id": "3.1.4a"}, {"ref": "3.1.4", "title": "Sources of finance", "points": [["Internal sources", "owners' investment, retained profits, sale of assets, sale and leaseback, working capital"], ["External sources", "trade credit, share capital, overdraft, loans, business angels, private equity, crowd funding"], ["Overdraft", "flexible short-term borrowing; high interest and can be withdrawn"], ["Loans", "for longer-term investment; fixed repayments and interest, may need security"], ["Share capital, business angels and private equity", "no repayments, but owners give up a share of control and profit"], ["Crowd funding", "raises money from many people online; also tests demand, but ideas are public and targets may not be met"], ["Choosing a source", "depends on the amount, purpose, cost, time period, risk and how much control owners will give up"]], "id": "3.1.4f"}, {"ref": "3.1.4", "title": "Break-even", "points": [[null, "Total costs = fixed costs + variable costs; variable costs = variable cost per unit × units sold"], [null, "Revenue = selling price per unit × number of units sold"], [null, "Contribution per unit = selling price − variable cost per unit"], [null, "Total contribution = contribution per unit × units sold (or total revenue − total variable costs)"], [null, "Break-even output = fixed costs ÷ contribution per unit"], [null, "Margin of safety = actual output − break-even output"], ["Break-even chart", "shows the effect of changes in price, output and costs on break-even"], ["Value of break-even", "quick and simple; but assumes all output is sold at one price and costs are linear"]], "id": "3.1.4b"}, {"ref": "3.1.4", "title": "Profit and budgets", "points": [["Gross, operating and profit for the year", "gross = revenue − cost of sales; operating = gross − operating expenses; profit for the year is after finance costs and tax"], ["Profit vs cash", "a business can be profitable but run out of cash, e.g. if customers pay late"], ["Profit vs profitability", "profit is an amount; profitability is profit relative to revenue or capital, e.g. a margin"], ["Increasing profit", "raise revenue or cut costs; each has challenges, e.g. price rises may lose customers"], ["Purpose of budgeting", "planning, controlling spending, setting targets, coordinating departments"], ["Zero-based budgeting", "every item starts from zero and must be justified; cuts waste but takes time"], [null, "Budget variance = budgeted figure − actual figure"], ["Adverse and favourable variances", "favourable when results are better than budget (higher revenue or lower costs); adverse when worse"]], "id": "3.1.4c"}, {"ref": "3.1.4", "title": "Cash flow and liquidity", "points": [["Payables and receivables", "money the business owes suppliers vs money customers owe the business"], ["Cash flow forecast", "predicts inflows and outflows to spot shortfalls and plan finance"], ["Improving cash flow", "debt factoring, shorter payment terms for customers, early payment incentives, credit checks, longer payment terms from suppliers, reducing outgoings, better invoice management"], [null, "Current ratio = current assets ÷ current liabilities"], [null, "Acid test ratio = (current assets − inventory) ÷ current liabilities"], [null, "Payables days = payables ÷ cost of sales × 365"], [null, "Receivables days = receivables ÷ revenue × 365"]], "id": "3.1.4d"}, {"ref": "3.1.4", "title": "Financial reporting and performance", "points": [["Financial statements", "income statement and statement of financial position (balance sheet)"], [null, "Gross, operating and profit for the year margins (%) = that profit ÷ revenue × 100"], [null, "ROCE (%) = operating profit ÷ (total equity + non-current liabilities) × 100"], [null, "Return on investment (%) = profit from the investment ÷ cost of the investment × 100"], [null, "Gearing (%) = non-current liabilities ÷ (total equity + non-current liabilities) × 100"], ["Judging performance", "compare with trends, competitors (benchmarking), objectives and the business's context"], ["Limitations of financial reporting", "historic; leaves out non-financial factors such as morale, brand reputation and environmental impact"], ["Ethics in finance", "tax avoidance; payment terms for customers and suppliers, e.g. paying small suppliers late"]], "id": "3.1.4e"}]}, {"unit": "3.2", "title": "Managing people and operations", "topics": [{"ref": "3.2.1", "title": "HR objectives and planning", "points": [["HR objectives", "number and skills of employees, employee turnover and retention, engagement, employee costs, equality, diversity, inclusion and belonging"], ["Influences on HR objectives", "corporate objectives, the labour market, finance available, the law, technology"], ["Human resource planning", "recruitment, training, retention, redeployment, redundancy"], ["Forms of employment", "part-time, full-time, temporary, permanent, zero-hours, freelance"], ["Flexible employment", "lets the business match staff to demand and cut costs, but may reduce loyalty and commitment"], ["Influences on HR planning", "current workforce, future needs, skills and numbers gaps, the labour market"], ["Links to other functions", "HR decisions affect costs, output, quality and competitiveness"]], "id": "3.2.1a"}, {"ref": "3.2.1", "title": "HR data", "points": [["Measuring employees", "engagement, representation, diversity, wellbeing, and key performance indicators (KPIs) for roles"], [null, "Employee productivity = output over a time period ÷ number of employees"], [null, "Sales per employee = sales over a time period ÷ number of employees"], [null, "Employee turnover (%) = number of staff leaving ÷ number of staff employed × 100"], [null, "Employee costs as a percentage of revenue = employee costs ÷ revenue × 100"], ["High employee turnover", "raises recruitment and training costs and can hurt quality and morale"], ["Using HR data", "look at trends and compare with rivals; numbers do not explain the reasons behind them"]], "id": "3.2.1e"}, {"ref": "3.2.1", "title": "Organisational design and leadership", "points": [["Span of control", "the number of people who report directly to one manager"], ["Levels of hierarchy", "the number of layers of management"], ["Tall structure", "narrow spans; close supervision and clear promotion routes, but slow communication and higher costs"], ["Flat structure", "wide spans; faster communication and more empowerment, but managers may be overstretched"], ["Centralisation and decentralisation", "decisions made at the top vs passed down; control and consistency vs speed and local knowledge"], ["Restructuring and delayering", "removing layers cuts costs and speeds decisions but can lower morale and overload managers"], ["Leadership styles", "autocratic, democratic, transformational"], ["Impact of leadership", "affects individual motivation, team performance and business performance"]], "id": "3.2.1b"}, {"ref": "3.2.1", "title": "Developing people and teamwork", "points": [["Employee appraisal", "regular review of performance against targets; identifies training needs and can motivate"], ["Managing talent", "acquiring, managing, developing and retaining talented staff; valuable but costly and staff may leave"], ["Purpose of teams", "combine skills, share workload, improve ideas and decisions"], ["Hackman's model of team effectiveness", "a real team, a compelling direction, an enabling structure, a supportive context, expert coaching"], ["Factors influencing team effectiveness", "clear goals, the right mix of skills, leadership, resources and support"]], "id": "3.2.1c"}, {"ref": "3.2.1", "title": "Motivation", "points": [["Benefits of motivating employees", "higher productivity, lower turnover, better quality and customer service"], ["Challenges", "costs, different employees are motivated by different things"], ["Taylor", "scientific management: break work into simple tasks, pay by output; people are motivated by money"], ["Maslow", "hierarchy of needs: physiological, safety, love and belonging, esteem, self-actualisation"], ["Herzberg", "hygiene factors (pay, conditions, policy) prevent dissatisfaction; motivators (achievement, recognition, responsibility) motivate"], ["Using the theories", "choose methods that meet the needs of the particular workforce"]], "id": "3.2.1f"}, {"ref": "3.2.1", "title": "Rewarding people", "points": [["Financial rewards", "wages, salaries, piece rate, commission, performance-related pay, shares, fringe benefits"], ["Piece rate and commission", "link pay to output or sales; can raise output but may hurt quality or teamwork"], ["Performance-related pay", "rewards meeting targets; can be seen as unfair if targets are hard to measure"], ["Non-financial rewards", "delegation, empowerment, job enrichment, training and development, remote, hybrid and flexible working"], ["Job enrichment", "gives employees more challenging and varied work and more responsibility"], ["Choosing rewards", "depends on the job, the workforce, costs and what the business wants to encourage"]], "id": "3.2.1d"}, {"ref": "3.2.1", "title": "Wellbeing, employee relations and ethics", "points": [["Employee wellbeing", "benefits: lower absence and turnover, higher productivity; challenges: cost and time"], ["Improving wellbeing", "physical and mental health support, inclusive work environment, employee voice, flexible working"], ["Employee voice and involvement", "better decisions and commitment, but can slow decisions down"], ["Individual and collective representation", "individual contracts vs trade unions and employee forums"], ["Poor employer-employee relations", "causes: poor communication, unfair pay; consequences: strikes, absence, turnover"], ["Ethics in HR", "codes of conduct; equality, diversity, inclusion and belonging; gender pay gaps and gaps between senior managers and other staff"]], "id": "3.2.1g"}, {"ref": "3.2.2", "title": "Operations objectives and data", "points": [["Operations objectives", "efficiency, quality, volume of goods and services, flexibility, environmental impact"], ["Adding value", "operations turn inputs into outputs worth more to customers than the cost of making them"], ["Operations location", "costs, demand, access to resources and markets, infrastructure, government incentives, ethical and people considerations, break-even, return on investment, environment"], [null, "Unit costs = total costs ÷ number of units of output"], [null, "Capacity utilisation (%) = actual output ÷ maximum possible output × 100"], ["Operations KPIs", "wait times, returns, defects, complaints, speed of response, delivery times, customer satisfaction ratings"], ["Links to other functions", "operations decisions affect costs, quality, staffing and competitiveness"]], "id": "3.2.2a"}, {"ref": "3.2.2", "title": "Efficiency", "points": [["Efficiency", "making the most of resources to keep unit costs down"], ["Improving capacity utilisation", "spreads fixed costs over more units, but running near full capacity leaves no room for extra orders or maintenance"], ["Lean production", "reducing inventory, re-works, waiting times and transportation times; kaizen; standardised processes"], ["Kaizen", "continuous small improvements suggested by employees"], ["Other ways to improve efficiency", "reducing waste, recycling and reusing materials, effective scheduling, improving productivity, better cost control"], ["Drawbacks", "investment costs, staff resistance, possible effects on quality or flexibility"]], "id": "3.2.2b"}, {"ref": "3.2.2", "title": "Quality", "points": [["Quality", "meeting customers' expectations consistently"], ["Costs of poor quality", "waste, re-work, returns and refunds, lost reputation and customers"], ["Quality control", "inspecting products to find faults; catches errors but adds cost and finds problems late"], ["Quality assurance", "building quality into every stage so faults are prevented"], ["Total Quality Management (TQM)", "every employee is responsible for quality"], ["Quality circles and benchmarking", "groups of staff meeting to solve quality problems; comparing with the best businesses"]], "id": "3.2.2e"}, {"ref": "3.2.2", "title": "Environmental impact of operations", "points": [["Purpose of sustainable operations", "lower costs over time, meet customer and regulatory expectations, protect reputation"], ["Ways to reduce impact", "waste reduction, resource efficiency, reducing emissions, cutting the carbon footprint, sustainable sourcing, circularity"], ["Circularity", "designing products and processes so materials are reused and recycled rather than thrown away"], ["Challenges", "costs, supply chain limitations, disruption from changing processes"]], "id": "3.2.2f"}, {"ref": "3.2.2", "title": "Matching output to demand", "points": [["Ways to match supply to demand", "changing production scheduling, increasing or decreasing inventory, part-time, temporary, zero-hours or freelance staff, outsourcing, investment in capital and technology, changing capacity"], ["Cyclical and seasonal demand", "demand that rises and falls with the economy or the time of year"], ["Outsourcing", "another business does the work; flexible, but less control over quality"], ["Holding inventory", "covers peaks in demand but ties up cash and risks waste"], ["Not matching supply to demand", "lost sales and unhappy customers, or idle capacity and wasted stock"]], "id": "3.2.2c"}, {"ref": "3.2.2", "title": "Supply chain and inventory", "points": [["Make or buy", "producing internally gives control; buying in can be cheaper and more flexible"], ["Managing the supply chain", "relationships with suppliers, and logistics from suppliers and to customers"], ["Sourcing suppliers", "number and choice of suppliers; one supplier gives a closer relationship, several reduce risk"], ["Supply chain transparency", "knowing where inputs come from; third-party accreditations such as Fairtrade build trust"], ["Reasons to hold inventory", "meet unexpected demand, cover supply delays, buy in bulk"], ["Just in time vs just in case", "JIT cuts storage costs and waste but is vulnerable to delays; JIC is safer but ties up cash"], [null, "Inventory turnover = cost of sales ÷ average inventories held"]], "id": "3.2.2g"}, {"ref": "3.2.2", "title": "Innovation and project management", "points": [["Innovation", "developing new products or processes; can bring competitive advantage but is costly and risky"], ["Ways of developing innovation", "research and development, talent acquisition and retention, cross-functional teams, intrapreneurship"], ["Protecting innovation", "intellectual property: patents and copyrights"], ["Project management", "planning and controlling a project to finish on time, on budget and to the right quality"], ["Network analysis", "shows the order of activities, the critical path and float"], ["Critical path", "the activities with no float; a delay to any of them delays the whole project"], [null, "Float time = latest finish time − duration − earliest start time"]], "id": "3.2.2d"}, {"ref": "3.2.2", "title": "Scale, technology and ethics in operations", "points": [["Economies of scale", "falling unit costs as a business grows: technical, purchasing, financial"], ["Diseconomies of scale", "rising unit costs from problems with control, communication and coordination"], ["Technology, including AI, in operations", "in inventory management, supply chain management and automation, to improve competitiveness"], ["Drawbacks of technology", "high cost, staff training and resistance, risk of breakdowns"], ["Ethics in operations", "supplier codes of conduct and audits; ethical sourcing, product safety and environmental impact"]], "id": "3.2.2h"}, {"ref": "3.2.3", "title": "Managing business culture", "points": [["Business culture", "the shared values, attitudes and ways of working in a business"], ["Purpose of business values", "guide behaviour and decisions and show what the business stands for"], ["Factors influencing culture", "leadership and employee values, leadership style, mission, reward systems, organisational structure, customer expectations"], ["Positive culture", "motivation, retention, innovation, good reputation"], ["Negative culture", "poor behaviour, high turnover, scandals, resistance to change"], ["Changing culture", "reasons: poor performance, new leadership, mergers; challenges: takes time and meets resistance"], ["Culture and competitiveness", "culture affects productivity, innovation and customer service"]], "id": "3.2.3a"}]}, {"unit": "3.3", "title": "Business and society, the external environment and strategy", "topics": [{"ref": "3.3.1", "title": "Sustainability", "points": [["Sustainability", "meeting today's needs without harming the ability of future generations to meet theirs"], ["Environmental sustainability", "waste reduction, resource efficiency, reducing emissions, carbon footprint, sustainable sourcing, circularity"], ["Social sustainability", "fair treatment of workers, supporting local communities, ethical sourcing"], ["Economic sustainability", "long-term profitability without exploiting resources or people"], ["Challenges", "costs, trade-offs with short-term profit, supply chain limits, measuring impact"], ["Triple Bottom Line", "judging performance on People, Planet and Profit"]], "id": "3.3.1a"}, {"ref": "3.3.1", "title": "CSR and ESG", "points": [["Corporate Social Responsibility (CSR)", "a business taking responsibility for its impact on society and the environment"], ["Carroll's CSR pyramid", "economic, legal, ethical and philanthropic responsibilities"], ["Shareholder vs stakeholder approach", "run mainly for owners' returns vs balancing the interests of all stakeholders"], ["CSR vs PR", "greenwashing (false environmental claims) and bluewashing (false social claims)"], ["ESG reporting", "reporting Environmental, Social and Governance performance to investors and others"], ["ESG measures", "health and safety, emissions, resource usage, community investment and philanthropy, composition of directors"], ["Value of improving ESG performance", "attracts investors, customers and staff; reduces risk; but costs money"]], "id": "3.3.1b"}, {"ref": "3.3.2", "title": "Competitive environment", "points": [["Porter's five forces", "rivalry, buyer power, supplier power, entry threat, substitute threat"], ["Influences on the forces", "number and size of rivals, switching costs, barriers to entry, number of suppliers, availability of substitutes"], ["Impact of the five forces", "strong forces push down prices and profit; weak forces allow higher margins"], ["Influencing the forces", "e.g. building a brand, signing long-term contracts, buying suppliers, raising barriers to entry"], ["Responding to changes", "adjusting price, product, suppliers or strategy"]], "id": "3.3.2a"}, {"ref": "3.3.2", "title": "Political and legal environment", "points": [["Trade agreements", "reduce barriers to trade between countries"], ["Protectionism", "tariffs, quotas and trade regulations that protect domestic businesses"], ["Consumer protection", "laws on product safety, honest information and fair contracts"], ["Employee protection", "including the Equality Act; minimum wage, health and safety, rights at work"], ["Competition policy", "prevents abuse of market power, cartels and mergers that harm consumers"], ["Environmental protection", "laws on pollution, waste and emissions"], ["Opportunities, threats and responses", "each change affects functional areas; businesses respond by adapting products, costs or markets"]], "id": "3.3.2b"}, {"ref": "3.3.2", "title": "Economic environment", "points": [["Economic growth (GDP)", "rising incomes increase demand, especially for income elastic products"], ["Taxation", "direct taxes (on income and profit) and indirect taxes (on spending, e.g. VAT)"], ["Inflation", "rising prices increase costs and may reduce real incomes"], ["Interest rates", "higher rates raise borrowing costs and reduce consumer spending"], ["Exchange rates", "appreciation makes exports dearer and imports cheaper; depreciation does the opposite"], ["Unemployment", "lower demand for many products, but easier recruitment"], ["Exchange rate calculations", "work out the effect on export prices and import costs"]], "id": "3.3.2c"}, {"ref": "3.3.2", "title": "Social and technological environment", "points": [["Demographic factors", "changes in population size, age structure and household make-up"], ["Consumer values", "e.g. growing demand for ethical and sustainable products"], ["Activism", "campaigns by consumers, employees or groups that pressure businesses to change"], ["Technological change", "digital and disruptive technologies, including AI, create opportunities and threats"], ["Responding to change", "adapting products, processes, marketing and skills"]], "id": "3.3.2d"}, {"ref": "3.3.3", "title": "Strategy and influences on strategy", "points": [["Strategy and planning", "long-term plans to achieve objectives; give direction but can become out of date"], ["Assessing performance", "using marketing, finance, HR and operations data, both quantitative and qualitative"], ["Mission, vision and objectives", "purpose, the long-term aim, and measurable targets"], ["SWOT analysis", "internal strengths and weaknesses, external opportunities and threats"], ["Stakeholder mapping", "plots stakeholders by power and interest to decide how to manage them"], ["Stakeholder power and actions", "influences on power and interest; actions stakeholders can take, and their impact"]], "id": "3.3.3a"}, {"ref": "3.3.3", "title": "Selecting and implementing a strategy", "points": [["Ansoff Matrix", "market penetration, market development, new product development, diversification; risk rises from penetration to diversification"], ["Positioning", "how a business's offer compares on benefits and price"], ["Low-cost vs differentiation", "compete on price with low costs vs offer something different that justifies a higher price"], ["Changing positioning", "can open new markets but risks confusing customers"], ["Successful implementation", "resources, quality of planning and monitoring, leadership, communication, external factors"], ["Losing competitiveness", "strategic drift: failing to keep up with changes in the market"]], "id": "3.3.3b"}, {"ref": "3.3.3", "title": "Strategic investment decisions", "points": [["Investment", "spending on assets now to gain returns in the future (capital expenditure)"], ["Factors influencing investment", "objectives, non-financial factors, risk, business confidence"], ["Payback", "the time taken for net cash flows to repay the initial cost"], [null, "Average rate of return (%) = average annual return ÷ initial cost × 100"], [null, "Net present value = total present value of cash flows − cost of investment"], ["Limitations of appraisal", "based on forecasts and ignores non-financial factors"]], "id": "3.3.3c"}, {"ref": "3.3.3", "title": "Business growth", "points": [["SMEs", "small and medium-sized enterprises: flexible and close to customers, but limited finance and scale"], ["Reasons for growth", "economies of scale, market power, higher profits, survival"], ["Challenges of growth", "finance, control, communication, keeping culture and quality"], ["Organic vs inorganic growth", "growing from within vs mergers and acquisitions"], ["Franchising", "rapid growth using others' money, but less control"], ["Integration", "vertical (backward and forward), horizontal, conglomerate"], ["Retrenchment", "cutting back the size of the business to reduce costs or refocus"]], "id": "3.3.3d"}, {"ref": "3.3.3", "title": "Global and digital strategy", "points": [["Becoming more global", "opportunities: new markets and lower costs; threats: competition, risk, cultural differences"], ["Ways to enter international markets", "exporting, licensing, joint ventures, direct investment"], ["Glocalisation", "a global brand adapted to local tastes"], ["Producing abroad", "lower costs and access to markets, but quality, ethics and supply chain risks"], ["Digital strategy", "a plan for using digital technology across the business; affects all functions and competitiveness"]], "id": "3.3.3e"}, {"ref": "3.3.4", "title": "Change", "points": [["Reasons for change", "internal (new leaders, poor performance) and external (technology, competition, law)"], ["Change for stakeholders", "advantages and disadvantages for employees, customers, owners and others"], ["Kotter and Schlesinger's reasons for resistance", "self-interest, misunderstanding and lack of trust, different assessments, low tolerance for change"], ["Lewin's Force Field Analysis", "weighs driving forces against restraining forces"], ["Managing change", "communicate, involve staff, train, and reduce the restraining forces"]], "id": "3.3.4a"}, {"ref": "3.3.4", "title": "Risk and uncertainty", "points": [["Risk vs uncertainty", "risk can be estimated and planned for; uncertainty cannot be predicted"], ["Types of risk", "financial, strategic, operational, compliance, reputational, cybersecurity"], ["Managing risk", "market research, sales forecasting, contingency and crisis plans, succession planning, insurance, diversifying, investment and training, cybersecurity measures"], ["Managing uncertainty", "scenario planning, developing an agile business"], ["Developing an agile business", "flat structure, empowerment, transformational leadership, cross-functional teams"]], "id": "3.3.4b"}]}];
+const PROXY='https://nishkam-marker.alevelnishkam.workers.dev';
+const GUIDE={'3.1.1':'guide_3_1_1_business_and_objectives.html','3.1.2':'guide_3_1_2_forms_of_business_and_stakeholders.html','3.1.3':'guide_3_1_3_marketing_management.html','3.1.4':'guide_3_1_4_financial_management.html'};
+const MODEL='claude-sonnet-4-6';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pt=p=>p[0]?`<b>${esc(p[0])}:</b> ${esc(p[1])}`:esc(p[1]);
+const ptText=p=>p[0]?`${p[0]}: ${p[1]}`:p[1];
+const A=window.Acct||{on:false,user:null,get(){},set(){},send(){},bar(){},onChange(){},ready:Promise.resolve()};
+const hist=()=>A.get('blurt:history')||{};
+const TOPICS=[];DATA.forEach((u,ui)=>u.topics.forEach((t,ti)=>TOPICS.push({u:ui,t:ti,unit:u.unit,utitle:u.title,...t})));
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* tabs */
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  document.querySelectorAll('.tab').forEach(t=>t.hidden=t.id!==b.dataset.t);});
+
+/* downloads */
+$('#dl').innerHTML=DATA.map(u=>`<tr><td><b>${u.unit}</b> ${esc(cap(u.title))}</td><td><a href="blurting/7138_Blurt_Sheet_Unit_${u.unit}.pdf" download>Download</a></td><td><a href="blurting/7138_Blank_Blurt_Sheet_Unit_${u.unit}.pdf" download>Download</a></td></tr>`).join('')+
+  `<tr><td><b>All</b> Formulas</td><td><a href="blurting/7138_Formula_Blurt_Sheet.pdf" download>Download</a></td><td><a href="blurting/7138_Blank_Formula_Blurt_Sheet.pdf" download>Download</a></td></tr>`;
+
+const tUrl=(t,blank)=>`blurting/topics/7138_${blank?'Blank_':''}Blurt_${t.id}.pdf`;
+$('#dl-topics').innerHTML=DATA.map(u=>`<details><summary>${u.unit} ${esc(cap(u.title))}<span>${u.topics.length} topics</span></summary><table class="dlt"><tbody>${u.topics.map(t=>`<tr><td>${t.ref} ${esc(t.title)}</td><td><a href="${tUrl(t)}" download>Blurt sheet</a></td><td><a href="${tUrl(t,1)}" download>Blank sheet</a></td></tr>`).join('')}</tbody></table></details>`).join('');
+
+/* unit chips */
+function chips(el){el.innerHTML=DATA.map((u,i)=>`<label><input type="checkbox" value="${i}" checked> ${u.unit}</label>`).join('');}
+const chosen=el=>[...el.querySelectorAll('input:checked')].map(i=>+i.value);
+chips($('#m-units'));chips($('#r-units'));
+
+/* ---------- blurt a topic ---------- */
+const bu=$('#b-unit'),bt=$('#b-topic');
+bu.innerHTML='<option value="-1">All units</option>'+DATA.map((u,i)=>`<option value="${i}">${u.unit} ${esc(cap(u.title))}</option>`).join('');
+bu.value='0';
+function fillTopics(){const ui=+bu.value;const list=ui<0?TOPICS:TOPICS.filter(t=>t.u===ui);
+  const h=hist();bt.innerHTML=list.map(t=>{const x=h[t.id];return `<option value="${TOPICS.indexOf(t)}">${t.ref} ${esc(t.title)}${x?` (last time ${x.got}/${x.total})`:''}</option>`;}).join('');}
+function topicDl(){const t=TOPICS[+bt.value];if(!t){$('#b-dl').innerHTML='';return;}
+  $('#b-dl').innerHTML=`Sheets for this topic: <a href="${tUrl(t)}" download>blurt sheet</a> · <a href="${tUrl(t,1)}" download>blank sheet</a>`;}
+bu.onchange=()=>{fillTopics();topicDl();};bt.onchange=topicDl;fillTopics();topicDl();
+let cur=null,tick=null,left=0,photo=null,sess=null;
+function saveDraft(){if(cur)A.set('draft:blurting',{id:cur.id,text:$('#b-text').value});}
+function showResume(){const d=A.get('draft:blurting'),el=$('#b-resume');const t=d&&d.text&&d.text.trim()&&TOPICS.find(x=>x.id===d.id);
+  if(!t||!$('#b-run').hidden||!$('#b-check').hidden){el.hidden=true;return;}
+  el.hidden=false;el.innerHTML=`You have an unfinished blurt on ${esc(t.ref+' '+t.title)}. <button class="b" id="b-resume-go" style="padding:5px 12px;margin-left:4px">Carry on with it</button>`;
+  $('#b-resume-go').onclick=()=>{$('#b-time').value='0';start(TOPICS.indexOf(t),d.text);};}
+function sendBlurt(){
+  if(!sess||sess.sent||!cur)return;sess.sent=true;
+  const lis=[...$('#b-list').querySelectorAll('li')],got=lis.filter(li=>li.querySelector('input').checked).length,part=lis.filter(li=>li.classList.contains('part')).length;
+  A.send('/blurt',{kind:'blurt',ref:cur.ref,topic:cur.title,got,total:lis.length,detail:{id:cur.id,partly:part,ai:sess.ai,missed:lis.filter(li=>!li.querySelector('input').checked).map(li=>+li.dataset.i)}});
+  const h=hist(),o=h[cur.id]||{n:0,best:0};h[cur.id]={got,total:lis.length,best:Math.max(o.best||0,got),n:(o.n||0)+1,t:Date.now()};A.set('blurt:history',h);
+  A.set('draft:blurting',{id:'',text:''});fillTopicsKeep();
+}
+function fillTopicsKeep(){const v=bt.value;fillTopics();bt.value=v;}
+function start(idx,keepText){
+  cur=TOPICS[idx];if(+bu.value>=0&&cur.u!==+bu.value){bu.value=String(cur.u);fillTopics();}bt.value=idx;topicDl();
+  $('#b-setup').hidden=true;$('#b-run').hidden=false;$('#b-check').hidden=true;$('#b-ai-out').innerHTML='';
+  $('#b-ref').textContent=`Unit ${cur.unit} · ${cur.ref}`;$('#b-title').textContent=cur.title;
+  $('#b-count').textContent=`There are ${cur.points.length} key points on the blurt sheet for this topic. See how many you can get.`;
+  $('#b-text').value=keepText||'';photo=null;sess=null;$('#b-photo-name').textContent='';
+  clearInterval(tick);left=+$('#b-time').value;const tm=$('#b-timer');tm.classList.remove('out');
+  if(left>0){const show=()=>{tm.textContent=`${Math.floor(left/60)}:${String(left%60).padStart(2,'0')}`;};show();
+    tick=setInterval(()=>{left--;show();if(left<=0){clearInterval(tick);tm.textContent="Time's up";tm.classList.add('out');}},1000);}
+  else tm.textContent='';
+  $('#b-text').focus();showResume();
+}
+$('#b-start').onclick=()=>start(+bt.value);
+$('#b-random').onclick=()=>{const ui=+bu.value;const list=ui<0?TOPICS:TOPICS.filter(t=>t.u===ui);start(TOPICS.indexOf(pick(list)));};
+$('#b-back').onclick=$('#b-new').onclick=()=>{clearInterval(tick);sendBlurt();$('#b-setup').hidden=false;$('#b-run').hidden=true;$('#b-check').hidden=true;showResume();};
+$('#b-again').onclick=()=>{sendBlurt();start(TOPICS.indexOf(cur));};
+$('#b-done').onclick=()=>{clearInterval(tick);saveDraft();sess={ai:false,sent:false};
+  $('#b-list').innerHTML=cur.points.map((p,i)=>`<li data-i="${i}"><input type="checkbox" id="c${i}"><label for="c${i}">${pt(p)}</label><span class="tagx"></span></li>`).join('');
+  $('#b-list').querySelectorAll('input').forEach(c=>c.onchange=()=>{const li=c.closest('li');li.classList.toggle('got',c.checked);if(c.checked){li.classList.remove('part');li.querySelector('.tagx').textContent='';}score();});
+  $('#b-check').hidden=false;score();$('#b-check').scrollIntoView({behavior:'smooth',block:'start'});};
+function score(){const all=$('#b-list').querySelectorAll('input'),n=[...all].filter(c=>c.checked).length;
+  $('#b-score').textContent=`${n} / ${all.length}`;
+  $('#b-score-txt').textContent=n===all.length?'Every point. Blurt a different topic next.':n>=all.length*0.7?'Good. Revise the points you missed, then try again in a few days.':'Revise the points you missed, then blurt this topic again.';}
+$('#b-print').onclick=()=>{const miss=cur.points.filter((p,i)=>!$('#c'+i).checked);
+  printSheet(`<h1>Points to revise - ${esc(cur.title)}</h1><div class="meta">Unit ${cur.unit} · ${cur.ref}</div><ul>${(miss.length?miss:cur.points).map(p=>`<li>${pt(p)}</li>`).join('')}</ul>`);};
+
+let dT=null;$('#b-text').addEventListener('input',()=>{clearTimeout(dT);dT=setTimeout(saveDraft,800);});
+addEventListener('pagehide',()=>{sendBlurt();rfSend();});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){sendBlurt();rfSend();}});
+A.ready.then(()=>{fillTopicsKeep();showResume();});A.onChange(()=>{fillTopicsKeep();showResume();});
+A.bar(document.querySelector('.tabs').closest('.panel'),{text:'Sign in once on the home page and your blurting scores are saved to your account.'});
+
+/* photo */
+$('#b-photo').onchange=e=>{const f=e.target.files[0];if(!f)return;const img=new Image(),r=new FileReader();
+  r.onload=()=>{img.onload=()=>{const max=1600,s=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=img.width*s;c.height=img.height*s;
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);photo=c.toDataURL('image/jpeg',0.8);$('#b-photo-name').textContent=f.name;};img.src=r.result;};r.readAsDataURL(f);};
+
+/* AI check */
+let lastAI=null;
+const asNum=x=>typeof x==='object'&&x?Number(x.i):Number(x);
+$('#b-ai').onclick=async()=>{
+  const text=$('#b-text').value.trim();
+  if(!text&&!photo){$('#b-ai-out').innerHTML='<div class="box err">Type your blurt in the box above, or add a photo of it, then try again.</div>';return;}
+  const btn=$('#b-ai');btn.disabled=true;btn.textContent='Checking...';
+  const list=cur.points.map((p,i)=>`${i}. ${ptText(p)}`).join('\n');
+  const sys=`You are an experienced AQA A-level Business (7138) teacher checking a student's blurt. A blurt is everything the student could remember about one topic, written from memory without notes.
+
+Topic: ${cur.ref} ${cur.title} (Unit ${cur.unit} ${cur.utitle})
+Checklist of key points (index. point):
+${list}
+
+Mark against the checklist strictly but fairly.
+- A point is "got" only if the meaning is correct and complete enough that it would earn credit in an exam. Different wording and note form are fine.
+- A point is "partial" if the student named the term but gave no meaning or a vague one, gave only some items of a list, or gave a formula with a part missing or wrong. For each partial point say exactly what is missing, in one short sentence (e.g. "You listed three of the five SMART criteria - add realistic and time specific").
+- Anything else on the checklist is missed. Do not give credit for something the student did not write.
+
+Then:
+- "errors": statements that are factually wrong for the AQA A-level Business 7138 specification. Note that this specification uses Accountable (not Achievable) and Time specific in SMART, and budget variance = budgeted figure − actual figure. Quote what they wrote briefly and give the correct version. Spelling and grammar are not errors.
+- "mixups": places where the student confused two concepts that are often confused (for example profit and cash flow, revenue and profit, production and productivity, market size and market share, objectives and strategy, a fixed and a variable cost). Quote what they wrote and explain the difference in one or two sentences, speaking to the student as "you". Leave empty if there are none. Never include a quote that is already in errors.
+- "rewrites": pick the two or three weakest things the student actually wrote that are vague or incomplete but not already listed in errors or mixups and show a better version of each. "wrote" is a short quote of their words; "better" is how it could read in a strong revision note - accurate and precise, but still short and in plain language.
+- "revise_first": the three things the student should revise first from this topic, most important first. Each one short and specific.
+- "extra": up to two correct, relevant points the student made that are not on the checklist. Leave empty if none.
+- "comment": two sentences to the student in plain teacher language and British English. Be honest about how much they recalled, and say what to do next. No exaggerated praise. Do not mention grades.
+
+Write every comment to the student as "you", never "the student". Each mistake should appear once only: if something is in errors, do not repeat it in mixups or rewrites. All text must be in British English. Do not use bold, markdown or emoji.
+Return JSON only, no other text:
+{"got":[0],"partial":[{"i":0,"missing":""}],"errors":[{"wrote":"","correct":""}],"mixups":[{"wrote":"","explain":""}],"rewrites":[{"wrote":"","better":""}],"revise_first":["","",""],"extra":[],"comment":""}`;
+  let content;
+  if(photo){content=[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:photo.split(',')[1]}},{type:'text',text:'The student\'s handwritten blurt is in the image. If a word is hard to read, give the student the benefit of the doubt only where the meaning is clear.'+(text?'\n\nThey also typed:\n'+text:'')}];}
+  else content='Student\'s blurt:\n'+text;
+  try{
+    const r=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:3000,system:sys,messages:[{role:'user',content}]})});
+    if(!r.ok)throw new Error('the checker returned an error ('+r.status+')');
+    const d=await r.json();const raw=(d.content||[]).map(c=>c.text||'').join('');
+    const a=raw.indexOf('{'),b=raw.lastIndexOf('}');if(a<0||b<a)throw new Error('the reply could not be read');
+    const fb=JSON.parse(raw.slice(a,b+1));
+    const n=cur.points.length,ok=i=>Number.isInteger(i)&&i>=0&&i<n;
+    const got=new Set((fb.got||[]).map(asNum).filter(ok));
+    const partMap=new Map();(fb.partial||[]).forEach(x=>{const i=asNum(x);if(ok(i)&&!got.has(i))partMap.set(i,(x&&x.missing)||'');});
+    $('#b-list').querySelectorAll('li').forEach(li=>{const i=+li.dataset.i,c=li.querySelector('input'),tg=li.querySelector('.tagx');
+      c.checked=got.has(i);li.classList.toggle('got',got.has(i));li.classList.toggle('part',partMap.has(i));tg.textContent=got.has(i)?'got it':partMap.has(i)?'partly':'missed';
+      const old=li.querySelector('.miss-note');if(old)old.remove();
+      if(partMap.get(i)){const m=document.createElement('div');m.className='small miss-note';m.style.marginTop='4px';m.textContent=partMap.get(i);li.querySelector('label').appendChild(m);}});
+    score();
+    const arr=k=>Array.isArray(fb[k])?fb[k]:[];
+    const norm=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const you=x=>String(x||'').replace(/\bThe student has\b/g,'You have').replace(/\bthe student has\b/g,'you have').replace(/\bThe student\b/g,'You').replace(/\bthe student's\b/gi,'your').replace(/\bthe student\b/g,'you');
+    const seenW=new Set();const uniq=e=>{const k=norm(e.wrote);if(!k||seenW.has(k))return false;seenW.add(k);return true;};
+    ['errors','mixups','rewrites'].forEach(k=>{if(Array.isArray(fb[k]))fb[k]=fb[k].filter(e=>e&&uniq(e)).map(e=>{const o={};for(const f in e)o[f]=f==='wrote'?e[f]:you(e[f]);return o;});});
+    if(fb.comment)fb.comment=you(fb.comment);
+    partMap.forEach((v,k)=>partMap.set(k,you(v)));
+    lastAI={topic:cur,text,photo:!!photo,got,partMap,fb,errors:arr('errors').filter(e=>e&&e.wrote),mixups:arr('mixups').filter(e=>e&&e.wrote),
+      rewrites:arr('rewrites').filter(e=>e&&e.wrote&&e.better),first:arr('revise_first').filter(Boolean).slice(0,3),extra:arr('extra').filter(Boolean)};
+    if(sess)sess.ai=true;
+    $('#b-ai-out').innerHTML=aiHtml(lastAI)+`<div class="btns"><button class="b" id="b-pdf">Save this feedback as a PDF</button></div>`;
+    $('#b-pdf').onclick=aiPdf;
+  }catch(e){$('#b-ai-out').innerHTML=`<div class="box err">The AI check didn't work: ${esc(e.message)}. Check your connection and try again, or tick the checklist yourself.</div>`;}
+  btn.disabled=false;btn.textContent='Check my blurt with AI';
+};
+function aiHtml(A){
+  const n=A.topic.points.length,g=A.got.size,p=A.partMap.size;
+  let h=`<div class="box"><h4>AI check</h4><p>${esc(A.fb.comment||'')}</p><p class="small" style="margin-top:6px">${g} of ${n} points got, ${p} partly, ${n-g-p} missed. The checklist has been ticked for you, and partly-right points say what is missing. You can change any tick if you disagree.</p></div>`;
+  if(A.first.length)h+=`<div class="box"><h4>Revise these first</h4><ol style="margin:6px 0 0;padding-left:20px">${A.first.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>${GUIDE[A.topic.ref]?`<p class="small" style="margin-top:8px">The <a href="${GUIDE[A.topic.ref]}" style="color:var(--fg)">exam guide for ${A.topic.ref}</a> goes into more depth.</p>`:''}</div>`;
+  if(A.errors.length)h+=`<div class="box err"><h4>Things to correct</h4><ul class="fix">${A.errors.map(e=>`<li><span class="w">You wrote: "${esc(e.wrote)}"</span><br>${esc(e.correct||'')}</li>`).join('')}</ul></div>`;
+  if(A.mixups.length)h+=`<div class="box err"><h4>Ideas you have mixed up</h4><ul class="fix">${A.mixups.map(e=>`<li><span class="w">You wrote: "${esc(e.wrote)}"</span><br>${esc(e.explain||'')}</li>`).join('')}</ul></div>`;
+  if(A.rewrites.length)h+=`<div class="box"><h4>Making your points sharper</h4><ul class="fix">${A.rewrites.map(e=>`<li><span class="w">You wrote: "${esc(e.wrote)}"</span><br>It could read: ${esc(e.better)}</li>`).join('')}</ul></div>`;
+  if(A.extra.length)h+=`<div class="box"><h4>Also correct, not on the checklist</h4><ul>${A.extra.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
+  return h;
+}
+function aiPdf(){
+  const A=lastAI;if(!A)return;const t=A.topic;
+  const ticks=t.points.map((p,i)=>{const s=A.got.has(i)?'Got it':A.partMap.has(i)?'Partly':'Missed';const note=A.partMap.get(i);
+    return `<tr><td class="${s==='Got it'?'g':s==='Partly'?'p':'m'}">${s}</td><td>${pt(p)}${note?`<div class="note">${esc(note)}</div>`:''}</td></tr>`;}).join('');
+  const sec=(title,items,f)=>items.length?`<h2>${title}</h2><ul>${items.map(f).join('')}</ul>`:'';
+  const w=window.open('','_blank');
+  if(!w){alert('Your browser blocked the new window. Allow pop-ups for this site and try again.');return;}
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Blurt feedback - ${esc(t.title)}</title><style>
+body{font-family:Calibri,Arial,sans-serif;max-width:720px;margin:28px auto;line-height:1.5;color:#222;font-size:13.5px}
+h1{font-size:20px;color:#193e68;border-bottom:2px solid #c8a84e;padding-bottom:6px;margin:0 0 4px}
+h2{font-size:15px;color:#193e68;margin:20px 0 6px}
+.meta{color:#666;font-size:12px;margin-bottom:12px}
+table{width:100%;border-collapse:collapse}td{border-bottom:1px solid #e3e3e3;padding:6px;vertical-align:top}
+td:first-child{width:62px;font-weight:700;font-size:12px}.g{color:#28724f}.p{color:#9a7414}.m{color:#a33}
+.note{color:#555;font-size:12px;margin-top:3px}
+ul,ol{padding-left:18px;margin:4px 0}li{margin-bottom:6px}.w{color:#666}
+.blurt{white-space:pre-wrap;border:1px solid #ddd;padding:10px;font-size:12.5px;background:#fafafa}
+@media print{body{margin:12px}}
+</style></head><body>
+<h1>Blurt feedback - ${esc(t.title)}</h1>
+<div class="meta">Unit ${t.unit} · ${t.ref} · ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})} · ${A.got.size} of ${t.points.length} points got, ${A.partMap.size} partly</div>
+<p>${esc(A.fb.comment||'')}</p>
+${A.first.length?`<h2>Revise these first</h2><ol>${A.first.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`:''}
+<h2>Checklist</h2><table>${ticks}</table>
+${sec('Things to correct',A.errors,e=>`<li><span class="w">You wrote: "${esc(e.wrote)}"</span><br>${esc(e.correct||'')}</li>`)}
+${sec('Ideas you have mixed up',A.mixups,e=>`<li><span class="w">You wrote: "${esc(e.wrote)}"</span><br>${esc(e.explain||'')}</li>`)}
+${sec('Making your points sharper',A.rewrites,e=>`<li><span class="w">You wrote: "${esc(e.wrote)}"</span><br>It could read: ${esc(e.better)}</li>`)}
+${sec('Also correct, not on the checklist',A.extra,x=>`<li>${esc(x)}</li>`)}
+${A.text?`<h2>Your blurt</h2><div class="blurt">${esc(A.text)}</div>`:A.photo?'<p class="meta">Blurt checked from a photo.</p>':''}
+<script>window.onload=()=>setTimeout(()=>window.print(),300);<\/script>
+</body></html>`);
+  w.document.close();
+}
+
+/* ---------- mixed sheet ---------- */
+let mixed=[];
+$('#m-gen').onclick=()=>{const us=chosen($('#m-units'));if(!us.length){$('#m-prev').innerHTML='<p class="small">Choose at least one unit.</p>';return;}
+  const pool=TOPICS.filter(t=>us.includes(t.u));mixed=shuffle(pool).slice(0,+$('#m-n').value);
+  mixed.sort((a,b)=>TOPICS.indexOf(a)-TOPICS.indexOf(b));
+  $('#m-prev').innerHTML=`<p class="small">Your sheet:</p><ol>${mixed.map(t=>`<li>${t.ref} ${esc(t.title)} <span class="small">(${t.points.length} points)</span></li>`).join('')}</ol>`;
+  $('#m-blank').disabled=$('#m-ans').disabled=false;};
+$('#m-blank').onclick=()=>printSheet(`<h1>Blurt sheet</h1><div class="meta">Name: ______________________ &nbsp; Date: __________ &nbsp; Notes away. Write everything you can remember under each heading.</div>`+
+  mixed.map(t=>`<div class="pt"><h2>${t.ref} ${esc(t.title)}</h2><div class="hint">${t.points.length} key points to recall</div>${'<div class="ln"></div>'.repeat(Math.max(5,t.points.length+3))}</div>`).join(''));
+$('#m-ans').onclick=()=>printSheet(`<h1>Blurt sheet - answers</h1><div class="meta">Mark your sheet in a different colour.</div>`+
+  mixed.map(t=>`<div class="pt"><h2>${t.ref} ${esc(t.title)}</h2><ul>${t.points.map(p=>`<li>${pt(p)}</li>`).join('')}</ul></div>`).join(''));
+function printSheet(h){$('#printArea').innerHTML=h;window.print();}
+
+/* ---------- rapid fire ---------- */
+let deck=[],di=0,got=0,miss=0,missed=[],rfSent=false;
+function rfSend(){if(rfSent||di<5)return;rfSent=true;const us=chosen($('#r-units'));A.send('/blurt',{kind:'rapid',ref:'',topic:us.length===DATA.length?'All units':us.map(i=>DATA[i].unit).join(', '),got,total:di,detail:{missed:missed.slice(0,40).map(p=>p[0])}});}
+function buildDeck(){const us=chosen($('#r-units'));deck=[];
+  TOPICS.forEach(t=>{if(us.includes(t.u))t.points.forEach(p=>{if(p[0])deck.push({t,p});});});
+  rfSend();deck=shuffle(deck);di=0;got=0;miss=0;missed=[];rfSent=false;show();}
+function show(){const card=$('#r-card');card.classList.remove('on');
+  ['#r-got','#r-miss'].forEach(s=>$(s).hidden=true);$('#r-flip').hidden=false;
+  if(!deck.length){$('#r-cue').textContent='Choose at least one unit';$('#r-topic').textContent='';$('#r-flip').hidden=true;return;}
+  if(di>=deck.length){rfSend();$('#r-topic').textContent='Finished';$('#r-cue').textContent=`${got} of ${deck.length}`;$('#r-flip').hidden=true;stats();return;}
+  const c=deck[di];$('#r-topic').textContent=$('#r-topic2').textContent=`${c.t.ref} ${c.t.title}`;
+  $('#r-cue').textContent=c.p[0];setTimeout(()=>{$('#r-cue2').textContent=c.p[0];$('#r-ans').textContent=c.p[1];},200);stats();}
+function stats(){$('#r-s1').textContent=`${got} got`;$('#r-s2').textContent=`${miss} missed`;$('#r-s3').textContent=deck.length?`${Math.min(di+1,deck.length)} of ${deck.length}`:'';
+  $('#r-missed').innerHTML=missed.length?`<div class="box"><h4>Missed so far - revise these</h4><ul>${missed.map(p=>`<li>${pt(p)}</li>`).join('')}</ul></div>`:'';}
+$('#r-flip').onclick=()=>{$('#r-card').classList.add('on');$('#r-flip').hidden=true;$('#r-got').hidden=$('#r-miss').hidden=false;};
+$('#r-got').onclick=()=>{got++;di++;show();};
+$('#r-miss').onclick=()=>{miss++;missed.push(deck[di].p);di++;show();};
+$('#r-units').onchange=buildDeck;
+document.addEventListener('keydown',e=>{if($('#t3').hidden||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;
+  if(e.key===' '&&!$('#r-flip').hidden){e.preventDefault();$('#r-flip').click();}
+  else if(e.key==='ArrowRight'&&!$('#r-got').hidden)$('#r-got').click();
+  else if(e.key==='ArrowLeft'&&!$('#r-miss').hidden)$('#r-miss').click();});
+buildDeck();
+
+/* hero network */
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cv=$('#net'),cx=cv.getContext('2d');let W,H,pts=[],mouse={x:-999,y:-999};
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function size(){const r=cv.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;cx.setTransform(d,0,0,d,0,0);
+  pts=Array.from({length:Math.round(Math.min(70,W*H/12000))},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,k:Math.random()<.12?'s':Math.random()<.14?'e':'c'}));}
+function draw(){cx.clearRect(0,0,W,H);const cs={s:css('--start'),e:css('--end'),c:css('--chain')},lc=css('--muted');
+  for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.hypot(dx,dy);if(d<120&&d>0){p.x+=dx/d;p.y+=dy/d;}}
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<125){cx.globalAlpha=(1-d/125)*.28;cx.strokeStyle=lc;cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke();}}
+  for(const p of pts){cx.globalAlpha=.75;cx.fillStyle=cs[p.k];cx.beginPath();cx.arc(p.x,p.y,p.k==='c'?1.8:3,0,7);cx.fill();}
+  cx.globalAlpha=1;if(!reduce)requestAnimationFrame(draw);}
+size();draw();addEventListener('resize',size);
+const hero=document.querySelector('.hero');hero.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;});hero.addEventListener('pointerleave',()=>{mouse.x=mouse.y=-999;});
+})();
+</script>
+<script src="visit.js" defer></script>
+</body>
+</html>
