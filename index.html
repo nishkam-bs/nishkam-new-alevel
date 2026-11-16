@@ -220,9 +220,23 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
 .nk-marks details p{font-size:13.5px;margin-top:6px}
 .nk-marks .nk-q{font-style:italic}
 @media(max-width:760px){.nk-cols{grid-template-columns:1fr}.nk-prog li{grid-template-columns:120px 1fr 70px}.nk-home{padding:20px}}
+.tool-groups{display:grid;gap:14px;padding-bottom:40px;margin-bottom:40px;border-bottom:1px solid var(--rule)}
+.tool-group{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tool-group .tg-label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);font-weight:700;width:150px;flex:none}
+.tool-group a{padding:8px 14px;border-radius:999px;border:1px solid var(--rule);background:var(--paper);color:var(--navy);font-weight:600;font-size:13.5px;text-decoration:none;transition:.15s}
+.tool-group a:hover{border-color:var(--navy)}
+.tool-group a.main{background:var(--navy);color:#fff;border-color:var(--navy)}
+.mtop{display:none}
+@media(max-width:900px){
+  body .mtop{display:flex;position:fixed;top:0;left:0;right:0;height:60px;z-index:150;background:var(--parchment);border-bottom:1px solid var(--rule);align-items:center;padding-left:64px;font-family:'DM Serif Display',serif;font-size:20px;color:var(--navy)}
+  main{padding-top:84px!important}
+  body .tool-group .tg-label{width:100%}
+  .hamburger{z-index:160}
+}
 </style>
 </head>
 <body>
+<div class="mtop">A-Level Business</div>
 <button class="hamburger" id="menuBtn" aria-label="Open menu">&#9776;</button>
 <div class="scrim" id="scrim"></div>
 <div class="layout">
@@ -234,6 +248,7 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
   <h2>Overview</h2>
   <a href="index.html" class="active">Home</a>
   <a href="schedule.html">My schedule</a>
+  <a href="practice.html">Practice</a>
   <h2>Study Tools</h2>
   <a href="six_marker_lab.html">6-Mark Analyse Lab</a>
   <a href="nine_mark_lab.html">9-Mark Assess Lab</a>
@@ -247,7 +262,6 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
   <a class="sub-link" href="course-9mark-assess.html">2. 9-Mark Assess</a>
   <a class="sub-link" href="course-calculate.html">3. Calculate and Use It</a>
   <a href="flashcards-7138.html">Flashcards</a>
-  <a href="#" style="opacity:.5">Knowledge Quiz</a>
   <h2>Unit 3.1</h2>
   <a class="sub-link" href="guide_3_1_1_business_and_objectives.html">3.1.1 Business &amp; objectives</a>
   <a class="sub-link" href="guide_3_1_2_forms_of_business_and_stakeholders.html">3.1.2 Forms &amp; stakeholders</a>
@@ -255,7 +269,6 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
   <a class="sub-link" href="guide_3_1_4_financial_management.html">3.1.4 Finance</a>
   <a class="sub-link" href="unit31/index.html">Unit 3.1 notes</a>
   <h2>Resources</h2>
-  <a href="#" style="opacity:.5">Sample papers</a>
   <a href="knowledge-organisers.html">Knowledge organisers</a>
   <a href="formula_reference.html">Formula reference</a>
   <div class="sidebar-footer">
@@ -269,23 +282,16 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
   <div class="hero">
     <div class="spec">AQA A-Level Business (7138) &middot; First teaching September 2026</div>
     <h2>Your <em>A-Level Business</em> revision hub.</h2>
-    <div class="tool-pills">
-      <a href="schedule.html" class="tool-pill">My schedule</a>
-      <a href="#courses" class="tool-pill">Courses</a>
-      <a href="#flashcards" class="tool-pill">Flashcards</a>
-      <a href="six_marker_lab.html" class="tool-pill">6-Mark Analyse Lab</a>
-      <a href="nine_mark_lab.html" class="tool-pill">9-Mark Assess Lab</a>
-      <a href="fifteen_mark_lab.html" class="tool-pill">15-Mark Evaluate Lab</a>
-      <a href="redraft.html" class="tool-pill">Redraft</a>
-      <a href="calculation_practice_lab.html" class="tool-pill">Calculations</a>
-      <a href="blurting.html" class="tool-pill">Blurting</a>
-      <a href="knowledge-organisers.html" class="tool-pill">Knowledge Organisers</a>
-      <a href="formula_reference.html" class="tool-pill">Formula Reference</a>
-      <a href="#" class="tool-pill disabled">Knowledge Quiz</a>
-    </div>
   </div>
 
   <div class="acct" id="account" hidden></div>
+
+  <div class="tool-groups">
+    <div class="tool-group"><span class="tg-label">Homework</span><a class="main" href="schedule.html">My schedule</a><a href="courses.html">Courses</a><a href="practice.html">Practice</a></div>
+    <div class="tool-group"><span class="tg-label">Get an answer marked</span><a href="six_marker_lab.html">6-Mark Lab</a><a href="nine_mark_lab.html">9-Mark Lab</a><a href="fifteen_mark_lab.html">15-Mark Lab</a><a href="redraft.html">Redraft</a></div>
+    <div class="tool-group"><span class="tg-label">Practise</span><a href="calculation_practice_lab.html">Calculations</a><a href="blurting.html">Blurting</a><a href="#flashcards">Flashcards</a></div>
+    <div class="tool-group"><span class="tg-label">Revise</span><a href="knowledge-organisers.html">Knowledge Organisers</a><a href="#units">Exam Guides</a><a href="unit31/index.html">Unit 3.1 Notes</a><a href="formula_reference.html">Formula Reference</a></div>
+  </div>
 
   <!-- ══════════════════════════════════════════════════════ -->
   <!-- EMBEDDED FLASHCARDS                                    -->
@@ -654,7 +660,6 @@ footer a{color:var(--muted);display:block;padding:2px 0}footer a:hover{color:var
       <a href="redraft.html">Redraft</a>
       <a href="calculation_practice_lab.html">Calculations</a>
       <a href="flashcards-7138.html">Flashcards</a>
-      <a href="#" style="opacity:.5">Knowledge Quiz</a>
     </div>
   </footer>
 </main>
