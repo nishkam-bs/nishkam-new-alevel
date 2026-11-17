@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>KAT preparation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{--bg:#FAF7F1;--bg2:#F3ECDB;--card:#fff;--fg:#1A1A1A;--navy:#0E2A47;--muted:#6B6B6B;--line:#E5DFD2;--ok:#2d7a4f;--ok-soft:rgba(45,122,79,.12);--amber:#a7741a;--amber-soft:rgba(183,121,31,.14);--end:#b23b31;--end-soft:rgba(178,59,49,.1)}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1420;--bg2:#121a28;--card:#172133;--fg:#e9ecf2;--navy:#cfe0f5;--muted:#9aa4b6;--line:rgba(255,255,255,.1);--ok:#5fcf80;--ok-soft:rgba(95,207,128,.14);--amber:#e8b04a;--amber-soft:rgba(232,176,74,.14);--end:#ff7d70;--end-soft:rgba(255,125,112,.12);color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:32px max(18px,env(safe-area-inset-right,0px)) 70px max(18px,env(safe-area-inset-left,0px))}
+h1,h2{font-family:"DM Serif Display",Georgia,serif;font-weight:400;color:var(--navy);margin:0;line-height:1.15}
+h1{font-size:2.4rem;margin:6px 0}
+h2{font-size:1.4rem;margin-bottom:4px}
+.top a{color:var(--muted);font-size:.9rem}
+.lead{color:var(--muted);margin:0 0 20px;max-width:660px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:18px}
+.muted{color:var(--muted)}.small{font-size:.86rem}
+.sum{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 16px}
+.sum span{padding:6px 12px;border-radius:999px;background:var(--bg2);font-size:.88rem}
+.how{margin:8px 0 0;padding-left:20px;font-size:.92rem}.how li{margin:5px 0}
+.prog{display:block;height:8px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:12px 0 4px}.prog i{display:block;height:100%;background:var(--ok)}
+.season{font-size:.85rem;color:var(--muted);margin:0 0 6px}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;align-items:start;border-top:1px solid var(--line);padding:12px 0}
+.item:first-of-type{border-top:0}
+.item .t{font-weight:600}
+.item .q{font-size:.92rem;margin-top:2px}
+.item .n{font-size:.82rem;color:var(--muted);margin-top:2px}
+.item .opt{font-size:.92rem;margin-top:8px;padding:8px 12px;border-left:3px solid var(--line)}
+.st{font:600 .75rem "IBM Plex Mono",monospace;padding:4px 9px;border-radius:6px;white-space:nowrap;text-align:center}
+.st.done{background:var(--ok-soft);color:var(--ok)}.st.late{background:var(--amber-soft);color:var(--amber)}.st.missing{background:var(--end-soft);color:var(--end)}.st.todo{background:var(--bg2)}.st.excused{background:var(--bg2);color:var(--muted)}
+.go{display:inline-block;margin-top:6px;padding:7px 14px;border-radius:9px;background:var(--navy);color:var(--card);text-decoration:none;font-weight:600;font-size:.88rem}
+@media (prefers-color-scheme:dark){.go{color:#0e1420}}
+details.wk{border-top:1px solid var(--line);padding:10px 0}
+details.wk summary{cursor:pointer;font-weight:600}
+details.wk summary span{font-weight:400;color:var(--muted);font-size:.88rem;margin-left:8px}
+.cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:0 0 22px}
+.pick{display:block;text-align:left;font:inherit;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color .15s}
+.pick:hover,.pick.on{border-color:var(--navy)}
+.pick .num{font:600 .75rem "IBM Plex Mono",monospace;color:var(--muted)}
+.pick h2{margin:4px 0 6px}
+.pick p{margin:0;font-size:.92rem;color:var(--muted)}
+.case-text{font-size:.97rem}
+.case-text p{margin:0 0 10px}
+.case-text h3{font-size:1rem;margin:20px 0 6px;color:var(--navy)}
+.case-text ul{margin:0 0 10px;padding-left:20px}
+.case-text table{border-collapse:collapse;width:100%;margin:6px 0 14px;font-size:.88rem}
+.case-text th,.case-text td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+.case-text th{background:var(--bg2);font-weight:600}
+.qn{font:600 .8rem "IBM Plex Mono",monospace;color:var(--muted)}
+.qtext{white-space:pre-line}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="index.html">Back to the main site</a></div>
+  <h1>KAT preparation</h1>
+  <p class="lead">Practise for the KAT with these two case studies. Choose one, read it carefully, then answer the questions. Each question opens in the right marking tool: type your answer or upload photos of your handwritten answer to get it marked.</p>
+  <div id="bar"></div>
+  <div class="cases">
+    <button type="button" class="pick" data-c="dhillon"><span class="num">Case study 1</span><h2>Dhillon Drinks Ltd</h2><p>A mango lassi business in Southall with four drinks and £900,000 to invest. Two 6-mark, two 9-mark and one 15-mark question.</p></button>
+    <button type="button" class="pick" data-c="leaflather"><span class="num">Case study 2</span><h2>Leaf &amp; Lather plc</h2><p>A plastic-free beauty business whose market share and share price have fallen. Two 6-mark, two 9-mark and one 15-mark question.</p></button>
+  </div>
+  <div id="view" hidden>
+    <div class="card"><h2>Questions</h2><p class="small muted" style="margin:0 0 6px">Read the case study below first. Every question asks you to use the case, and some ask for a calculation.</p><div id="qs"></div></div>
+    <div class="card"><h2 id="caseTitle"></h2><p class="small muted" style="margin:0 0 8px">You can highlight the case study as you read, the same as you would on paper.</p><div class="case-text" id="caseText" data-hl></div></div>
+  </div>
+</div>
+<script src="account.js"></script>
+<script src="hw-bank.js"></script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),Ac=window.Acct,H=window.HW;
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LAB={6:'six_marker_lab.html',9:'nine_mark_lab.html',15:'fifteen_mark_lab.html'};
+const NUM={dhillon:['1','2','3','4','5'],leaflather:['11','12','13','14','15']};
+let mine={};
+if(Ac)Ac.bar('#bar',{inside:true,text:'Sign in on the home page so your marked answers are saved.'});
+
+/* the case study text: headings, bullet points and appendix tables */
+function caseHtml(ctx){
+  const out=[];let list=[];
+  const flush=()=>{if(list.length){out.push('<ul>'+list.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>');list=[];}};
+  ctx.split('\n').forEach((line,i)=>{
+    const t=line.trim();
+    if(!t){flush();return;}
+    if(i===0)return;                                   /* the title is shown above */
+    if(t.startsWith('•')){list.push(t.slice(1).trim());return;}
+    flush();
+    if(/^(Appendix [A-E]|Source A|The product portfolio|Where to invest next)\b/.test(t)){out.push('<h3>'+esc(t)+'</h3>');return;}
+    if(/ \| /.test(t)){
+      const cells=t.split(' | ');let cap='';
+      const f=/^(.+?): (.+: .+)$/.exec(cells[0]);if(f){cap=f[1];cells[0]=f[2];}
+      out.push((cap?'<p style="margin:10px 0 4px"><b>'+esc(cap)+'</b></p>':'')+'<table class="row"><tbody><tr>'+cells.map(c=>{const m=c.split(': ');return '<td><b>'+esc(m[0])+'</b><br>'+esc(m.slice(1).join(': '))+'</td>';}).join('')+'</tr></tbody></table>');return;}
+    const m=/^([^:;]{2,60}): (.*)$/.exec(t);
+    if(m&&/;|£|%|[0-9]/.test(m[2])&&!/\.$/.test(t)){out.push('<table><tbody><tr><th style="width:32%">'+esc(m[1])+'</th><td>'+m[2].split('; ').map(esc).join('<br>')+'</td></tr></tbody></table>');return;}
+    out.push('<p>'+esc(t)+'</p>');
+  });
+  flush();
+  return out.join('').replace(/<\/tbody><\/table><table><tbody>/g,'');
+}
+function show(id){
+  const c=H.cases[id];if(!c)return;
+  document.querySelectorAll('.pick').forEach(b=>b.classList.toggle('on',b.dataset.c===id));
+  $('#view').hidden=false;$('#caseTitle').textContent=c.title;
+  $('#caseText').innerHTML=caseHtml(c.ctx);
+  const qs=H.qs.filter(q=>q.kat&&q.caseId===id);
+  $('#qs').innerHTML=qs.map((q,i)=>{const m=mine[q.id];
+    return `<div class="item"><div><div class="qn">Question ${NUM[id][i]} · ${q.marks} marks</div><div class="q qtext">${esc(q.q)}</div>
+      <a class="go" href="${LAB[q.marks]}?q=${encodeURIComponent(q.id)}">${m?'Answer it again':'Answer this question'}</a></div>
+      <span class="st ${m?'done':'todo'}">${m?'Marked: '+esc(m):'Not done'}</span></div>`;}).join('');
+  try{history.replaceState(null,'','#'+id);}catch(e){}
+}
+document.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{show(b.dataset.c);$('#view').scrollIntoView({behavior:'smooth',block:'start'});});
+async function marks(){
+  if(!Ac||!Ac.user)return;
+  try{const d=await Ac.call('/mymarks');(d.marks||[]).slice().reverse().forEach(m=>{if(m.ref&&/^kat-/.test(m.ref))mine[m.ref]=m.mark;});}catch(e){}
+  const cur=document.querySelector('.pick.on');if(cur)show(cur.dataset.c);
+}
+const start=(location.hash||'').slice(1);if(H.cases[start])show(start);
+if(Ac){Ac.ready.then(marks);
+  /* coming back from a marking tool (including the Back button): refresh the marks */
+  addEventListener('pageshow',e=>{if(e.persisted)marks();});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')marks();});}
+})();
+</script>
+<script src="highlighter.js"></script>
+<script src="visit.js" defer></script>
+</body>
+</html>

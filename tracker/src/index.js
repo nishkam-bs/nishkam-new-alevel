@@ -240,7 +240,7 @@ const routes = {
 
   async '/mymarks'(db, b) {
     const u = await student(db, b);
-    const { results } = await db.prepare('SELECT t,tool,question,mark,level,well,improve FROM marks WHERE username=? ORDER BY id DESC LIMIT 60').bind(u.username).all();
+    const { results } = await db.prepare('SELECT t,tool,question,mark,level,well,improve,ref FROM marks WHERE username=? ORDER BY id DESC LIMIT 60').bind(u.username).all();
     return { marks: results };
   },
 
