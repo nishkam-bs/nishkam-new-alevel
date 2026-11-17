@@ -1,7 +1,9 @@
 /* =====================================================================
-   Highlighter for case studies (7138 site).
-   Students select text in a case study and pick a colour, like using
-   highlighter pens on paper. Highlights are saved to the student's
+   Highlighter for case studies. Same file on the 7132 and 7138 sites.
+   Text case studies: students select text and pick a colour, like using
+   highlighter pens on paper.
+   Case studies shown as pictures (scanned exam pages in the drills):
+   students switch the highlighter pen on and drag across the page. Highlights are saved to the student's
    account (account.js), so they follow them between devices, and the
    same case study shows the same highlights in every tool.
 
@@ -12,9 +14,12 @@
    ===================================================================== */
 (function(){
 "use strict";
-const SEL='.cs-body,.casetext,[data-hl]';
+const SEL='.cs-body,.casetext,[data-hl]:not(img)';
+const IMG_SEL='#case img,img[data-hl]';
 const COLOURS=[['y','Yellow','#ffe766'],['b','Blue','#a9d4ff'],['g','Green','#b4eab2'],['p','Pink','#ffbfd9']];
-const A=window.Acct||null, KEY='highlights', LKEY='n8_hl';
+const A=window.Acct||null, KEY='highlights';
+/* this browser's copy, kept apart for each site (both sites share the github.io address) */
+const LKEY='hl:'+location.pathname.replace(/[^/]*$/,'');
 
 /* ---------- storage ---------- */
 function all(){
@@ -156,10 +161,82 @@ document.addEventListener('selectionchange',()=>{clearTimeout(selT);selT=setTime
 addEventListener('scroll',()=>{if(menu&&!menu.hidden&&target&&!target.overlap)check();},{passive:true});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')hide();});
 
+
+/* ---------- pictures of case studies: a highlighter pen ---------- */
+const pics=new Map(); /* img -> {key,canvas,wrap} */
+let pen=false,penC='y',penBar=null,undo=[];
+const PEN={y:'rgba(255,221,0,.42)',b:'rgba(80,160,255,.38)',g:'rgba(70,200,90,.38)',p:'rgba(255,90,160,.36)'};
+function picKey(img){const all=[...document.querySelectorAll(IMG_SEL)];const q=new URLSearchParams(location.search);
+  return 'img:'+location.pathname.split('/').pop()+':'+(q.get('d')||q.get('q')||'')+':'+all.indexOf(img);}
+function strokes(key){const d=all()[key];return d&&Array.isArray(d.s)?d.s:[];}
+function setStrokes(key,st){const d=all();if(st.length)d[key]={s:st,t:Date.now()};else delete d[key];save(d);}
+function drawPic(o){
+  const c=o.canvas,img=o.img,w=img.clientWidth,h=img.clientHeight;if(!w||!h)return;
+  const dpr=Math.min(devicePixelRatio||1,2);
+  if(c.width!==Math.round(w*dpr)||c.height!==Math.round(h*dpr)){c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);}
+  c.style.width=w+'px';c.style.height=h+'px';
+  const x=c.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);
+  x.lineCap='butt';x.lineJoin='round';
+  strokes(o.key).concat(o.live?[o.live]:[]).forEach(st=>{
+    if(!st.p||st.p.length<2)return;
+    x.strokeStyle=PEN[st.c]||PEN.y;x.lineWidth=st.w*w;x.beginPath();
+    st.p.forEach(([px,py],i)=>{i?x.lineTo(px*w,py*h):x.moveTo(px*w,py*h);});x.stroke();
+  });
+}
+function attachPic(img){
+  if(pics.has(img))return;
+  if(!img.complete||!img.naturalWidth){img.addEventListener('load',()=>attachPic(img),{once:true});return;}
+  const wrap=document.createElement('div');wrap.className='nk-hlpic';
+  img.parentNode.insertBefore(wrap,img);wrap.appendChild(img);
+  const canvas=document.createElement('canvas');canvas.className='nk-hlcan';wrap.appendChild(canvas);
+  const o={img,canvas,wrap,key:picKey(img),live:null};pics.set(img,o);
+  const pos=e=>{const r=canvas.getBoundingClientRect();return [(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height];};
+  canvas.addEventListener('pointerdown',e=>{if(!pen)return;e.preventDefault();canvas.setPointerCapture(e.pointerId);
+    o.live={c:penC,w:0.022,p:[pos(e)]};drawPic(o);});
+  canvas.addEventListener('pointermove',e=>{if(!o.live)return;e.preventDefault();
+    const [px,py]=pos(e),l=o.live.p[o.live.p.length-1];
+    /* a highlighter is held level: keep the stroke close to horizontal unless the student clearly moves up or down */
+    const ny=Math.abs(py-o.live.p[0][1])<0.012?o.live.p[0][1]:py;
+    if(Math.hypot(px-l[0],ny-l[1])>0.002)o.live.p.push([px,ny]);drawPic(o);});
+  const end=()=>{if(!o.live)return;const st=o.live;o.live=null;
+    if(st.p.length>1){const r=strokes(o.key).concat([st]);setStrokes(o.key,r);undo.push(o.key);updateBar();}drawPic(o);};
+  canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
+  new ResizeObserver(()=>drawPic(o)).observe(img);
+  drawPic(o);showBar();
+}
+function scanPics(){
+  document.querySelectorAll(IMG_SEL).forEach(attachPic);
+  for(const [img,o] of [...pics])if(!img.isConnected)pics.delete(img);
+  if(!pics.size&&penBar){penBar.remove();penBar=null;}
+}
+function setPen(on){pen=on;document.documentElement.classList.toggle('nk-pen-on',on);updateBar();}
+function updateBar(){
+  if(!penBar)return;
+  penBar.querySelector('.nk-pen').textContent=pen?'Highlighter on':'Highlighter off';
+  penBar.querySelector('.nk-pen').classList.toggle('on',pen);
+  penBar.querySelectorAll('[data-pc]').forEach(b=>b.classList.toggle('on',b.dataset.pc===penC));
+  const any=[...pics.values()].some(o=>strokes(o.key).length);
+  penBar.querySelector('.nk-undo').disabled=!undo.length;penBar.querySelector('.nk-clear').disabled=!any;
+}
+function showBar(){
+  if(penBar)return;
+  const first=document.querySelector(IMG_SEL);if(!first)return;
+  const host=first.closest('#case')||first.parentNode.parentNode;
+  penBar=document.createElement('div');penBar.className='nk-penbar';
+  penBar.innerHTML='<button type="button" class="nk-pen">Highlighter off</button>'+
+    COLOURS.map(([c,n])=>`<button type="button" data-pc="${c}" class="nk-sw nk-${c}" title="${n}" aria-label="${n}"></button>`).join('')+
+    '<button type="button" class="nk-undo">Undo</button><button type="button" class="nk-clear">Clear page highlights</button>';
+  penBar.querySelector('.nk-pen').onclick=()=>setPen(!pen);
+  penBar.querySelectorAll('[data-pc]').forEach(b=>b.onclick=()=>{penC=b.dataset.pc;setPen(true);});
+  penBar.querySelector('.nk-undo').onclick=()=>{const k=undo.pop();if(!k)return;const r=strokes(k);r.pop();setStrokes(k,r);pics.forEach(o=>{if(o.key===k)drawPic(o);});updateBar();};
+  penBar.querySelector('.nk-clear').onclick=()=>{if(!confirm('Remove all your highlights from these pages?'))return;pics.forEach(o=>{setStrokes(o.key,[]);drawPic(o);});undo=[];updateBar();};
+  host.insertBefore(penBar,host.firstChild);updateBar();
+}
+
 /* ---------- styles ---------- */
 const css=document.createElement('style');
 css.textContent=`mark.nk-hl{color:inherit;border-radius:2px;padding:0 1px;cursor:pointer;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-${COLOURS.map(([c,,h])=>`mark.nk-${c},.nk-hl-menu .nk-${c}{background:${h}}`).join('\n')}
+${COLOURS.map(([c,,h])=>`mark.nk-${c},.nk-hl-menu .nk-${c},.nk-penbar button.nk-${c}{background:${h}}`).join('\n')}
 @media (prefers-color-scheme:dark){mark.nk-hl{color:#111}}
 .nk-hl-bar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12.5px;opacity:.75;margin:4px 0 6px}
 .nk-hl-bar button{font:inherit;background:none;border:0;padding:0;text-decoration:underline;cursor:pointer;color:inherit}
@@ -167,15 +244,27 @@ ${COLOURS.map(([c,,h])=>`mark.nk-${c},.nk-hl-menu .nk-${c}{background:${h}}`).jo
 .nk-hl-menu button{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.85);cursor:pointer;padding:0}
 .nk-hl-menu .nk-x{width:auto;border-radius:8px;padding:0 10px;background:transparent;color:#fff;font:600 12.5px system-ui,sans-serif}
 .nk-hl-menu[hidden]{display:none}
-@media print{.nk-hl-bar,.nk-hl-menu{display:none!important}mark.nk-hl{-webkit-print-color-adjust:exact;print-color-adjust:exact}}`;
+.nk-hlpic{position:relative;display:block}
+.nk-hlpic img{display:block}
+.nk-hlcan{position:absolute;left:0;top:0;pointer-events:none;mix-blend-mode:multiply}
+.nk-pen-on .nk-hlcan{pointer-events:auto;touch-action:none;cursor:crosshair}
+.nk-penbar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 10px;margin:0 0 12px;border-radius:10px;background:#1b2a4a;color:#fff;font:600 13px system-ui,sans-serif}
+.nk-penbar button{font:inherit;border:1px solid rgba(255,255,255,.5);background:transparent;color:#fff;border-radius:8px;padding:5px 10px;cursor:pointer}
+.nk-penbar button:disabled{opacity:.4;cursor:default}
+.nk-penbar .nk-pen.on{background:#ffe766;color:#1b2a4a;border-color:#ffe766}
+.nk-penbar .nk-sw{width:26px;height:26px;border-radius:50%;padding:0;border:2px solid rgba(255,255,255,.6)}
+.nk-penbar .nk-sw.on{border-color:#fff;box-shadow:0 0 0 2px #fff}
+@media print{.nk-hl-bar,.nk-hl-menu,.nk-penbar{display:none!important}mark.nk-hl{-webkit-print-color-adjust:exact;print-color-adjust:exact}}`;
 document.head.appendChild(css);
 
 /* ---------- start ---------- */
 function start(){
-  scan();
-  new MutationObserver(()=>{clearTimeout(start.t);start.t=setTimeout(scan,60);}).observe(document.body,{childList:true,subtree:true});
-  if(A){A.ready.then(()=>boxes.forEach((b,el)=>refresh(el)));A.onChange(k=>{if(k.includes(KEY)||k.includes('*'))boxes.forEach((b,el)=>refresh(el));});}
+  const both=()=>{scan();scanPics();};
+  both();
+  new MutationObserver(()=>{clearTimeout(start.t);start.t=setTimeout(both,60);}).observe(document.body,{childList:true,subtree:true});
+  const redraw=()=>{boxes.forEach((b,el)=>refresh(el));pics.forEach(drawPic);updateBar();};
+  if(A){A.ready.then(redraw);A.onChange(k=>{if(k.includes(KEY)||k.includes('*'))redraw();});}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
-window.NHighlight={scan};
+window.NHighlight={scan,scanPics};
 })();
