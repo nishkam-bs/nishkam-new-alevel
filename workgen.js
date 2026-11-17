@@ -32,8 +32,22 @@ async function ask(system,content,maxTokens){
   const r=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:maxTokens||6000,system,messages:[{role:'user',content}]})});
   if(!r.ok)throw new Error('The AI did not respond ('+r.status+'). Try again in a minute.');
   const d=await r.json();const raw=(d.content||[]).map(c=>c.text||'').join('');
-  const a=raw.indexOf('{'),b=raw.lastIndexOf('}');if(a<0||b<a)throw new Error('The reply could not be read. Try again.');
-  return JSON.parse(raw.slice(a,b+1));
+  const obj=firstObject(raw);if(!obj)throw new Error('The reply could not be read. Try again.');
+  return obj;
+}
+/* the first complete JSON object in the reply, ignoring any text before or after it */
+function firstObject(raw){
+  for(let a=raw.indexOf('{');a>=0;a=raw.indexOf('{',a+1)){
+    let depth=0,inStr=false,esc=false;
+    for(let i=a;i<raw.length;i++){
+      const c=raw[i];
+      if(inStr){if(esc)esc=false;else if(c==='\\')esc=true;else if(c==='"')inStr=false;continue;}
+      if(c==='"')inStr=true;else if(c==='{')depth++;else if(c==='}'&&--depth===0){
+        try{return JSON.parse(raw.slice(a,i+1));}catch(e){break;}
+      }
+    }
+  }
+  return null;
 }
 const topicLine=id=>{const t=TOP[id];return t?`${id} = ${t.ref} ${t.title}`:'';};
 
@@ -65,16 +79,19 @@ function clean(spec,topicIds){
 async function generate(req){
   const c=Object.assign({mcq:0,calc:0,short:0,extended:0},req.counts||{});
   const total=c.mcq+c.calc+c.short+c.extended;if(!total)throw new Error('Choose at least one question.');
-  const topics=(req.topics||[]).filter(id=>TOP[id]);
+  let topics=(req.topics||[]).filter(id=>TOP[id]);
+  if(!topics.length)topics=(T.taught||[]).filter(id=>TOP[id]);
   const sys=`You write practice questions for a Year 12 student on AQA A-level Business (7138).\n\n${RULES}\n\n${FORMAT}`;
   const user=[
-    topics.length?`Topics to cover (spread the questions across them, weakest first):\n${topics.map(topicLine).join('\n')}`:'Topics: choose from across the course.',
+    (req.topics||[]).length?`Topics to cover (spread the questions across them, weakest first):\n${topics.map(topicLine).join('\n')}`:`This student has no clear gaps yet. Set stretching questions spread across these topics, which the class has been taught. Do not use any other topics:\n${topics.map(topicLine).join('\n')}`,
     req.about?`What we know about this student:\n${req.about}\nAim the questions at their gaps. Pitch them so they are challenging but fair.`:'',
     `Write exactly: ${c.mcq} multiple choice, ${c.calc} calculation, ${c.short} short answer, ${c.extended} extended (${req.extendedMarks||9} marks).`,
     req.note?`Teacher's note: ${req.note}`:'',
     `Title for the set: ${req.title||'a short plain title naming the topics'}`
   ].filter(Boolean).join('\n\n');
-  const spec=clean(await ask(sys,user,Math.min(12000,1500+total*700)),topics);
+  let spec;
+  try{spec=clean(await ask(sys,user,Math.min(12000,1500+total*700)),topics);}
+  catch(e){spec=clean(await ask(sys,user,Math.min(12000,1500+total*700)),topics);}
   if(!spec.items.length)throw new Error('No usable questions came back. Try again.');
   if(req.title)spec.title=req.title;
   return spec;
