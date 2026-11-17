@@ -379,6 +379,7 @@ const CASES=[
 /* ═══ STATE ═══ */
 let hist=[];
 let uploadedImages=[];
+let customCaseImages=[];
 let lastFb=null,lastQ='',lastCtx='';
 let markStep='browse'; // browse | case | write
 let curCase=null,curQ=null;
@@ -412,10 +413,17 @@ function renderBrowse(mc){
   <div id="caseGrid" class="cs-grid"></div>
   <div id="customArea" style="display:none" class="card">
     <h3>Your own question</h3>
-    <label class="fl mt">Your 6-mark question</label>
+    <label class="fl mt">Your 6-mark question <span class="tiny" style="font-weight:400">(leave empty if it is on your uploaded pages)</span></label>
     <input type="text" id="cqInput" placeholder="Analyse one way in which..." />
     <label class="fl" style="margin-top:12px">Case study / source material</label>
     <textarea id="ccInput" style="min-height:100px" placeholder="Paste the case study text here. The marker needs this to judge AO2."></textarea>
+    <p class="tiny" style="margin:12px 0 6px">Case study on paper? Upload photos or a PDF of it instead of typing it out. If the question is printed on the sheet too, you can leave the question box empty.</p>
+    <div class="upload-zone" id="ccDrop" style="padding:18px">
+      <p style="font-weight:700;color:var(--navy)">Upload photos of the case study</p>
+      <p class="tiny" style="margin-top:4px">Tap to choose photos or a PDF, or drag them here. Up to 6 pages.</p>
+      <input type="file" id="ccFile" accept="image/*,application/pdf" multiple style="display:none" />
+    </div>
+    <div class="upload-previews" id="ccPrev"></div>
     <button class="btn btn-g mt" id="cqGo">Start writing</button>
   </div>`;
   renderCaseGrid('all');
@@ -427,11 +435,21 @@ function renderBrowse(mc){
     if(f==='custom'){mc.querySelector('#caseGrid').style.display='none';mc.querySelector('#customArea').style.display='block';}
     else{mc.querySelector('#caseGrid').style.display='grid';mc.querySelector('#customArea').style.display='none';renderCaseGrid(f);}
   });
-  mc.querySelector('#cqGo').onclick=()=>{
-    const q=mc.querySelector('#cqInput').value.trim();
+  const ccDrop=mc.querySelector('#ccDrop'),ccFile=mc.querySelector('#ccFile'),ccPrev=mc.querySelector('#ccPrev');
+  customCaseImages.length=0;
+  ccDrop.onclick=()=>ccFile.click();
+  ccDrop.ondragover=e=>{e.preventDefault();ccDrop.style.borderColor='var(--blue)';};
+  ccDrop.ondragleave=()=>{ccDrop.style.borderColor='var(--line)';};
+  ccDrop.ondrop=e=>{e.preventDefault();ccDrop.style.borderColor='var(--line)';NMark.addFiles(e.dataTransfer.files,customCaseImages,ccPrev,6);};
+  ccFile.onchange=()=>{NMark.addFiles(ccFile.files,customCaseImages,ccPrev,6);ccFile.value='';};
+  mc.querySelector('#cqGo').onclick=async()=>{
+    await NMark.ready();
+    let q=mc.querySelector('#cqInput').value.trim();
     const c=mc.querySelector('#ccInput').value.trim();
-    if(!q){alert('Please enter a question.');return;}
-    curCase={id:'custom',title:'Custom question',ctx:c||'No case study provided.',qs:[],paper:0,desc:'',tags:[]};
+    const pics=customCaseImages.slice();
+    if(!q&&!pics.length){alert('Please enter a question, or upload photos of the case study with the question on it.');return;}
+    if(!q)q='The question is printed on the uploaded case study pages. Read it from there.';
+    curCase={id:'custom',title:'Custom question',ctx:c||(pics.length?'The case study is in the uploaded photos.':'No case study provided.'),ctxImages:pics,qs:[],paper:0,desc:'',tags:[]};
     curQ=q;
     markStep='write';renderMark();
   };
@@ -559,10 +577,15 @@ async function runMark(){
   const userMsg=`QUESTION:\n${qText}\n\n[6 marks]\n\nCASE STUDY / SOURCE MATERIAL:\n${ctxText}\n\nSTUDENT ANSWER:\n${essayText||'[See handwritten answer in images]'}\n\nReply with the JSON object only: your first character must be { and your last must be }.`;
 
   let messages;
+  /* a custom case study uploaded as photos goes in first, labelled, so the marker can tell it apart from the answer */
+  const casePics=(curCase&&curCase.ctxImages)||[];
+  const caseBlocks=casePics.length?[{type:'text',text:'CASE STUDY PAGES (photos or PDF uploaded by the student). Use these as the case study / source material. If the question is printed on them, read it from there.'}].concat(NMark.blocks(casePics)):[];
   if(photoMode){
-    const content=NMark.blocks(uploadedImages);
+    const content=caseBlocks.concat(casePics.length?[{type:'text',text:'STUDENT ANSWER PAGES (handwritten):'}]:[],NMark.blocks(uploadedImages));
     content.push({type:'text',text:userMsg+'\n\nIMPORTANT: First read the handwritten answer from the image(s), then mark it. Your entire response must be a single JSON object starting with { — no explanation, no preamble, no text before or after the JSON.'+NMark.UNREADABLE_NOTE});
     messages=[{role:'user',content:content}];
+  }else if(caseBlocks.length){
+    messages=[{role:'user',content:caseBlocks.concat([{type:'text',text:userMsg}])}];
   }else{
     messages=[{role:'user',content:userMsg}];
   }
@@ -832,6 +855,7 @@ function updateProgress(){
 <script src="account.js"></script>
 <script src="hw-bank.js"></script>
 <script src="mark-tracker.js"></script>
+<script src="highlighter.js"></script>
 <script>if(window.YTrack)YTrack.init('#markContent');</script>
 <script src="visit.js" defer></script>
 </body>
