@@ -65,9 +65,11 @@ function analyse(d){
   /* blurting */
   Object.entries(store['blurt:history']||{}).forEach(([id,h])=>{if(TOP[id]&&h&&h.total)ev.push({topic:id,skill:'knowledge',w:3,ok:h.got/h.total,src:'blurt',label:'Blurting'});});
   /* marked answers and quizzes */
-  const essays=[];
+  const essays=[],calcNotes=[],calcRows=[];
   (d.marks||[]).forEach(m=>{
     const p=pct(m.mark),calc=isCalc(m.tool),essay=isEssay(m.tool);
+      if(calc&&p!=null&&p<100&&m.improve)calcNotes.push({t:m.t,q:m.question,text:String(m.improve)});
+    if(calc&&p!=null){const mm=String(m.mark).match(/(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/);calcRows.push({t:m.t,q:String(m.question||''),p:p/100,lost:mm?+mm[2]-+mm[1]:0});}
     const qt=topicsIn(m.question,calc?1:2);
     if(p!=null){
       qt.forEach(t=>ev.push({topic:t,skill:calc?'quant':null,w:calc?1:1.5,ok:p/100,src:'mark',label:m.tool}));
@@ -75,13 +77,13 @@ function analyse(d){
       if(calc&&!qt.length)ev.push({topic:null,skill:'quant',w:1,ok:p/100,src:'mark',label:m.tool});
       if(!qt.length){
         /* quizzes on a whole unit, e.g. "Unit 7: ..." or "Units 1-6" */
-        const um=String(m.question).match(/units?\s*(\d+)(?:\s*[-–]\s*(\d+))?/i)||String(m.question).match(/units?\s*3\.(\d+)(?:\s*[-–]\s*3\.(\d+))?/i);
+        const um=String(m.question).match(/units?\s*3\.(\d+)(?:\s*[-–]\s*3\.(\d+))?/i)||String(m.question).match(/units?\s*(\d+)(?:\s*[-–]\s*(\d+))?/i);
         if(um){const a1=+um[1],b1=+(um[2]||um[1]);for(let u=a1;u<=Math.min(b1,10);u++)ev.push({unit:'3.'+u,topic:null,skill:null,w:1/(b1-a1+1),ok:p/100,src:'mark',label:m.tool});}
       }
     }
     [[m.well,1],[m.improve,0]].forEach(([txt,ok])=>segs(txt).forEach(sg=>{
       const tp=topicsIn(sg,1)[0];
-      if(tp&&!essay)ev.push({topic:tp,skill:null,w:.6,ok,src:'feedback',label:m.tool});
+      if(tp&&!essay&&!calc)ev.push({topic:tp,skill:null,w:.6,ok,src:'feedback',label:m.tool});
       if(essay||calc)skillsIn(sg).forEach(k=>ev.push({topic:null,skill:k,w:.5,ok,src:'feedback',label:m.tool}));
     }));
   });
@@ -101,15 +103,27 @@ function analyse(d){
   ev.forEach(e=>{if(e.unit){const y=units[e.unit]=units[e.unit]||{n:0,s:0};y.n+=e.w;y.s+=e.w*e.ok;}});
   Object.values(units).forEach(y=>{y.score=y.n?y.s/y.n:null;});
   const gaps=Object.entries(topics).filter(([,x])=>x.n>=1.5&&x.score<.6).sort((a,b)=>a[1].score-b[1].score||b[1].n-a[1].n).map(([id,x])=>Object.assign({id},TOP[id],x));
+  /* calculation areas: a marked paper splits a topic into smaller areas (e.g. PED and YED are both
+     "Demand and elasticity"), so a weak area can be hidden by a strong one. Keep the latest mark for
+     each area and add weak ones to the gaps. */
+  const latest={};calcRows.sort((a,b)=>String(a.t).localeCompare(String(b.t))).forEach(r=>{latest[r.q]=r;});
+  const calcGaps=Object.values(latest).filter(r=>r.p<.7&&!/whole paper/i.test(r.q)).sort((a,b)=>b.lost-a.lost||a.p-b.p).map(r=>{
+    const label=r.q.replace(/^[^:]*:\s*/,'').replace(/\s*\(.*$/,'');return {label,score:r.p,topic:topicsIn(r.q,1)[0]||null};});
+  calcGaps.forEach(c=>{if(!c.topic||!TOP[c.topic])return;const g=gaps.find(x=>x.id===c.topic);
+    if(g){g.calc=(g.calc?g.calc+'; ':'')+c.label;g.cs=(g.cs||[]).concat(c.score);if(g.base==null)g.base=g.cs.length>1?1:g.score;
+      g.score=Math.min(g.base,g.cs.reduce((x,y)=>x+y,0)/g.cs.length);}
+    else gaps.push(Object.assign({id:c.topic},TOP[c.topic],{n:1.5,s:c.score*1.5,score:c.score,src:{},calc:c.label,cs:[c.score],base:1}));});
+  gaps.sort((a,b)=>(b.calc?1:0)-(a.calc?1:0)||a.score-b.score);
   const strengths=Object.entries(topics).filter(([,x])=>x.n>=3&&x.score>=.8).sort((a,b)=>b[1].score-a[1].score||b[1].n-a[1].n).map(([id,x])=>Object.assign({id},TOP[id],x));
   const weakSkills=Object.entries(skills).filter(([,x])=>x.n>=2).sort((a,b)=>a[1].score-b[1].score).map(([k,x])=>Object.assign({key:k,name:SKILL[k]},x));
   essays.sort((a,b)=>String(a.t).localeCompare(String(b.t)));
-  return {topics,skills,units,gaps,strengths,weakSkills,essays,evidence:ev.length};
+  calcNotes.sort((a,b)=>String(b.t).localeCompare(String(a.t)));
+  return {topics,skills,units,gaps,strengths,weakSkills,essays,calcNotes,calcGaps,evidence:ev.length};
 }
 function status(x){if(!x||!x.n)return 'none';if(x.score>=.75)return 'secure';if(x.score>=.5)return 'patchy';return 'gap';}
 function nextSteps(a){
   const out=[];
-  a.gaps.slice(0,2).forEach(g=>out.push(`Revise ${g.ref} ${g.title} - about ${Math.round(g.score*100)}% right so far.`));
+  a.gaps.slice(0,2).forEach(g=>out.push(g.calc?`Practise the calculations on ${g.calc} (${g.ref} ${g.title}) - about ${Math.round(g.score*100)}% right so far.`:`Revise ${g.ref} ${g.title} - about ${Math.round(g.score*100)}% right so far.`));
   const ws=a.weakSkills[0];
   if(ws&&ws.score<.7){
     const tip={analysis:'Practise building chains of reasoning that end at the business outcome the question asks about.',
@@ -130,8 +144,10 @@ function summary(a,maxGaps){
   const lines=[];
   lines.push('Units: '+T.units.map(u=>{const x=a.units[u.unit];return `${u.unit} ${u.title} ${x&&x.n>=1?Math.round(x.score*100)+'%':'no evidence'}`;}).join('; '));
   lines.push('Skills: '+T.skills.map(([k,n])=>{const x=a.skills[k];return `${n} ${x&&x.n?f(x):'no evidence'}`;}).join('; '));
-  if(a.gaps.length)lines.push('Weakest topics: '+a.gaps.slice(0,maxGaps||8).map(g=>`${g.id} (${g.ref} ${g.title}) ${f(g)}`).join('; '));
+  if(a.gaps.length)lines.push('Weakest topics: '+a.gaps.slice(0,maxGaps||8).map(g=>`${g.id} (${g.ref} ${g.title}${g.calc?', calculations on '+g.calc:''}) ${f(g)}`).join('; '));
+  if(a.calcGaps&&a.calcGaps.length)lines.push('Weakest calculation areas in marked papers: '+a.calcGaps.slice(0,6).map(c=>`${c.label} ${Math.round(c.score*100)}%`).join('; '));
   if(a.strengths.length)lines.push('Strongest topics: '+a.strengths.slice(0,6).map(g=>`${g.ref} ${g.title} ${f(g)}`).join('; '));
+  if(a.calcNotes&&a.calcNotes.length)lines.push('Mistakes in marked calculations (set questions that practise these): '+a.calcNotes.slice(0,6).map(n=>n.text.replace(/\s+/g,' ').slice(0,700)).join(' | '));
   if(a.essays.length)lines.push('Extended answers (oldest first): '+a.essays.slice(-10).map(e=>`${e.tool} ${Math.round(e.p)}%`).join(', '));
   return lines.join('\n');
 }

@@ -413,14 +413,14 @@ const routes = {
     return { ok: true };
   },
 
-  /* one-time import of results from the old Google Sheet tracker */
+  /* import of results: marked papers loaded on the dashboard (replace=true updates a re-loaded file) */
   async '/import'(db, b) {
     await session(db, b.token, 'teacher');
     const users = new Set((await db.prepare('SELECT username FROM users').all()).results.map(r => r.username));
     const stmts = [];
     for (const m of (Array.isArray(b.marks) ? b.marks : []).slice(0, 200)) {
       if (!users.has(m.username) || !m.qid) continue;
-      stmts.push(db.prepare('INSERT OR IGNORE INTO marks(qid,username,t,tool,question,mark,level,well,improve,answer) VALUES(?,?,?,?,?,?,?,?,?,?)')
+      stmts.push(db.prepare((b.replace ? 'INSERT OR REPLACE' : 'INSERT OR IGNORE') + ' INTO marks(qid,username,t,tool,question,mark,level,well,improve,answer) VALUES(?,?,?,?,?,?,?,?,?,?)')
         .bind(str(m.qid, 40), m.username, str(m.t, 40), str(m.tool, 60), str(m.question, 500), str(m.mark, 20), str(m.level, 60), str(m.well, 1200), str(m.improve, 1200), str(m.answer, 12000)));
     }
     for (const a of (Array.isArray(b.attempts) ? b.attempts : []).slice(0, 200)) {

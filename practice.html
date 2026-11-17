@@ -133,7 +133,7 @@ function lists(){
 }
 function gapInfo(){
   const g=mine.gaps.slice(0,5),steps=A.nextSteps(mine);
-  $('#gapInfo').innerHTML=g.length?`From your courses and marked answers, these topics need the most work:<ol class="steps">${g.map(x=>`<li>${esc(x.ref+' '+x.title)} <span class="muted">(${Math.round(x.score*100)}%)</span></li>`).join('')}</ol>${steps[2]&&!/^Revise/.test(steps[2])?`<p style="margin:8px 0 0">${esc(steps[2])}</p>`:''}`
+  $('#gapInfo').innerHTML=g.length?`From your courses, marked answers and marked papers, these topics need the most work:<ol class="steps">${g.map(x=>`<li>${esc(x.ref+' '+x.title)}${x.calc?esc(': calculations on '+x.calc):''} <span class="muted">(${Math.round(x.score*100)}%)</span></li>`).join('')}</ol>${steps[2]&&!/^Revise/.test(steps[2])?`<p style="margin:8px 0 0">${esc(steps[2])}</p>`:''}`
     :'There is not enough evidence yet to find your gaps. Do some courses or use the marking labs first, or make your own set below. A set on your gaps will cover a spread of topics until then.';
 }
 

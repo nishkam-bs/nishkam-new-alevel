@@ -96,7 +96,7 @@ const ago=t=>t?TR.ago(new Date(t).toISOString()):'never';
 /* ---------- class page ---------- */
 function classGaps(list){
   const o={};
-  list.forEach(s=>Object.entries(s.a.topics).forEach(([id,x])=>{if(x.n<1)return;const y=o[id]=o[id]||{n:0,s:0,who:[]};y.n+=x.n;y.s+=x.s;if(x.score<.6&&x.n>=1.5)y.who.push(s);}));
+  list.forEach(s=>Object.entries(s.a.topics).forEach(([id,x])=>{if(x.n<1)return;const y=o[id]=o[id]||{n:0,s:0,who:[]};y.n+=x.n;y.s+=x.s;if(s.a.gaps.some(g=>g.id===id))y.who.push(s);}));
   return Object.entries(o).map(([id,y])=>Object.assign({id,score:y.s/y.n},A.TOP[id],y)).filter(y=>y.who.length>=2||y.score<.6&&y.n>=4).sort((a,b)=>b.who.length-a.who.length||a.score-b.score).slice(0,12);
 }
 function renderClass(){
@@ -118,7 +118,7 @@ function renderClass(){
   <div id="ovSumOut"></div>
   <div class="ov-grid">
     <div class="ov-card"><h2>Gaps across the class</h2>${gaps.length?`<table><thead><tr><th class="l">Topic</th><th>Class</th><th class="l">Students with a gap</th><th></th></tr></thead><tbody>${gaps.map(g=>`<tr><td class="l" style="white-space:normal">${esc(g.ref+' '+g.title)}</td><td>${cell(g)}</td><td class="l" style="white-space:normal">${g.who.map(s=>esc(s.first)).join(', ')||'–'}</td><td><button class="btn ghost" style="padding:4px 10px" data-gap="${g.id}">Set work</button></td></tr>`).join('')}</tbody></table>`:'<p class="muted">Not enough evidence yet.</p>'}
-      <p class="note">A topic shows here when two or more students score under 60% on it. Hover over a score to see how much evidence it is based on.</p></div>
+      <p class="note">A topic shows here when two or more students score under 60% on it, or have a weak area of calculations in it on a marked paper. Hover over a score to see how much evidence it is based on.</p></div>
     <div class="ov-card"><h2>Needs attention</h2><ul class="ov-list">${(()=>{const ns=list.filter(s=>!s.acc.lastSeen);const rest=list.map(s=>({s,w:attention(s).filter(w=>w!=='Has not signed in yet')})).filter(x=>x.w.length);
       return (ns.length?`<li><b>Not signed in yet</b><div class="why">${ns.map(s=>esc(s.first)).join(', ')}</div></li>`:'')+rest.map(x=>`<li><button class="lnk" data-u="${esc(x.s.u)}">${esc(x.s.name)}</button><div class="why">${x.w.map(esc).join(' · ')}</div></li>`).join('')||'<li class="muted">Nobody at the moment.</li>';})()}</ul></div>
   </div>
@@ -179,7 +179,7 @@ function renderStudent(){
       <div class="ov-card"><h2>Extended answers</h2>${ess.length?`<div class="trend">${ess.map(e=>`<i style="height:${Math.max(4,e.p*.6)}px" title="${esc(e.tool)} ${Math.round(e.p)}%"></i>`).join('')}</div><p class="note">Oldest to newest. Latest: ${Math.round(ess[ess.length-1].p)}%.</p>`:'<p class="muted">None yet.</p>'}</div></div>
   </div>
   <div class="ov-grid">
-    <div class="ov-card"><h2>Gaps</h2>${a.gaps.length?`<table><thead><tr><th class="l">Topic</th><th>Score</th><th class="l">Evidence from</th></tr></thead><tbody>${a.gaps.slice(0,12).map(g=>`<tr><td class="l" style="white-space:normal">${esc(g.ref+' '+g.title)}</td><td>${cell(g)}</td><td class="l muted" style="white-space:normal">${Object.keys(g.src).map(esc).join(', ')}</td></tr>`).join('')}</tbody></table>`:'<p class="muted">No clear gaps yet.</p>'}</div>
+    <div class="ov-card"><h2>Gaps</h2>${a.gaps.length?`<table><thead><tr><th class="l">Topic</th><th>Score</th><th class="l">Evidence from</th></tr></thead><tbody>${a.gaps.slice(0,12).map(g=>`<tr><td class="l" style="white-space:normal">${esc(g.ref+' '+g.title)}${g.calc?`<br><span class="muted" style="font-size:.85em">Calculations: ${esc(g.calc)}</span>`:''}</td><td>${cell(g)}</td><td class="l muted" style="white-space:normal">${Object.keys(g.src).concat(g.calc?['Calculation booklet']:[]).filter((v,i,a)=>a.indexOf(v)===i).map(esc).join(', ')}</td></tr>`).join('')}</tbody></table>`:'<p class="muted">No clear gaps yet.</p>'}</div>
     <div class="ov-card"><h2>Strengths</h2>${a.strengths.length?`<ul class="ov-list">${a.strengths.slice(0,10).map(g=>`<li>${esc(g.ref+' '+g.title)} <span class="muted">${Math.round(g.score*100)}%</span></li>`).join('')}</ul>`:'<p class="muted">Not enough evidence yet.</p>'}</div>
   </div>
   <div class="ov-card"><h2>Recent marks</h2>${recent.length?`<ul class="ov-list">${recent.map(m=>`<li><b>${esc(m.mark)}</b> ${esc(m.tool)} <span class="muted">${new Date(m.t).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</span><div class="why">${esc(String(m.question).slice(0,160))}</div>${m.improve?`<div class="why">To improve: ${esc(String(m.improve).slice(0,260))}</div>`:''}</li>`).join('')}</ul>`:'<p class="muted">None yet.</p>'}</div>

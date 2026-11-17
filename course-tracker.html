@@ -100,11 +100,15 @@ select{border-radius:10px;border:1px solid var(--line);background:var(--card);co
     <h2 style="margin-top:26px">All accounts</h2>
     <div class="tablewrap"><table id="acctTbl"></table></div>
     <p class="muted" style="font-size:.85rem;margin:12px 0 0">If a student forgets their password, reset it here and give them the new one-time password. Resetting signs them out on every device. Their saved work is kept.</p>
+    <h2 style="margin-top:26px">Add marks from a paper</h2>
+    <p class="muted" style="margin:0 0 10px">Load a results file from a marked paper, such as the Unit 3.1 calculations booklet. Check each name is matched to the right account, then add the results. They appear in Marked answers and on each student's My marks, and they feed the gaps in the Overview and the work you set from there. Loading the same file again updates the results.</p>
+    <input type="file" id="resFile" accept=".json,application/json" aria-label="Results file">
+    <div id="resPrev" style="margin-top:12px"></div>
   </div>
   <div class="grid2" id="mainGrid">
     <div>
       <div class="card">
-        <div class="filters" id="mainFilters"><select id="course" aria-label="Choose course"><option value="s">This week</option><option value="o">Overview</option><option value="1000">6-Mark Analyse Course</option><option value="1100">9-Mark Assess Course</option><option value="1200">Calculate and Use It Course</option><option value="m">Marked answers (6, 9 and 15-mark labs)</option><option value="b">Blurting</option><option value="a">Student accounts</option></select><select id="sort" aria-label="Sort students"><option value="name">Sort by name</option><option value="prog">Sort by progress</option><option value="recent">Sort by last active</option></select></div>
+        <div class="filters" id="mainFilters"><select id="course" aria-label="Choose course"><option value="s">This week</option><option value="o">Overview</option><option value="1000">6-Mark Analyse Course</option><option value="1100">9-Mark Assess Course</option><option value="1200">Calculate and Use It Course</option><option value="m">Marked answers and papers</option><option value="b">Blurting</option><option value="a">Student accounts</option></select><select id="sort" aria-label="Sort students"><option value="name">Sort by name</option><option value="prog">Sort by progress</option><option value="recent">Sort by last active</option></select></div>
         <div class="tablewrap"><table id="tbl"></table></div>
         <div class="legend" id="legend"><span><span class="cell p">8/10</span> passed (best score)</span><span><span class="cell a">5/10</span> tried, not passed yet</span><span>Click a name to see attempts and written answers</span></div>
       </div>
@@ -317,7 +321,7 @@ $('#dlCsv').onclick=()=>{
   const csv='﻿'+['Name,Username,One-time password,Site'].concat(fresh.map(f=>[f.name,f.username,f.password,SITE].map(q).join(','))).join('\r\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=`7138 sign-in details ${new Date().toISOString().slice(0,10)}.csv`;a.click();
 };
-const SITE='https://nishkam-bs.github.io/nishkam-alevel/';
+const SITE='https://nishkam-bs.github.io/nishkam-new-alevel/';
 $('#printSlips').onclick=()=>{
   const w=window.open('','_blank');if(!w){alert('Allow pop-ups for this page and try again.');return;}
   w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Sign-in slips</title><style>
@@ -326,6 +330,29 @@ body{font-family:Arial,sans-serif;margin:12mm}.slip{border:1px dashed #888;paddi
 ${fresh.map(f=>`<div class="slip">${esc(f.name)}<br>Website: ${SITE}<br>Username: <b>${esc(f.username)}</b><br>One-time password: <b>${esc(f.password)}</b><br>
 <span class="s">Sign in on the home page. You will then choose your own password. Keep this slip private.</span></div>`).join('')}
 <script>window.onload=()=>setTimeout(()=>window.print(),300);<\/script></body></html>`);w.document.close();
+};
+/* ---------- marks from a marked paper (results file made outside the site; never kept in the repo) ---------- */
+let res=null;
+$('#resFile').onchange=async e=>{
+  const f=e.target.files[0];$('#resPrev').innerHTML='';res=null;if(!f)return;
+  try{res=JSON.parse(await f.text());if(!Array.isArray(res.results)||!res.id)throw 0;}
+  catch(x){$('#resPrev').innerHTML='<p class="err">That file could not be read. Choose the .json results file.</p>';return;}
+  const accs=(data.accounts||[]).slice().sort((a,b)=>a.name.localeCompare(b.name));
+  const opts=sel=>'<option value="">Not added</option>'+accs.map(a=>`<option value="${esc(a.username)}"${sel&&sel.username===a.username?' selected':''}>${esc(a.name)}</option>`).join('');
+  $('#resPrev').innerHTML=`<p style="margin:0 0 8px"><b>${esc(res.title||'Results')}</b> <span class="muted">${esc(res.date||'')}</span></p>
+  <div class="tablewrap"><table><thead><tr><th class="l">Name on the paper</th><th>Mark</th><th class="l">Account</th></tr></thead><tbody>${res.results.map((r,i)=>`<tr><td class="l">${esc(r.name)}</td><td>${esc(r.total)}/${esc(r.max)}</td><td class="l"><select data-i="${i}" aria-label="Account for ${esc(r.name)}">${opts(matchAccount(r.name,accs))}</select></td></tr>`).join('')}</tbody></table></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px"><button class="btn" id="resGo">Add these results</button><span class="muted" id="resMsg" style="align-self:center;font-size:.9rem"></span></div>`;
+  $('#resGo').onclick=async()=>{
+    const marks=[];const who=[];
+    document.querySelectorAll('#resPrev select').forEach(s=>{const u=s.value;if(!u)return;const r=res.results[+s.dataset.i];who.push(r.name);
+      (r.rows||[]).forEach(m=>marks.push({qid:`${res.id}-${u}-${m.key}`.slice(0,40),username:u,t:res.t||new Date().toISOString(),tool:res.tool||'Calculation booklet',question:m.question,mark:m.mark,level:m.level||'',well:m.well||'',improve:m.improve||'',answer:m.answer||''}));});
+    if(!marks.length){$('#resMsg').textContent='Match at least one name to an account.';return;}
+    $('#resGo').disabled=true;let saved=0;
+    try{for(let i=0;i<marks.length;i+=150){const d=await api('/import',{token,marks:marks.slice(i,i+150),replace:true});saved+=d.saved||0;}
+      $('#resMsg').textContent=`Added ${saved} result${saved===1?'':'s'} for ${who.length} student${who.length===1?'':'s'}.`;await load();}
+    catch(x){$('#resMsg').textContent=x.message;}
+    $('#resGo').disabled=false;
+  };
 };
 window.TR={get data(){return data;},get token(){return token;},api,esc,ago:t=>ago(t),reload:()=>load()};
 function ago(t){const m=Math.round((Date.now()-Date.parse(t))/60000);if(m<60)return m+' min ago';const h=Math.round(m/60);if(h<24)return h+' h ago';return Math.round(h/24)+' days ago';}
