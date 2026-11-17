@@ -220,6 +220,7 @@ main h1{font-family:'DM Serif Display',serif;font-size:36px;color:var(--navy);ma
 </div>
 
 <script src="marking-uploads.js"></script>
+<script src="feedback-ui.js"></script>
 <script>
 const WORKER_URL = 'https://nishkam-marker.alevelnishkam.workers.dev';
 
@@ -498,6 +499,14 @@ function showFeedback(r){
     nf += `<div class="overall-box"><p>${r.overall}</p></div>`;
   }
   document.getElementById('newFeedback').innerHTML = nf;
+
+  // shared results layout (same as the other markers)
+  const step2=document.getElementById('step2');
+  let host=document.getElementById('nfbRedraft');
+  if(!host){host=document.createElement('div');host.id='nfbRedraft';host.style.marginBottom='18px';step2.prepend(host);}
+  host.innerHTML=NFb.redraft(r);
+  ['markCard','newFeedbackCard'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  const icCard=document.getElementById('improvementCards');if(icCard&&icCard.closest('.card'))icCard.closest('.card').style.display='none';
 }
 
 /* ── Reset ── */

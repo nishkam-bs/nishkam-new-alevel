@@ -198,7 +198,7 @@ textarea{min-height:220px;resize:vertical;line-height:1.7}
 <!-- FEEDBACK TAB -->
 <section id="feedback" class="tab">
   <div class="topbar">
-    <div><div class="eyebrow">Annotated Feedback</div><h2>How did I do?</h2><div class="sub">Your answer with AO colour-coding and examiner-style margin notes.</div></div>
+    <div><div class="eyebrow">Your feedback</div><h2>How did I do?</h2></div>
   </div>
   <div class="ld" id="ldPanel"><div class="spin"></div><p style="font-weight:700;color:var(--navy);font-size:16px">Marking your answer...</p><p class="muted" style="margin-top:4px">Reading every sentence. Tracing both sides of the argument. Checking the endpoint and judgement.</p></div>
   <div id="fbPanel">
@@ -284,6 +284,7 @@ textarea{min-height:220px;resize:vertical;line-height:1.7}
 </div>
 
 <script src="marking-uploads.js"></script>
+<script src="feedback-ui.js"></script>
 <script>
 const PROXY='https://nishkam-marker.alevelnishkam.workers.dev';
 const MODEL='claude-sonnet-4-6';
@@ -746,7 +747,7 @@ async function runMark(){
   }catch(err){
     document.getElementById('ldPanel').classList.remove('show');
     document.getElementById('fbPanel').style.display='block';
-    document.getElementById('fbPanel').innerHTML=`<div class="al al-r"><b>Not marked</b> ${String(err.message||'Couldn\'t reach the marker').replace(/\.$/,'')}. Your answer is still there. Go back to Mark My Answer and try again.</div>`;
+    document.getElementById('fbPanel').innerHTML=NFb.error(String(err.message||'Couldn\'t reach the marker').replace(/\.$/,'')+'. Your answer is still there.','<button class="btn btn-g" onclick="openTab(\'mark\')">Back to my answer</button>');
   }
 }
 
@@ -802,60 +803,9 @@ function showFeedback(fb,qText){
   const pct=Math.round(fb.mark/9*100);
   const isQuant=fb.qtype==='quantitative';
 
-  let html='';
-
-  // Score + judgement + endpoint
-  html+=`<div class="grid g4">
-    <div class="card" style="text-align:center;padding:24px 16px">
-      <div class="tiny">MARK</div>
-      <div class="mark-num">${fb.mark}/9</div>
-      <div class="mark-level" style="color:${col}">${fb.level}</div>
-      <div class="mark-bar"><span style="width:${pct}%;background:${col}"></span></div>
-    </div>
-    <div class="card" style="padding:20px;border-top:4px solid ${fb.judgement_quality==='WEIGHTED'?'var(--green)':fb.judgement_quality==='SUPPORTED'?'var(--gold)':'var(--red)'}">
-      <h4>Judgement quality</h4>
-      <div style="font-size:16px;font-weight:900;color:${fb.judgement_quality==='WEIGHTED'?'var(--green)':fb.judgement_quality==='SUPPORTED'?'var(--gold)':'var(--red)'};margin:6px 0">${fb.judgement_quality||'None'}</div>
-      <p class="tiny">${fb.judgement_quality==='WEIGHTED'?'You weighed competing arguments and decided which was stronger.':fb.judgement_quality==='SUPPORTED'?'You gave a supported conclusion but did not fully weigh the arguments.':fb.judgement_quality==='ASSERTION'?'Your conclusion was stated without explaining why.':'No clear judgement was made.'}</p>
-    </div>
-    <div class="card" style="padding:20px">
-      <h4>Issue assessed</h4>
-      <p style="font-size:12px;line-height:1.5;margin-top:4px;color:var(--ink)">${fb.issue||''}</p>
-      <h4 style="margin-top:10px">Endpoint</h4>
-      <p style="font-size:12px;color:var(--ink)">${fb.endpoint||''}</p>
-    </div>
-    <div class="card" style="padding:20px;border-top:4px solid var(--blue)">
-      <h4>AO diagnostic</h4>
-      <p style="font-size:12px;line-height:1.8;margin-top:6px"><span style="color:var(--ao1);font-weight:700">AO1:</span> ${fb.ao1_diagnostic||''}<br><span style="color:var(--ao2);font-weight:700">AO2:</span> ${fb.ao2_diagnostic||''}<br><span style="color:var(--ao3);font-weight:700">AO3:</span> ${fb.ao3_diagnostic||''}<br><span style="color:var(--ao4);font-weight:700">AO4:</span> ${fb.ao4_diagnostic||''}</p>
-      <p class="tiny mt">This is a diagnostic guide, not how the mark was calculated.</p>
-    </div>
-  </div>`;
-
-  // Quantitative extras
-  if(isQuant&&fb.calculation_correct!==undefined){
-    const calcCol=fb.calculation_correct?'var(--green)':'var(--red)';
-    html+=`<div class="card mt" style="border-top:4px solid ${calcCol};padding:18px 22px">
-      <div class="row" style="gap:16px">
-        <div><h4>Calculation</h4><div style="font-size:16px;font-weight:900;color:${calcCol};margin-top:4px">${fb.calculation_correct?'Correct':'Error found'}</div></div>
-        ${fb.own_figure_applied?'<div style="padding:6px 12px;background:var(--ao2-bg);border-radius:8px;font-size:12px;font-weight:700;color:var(--ao2)">Own figure rule applied</div>':''}
-        <div style="flex:1;font-size:13px;color:var(--ink);line-height:1.5">${fb.calc_comment||''}</div>
-      </div>
-    </div>`;
-  }
-
-  // Chain visuals
-  if(fb.chain_for||fb.chain_against){
-    html+=`<div class="grid g2 mt">`;
-    if(fb.chain_for){
-      html+=`<div class="chain-box"><div class="chain-label">Argument for</div>${fb.chain_for}</div>`;
-    }
-    if(fb.chain_against){
-      html+=`<div class="chain-box" style="background:var(--ao4-bg);border-color:var(--ao4)"><div class="chain-label" style="color:var(--ao4)">Argument against</div>${fb.chain_against}</div>`;
-    }
-    html+=`</div>`;
-  }
-
+  let anno='';
   // AO colour key
-  html+=`<div class="ao-key mt">
+  anno+=`<div class="ao-key mt">
     <div class="ao-key-item"><div class="ao-key-swatch" style="background:var(--ao1-bg);border-color:var(--ao1)"></div>Knowledge (AO1)</div>
     <div class="ao-key-item"><div class="ao-key-swatch" style="background:var(--ao2-bg);border-color:var(--ao2)"></div>Application (AO2)</div>
     <div class="ao-key-item"><div class="ao-key-swatch" style="background:var(--ao3-bg);border-color:var(--ao3)"></div>Analysis (AO3)</div>
@@ -865,7 +815,7 @@ function showFeedback(fb,qText){
 
   // Annotated essay
   if(fb.segments&&fb.segments.length>0){
-    html+=`<div class="anno-wrap mt">
+    anno+=`<div class="anno-wrap mt">
       <div class="anno-essay"><div class="anno-label">Your answer — annotated</div>`;
     fb.segments.forEach((seg,i)=>{
       let cls='';
@@ -874,9 +824,9 @@ function showFeedback(fb,qText){
       else if(seg.ao==='AO2') cls='seg seg-ao2';
       else if(seg.ao==='AO3') cls='seg seg-ao3';
       else if(seg.ao==='AO4') cls='seg seg-ao4';
-      html+=`<span class="${cls}" data-seg="${i}" title="${(seg.annotation||'').replace(/"/g,'&quot;')}"><span class="seg-num">${i+1}</span>${seg.text} </span>`;
+      anno+=`<span class="${cls}" data-seg="${i}" title="${(seg.annotation||'').replace(/"/g,'&quot;')}"><span class="seg-num">${i+1}</span>${seg.text} </span>`;
     });
-    html+=`</div><div class="anno-sidebar"><div class="anno-label">Examiner notes</div>`;
+    anno+=`</div><div class="anno-sidebar"><div class="anno-label">Examiner notes</div>`;
     fb.segments.forEach((seg,i)=>{
       if(!seg.annotation)return;
       let ncls='anno-note ';
@@ -887,47 +837,27 @@ function showFeedback(fb,qText){
       else if(seg.ao==='AO4') ncls+='anno-note-ao4';
       else ncls+='anno-note-ao1';
       const tag=seg.quality==='WEAK'?'Needs work':seg.ao;
-      html+=`<div class="${ncls}" data-seg="${i}"><div style="display:flex;align-items:center;gap:4px;margin-bottom:3px"><span class="anno-num">${i+1}</span><span class="ao-tag">${tag}</span></div><div>${seg.annotation}</div></div>`;
+      anno+=`<div class="${ncls}" data-seg="${i}"><div style="display:flex;align-items:center;gap:4px;margin-bottom:3px"><span class="anno-num">${i+1}</span><span class="ao-tag">${tag}</span></div><div>${seg.annotation}</div></div>`;
     });
-    html+=`</div></div>`;
+    anno+=`</div></div>`;
   }
 
-  // Rewrite card
-  if(fb.rewrite_original&&fb.rewrite_improved){
-    html+=`<div class="rewrite-card">
-      <h3>You wrote / It could read</h3>
-      <div class="rw-box rw-original"><div class="rw-label">You wrote</div>${fb.rewrite_original}</div>
-      <div class="rw-box rw-improved"><div class="rw-label">It could read</div>${fb.rewrite_improved}</div>
-    </div>`;
-  }
+  const panel=document.getElementById('fbPanel');
+  const JQ={WEIGHTED:['Weighed up','good'],SUPPORTED:['Supported','amber'],ASSERTION:['Asserted','bad']}[fb.judgement_quality]||['None yet','bad'];
+  const quant=fb.qtype==='quantitative'&&fb.calculation_correct!==undefined;
+  panel.innerHTML=NFb.build({
+    mark:fb.mark,max:9,names:false,question:qText,
+    facts:[{label:'Judgement',value:JQ[0],tone:JQ[1]},quant?{label:'Calculation',value:fb.calculation_correct?'Correct':'Error found',tone:fb.calculation_correct?'good':'bad'}:null],
+    well:fb.positive,
+    fix:{title:fb.blocker_heading,text:fb.blocker,how:fb.improve},
+    rewrite:fb.rewrite_original&&fb.rewrite_improved?{wrote:fb.rewrite_original,could:fb.rewrite_improved}:null,
+    annotated:anno,
+    more:[quant?{title:'Calculation',tag:fb.own_figure_applied?'Own figure rule applied':'',tone:'mid',text:fb.calc_comment,wide:true}:null,
+      {title:'Argument for',text:fb.chain_for},{title:'Argument against',text:fb.chain_against},
+      {title:'What the question is about',html:'<p>'+NFb.text(fb.issue)+'</p><p style="margin-top:6px"><b>Endpoint:</b> '+NFb.text(fb.endpoint)+'</p>'},{title:'Knowledge, application, analysis, evaluation',wide:true,html:'<ul>'+[['AO1',fb.ao1_diagnostic],['AO2',fb.ao2_diagnostic],['AO3',fb.ao3_diagnostic],['AO4',fb.ao4_diagnostic]].filter(x=>x[1]).map(x=>'<li><b>'+x[0]+':</b> '+NFb.text(x[1])+'</li>').join('')+'</ul><p style="margin-top:6px;color:var(--muted);font-size:13px">A guide to your strengths, not how the mark was worked out.</p>'}],
+    actions:'<button class="btn btn-p" onclick="generatePDF()">Save feedback as PDF</button><button class="btn btn-g" onclick="markStep=\'browse\';curCase=null;curQ=null;uploadedImages=[];openTab(\'mark\');renderMark();window.scrollTo({top:0})">Try another question</button>'
+  });
 
-  // Blocker + improve + positive
-  html+=`<div class="grid g2 mt">
-    <div class="card">
-      <h3>Overall feedback</h3>
-      <p style="font-size:14px;line-height:1.8">${fb.positive||''}</p>
-    </div>
-    <div>
-      <div class="blocker-card" style="margin-top:0">
-        <h3 style="color:var(--red)">${fb.blocker_heading||"What's stopping you"}</h3>
-        <p style="font-size:13px;line-height:1.7">${fb.blocker||''}</p>
-      </div>
-      <div class="card mt">
-        <h3>How to upgrade</h3>
-        <div class="al al-g">${fb.improve||''}</div>
-      </div>
-    </div>
-  </div>`;
-
-  // Action buttons
-  html+=`<div class="card mt" style="text-align:center;padding:30px">
-    <div class="row" style="justify-content:center;gap:14px">
-      <button class="btn btn-p" onclick="generatePDF()">Save feedback as PDF</button>
-      <button class="btn btn-g" onclick="markStep='browse';curCase=null;curQ=null;uploadedImages=[];openTab('mark');renderMark();window.scrollTo({top:0})">Try another question</button>
-    </div>
-  </div>`;
-
-  document.getElementById('fbPanel').innerHTML=html;
 
   // Hover sync
   document.querySelectorAll('[data-seg]').forEach(el=>{
