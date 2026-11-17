@@ -219,9 +219,9 @@ textarea{min-height:220px;resize:vertical;line-height:1.7}
   <div class="grid g2 mt">
     <div class="card">
       <h3>The structure we use</h3>
-      <p style="font-size:13px;line-height:1.7"><strong>1. Argument for the first option.</strong> Build a chain with 5–6 analysis connectives: <em>this means that, as a result, therefore, this could lead to, causing</em>. Use the case study and a worked figure. Finish with a sentence that uses the words of the question.</p>
+      <p style="font-size:13px;line-height:1.7"><strong>1. Argument for the first option.</strong> Build a chain of reasoning that explains why each step leads to the next. Use the case study and a worked figure. Finish with a sentence that uses the words of the question.</p>
       <p style="font-size:13px;line-height:1.7;margin-top:6px"><strong>2. Evaluation of the first option.</strong> Start with "However…". Think about cost, risk, what the data does not show.</p>
-      <p style="font-size:13px;line-height:1.7;margin-top:6px"><strong>3. Argument for the second option.</strong> Same again: connectives, case study, data, a model if it helps.</p>
+      <p style="font-size:13px;line-height:1.7;margin-top:6px"><strong>3. Argument for the second option.</strong> Same again: a chain of reasoning, case study, data, a model if it helps.</p>
       <p style="font-size:13px;line-height:1.7;margin-top:6px"><strong>4. Evaluation of the second option.</strong></p>
       <p style="font-size:13px;line-height:1.7;margin-top:6px"><strong>5. Conclusion.</strong> Overall, I would recommend… → Although…, … carries greater weight because… → However, this ultimately depends on… → Therefore, [answer in the words of the question].</p>
       <p class="tiny mt">AQA does not insist on this order, so the lab checks it separately and it never changes your mark. It is the most reliable way to hit every AO.</p>
@@ -764,15 +764,15 @@ function structSteps(fb){
   const dataOk=(d.worked_figures||0)>=1&&(!isQ||d.calculation_shown===true);
   const conclOk=c.overall&&c.although_weight&&c.depends_on&&c.therefore_question;
   return [
-    {k:'Argument for option 1',ok:!!a1.present&&connCount(a1)>=5&&!!a1.links_to_question,detail:(a1.present?connCount(a1)+' analysis connectives (target 5–6)'+(a1.links_to_question?'; last sentence links to the question':'; last sentence does not link back to the question'):'Not found'),conns:a1.connectives||[]},
+    {k:'Argument for option 1',ok:!!a1.present&&!!a1.links_to_question,detail:(a1.present?(a1.links_to_question?'Present. The last sentence links back to the question.':'Present, but the last sentence does not link back to the question.'):'Not found')},
     {k:'Data and calculations',ok:dataOk,detail:(isQ?(d.calculation_shown?'Calculation shown with working. ':'Calculation not shown with formula and working. '):'')+(d.worked_figures||0)+' worked figure'+((d.worked_figures||0)===1?'':'s')+(d.example?' (e.g. "'+d.example+'")':'')},
     {k:'Evaluation of option 1',ok:!!e1.present,detail:e1.present?'"'+(e1.quote||'')+'…"':'No evaluation paragraph found for this option'},
-    {k:'Argument for option 2',ok:!!a2.present&&connCount(a2)>=5&&!!a2.links_to_question,detail:(a2.present?connCount(a2)+' analysis connectives (target 5–6)'+(a2.links_to_question?'; last sentence links to the question':'; last sentence does not link back to the question'):'Not found'),conns:a2.connectives||[]},
+    {k:'Argument for option 2',ok:!!a2.present&&!!a2.links_to_question,detail:(a2.present?(a2.links_to_question?'Present. The last sentence links back to the question.':'Present, but the last sentence does not link back to the question.'):'Not found')},
     {k:'Evaluation of option 2',ok:!!e2.present,detail:e2.present?'"'+(e2.quote||'')+'…"':'No evaluation paragraph found for this option'},
     {k:'Conclusion steps',ok:!!conclOk,detail:['Overall','Although… carries greater weight','It depends on…','Therefore + question words'].map((t,i)=>([c.overall,c.although_weight,c.depends_on,c.therefore_question][i]?'✓ ':'✗ ')+t).join('   ')}
   ];
 }
-function structSummary(fb){const s=structSteps(fb);return s.filter(x=>x.ok).length+'/'+s.length+' steps; connectives '+connCount((fb.structure||{}).arg1)+' and '+connCount((fb.structure||{}).arg2);}
+function structSummary(fb){const s=structSteps(fb);return s.filter(x=>x.ok).length+'/'+s.length+' steps';}
 
 function showFeedback(fb,qText){
   document.getElementById('ldPanel').classList.remove('show');
