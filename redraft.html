@@ -219,6 +219,7 @@ main h1{font-family:'DM Serif Display',serif;font-size:36px;color:var(--navy);ma
 </main>
 </div>
 
+<script src="marking-uploads.js"></script>
 <script>
 const WORKER_URL = 'https://nishkam-marker.alevelnishkam.workers.dev';
 
@@ -292,7 +293,7 @@ pdfInput.addEventListener('change', e => { if(e.target.files.length) handleFile(
 
 function handleFile(file){
   if(file.type !== 'application/pdf'){ alert('Please upload a PDF file.'); return; }
-  if(file.size > 10 * 1024 * 1024){ alert('File is too large. Maximum 10 MB.'); return; }
+  if(file.size > 6 * 1024 * 1024){ alert('That PDF is too big. Use the feedback PDF saved from the marker page (it is usually small).'); return; }
   pdfFileName = file.name;
   const reader = new FileReader();
   reader.onload = function(e){
@@ -412,10 +413,7 @@ ${isFullEssay ? `{
 }`}`;
 
   try {
-    const response = await fetch(WORKER_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    const result = capRedraft(await NMark.markJSON({
         model: 'claude-sonnet-4-6',
         max_tokens: 2500,
         system: systemPrompt,
@@ -426,13 +424,7 @@ ${isFullEssay ? `{
             { type: 'text', text: 'Here is my redrafted work:\n\n' + essay }
           ]
         }]
-      })
-    });
-
-    if(!response.ok) throw new Error('server '+response.status);
-    const data = await response.json();
-    const txt = data.content ? data.content.map(c => c.text || '').join('') : '';
-    const result = capRedraft(extractJSON(txt));
+    }));
     clearInterval(interval);
 
     showFeedback(result);
@@ -447,7 +439,7 @@ ${isFullEssay ? `{
     console.error('Error:', e);
     document.getElementById('loadingState').classList.add('hidden');
     document.getElementById('step1').classList.remove('hidden');
-    alert('The feedback did not come through. Your work is still here, so press the button to try again.');
+    alert((e&&e.message?e.message+'\n\n':'')+'Your work is still here, so press the button to try again.');
   }
 }
 

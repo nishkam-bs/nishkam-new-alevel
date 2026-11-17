@@ -283,6 +283,7 @@ textarea{min-height:220px;resize:vertical;line-height:1.7}
 </main>
 </div>
 
+<script src="marking-uploads.js"></script>
 <script>
 const PROXY='https://nishkam-marker.alevelnishkam.workers.dev';
 const MODEL='claude-sonnet-4-6';
@@ -654,8 +655,8 @@ function renderWrite(mc){
       <div class="upload-zone" id="dropZone">
         <p style="font-size:24px;margin-bottom:8px">&#128247;</p>
         <p style="font-weight:700;color:var(--navy)">Upload photos of your handwritten answer</p>
-        <p class="tiny" style="margin-top:4px">Tap to choose photos or drag and drop. Up to 7 pages.</p>
-        <input type="file" id="fileInput" accept="image/*" multiple style="display:none" />
+        <p class="tiny" style="margin-top:4px">Tap to choose photos or a PDF. Up to 7 pages. One page per photo, in good light.</p>
+        <input type="file" id="fileInput" accept="image/*,application/pdf" multiple style="display:none" />
       </div>
       <div class="upload-previews" id="previews"></div>
     </div>
@@ -675,24 +676,18 @@ function renderWrite(mc){
   dz.ondragover=e=>{e.preventDefault();dz.style.borderColor='var(--blue)';};
   dz.ondragleave=()=>{dz.style.borderColor='var(--line)';};
   dz.ondrop=e=>{e.preventDefault();dz.style.borderColor='var(--line)';handleFiles2(e.dataTransfer.files,mc);};
-  fi.onchange=()=>handleFiles2(fi.files,mc);
-  mc.querySelector('#submitBtn').onclick=()=>{
+  fi.onchange=()=>{handleFiles2(fi.files,mc);fi.value='';};
+  mc.querySelector('#submitBtn').onclick=async()=>{
+    if(NMark.pending){const b=mc.querySelector('#submitBtn'),t=b.textContent;b.disabled=true;b.textContent='Getting your pages ready…';await NMark.ready();b.disabled=false;b.textContent=t;}
     const hasText=mc.querySelector('#essay').value.trim().length>0;
     const hasImages=uploadedImages.length>0;
-    if(!hasText&&!hasImages){alert('Please write your answer or upload photos of it.');return;}
+    if(!hasText&&!hasImages){alert('Please write your answer or upload photos (or a PDF) of it.');return;}
     runMark();
   };
 }
 
 function handleFiles2(files,mc){
-  const previews=mc.querySelector('#previews');
-  for(const f of files){
-    if(uploadedImages.length>=7)break;
-    if(!f.type.startsWith('image/'))continue;
-    const reader=new FileReader();
-    reader.onload=e=>{uploadedImages.push(e.target.result);const img=document.createElement('img');img.src=e.target.result;previews.appendChild(img);};
-    reader.readAsDataURL(f);
-  }
+  return NMark.addFiles(files,uploadedImages,mc.querySelector('#previews'),7);
 }
 
 /* ═══ TABS ═══ */
@@ -718,27 +713,27 @@ async function runMark(){
   lastQ=qText;lastCtx=ctxText;lastQType=qType;
 
   const essayEl=document.getElementById('essay');
-  const essayText=essayEl?essayEl.value.trim():'';
+  const photoMode=NMark.usePhotos(uploadedImages,essayEl?essayEl.value:'');
+  const essayText=photoMode?'':(essayEl?essayEl.value.trim():'');
   const userMsg=`QUESTION:\n${qText}\n\n[9 marks] [${qType}]\n\nCASE STUDY / SOURCE MATERIAL:\n${ctxText}\n\nSTUDENT ANSWER:\n${essayText||'[See handwritten answer in images]'}\n\nReply with the JSON object only: your first character must be { and your last must be }.`;
 
   const sysPrompt=qType==='quantitative'?SYS_QUANT:SYS_QUAL;
 
   let messages;
-  if(uploadedImages.length>0&&!essayText){
-    const content=uploadedImages.map(d=>({type:'image',source:{type:'base64',media_type:'image/jpeg',data:d.split(',')[1]}}));
-    content.push({type:'text',text:userMsg});
+  if(photoMode){
+    const content=NMark.blocks(uploadedImages);
+    content.push({type:'text',text:userMsg+NMark.UNREADABLE_NOTE});
     messages=[{role:'user',content:content}];
   }else{
     messages=[{role:'user',content:userMsg}];
   }
 
   try{
-    const resp=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:4000,system:sysPrompt,messages})});
-    if(!resp.ok)throw new Error('API error: '+resp.status);
-    const data=await resp.json();
+    const data=await NMark.ask({model:MODEL,max_tokens:4000,system:sysPrompt,messages});
     if(data.error)throw new Error('The marker is busy at the moment');
     if(data.stop_reason==='max_tokens')throw new Error('The feedback was too long to finish');
     const txt=(data.content||[]).map(c=>c.text||'').join('');
+    try{NMark.json(txt);}catch(e){if(e.unreadable)throw e;}
     const fb=enforceCaps(extractJSON(txt),qType);
     lastFb=fb;
     showFeedback(fb,qText);
@@ -751,7 +746,7 @@ async function runMark(){
   }catch(err){
     document.getElementById('ldPanel').classList.remove('show');
     document.getElementById('fbPanel').style.display='block';
-    document.getElementById('fbPanel').innerHTML=`<div class="al al-r"><b>Something went wrong</b>${err.message}. Your answer is still there. Go back to Mark My Answer and try again.</div>`;
+    document.getElementById('fbPanel').innerHTML=`<div class="al al-r"><b>Not marked</b> ${String(err.message||'Couldn\'t reach the marker').replace(/\.$/,'')}. Your answer is still there. Go back to Mark My Answer and try again.</div>`;
   }
 }
 
