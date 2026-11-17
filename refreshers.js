@@ -66,7 +66,7 @@ roms:{short:'return on marketing spend',title:'Return on marketing spend',mins:3
  check:{q:'A campaign costs £50,000 and brings in £65,000 of extra gross profit. What is the return on marketing spend?',options:['30%','130%','77%','23%'],answer:0,
   why:'Profit from marketing = £65,000 − £50,000 = £15,000. £15,000 ÷ £50,000 × 100 = 30%.'}},
 
-pts:{short:'percentage points and percentage change',title:'Percentage points and percentage change',mins:2,match:/percentage point|change in (the )?market share|% change in market share/i,
+pts:{short:'percentage change',title:'Percentage points and percentage change',mins:2,match:/percentage point|change in (the )?market share|% change in market share/i,
  cards:[
   {h:'The rule',html:`<p>When you compare two percentages, there are two different answers:</p>
    ${F('Change in percentage points = new % − old %')}
@@ -111,7 +111,7 @@ market:{short:'market share calculations',title:'Market share, growth and size',
  check:{q:'A market is worth £200m and will grow by 5%. A business wants a 10% share next year. What sales does it need?',options:['£21m','£20m','£10.5m','£30m'],answer:0,
   why:'Next year\'s market = £200m × 1.05 = £210m. 10% of £210m = £21m.'}},
 
-shares:{short:'the shares calculations',title:'Shares: market capitalisation and dividends',mins:3,match:/dividend|market capitali|share price/i,
+shares:{short:'share calculations',title:'Shares: market capitalisation and dividends',mins:3,match:/dividend|market capitali|share price/i,
  cards:[
   {h:'The rules',html:`${F('Market capitalisation = number of issued shares × current share price')}
    ${F('Dividend per share = total dividend paid ÷ number of ordinary shares in issue')}
@@ -125,7 +125,7 @@ shares:{short:'the shares calculations',title:'Shares: market capitalisation and
  check:{q:'Dividend per share is 8p and the share price is 200p. What is the dividend yield?',options:['4%','25%','0.04%','40%'],answer:0,
   why:'8 ÷ 200 × 100 = 4%. Both figures are in pence, so no conversion is needed.'}},
 
-sales:{short:'sales volume and value',title:'Sales volume and sales value',mins:3,match:/sales volume|sales value|average (selling )?price|per shop|by region/i,
+sales:{short:'sales figures',title:'Sales volume and sales value',mins:3,match:/sales volume|sales value|average (selling )?price|per shop|by region/i,
  cards:[
   {h:'The rules',html:`<p><b>Sales volume</b> is the number of units sold. <b>Sales value</b> (revenue) is in pounds.</p>
    ${F('Sales value = selling price per unit × number of units sold')}

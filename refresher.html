@@ -64,8 +64,8 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const R=window.REFRESH,Ac=window.Acct,q=new URLSearchParams(location.search);
 const ids=(q.get('d')||'').split(',').filter(k=>R.DECKS[k]).slice(0,4);
-let back=q.get('back')||'';if(!/^[\w.-]+\.html(#[\w=.-]*)?$/.test(back))back='';
-if(back){$('#backTop').href=back;$('#backTop').textContent=/practice/.test(back)?'Back to my work':'Back to the home page';}
+let back=q.get('back')||'';if(!/^[\w.-]+\.html(\?[\w=&.,-]*)?(#[\w=.-]*)?$/.test(back))back='';
+if(back){$('#backTop').href=back;$('#backTop').textContent=/practice/.test(back)?'Back to my work':/weekly/.test(back)?'Back to the questions':'Back to the home page';}
 if(!ids.length){$('#title').textContent='Refresher not found';$('#card').innerHTML='<p>This refresher could not be found. Go back and try the link again.</p>';$('.nav').hidden=true;return;}
 
 let mine={};   /* deck id -> feedback lines from this student's own marked work */
@@ -97,7 +97,7 @@ function render(){
       (c.picked!=null?`<div class="why ${c.picked===k.answer?'good':'bad'}">${c.picked===k.answer?'Right. ':'Not quite. '}${esc(k.why)}${c.picked!==k.answer?' Try again.':''}</div>`:'');
   }else if(c.done){
     h+=`<p>That's the refresher done${ids.length>1?' on all of these topics':''}.</p><p>Remember to show your working on every calculation. You get method marks even if the final answer goes wrong.</p>`+
-      (back?`<a class="btn" href="${esc(back)}" id="finish">${/practice/.test(back)?'Got it, back to the questions':'Back to the home page'}</a>`:`<a class="btn" href="practice.html" id="finish">Go to practice</a>`);
+      (back?`<a class="btn" href="${esc(back)}" id="finish">${/practice|weekly/.test(back)?'Got it, back to the questions':'Back to the home page'}</a>`:`<a class="btn" href="practice.html" id="finish">Go to practice</a>`);
   }else h+=c.html;
   $('#card').innerHTML=h;
   $('#dots').innerHTML=cards.map((_,i)=>`<i class="${i<=at?'on':''}"></i>`).join('');
@@ -120,7 +120,7 @@ build();render();
   try{
     const marks=(await Ac.call('/mymarks')).marks||[];
     ids.forEach(id=>{const re=R.DECKS[id].match,out=[];
-      marks.forEach(m=>{if(!m.improve)return;const rowHit=re.test(m.question||'');
+      marks.forEach(m=>{if(!m.improve)return;const rowHit=/calc|booklet|paper/i.test(m.tool||'')&&re.test(m.question||'');
         String(m.improve).split(/\s\/\s/).forEach(s=>{s=s.trim();if(s&&!/^Work on:/.test(s)&&(rowHit||re.test(s))&&!out.includes(s))out.push(s);});});
       mine[id]=out.slice(0,4);});
     const cur=cards[at];build();at=Math.max(0,cards.findIndex(c=>c.deck===cur.deck&&c.h===cur.h));render();

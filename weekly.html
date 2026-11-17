@@ -52,6 +52,7 @@ h1{font-family:"DM Serif Display",Georgia,serif;font-weight:400;color:var(--navy
   <div class="done" id="end" hidden></div>
 </div>
 <script src="account.js"></script>
+<script src="refreshers.js"></script>
 <script>
 (function(){
 "use strict";
@@ -74,15 +75,28 @@ function render(){
     return `<div class="qc" id="q${i}"><div class="qn"><span>${i+1} of ${Q.items.length}</span><span>${esc(it.label||'')}</span></div>
       <div class="qt">${fmtQ(it.q)}</div>${it.svg?`<div class="fig">${it.svg}</div>`:''}${it.img?`<div class="fig"><img src="${esc(it.img)}" alt="${esc(it.alt||'Figure for this question')}"></div>`:''}
       <div class="opts">${it.opts.map((o,j)=>`<button class="opt${answered&&j===it.ans?' right':''}${answered&&j===a&&a!==it.ans?' wrong':''}" data-i="${i}" data-j="${j}" ${answered?'disabled':''}><b>${L[j]}</b><span>${esc(o)}</span></button>`).join('')}</div>
-      ${answered?`<div class="fb ${a===it.ans?'r':'w'}"><strong>${a===it.ans?'Right.':'Not quite. The answer is '+L[it.ans]+'.'}</strong>${esc(it.why)}</div>`:''}</div>`;}).join('');
+      ${answered?`<div class="fb ${a===it.ans?'r':'w'}"><strong>${a===it.ans?'Right.':'Not quite. The answer is '+L[it.ans]+'.'}</strong>${esc(it.why)}${a!==it.ans?rfLinks(it.q):''}</div>`:''}</div>`;}).join('');
   document.querySelectorAll('.opt:not([disabled])').forEach(b=>b.onclick=()=>choose(+b.dataset.i,+b.dataset.j));
   progress(st);
+}
+/* refreshers for the calculations they got wrong */
+const RF=window.REFRESH,BACK='weekly.html?set='+set;
+function rfLinks(q){if(!RF||!/^calc/.test(set))return '';const d=RF.find(q).slice(0,2);return d.map(k=>`<br><a href="${esc(RF.link([k],BACK))}">Refresher: ${esc(RF.DECKS[k].title)}</a>`).join('');}
+function rfEnd(st){
+  if(!RF||!/^calc/.test(set))return;
+  const n={};Q.items.forEach((it,i)=>{if(st.a[i]!=null&&st.a[i]!==it.ans)RF.find(it.q).forEach(k=>{n[k]=(n[k]||0)+1;});});
+  const d=Object.keys(n).sort((a,b)=>n[b]-n[a]).slice(0,3);if(!d.length)return;
+  const key='rf:'+set+':'+d.join(',');let seen=false;try{seen=!!sessionStorage.getItem(key);sessionStorage.setItem(key,'1');}catch(e){}
+  const links=`<p style="margin:8px 0 0">Refreshers for the ones you got wrong: ${d.map(k=>`<a href="${esc(RF.link([k],BACK))}">${esc(RF.DECKS[k].title)}</a>`).join(' · ')}</p>`;
+  $('#end').insertAdjacentHTML('beforeend',links);
+  if(!seen)setTimeout(()=>RF.ask({heading:'Do you need a refresher?',text:`You got some wrong on ${RF.names(d)}. A refresher goes through the rule, a worked example and the usual mistakes, in a few minutes.`,decks:d,back:BACK,no:'Not now'}),600);
 }
 function progress(st){
   const n=Q.items.length,done=st.a.filter(x=>x!=null).length,right=st.a.filter((x,i)=>x!=null&&x===Q.items[i].ans).length;
   $('#prog').hidden=false;$('#progTxt').textContent=`${done} of ${n} answered · ${right} right first time`;$('#progBar').style.width=(done/n*100)+'%';
   const end=$('#end');
-  if(done===n){end.hidden=false;end.innerHTML=`<b>Finished: ${right} out of ${n} right first time.</b><p class="muted" style="margin:6px 0 0">This is ticked off in your schedule. Look back at any you got wrong and read the explanation again. <a href="schedule.html">Back to my schedule</a></p>`;}
+  if(done===n){end.hidden=false;end.innerHTML=`<b>Finished: ${right} out of ${n} right first time.</b><p class="muted" style="margin:6px 0 0">This is ticked off in your schedule. Look back at any you got wrong and read the explanation again. <a href="schedule.html">Back to my schedule</a></p>`;
+    rfEnd(st);}
   else end.hidden=true;
 }
 function choose(i,j){
