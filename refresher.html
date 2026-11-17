@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Refresher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{--bg:#FAF7F1;--bg2:#F3ECDB;--card:#fff;--fg:#1A1A1A;--navy:#0E2A47;--muted:#6B6B6B;--line:#E5DFD2;--gold:#B08A3E;--ok:#2d7a4f;--ok-soft:rgba(45,122,79,.12);--end:#b23b31;--end-soft:rgba(178,59,49,.1)}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1420;--bg2:#121a28;--card:#172133;--fg:#e9ecf2;--navy:#cfe0f5;--muted:#9aa4b6;--line:rgba(255,255,255,.1);--gold:#e0b553;--ok:#5fcf80;--ok-soft:rgba(95,207,128,.14);--end:#ff8a7a;--end-soft:rgba(255,138,122,.12)}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.65 "IBM Plex Sans",system-ui,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:28px max(18px,env(safe-area-inset-right,0px)) 60px max(18px,env(safe-area-inset-left,0px))}
+.top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.top a{color:var(--muted);font-size:.9rem}
+.kicker{font:600 .78rem "IBM Plex Mono",monospace;color:var(--gold);letter-spacing:.04em;text-transform:uppercase;margin:22px 0 4px}
+h1,h2{font-family:"DM Serif Display",Georgia,serif;font-weight:400;color:var(--navy);margin:0;line-height:1.15}
+h1{font-size:2rem;margin-bottom:14px}
+h2{font-size:1.45rem;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 24px 20px;min-height:320px}
+.card p{margin:0 0 12px}.card ul,.card ol{margin:0 0 12px;padding-left:22px}.card li{margin-bottom:6px}
+.rf-formula{background:var(--bg2);border-left:4px solid var(--gold);border-radius:8px;padding:12px 16px;margin:0 0 14px;font-weight:600;font-size:1.05rem}
+.intro{background:var(--bg2);border-radius:10px;padding:12px 16px;margin-bottom:14px}
+.steps{list-style:none;padding:0!important;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:8px 0 8px 40px;border-top:1px solid var(--line);margin:0!important}
+.steps li:first-child{border-top:0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:26px;height:26px;border-radius:50%;background:var(--navy);color:var(--card);font:600 .8rem/26px "IBM Plex Mono",monospace;text-align:center}
+.mine li{margin-bottom:10px}
+.nav{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.dots{display:flex;gap:6px;flex:1}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--navy)}
+.btn{border:0;cursor:pointer;border-radius:10px;padding:11px 20px;font:600 .95rem "IBM Plex Sans",sans-serif;background:var(--navy);color:var(--card);text-decoration:none;display:inline-block}
+@media (prefers-color-scheme:dark){.btn{color:#0e1420}}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:default}
+.opt{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px;background:var(--card);color:var(--fg);font:inherit;cursor:pointer}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}.opt.wrong{border-color:var(--end);background:var(--end-soft)}
+.why{border-left:3px solid var(--line);padding:4px 0 4px 12px;margin-top:10px}
+.why.good{border-color:var(--ok)}.why.bad{border-color:var(--end)}
+.muted{color:var(--muted)}.small{font-size:.88rem}
+.rf-svgs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.rf-sc{margin:0;flex:1 1 140px;max-width:180px;text-align:center;font-size:.85rem;color:var(--muted)}
+.rf-sc svg{width:100%;height:auto;background:var(--bg2);border-radius:8px}
+.rf-sc line{stroke:var(--muted);stroke-width:1}.rf-sc circle{fill:var(--navy)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="index.html" id="backTop">Back to the main site</a><span class="small muted" id="count"></span></div>
+  <p class="kicker">Refresher</p>
+  <h1 id="title"></h1>
+  <div class="card" id="card"></div>
+  <div class="nav"><button class="btn ghost" id="prev">Back</button><div class="dots" id="dots"></div><button class="btn" id="next">Next</button></div>
+</div>
+<script src="account.js"></script>
+<script src="refreshers.js"></script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const R=window.REFRESH,Ac=window.Acct,q=new URLSearchParams(location.search);
+const ids=(q.get('d')||'').split(',').filter(k=>R.DECKS[k]).slice(0,4);
+let back=q.get('back')||'';if(!/^[\w.-]+\.html(#[\w=.-]*)?$/.test(back))back='';
+if(back){$('#backTop').href=back;$('#backTop').textContent=/practice/.test(back)?'Back to my work':'Back to the home page';}
+if(!ids.length){$('#title').textContent='Refresher not found';$('#card').innerHTML='<p>This refresher could not be found. Go back and try the link again.</p>';$('.nav').hidden=true;return;}
+
+let mine={};   /* deck id -> feedback lines from this student's own marked work */
+let cards=[],at=0;
+function build(){
+  cards=[];
+  ids.forEach((id,di)=>{
+    const d=R.DECKS[id];
+    d.cards.forEach((c,ci)=>{
+      if(ci===d.cards.length-1&&mine[id]&&mine[id].length)cards.push({deck:id,h:'Where you went wrong',mine:mine[id]});
+      cards.push(Object.assign({deck:id},c));
+    });
+    cards.push({deck:id,h:'Check you have got it',check:d.check});
+  });
+  cards.push({deck:ids[ids.length-1],h:'Done',done:true});
+}
+function render(){
+  const c=cards[at],d=R.DECKS[c.deck];
+  $('#title').textContent=d.title;document.title='Refresher: '+d.title;
+  $('#count').textContent=`${at+1} of ${cards.length}`;
+  let h=`<h2>${esc(c.h)}</h2>`;
+  if(c.type==='steps'){
+    h+=`<div class="intro">${esc(c.intro)}</div><ol class="steps">${c.steps.map((s,i)=>`<li${i>=(c.shown||1)?' hidden':''}>${esc(s)}</li>`).join('')}</ol>`+
+      ((c.shown||1)<c.steps.length?`<button class="btn ghost" id="more">Show the next step</button>`:'');
+  }else if(c.mine){
+    h+=`<p>From your own marked work on this topic:</p><ul class="mine">${c.mine.map(m=>`<li>${esc(m)}</li>`).join('')}</ul><p class="muted small">The next card has the mistakes students make most often.</p>`;
+  }else if(c.check){
+    const k=c.check;h+=`<p><b>${esc(k.q)}</b></p>`+k.order.map(i=>`<button class="opt${c.picked!=null?(i===k.answer?' right':(i===c.picked?' wrong':'')):''}" data-o="${i}" ${c.picked===k.answer?'disabled':''}>${esc(k.options[i])}</button>`).join('')+
+      (c.picked!=null?`<div class="why ${c.picked===k.answer?'good':'bad'}">${c.picked===k.answer?'Right. ':'Not quite. '}${esc(k.why)}${c.picked!==k.answer?' Try again.':''}</div>`:'');
+  }else if(c.done){
+    h+=`<p>That's the refresher done${ids.length>1?' on all of these topics':''}.</p><p>Remember to show your working on every calculation. You get method marks even if the final answer goes wrong.</p>`+
+      (back?`<a class="btn" href="${esc(back)}" id="finish">${/practice/.test(back)?'Got it, back to the questions':'Back to the home page'}</a>`:`<a class="btn" href="practice.html" id="finish">Go to practice</a>`);
+  }else h+=c.html;
+  $('#card').innerHTML=h;
+  $('#dots').innerHTML=cards.map((_,i)=>`<i class="${i<=at?'on':''}"></i>`).join('');
+  $('#prev').disabled=at===0;$('#next').hidden=!!c.done;
+  $('#next').disabled=!!(c.check&&c.picked==null);
+  const m=$('#more');if(m)m.onclick=()=>{c.shown=(c.shown||1)+1;render();};
+  document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{c.picked=+b.dataset.o;render();});
+  const f=$('#finish');if(f)f.onclick=()=>{try{if(Ac&&Ac.user)Ac.call('/visit',{page:'refresher-done',title:'Finished refresher: '+ids.map(i=>R.DECKS[i].title).join(', ')}).catch(()=>{});}catch(e){}};
+}
+$('#prev').onclick=()=>{if(at>0){at--;render();scrollTo({top:0});}};
+$('#next').onclick=()=>{if(at<cards.length-1){at++;render();scrollTo({top:0});}};
+
+/* shuffle the check options once, so the right answer isn't always first */
+ids.forEach(id=>{const k=R.DECKS[id].check;const o=k.options.map((_,i)=>i);for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]];}k.order=o;});
+build();render();
+
+/* add the student's own mistakes when their marks have loaded */
+(Ac&&Ac.ready?Ac.ready:Promise.resolve()).then(async()=>{
+  if(!Ac||!Ac.user)return;
+  try{
+    const marks=(await Ac.call('/mymarks')).marks||[];
+    ids.forEach(id=>{const re=R.DECKS[id].match,out=[];
+      marks.forEach(m=>{if(!m.improve)return;const rowHit=re.test(m.question||'');
+        String(m.improve).split(/\s\/\s/).forEach(s=>{s=s.trim();if(s&&!/^Work on:/.test(s)&&(rowHit||re.test(s))&&!out.includes(s))out.push(s);});});
+      mine[id]=out.slice(0,4);});
+    const cur=cards[at];build();at=Math.max(0,cards.findIndex(c=>c.deck===cur.deck&&c.h===cur.h));render();
+  }catch(e){}
+});
+})();
+</script>
+<script src="visit.js" defer></script>
+</body>
+</html>

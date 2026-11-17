@@ -103,6 +103,7 @@ ol.steps{margin:6px 0 0;padding-left:20px}
 <script src="taxonomy.js"></script>
 <script src="analysis.js"></script>
 <script src="workgen.js"></script>
+<script src="refreshers.js"></script>
 <script>
 (function(){
 "use strict";
@@ -122,6 +123,33 @@ async function load(){
   const bh=Ac.get('blurt:history');if(bh)store['blurt:history']=bh;
   mine=A.analyse({store,marks,work});
   lists();gapInfo();
+  /* coming back from a refresher: open that work straight away */
+  const hw=(location.hash.match(/^#w=([\w-]+)/)||[])[1];
+  if(hw){const w=work.find(x=>x.id===hw);history.replaceState(null,'',location.pathname+location.search);if(w){asked(w.id,1);open(w);}}
+}
+/* refreshers: which decks a set of questions is about, the student's own gap areas first */
+const RF=window.REFRESH;
+const askedKey=id=>'n8_rf_ask:'+id;
+function asked(id,v){try{if(v)localStorage.setItem(askedKey(id),'1');return !!localStorage.getItem(askedKey(id));}catch(e){return false;}}
+function decksFor(items){
+  if(!RF)return [];
+  const n={};items.forEach(it=>RF.find(it.q).forEach(k=>{n[k]=(n[k]||0)+1;}));
+  const gapText=((mine&&mine.calcGaps)||[]).map(c=>c.label).concat(((mine&&mine.gaps)||[]).map(g=>g.title+' '+(g.calc||''))).join(' ; ');
+  const weak=new Set(RF.find(gapText));
+  return Object.keys(n).sort((a,b)=>(weak.has(b)?1:0)-(weak.has(a)?1:0)||n[b]-n[a]).slice(0,3);
+}
+function offerBefore(w){
+  if(!RF||w.status==='done'||asked(w.id))return;
+  const d=decksFor(w.spec.items||[]);if(!d.length)return;
+  RF.ask({heading:'Before you start',text:'Do you want a quick refresher first? It goes through the rule, a worked example and any mistakes you made on this before. Then you come straight back to the questions.',
+    decks:d,back:'practice.html#w='+w.id,no:'No thanks, start the questions',onAny:()=>asked(w.id,1)});
+}
+function offerAfter(w){
+  if(!RF||!w.result)return;
+  const wrong=(w.spec.items||[]).filter((it,i)=>{const r=w.result.items[i];return r&&r.ok<1;});
+  const d=decksFor(wrong);if(!d.length)return;
+  RF.ask({heading:'Do you need a refresher?',text:`You dropped marks on ${RF.names(d)}. A refresher goes through the rule, a worked example and the usual mistakes, in a few minutes.`,
+    decks:d,back:'practice.html#w='+w.id,no:'Not now'});
 }
 function lists(){
   const li=w=>`<li><span class="t"><b>${esc(w.title)}</b><br><span class="small muted">${w.source==='teacher'?'Set':'Made'} ${fmt(w.created)}${w.due&&w.status!=='done'?` · due ${esc(new Date(w.due).toLocaleDateString('en-GB',{day:'numeric',month:'short'}))}`:''} · ${(w.spec.items||[]).length} questions</span></span>
@@ -162,6 +190,7 @@ function open(w){
   if(!w)return;cur=w;answers=Object.assign({},w.answers||{});
   $('#home').hidden=true;$('#doView').hidden=false;scrollTo({top:0});
   $('#doTitle').textContent=w.title;
+  setTimeout(()=>offerBefore(w),200);
   $('#doMeta').textContent=(w.source==='teacher'?'Set by your teacher':'Made by you')+' · '+fmt(w.created)+(w.status==='done'?` · marked: ${w.score}/${w.total}`:' · your answers save as you go');
   draw();
 }
@@ -170,7 +199,7 @@ function draw(){
   $('#doQs').innerHTML=(done?`<p><span class="score">${w.score}/${w.total}</span> <span class="muted">${Math.round(w.score/Math.max(1,w.total)*100)}%</span></p>`:'')+
   w.spec.items.map((it,i)=>{const a=answers[i],r=res[i];
     const fb=r?`<div class="fb ${r.ok>=.75?'good':r.ok>=.4?'mid':'bad'}">${r.marks}/${r.max}${it.type==='mcq'?(r.ok?' - right.':` - the answer is: ${esc(it.options[it.answer])}.`):''}${it.type==='calc'?(r.ok?' - right.':` - the answer is ${it.answer} ${esc(it.unit)}.`):''}
-      ${it.explain?` ${esc(it.explain)}`:''}${it.working?`<br><span class="muted">Working: ${esc(it.working)}</span>`:''}${r.feedback?`<br>${esc(r.feedback)}`:''}${r.better?`<br><span class="muted">It could read: ${esc(r.better)}</span>`:''}</div>`:'';
+      ${it.explain?` ${esc(it.explain)}`:''}${it.working?`<br><span class="muted">Working: ${esc(it.working)}</span>`:''}${r.feedback?`<br>${esc(r.feedback)}`:''}${r.better?`<br><span class="muted">It could read: ${esc(r.better)}</span>`:''}${r.ok<1&&RF?RF.find(it.q).slice(0,2).map(k=>`<br><a href="${esc(RF.link([k],'practice.html#w='+w.id))}">Refresher: ${esc(RF.DECKS[k].title)}</a>`).join(''):''}</div>`:'';
     return `<div class="q"><div class="meta">${i+1}. ${W.typeName[it.type]}${it.marks?` · ${it.marks} marks`:''}</div>${it.case?`<div class="case">${esc(it.case)}</div>`:''}<div class="stem">${esc(it.q)}</div>
     ${it.type==='mcq'?it.options.map((o,oi)=>`<label class="opt${done?(oi===it.answer?' right':(+a===oi?' wrong':'')):''}"><input type="radio" name="q${i}" value="${oi}" ${+a===oi&&a!==''&&a!=null?'checked':''} ${done?'disabled':''}> <span>${esc(o)}</span></label>`).join(''):''}
     ${it.type==='calc'?`<div style="display:flex;gap:8px;align-items:center;max-width:320px"><input type="text" inputmode="decimal" data-i="${i}" value="${esc(a||'')}" ${done?'disabled':''} placeholder="Your answer"> <span>${esc(it.unit)}</span></div>`:''}
@@ -190,7 +219,7 @@ $('#doSubmit').onclick=async()=>{
     const result=await W.mark(cur.spec,answers);
     await Ac.call('/work/submit',{id:cur.id,answers,result,score:result.score,total:result.total});
     Object.assign(cur,{status:'done',result,score:result.score,total:result.total,answers});
-    open(cur);
+    open(cur);setTimeout(()=>offerAfter(cur),400);
   }catch(e){$('#doMsg').textContent=e.message;}
   btn.disabled=false;
 };

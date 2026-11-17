@@ -285,6 +285,22 @@ function showNotice(){
   const b=ov.querySelector('button');try{b.focus({preventScroll:true});}catch(e){}ov.querySelector('.nk-modal').scrollTop=0;
   b.onclick=()=>{set(NOTICE.key,{seen:new Date().toISOString()});ov.remove();};
 }
+/* refreshers (refreshers.js, where the page loads it) */
+const rfPct=m=>{const x=String(m||'').match(/(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/);return x&&+x[2]?+x[1]/+x[2]:null;};
+function rfLinks(x){
+  const R=window.REFRESH;if(!R||!x.improve||rfPct(x.mark)===1)return '';
+  const d=R.find(/whole paper/i.test(x.question||'')?'':x.question);if(!d.length)return '';
+  return `<p>${d.map(k=>`<a href="${esc(R.link([k],'index.html'))}">Refresher: ${esc(R.DECKS[k].title)}</a>`).join(' · ')}</p>`;
+}
+function rfOffer(marks){
+  const R=window.REFRESH;if(!R||document.querySelector('.nk-ov,.rf-ov'))return;
+  const weak=marks.filter(m=>/calc/i.test(m.tool||'')&&!/whole paper/i.test(m.question||'')&&rfPct(m.mark)!=null&&rfPct(m.mark)<.7);
+  const scores={};weak.forEach(m=>R.find(m.question).forEach(k=>{const p=rfPct(m.mark);if(scores[k]==null||p<scores[k])scores[k]=p;}));
+  const ids=Object.keys(scores).sort((a,b)=>scores[a]-scores[b]).slice(0,3);if(!ids.length)return;
+  const key='rf:home:'+ids.slice().sort().join(',');if(get(key))return;
+  R.ask({heading:'Do you need a refresher?',text:`Your marked calculations show you dropped marks on ${R.names(ids)}. A refresher goes through the rule, a worked example and where you went wrong, in a few minutes.`,
+    decks:ids,back:'index.html',no:'Not now',onAny:()=>set(key,{t:new Date().toISOString()})});
+}
 function mountHome(target){
   if(!ON)return;
   const el=typeof target==='string'?document.querySelector(target):target;if(!el)return;
@@ -330,8 +346,9 @@ function mountHome(target){
       el2.innerHTML=todo.length?`<b>Work from your teacher: ${todo.length} to do.</b> <a href="practice.html">Go to practice</a>`:`<a href="practice.html">Practice</a>: make questions on your gaps or any topic you have covered.`;}).catch(()=>{});
     try{const d=await api('/mymarks',{});const m=el.querySelector('#nkMarks');if(!m)return;
       m.innerHTML=d.marks&&d.marks.length?`<ul class="nk-marks">${d.marks.slice(0,8).map(x=>`<li><details><summary><b>${esc(x.mark)}</b> ${esc(x.tool)} <span class="nk-small">${new Date(x.t).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</span></summary>
-        <p class="nk-q">${esc(x.question)}</p>${x.well?`<p><b>What went well:</b> ${esc(x.well)}</p>`:''}${x.improve?`<p><b>To improve:</b> ${esc(x.improve)}</p>`:''}</details></li>`).join('')}</ul>`
-        :'Nothing marked yet. Answers you mark in the 6, 9 and 15-mark labs will appear here.';}
+        <p class="nk-q">${esc(x.question)}</p>${x.well?`<p><b>What went well:</b> ${esc(x.well)}</p>`:''}${x.improve?`<p><b>To improve:</b> ${esc(x.improve)}</p>`:''}${rfLinks(x)}</details></li>`).join('')}</ul>`
+        :'Nothing marked yet. Answers you mark in the 6, 9 and 15-mark labs will appear here.';
+      setTimeout(()=>rfOffer(d.marks||[]),900);}
     catch(e){const m=el.querySelector('#nkMarks');if(m)m.textContent=auth?'Could not load your marks just now.':'';if(!auth)draw();}
   };
   draw();
