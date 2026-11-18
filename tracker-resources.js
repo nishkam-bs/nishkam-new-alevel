@@ -76,6 +76,34 @@ const SCHEMA=`{"title":"short plain title, e.g. 'Weighing up in a 16-mark conclu
 "full_answer":{"text":"a complete answer to the question that would get full marks (paragraphs separated by a blank line)","mark":"e.g. 9/9","notes":[{"quote":"exact words from full_answer.text","comment":"what earns marks here"}]},
 "tasks":[{"instruction":"short instruction","material":"a different weak paragraph to improve, or a new question, or empty","lines":10,"answer":"a model answer for the teacher"}],
 "checklist":["4 to 6 short things to check before handing in"]}`;
+function stdBlock(mk){if(IS12||!window.NSTANDARD)return '';if(!mk||mk>=16)return '\n\n'+NSTANDARD.block()+'\nThe full-mark answer and the strong part must follow this standard: the same paragraph pattern, models used to explain steps, "This shows that" concluding sentences, and the same conclusion pattern, with two clearly different real industries. Use different industries from the standard answer.';return '\n\n'+NSTANDARD.block({full:false,p1:true})+'\nFor this shorter question, use only its analysis paragraph as the model for analysis and reaching the end point.';}
+const MODELS=/price elasticity|PED|elastic|Porter|Five Forces|cost leadership|differentiation|Ansoff|Boston|Carroll|Elkington|Triple Bottom Line|Maslow|Herzberg|Taylor|Mayo|McClelland|Vroom|stakeholder mapping|SWOT|PESTLE|Kotter|Lewin|Tannenbaum|product life cycle|Handy|economies of scale|income elasticity/i;
+function stdApplies(mk){return !IS12&&!!window.NSTANDARD&&(!mk||+mk>=16);}
+function stdTemplate(mk){return stdApplies(mk)?`\n\nTHE FULL-MARK ANSWER MUST BE WRITTEN IN THIS EXACT PATTERN (three paragraphs, separated by a blank line${+mk===16?', no introduction':''}):
+Paragraph 1 starts "On one hand," then states the argument and the reason. The next sentence starts "This can be illustrated by" and names a real industry and a real business where the statement is true. Then explained steps (therefore, as a result, this is because) to the exact end point in the question, with at least one model or theory used to explain a step. The last sentence starts "This shows that" and uses the words of the question.
+Paragraph 2 starts "However, on the other hand," and challenges the statement. The next sentence starts "This can be explored by" and names a completely different real industry and business. Same kind of chain with at least one model or theory. The last sentence starts "This shows that".
+Paragraph 3 (the conclusion) starts "Overall," with a direct answer in the words of the question and "as it depends on" the deciding condition. Then a sentence starting "For" about industry 1 and a sentence starting "For" about industry 2, saying why the answer changes. Then a sentence starting "However, it also depends on" with a second condition and its reason. The last sentence starts "Therefore," and uses the words of the question.
+If the strong part is a conclusion, it follows the paragraph 3 pattern; if it is an argument, it follows the paragraph 1 or 2 pattern.`:'';}
+function stdChecks(r,mk){
+  if(!stdApplies(mk)||!r.full_answer||!r.full_answer.text||r.kind==='calculation')return [];
+  const ps=String(r.full_answer.text).split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean),out=[],need=(cond,problem)=>{if(!cond)out.push({where:'full_answer',problem,fix:'Rewrite the full-mark answer in the exact pattern of the standard answer.'});};
+  need(ps.length>=3,'The full-mark answer must have an argument for, an argument against and a conclusion as separate paragraphs.');
+  if(ps.length<3)return out;
+  const [a,b]=ps,c=ps[ps.length-1];
+  need(/^On one hand/i.test(a),'Paragraph 1 must start "On one hand," (no introduction).');
+  need(/This can be illustrated by/i.test(a),'Paragraph 1 must use "This can be illustrated by" and a real industry and business.');
+  need(/This shows that/i.test(a),'Paragraph 1 must end with a "This shows that" sentence using the question\'s words.');
+  need(MODELS.test(a),'Paragraph 1 must use a model or theory to explain a step.');
+  need(/^However, on the other hand/i.test(b),'Paragraph 2 must start "However, on the other hand,".');
+  need(/This can be explored by/i.test(b),'Paragraph 2 must use "This can be explored by" and a completely different industry and business.');
+  need(/This shows that/i.test(b),'Paragraph 2 must end with a "This shows that" sentence.');
+  need(MODELS.test(b),'Paragraph 2 must use a model or theory to explain a step.');
+  need(/^Overall/i.test(c)&&/depends on/i.test(c),'The conclusion must start "Overall," with a direct answer and "as it depends on".');
+  need((c.match(/(^|[.;]\s+)For /g)||[]).length>=2,'The conclusion must have a "For [industry 1]..." sentence and a "For [industry 2]..." sentence.');
+  need(/However, it also depends on/i.test(c),'The conclusion must include "However, it also depends on" a second condition.');
+  need(/Therefore,/.test(c),'The conclusion must end with a "Therefore," sentence in the question\'s words.');
+  return out;
+}
 function genSystem(mk){
   return `You are an experienced AQA A-level Business (${SPEC}) teacher and examiner. You are writing a one-lesson resource for your ${YEAR} class on one point that came out of their marked work. It will be printed and used in class.
 
@@ -83,7 +111,7 @@ First check the teaching point is accurate. If it is wrong or muddled, correct i
 
 ${mk?`The question type is a ${mk}-mark question.\nAQA level descriptors for ${mk} marks:\n${LEVELS[mk]||'Use the AQA levels for this mark total.'}\nWhat a full-mark answer to this type should look like on this course:\n${SHAPE[mk]||'Follow AQA expectations for this mark total.'}`:'If the point is about calculations, set kind to "calculation": the weak and strong parts are worked solutions (one with the error, one correct, with formula, working and units) and the full answer is a complete worked solution.'}
 
-${RULES}
+${RULES}${stdBlock(mk)}${stdTemplate(mk)}
 
 The weak answer must show the exact problem in the point, be believable as real student work at the mark you give it, and the mark must fit the level descriptors. The strong part and the full answer must genuinely earn full marks against the descriptors, without sounding like a textbook. Every note quote must be copied exactly from the text it refers to. Give 3 to 6 notes on each text, in the order they appear. Tasks: two or three, each with the number of handwritten lines a student would really need (a paragraph 8 to 12, a 9-mark answer about 22, a conclusion 10), and a model answer.
 
@@ -94,7 +122,7 @@ const STRUCT='Reply with ONLY JSON in this shape. Give a verdict on every area, 
 function checkSystem(mk,step){
   return `You are a senior AQA A-level Business (${SPEC}) examiner checking a printable teaching resource before it goes to a ${YEAR} class. ${step}
 ${mk?`AQA level descriptors for ${mk} marks:\n${LEVELS[mk]||''}\nCourse rules for a full-mark ${mk}-mark answer:\n${SHAPE[mk]||''}`:''}
-${RULES}`;
+${RULES}${stdBlock(mk)}${stdBlock(mk)?'\nAlso check the full-mark answer and the strong part meet this standard.':''}`;
 }
 function verdicts(c){
   const out=(c&&Array.isArray(c.issues)?c.issues:[]).slice();
@@ -130,7 +158,7 @@ ${job.comments&&job.comments.length?`What the marker said on their answers (for 
 
   /* check 1: examiner audit */
   step('Check 1 of 3: examiner check');
-  let iss=localChecks(r,names);
+  let iss=localChecks(r,names).concat(stdChecks(r,mk));
   const c1=await ask(checkSystem(mk,`Check everything: is the teaching point accurate; does the weak answer really show that problem and fit the mark given; do the strong part and the full answer genuinely earn full marks against the descriptors and the course rules; is every note accurate and is its quote copied exactly; are all facts, figures and calculations right (work every calculation out yourself); are the task answers right; is the language plain and right for students. Only report real problems, not matters of taste.
 Reply with ONLY JSON in this shape. Give a verdict on every area, then list every real problem in issues:
 {"point_accurate":{"ok":true,"note":""},"no_invented_case_facts":{"ok":true,"note":"list any detail used in an answer that is not in the question or question.data"},"weak_shows_the_problem":{"ok":true,"note":""},"weak_mark_fair":{"ok":true,"note":"the mark you would give"},"strong_part_full_marks":{"ok":true,"note":""},"full_answer_full_marks":{"ok":true,"note":"the mark you would give and why"},"follows_course_rules":{"ok":true,"note":""},"notes_accurate_and_quotes_exact":{"ok":true,"note":""},"figures_correct":{"ok":true,"note":"recalculate every figure"},"task_answers_correct":{"ok":true,"note":""},"plain_student_language":{"ok":true,"note":""},"issues":[{"where":"which part","problem":"what is wrong","fix":"how to fix it"}]}`),JSON.stringify(r),3000);
@@ -163,7 +191,7 @@ Reply with ONLY JSON: {"answer_a":{"mark":number,"level":"Level n","why":"what h
 
   /* check 3: final proofread */
   step('Check 3 of 3: final proofread');
-  let iss3=localChecks(r,names);
+  let iss3=localChecks(r,names).concat(stdChecks(r,mk));
   const c3=await ask(checkSystem(mk,`This is the final check before printing. Read it as a careful head of department would. Check facts against the AQA ${SPEC} specification, recalculate every figure, check every note quote is copied exactly and every note is accurate, check the full-mark answer follows the course rules for this question type, and check the wording is plain and suitable for students. Only report real problems.
 Reply with ONLY JSON in this shape. Give a verdict on every area, then list every real problem in issues:
 {"point_accurate":{"ok":true,"note":""},"no_invented_case_facts":{"ok":true,"note":"list any detail used in an answer that is not in the question or question.data"},"weak_shows_the_problem":{"ok":true,"note":""},"weak_mark_fair":{"ok":true,"note":"the mark you would give"},"strong_part_full_marks":{"ok":true,"note":""},"full_answer_full_marks":{"ok":true,"note":"the mark you would give and why"},"follows_course_rules":{"ok":true,"note":""},"notes_accurate_and_quotes_exact":{"ok":true,"note":""},"figures_correct":{"ok":true,"note":"recalculate every figure"},"task_answers_correct":{"ok":true,"note":""},"plain_student_language":{"ok":true,"note":""},"issues":[{"where":"which part","problem":"what is wrong","fix":"how to fix it"}]}`),JSON.stringify(r),3000);
@@ -171,8 +199,8 @@ Reply with ONLY JSON in this shape. Give a verdict on every area, then list ever
   if(iss3.length){step('Fixing what check 3 found');r=await revise(r,iss3,mk);
     step('Check 3 again: proofread of the fixed version');
     const c4=await ask(checkSystem(mk,`Final check of a resource that has just been corrected. Check facts, figures, exact quotes, the course rules for this question type, invented case details and wording. Only report real problems.\n${STRUCT}`),JSON.stringify(r),3000).catch(()=>null);
-    const left=localChecks(r,names).concat(c4?verdicts(c4):[]);
-    if(left.length){step('Fixing the last points');r=await revise(r,left,mk);const last=localChecks(r,names);warn.push(...last.map(x=>x.problem));}
+    const left=localChecks(r,names).concat(stdChecks(r,mk),c4?verdicts(c4):[]);
+    if(left.length){step('Fixing the last points');r=await revise(r,left,mk);const last=localChecks(r,names).concat(stdChecks(r,mk));warn.push(...last.map(x=>x.problem));}
   }
   log.push({n:3,name:'Final proofread',found:iss3.map(x=>x.problem)});
   r._warn=warn;
