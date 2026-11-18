@@ -207,7 +207,7 @@ function briefHtml(b){
   return `${b.headline?`<p class="rp-head">${esc(b.headline)}</p>`:''}<div class="rp-ai">
     ${b.happened&&b.happened.length?`<section><h3>What happened</h3><ul>${L(b.happened,x=>`<li>${esc(x)}</li>`)}</ul></section>`:''}
     ${b.seeing&&b.seeing.length?`<section><h3>What the work shows</h3><ul>${L(b.seeing,x=>`<li>${esc(x)}</li>`)}</ul></section>`:''}
-    ${b.reiterate&&b.reiterate.length?`<section class="wide"><h3>${st.u?'What to go over with '+esc(first(st.u)):'Go over these in lessons'}</h3><div class="re">${L(b.reiterate,x=>`<div><b>${esc(x.point)}</b>${esc(x.why||'')}${x.how?`<div class="h">In class: ${esc(x.how)}</div>`:''}</div>`)}</div></section>`:''}
+    ${b.reiterate&&b.reiterate.length?`<section class="wide"><h3>${st.u?'What to go over with '+esc(first(st.u)):'Go over these in lessons'}</h3><div class="re">${(b.reiterate||[]).filter(Boolean).map((x,i)=>`<div data-resh="brief:${i}"><b>${esc(x.point)}</b>${esc(x.why||'')}${x.how?`<div class="h">In class: ${esc(x.how)}</div>`:''}<button class="lnk rs-btn" data-res="brief:${i}">Make a worksheet and slides on this</button></div>`).join('')}</div></section>`:''}
     ${b.praise&&b.praise.length?`<section><h3>Worth praising</h3><ul>${L(b.praise,x=>`<li><b>${esc(x.name)}</b>: ${esc(x.why)}</li>`)}</ul></section>`:''}
     ${b.check_on&&b.check_on.length?`<section><h3>Check on</h3><ul>${L(b.check_on,x=>`<li><b>${esc(x.name)}</b>: ${esc(x.why)}</li>`)}</ul></section>`:''}
     ${b.to_student?`<section class="wide"><h3>Message for ${esc(first(st.u))}</h3><p style="margin:0;line-height:1.6;font-size:.93rem">${esc(b.to_student)}</p></section>`:''}
@@ -288,7 +288,7 @@ function typeHtml(b){
   return `${b.summary?`<p class="rp-head" style="margin-top:0">${esc(b.summary)}</p>`:''}<div class="rp-ai" style="margin-bottom:18px">
     ${b.doing_well&&b.doing_well.length?`<section><h3>What they are doing well</h3><ul>${L(b.doing_well,x=>`<li>${esc(x)}</li>`)}</ul></section>`:''}
     ${b.weaknesses&&b.weaknesses.length?`<section><h3>Where marks are being lost</h3><ul>${L(b.weaknesses,x=>`<li><b>${esc(x.issue)}</b>${x.seen?` <span class="muted">(${esc(x.seen)})</span>`:''}${x.example?`<br><span class="muted">${esc(x.example)}</span>`:''}</li>`)}</ul></section>`:''}
-    ${b.reiterate&&b.reiterate.length?`<section class="wide"><h3>Say this in lessons</h3><div class="re">${L(b.reiterate,x=>`<div><b>${esc(x.point)}</b>${x.how?`<div class="h">In class: ${esc(x.how)}</div>`:''}</div>`)}</div></section>`:''}
+    ${b.reiterate&&b.reiterate.length?`<section class="wide"><h3>Say this in lessons</h3><div class="re">${(b.reiterate||[]).filter(Boolean).map((x,i)=>`<div data-resh="type:${i}"><b>${esc(x.point)}</b>${x.how?`<div class="h">In class: ${esc(x.how)}</div>`:''}<button class="lnk rs-btn" data-res="type:${i}">Make a worksheet and slides on this</button></div>`).join('')}</div></section>`:''}
   </div>${b.questions?`<p class="rp-thin" style="margin-top:-6px;margin-bottom:16px">${esc(b.questions)}</p>`:''}`;
 }
 function typeText(b){
@@ -345,6 +345,21 @@ function bindAI(c,prev,R,types){
   const bc=$('#rpBriefCopy');if(bc)bc.onclick=()=>{const h=cached(KEY('brief',R));if(h&&navigator.clipboard)navigator.clipboard.writeText(briefText(h.d));bc.textContent='Copied';};
   const t=types.find(x=>String(x.k)===String(st.type));
   const tg=$('#rpTypeGo');if(tg&&t)tg.onclick=()=>writeType(t,R);
+  /* make a resource from a point */
+  const exams=window.EXAMS||[];
+  const qopts=list=>groupQuestions(list).slice(0,14).map(q=>{const ex=q.list[0].ref?exams.find(e=>e.id===q.list[0].ref):null;
+    return {text:q.full,ref:q.label||'Question the class used',marks:q.list[0].p.max,needs:ex?ex.needs||'':''};});
+  const names=[...new Set((TR.data.accounts||[]).flatMap(a=>[a.name,a.name.split(' ')[0]]))];
+  $$('[data-res]',root).forEach(b=>b.onclick=()=>{
+    if(!window.Resources){alert('The resource maker did not load. Refresh the page.');return;}
+    const [kind,i]=b.dataset.res.split(':');
+    let item,mk=null,pool=c.essays;
+    if(kind==='brief'){const h=cached(KEY('brief',R));item=h&&h.d.reiterate[+i];const m=/(\d+)[- ]mark/i.exec(item&&item.point||'');if(m){mk=+m[1];pool=c.essays.filter(e=>e.type===mk);}}
+    else{const h=t&&cached(KEY('type',R,t.k));item=h&&h.d.reiterate[+i];mk=t?t.k:null;pool=t?t.list:c.essays;}
+    if(!item)return;
+    Resources.open(b.closest('[data-resh]'),{point:item.point,why:item.why||'',how:item.how||'',marks:mk,options:qopts(pool.length?pool:c.essays),
+      comments:(pool.length?pool:c.essays).map(m=>String(m.improve||'')).filter(Boolean).slice(0,25),names});
+  });
   const tc=$('#rpTypeCopy');if(tc&&t)tc.onclick=()=>{const h=cached(KEY('type',R,t.k));if(h&&navigator.clipboard)navigator.clipboard.writeText(typeText(h.d));tc.textContent='Copied';};
 }
 
