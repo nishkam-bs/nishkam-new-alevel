@@ -108,7 +108,7 @@ function renderClass(){
   const units=T.units.map(u=>u.unit);
   const topicsBy={};T.topics.forEach(([id,unit])=>{(topicsBy[unit]=topicsBy[unit]||[]).push(id);});
   root.innerHTML=`
-  <div class="ov-top"><button class="btn" id="ovSum">Write a class summary</button><button class="btn ghost" id="ovSetAll">Set work</button><span class="sp"></span><span class="muted" style="font-size:.85rem">Click a name for one student's profile.</span></div>
+  <div class="ov-top"><button class="btn" id="ovRep">Feedback report</button><button class="btn ghost" id="ovSum">Write a class summary</button><button class="btn ghost" id="ovSetAll">Set work</button><span class="sp"></span><span class="muted" style="font-size:.85rem">Click a name for one student's profile.</span></div>
   <div class="stats">
     <div class="card stat"><b>${active} / ${list.length}</b><span>active in the last 7 days</span></div>
     <div class="card stat"><b>${recentE.length?Math.round(recentE.reduce((a,b)=>a+b,0)/recentE.length)+'%':'–'}</b><span>average extended answer, last 30 days</span></div>
@@ -137,6 +137,7 @@ function renderClass(){
   $$('[data-gap]',root).forEach(b=>b.onclick=()=>{const g=gaps.find(x=>x.id===b.dataset.gap);view={page:'set',users:g.who.map(s=>s.u),topics:[g.id],back:'class'};render();scrollTo({top:0});});
   $('#ovSetAll').onclick=()=>{view={page:'set',users:list.map(s=>s.u),topics:[],back:'class'};render();scrollTo({top:0});};
   $('#ovSum').onclick=()=>classSummary(list,gaps);
+  $('#ovRep').onclick=()=>{view={page:'report',u:'',fresh:true,back:'class'};render();scrollTo({top:0});};
   bindWork();
 }
 function workTable(ws,withName){
@@ -170,7 +171,7 @@ function renderStudent(){
   const recent=s.d.marks.slice().sort((x,y)=>String(y.t).localeCompare(String(x.t))).slice(0,8);
   const ess=a.essays.slice(-14);
   root.innerHTML=`
-  <div class="ov-top"><button class="btn ghost" id="ovBack">Back to the class</button><span class="sp"></span><button class="btn" id="ovFb">Write feedback</button><button class="btn ghost" id="ovSet1">Set work for ${esc(s.first)}</button></div>
+  <div class="ov-top"><button class="btn ghost" id="ovBack">Back to the class</button><span class="sp"></span><button class="btn ghost" id="ovRep1">Report for ${esc(s.first)}</button><button class="btn" id="ovFb">Write feedback</button><button class="btn ghost" id="ovSet1">Set work for ${esc(s.first)}</button></div>
   <div class="ov-card"><h2 style="font-size:1.8rem;margin-bottom:4px">${esc(s.name)}</h2><p class="muted" style="margin:0">${esc(s.u)} · last active ${ago(s.last)}${att.length?' · '+att.map(esc).join(' · '):''}</p>
     <h3 style="margin:16px 0 6px;font-size:1rem">Next steps</h3>${steps.length?`<ol style="margin:0;padding-left:20px">${steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`:'<p class="muted">Not enough evidence yet.</p>'}</div>
   <div class="ov-grid">
@@ -190,6 +191,7 @@ function renderStudent(){
   $$('[data-unit]',root).forEach(b=>b.onclick=()=>{const u=b.dataset.unit;openUnits.has(u)?openUnits.delete(u):openUnits.add(u);render();});
   $('#ovSet1').onclick=()=>{view={page:'set',users:[s.u],topics:[],back:'student',u:s.u};render();scrollTo({top:0});};
   $('#ovFb').onclick=()=>studentFeedback(s);
+  $('#ovRep1').onclick=()=>{view={page:'report',u:s.u,fresh:true,back:'student'};render();scrollTo({top:0});};
   $('#ovNoteSave').onclick=async()=>{try{await TR.api('/notes/save',{token:TR.token,username:s.u,text:$('#ovNote').value});(TR.data.notes=TR.data.notes||{})[s.u]={text:$('#ovNote').value,t:new Date().toISOString()};$('#ovNoteMsg').textContent='Saved';}catch(e){$('#ovNoteMsg').textContent=e.message;}};
   $('#ovCopy').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText($('#ovNote').value);$('#ovNoteMsg').textContent='Copied';};
   bindWork();
@@ -316,6 +318,7 @@ function preview(){
 
 function render(){
   if(!root)return;
+  if(view.page==='report'&&window.Report){const v=view;Report.render(root,{u:v.u,fresh:!!v.fresh,back:()=>{view=v.back==='student'&&v.u?{page:'student',u:v.u}:{page:'class'};render();scrollTo({top:0});}});v.fresh=false;return;}
   if(view.page==='student')renderStudent();else if(view.page==='set')renderSet();else renderClass();
 }
 let cssDone=false;
