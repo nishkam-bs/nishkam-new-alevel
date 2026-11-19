@@ -65,6 +65,7 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const R=window.REFRESH,Ac=window.Acct,q=new URLSearchParams(location.search);
 const ids=(q.get('d')||'').split(',').filter(k=>R.DECKS[k]).slice(0,4);
+const gate=(q.get('gate')||'').replace(/[^\w:.-]/g,'').slice(0,80);
 let back=q.get('back')||'';if(!/^[\w.-]+\.html(\?[\w=&.,-]*)?(#[\w=.-]*)?$/.test(back))back='';
 if(back){$('#backTop').href=back;$('#backTop').textContent=/practice/.test(back)?'Back to my work':/weekly/.test(back)?'Back to the questions':'Back to the home page';}
 if(!ids.length){$('#title').textContent='Refresher not found';$('#card').innerHTML='<p>This refresher could not be found. Go back and try the link again.</p>';$('.nav').hidden=true;return;}
@@ -98,7 +99,9 @@ function render(){
       (c.picked!==k.answer?`<button class="btn" id="chkA" ${c.pend==null?'disabled':''}>Submit</button>`:'')+
       (c.picked!=null?`<div class="why ${c.picked===k.answer?'good':'bad'}">${c.picked===k.answer?'Right. ':'Not quite. '}${esc(k.why)}${c.picked!==k.answer?' Try again.':''}</div>`:'');
   }else if(c.done){
-    h+=`<p>That's the refresher done${ids.length>1?' on all of these topics':''}.</p><p>Remember to show your working on every calculation. You get method marks even if the final answer goes wrong.</p>`+
+    if(gate&&R.markDone)R.markDone(gate,ids);
+    const calc=ids.some(i=>R.DECKS[i].kind!=='know');
+    h+=`<p>That's the refresher done${ids.length>1?' on all of these topics':''}.</p>${gate?'<p>Your work is now unlocked.</p>':''}${calc?'<p>Remember to show your working on every calculation. You get method marks even if the final answer goes wrong.</p>':'<p>Use what you have just gone over in your answers.</p>'}`+
       (back?`<a class="btn" href="${esc(back)}" id="finish">${/practice|weekly/.test(back)?'Got it, back to the questions':'Back to the home page'}</a>`:`<a class="btn" href="practice.html" id="finish">Go to practice</a>`);
   }else h+=c.html;
   $('#card').innerHTML=h;

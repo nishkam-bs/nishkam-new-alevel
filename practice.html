@@ -131,11 +131,11 @@ async function load(){
 const RF=window.REFRESH;
 const askedKey=id=>'n8_rf_ask:'+id;
 function asked(id,v){try{if(v)localStorage.setItem(askedKey(id),'1');return !!localStorage.getItem(askedKey(id));}catch(e){return false;}}
+function gapText(){return ((mine&&mine.calcGaps)||[]).map(c=>c.label).concat(((mine&&mine.gaps)||[]).map(g=>g.title+' '+(g.calc||''))).join(' ; ');}
 function decksFor(items){
   if(!RF)return [];
   const n={};items.forEach(it=>RF.find(it.q).forEach(k=>{n[k]=(n[k]||0)+1;}));
-  const gapText=((mine&&mine.calcGaps)||[]).map(c=>c.label).concat(((mine&&mine.gaps)||[]).map(g=>g.title+' '+(g.calc||''))).join(' ; ');
-  const weak=new Set(RF.find(gapText));
+  const weak=new Set(RF.find(gapText()));
   return Object.keys(n).sort((a,b)=>(weak.has(b)?1:0)-(weak.has(a)?1:0)||n[b]-n[a]).slice(0,3);
 }
 function offerBefore(w){
@@ -190,9 +190,19 @@ function open(w){
   if(!w)return;cur=w;answers=Object.assign({},w.answers||{});
   $('#home').hidden=true;$('#doView').hidden=false;scrollTo({top:0});
   $('#doTitle').textContent=w.title;
-  setTimeout(()=>offerBefore(w),200);
   $('#doMeta').textContent=(w.source==='teacher'?'Set by your teacher':'Made by you')+' · '+fmt(w.created)+(w.status==='done'?` · marked: ${w.score}/${w.total}`:' · your answers save as you go');
+  if(locked(w))return;
+  if(w.source!=='teacher')setTimeout(()=>offerBefore(w),200);
   draw();
+}
+/* work the teacher sets stays locked until the refresher is done */
+function locked(w){
+  if(!RF||!RF.gate||w.source!=='teacher'||w.status==='done')return false;
+  const g=RF.gate({id:'work:'+w.id,items:w.spec.items||[],gapText:gapText(),back:'practice.html#w='+w.id,onLeave:()=>$('#doBack').click()});
+  if(g.done)return false;
+  $('#doQs').innerHTML=`<div class="q"><p><b>Refresher first.</b> You need to do a short refresher before you can start this work.</p><p>${esc(g.text)}</p><p><a class="btn" href="${esc(g.href)}">Start the refresher</a></p></div>`;
+  $('#doEnd').hidden=true;
+  return true;
 }
 function draw(){
   const w=cur,done=w.status==='done',res=done&&w.result?w.result.items:[];

@@ -120,6 +120,11 @@ async function load(){
   catch(e){$('#qs').innerHTML='<p class="muted">Could not load the questions. Check your connection and try again.</p>';return;}
   document.title=Q.title;$('#title').textContent=Q.title;
   if(/^calc/.test(set))$('#lead').textContent='Work each one out on paper first, then choose your answer and press Submit. Some questions ask what the answer means for the business. The worked solution appears underneath once you submit. Your submitted answer is the one that counts.';
+  const st0=state();
+  if(RF&&RF.gate&&!st0.done&&!(st0.a||[]).some(x=>x!=null)){
+    const g=RF.gate({id:'weekly:'+set,items:Q.items,back:BACK,onLeave:()=>{location.href='schedule.html';}});
+    if(!g.done){$('#qs').innerHTML=`<div class="qc"><p><b>Refresher first.</b> You need to do a short refresher before you can start these questions.</p><p>${esc(g.text)}</p><p><a class="sub" style="display:inline-block;text-decoration:none" href="${esc(g.href)}">Start the refresher</a></p></div>`;return;}
+  }
   render();
 }
 Ac.bar('#bar',{inside:true,text:'Sign in once on the home page so your answers are saved and ticked off in your schedule.'});
