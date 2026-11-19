@@ -37,6 +37,7 @@ h2{font-size:1.45rem;margin-bottom:12px}
 .btn:disabled{opacity:.5;cursor:default}
 .opt{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px;background:var(--card);color:var(--fg);font:inherit;cursor:pointer}
 .opt.right{border-color:var(--ok);background:var(--ok-soft)}.opt.wrong{border-color:var(--end);background:var(--end-soft)}
+.opt.sel{border-color:var(--navy,var(--fg));box-shadow:inset 0 0 0 1px var(--navy,var(--fg));background:var(--card)}
 .why{border-left:3px solid var(--line);padding:4px 0 4px 12px;margin-top:10px}
 .why.good{border-color:var(--ok)}.why.bad{border-color:var(--end)}
 .muted{color:var(--muted)}.small{font-size:.88rem}
@@ -93,7 +94,8 @@ function render(){
   }else if(c.mine){
     h+=`<p>From your own marked work on this topic:</p><ul class="mine">${c.mine.map(m=>`<li>${esc(m)}</li>`).join('')}</ul><p class="muted small">The next card has the mistakes students make most often.</p>`;
   }else if(c.check){
-    const k=c.check;h+=`<p><b>${esc(k.q)}</b></p>`+k.order.map(i=>`<button class="opt${c.picked!=null?(i===k.answer?' right':(i===c.picked?' wrong':'')):''}" data-o="${i}" ${c.picked===k.answer?'disabled':''}>${esc(k.options[i])}</button>`).join('')+
+    const k=c.check;h+=`<p><b>${esc(k.q)}</b></p>`+k.order.map(i=>`<button class="opt${c.pend===i?' sel':c.picked!=null?(i===k.answer?' right':(i===c.picked?' wrong':'')):''}" data-o="${i}" ${c.picked===k.answer?'disabled':''}>${esc(k.options[i])}</button>`).join('')+
+      (c.picked!==k.answer?`<button class="btn" id="chkA" ${c.pend==null?'disabled':''}>Submit</button>`:'')+
       (c.picked!=null?`<div class="why ${c.picked===k.answer?'good':'bad'}">${c.picked===k.answer?'Right. ':'Not quite. '}${esc(k.why)}${c.picked!==k.answer?' Try again.':''}</div>`:'');
   }else if(c.done){
     h+=`<p>That's the refresher done${ids.length>1?' on all of these topics':''}.</p><p>Remember to show your working on every calculation. You get method marks even if the final answer goes wrong.</p>`+
@@ -104,7 +106,8 @@ function render(){
   $('#prev').disabled=at===0;$('#next').hidden=!!c.done;
   $('#next').disabled=!!(c.check&&c.picked==null);
   const m=$('#more');if(m)m.onclick=()=>{c.shown=(c.shown||1)+1;render();};
-  document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{c.picked=+b.dataset.o;render();});
+  document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{c.pend=+b.dataset.o;render();});
+  const ca=$('#chkA');if(ca)ca.onclick=()=>{if(c.pend==null)return;c.picked=c.pend;c.pend=null;render();};
   const f=$('#finish');if(f)f.onclick=()=>{try{if(Ac&&Ac.user)Ac.call('/visit',{page:'refresher-done',title:'Finished refresher: '+ids.map(i=>R.DECKS[i].title).join(', ')}).catch(()=>{});}catch(e){}};
 }
 $('#prev').onclick=()=>{if(at>0){at--;render();scrollTo({top:0});}};

@@ -150,6 +150,7 @@ table.d td.r,table.d th.r{text-align:right;font-family:"IBM Plex Mono",monospace
 .opt.right{border-color:var(--ok);background:var(--ok-soft)}
 .opt.wrong{border-color:var(--end);background:var(--end-soft)}
 .opt.dim{opacity:.5}
+.opt.sel{border-color:var(--fg);box-shadow:inset 0 0 0 1px var(--fg)}
 
 /* build */
 .board{display:grid;gap:9px}

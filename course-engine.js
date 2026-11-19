@@ -173,7 +173,7 @@ function openStage(id){
     st.items=pickItems(st.id,pool,countOf(st));
   }else if(st.type!=='write')st.items=pickItems(st.id,st.bank,countOf(st));
   else st.items=st.bank;
-  S={st,i:-1,score:0,streak:0,results:[],t0:0,cd:null};
+  S={st,i:-1,score:0,streak:0,results:[],t0:0,acc:0,seg:null,cd:null};
   $('#mapView').hidden=true;$('#stageView').hidden=false;running=false;
   $('#sTitle').textContent=`Stage ${st.id} · ${st.title}`;
   $('#pips').innerHTML=st.type==='write'?'':st.items.map(()=>'<i></i>').join('');
@@ -182,9 +182,15 @@ function openStage(id){
   body.innerHTML=`<div class="item"><div class="src">Stage ${st.id} of ${STAGES.length}</div><h2>${esc(st.title)}</h2>
     <div class="card teach">${st.teach}${st.type==='write'?'':`<p class="passline">${countOf(st)} questions. Pass mark: <b>${st.pass}</b>.</p>`}</div>
     <div class="next"><button class="btn" id="go">${st.type==='write'?'Open the question':'Start'}</button></div></div>`;
-  $('#go').onclick=()=>{S.t0=Date.now();clearInterval(timerId);timerId=setInterval(tick,1000);nextItem();};
+  $('#go').onclick=()=>{S.t0=Date.now();S.acc=0;S.seg=document.visibilityState==='hidden'?null:Date.now();clearInterval(timerId);timerId=setInterval(tick,1000);nextItem();};
 }
-function tick(){if(!S)return;const s=Math.floor((Date.now()-S.t0)/1000);$('#sTime').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+/* the stage clock only counts time while this page is open and on screen */
+function elapsed(){return S?S.acc+(S.seg?Date.now()-S.seg:0):0;}
+function clockPause(){if(S&&S.t0&&S.seg){S.acc+=Date.now()-S.seg;S.seg=null;}}
+function clockResume(){if(S&&S.t0&&!S.seg&&timerId)S.seg=Date.now();}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')clockPause();else clockResume();});
+addEventListener('pagehide',clockPause);addEventListener('pageshow',e=>{if(e.persisted)clockResume();});
+function tick(){if(!S)return;const s=Math.floor(elapsed()/1000);$('#sTime').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
 function updStats(){$('#sScore').textContent=S.score;$('#sStreak').textContent=S.streak;$$('#pips i').forEach((p,i)=>{p.className=S.results[i]===true?'ok':S.results[i]===false?'no':i===S.i?'cur':'';});}
 function record(ok){if(S.cd){clearTimeout(S.cd);S.cd=null;const b=$('.cd i');if(b)b.style.animationPlayState='paused';}S.results[S.i]=ok;if(ok){S.score++;S.streak++;}else S.streak=0;updStats();}
 function nextItem(){
@@ -194,6 +200,13 @@ function nextItem(){
   body.innerHTML='';const wrap=document.createElement('div');wrap.className='item';body.append(wrap);
   scrollTo({top:0,behavior:reduce?'auto':'smooth'});
   ({spot:itemSpot,drift:itemDrift,build:itemBuild,weak:itemWeak,mcq:itemMcq,write:itemWrite,calc:itemCalc,timed:itemTimed})[S.st.type](it,wrap);
+}
+/* pick an answer, then press Submit. Nothing is marked until they submit. */
+function pickThenSubmit(ch,onSubmit){
+  let sel=null;const row=document.createElement('div');row.className='next subrow';
+  const sb=document.createElement('button');sb.className='btn small';sb.textContent='Submit';sb.disabled=true;row.append(sb);ch.after(row);
+  $$('.opt',ch).forEach(b=>b.onclick=()=>{if(b.disabled)return;$$('.opt',ch).forEach(x=>x.classList.toggle('sel',x===b));sel=b;sb.disabled=false;});
+  sb.onclick=()=>{if(!sel)return;row.remove();$$('.opt',ch).forEach(x=>x.classList.remove('sel'));onSubmit(sel);};
 }
 function nextBtn(wrap,label){const n=document.createElement('div');n.className='next';const b=document.createElement('button');b.className='btn';b.textContent=label||(S.i===S.st.items.length-1?'See my result':'Next');b.onclick=nextItem;n.append(b);wrap.append(n);setTimeout(()=>b.focus({preventScroll:true}),50);
   b.scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest'});}
@@ -223,7 +236,7 @@ function itemDrift(it,wrap){
   const body=it.text!=null?esc(it.text):`${esc(it.lead)}<span class="tail">${esc(it.tail)}</span>`;
   wrap.innerHTML=`<span class="src">${esc(it.src)}</span><div class="qbox">${esc(it.q)}</div><p style="font-size:.88rem;color:var(--muted);margin-bottom:8px">${esc(D.showLabel||"The end of a student's chain:")}</p><div class="ending">"${body}"</div>
   <div class="choices two"><button class="opt" data-v="1">${esc(lab[0])}</button><button class="opt" data-v="0">${esc(lab[1])}</button></div>`;
-  $$('.opt',wrap).forEach(b=>b.onclick=()=>{const pick=b.dataset.v==='1',ok=pick===it.ok;$$('.opt',wrap).forEach(x=>{x.disabled=true;if((x.dataset.v==='1')===it.ok)x.classList.add('right');else x.classList.add('dim');});if(!ok)b.classList.replace('dim','wrong');
+  pickThenSubmit($('.choices',wrap),b=>{const pick=b.dataset.v==='1',ok=pick===it.ok;$$('.opt',wrap).forEach(x=>{x.disabled=true;if((x.dataset.v==='1')===it.ok)x.classList.add('right');else x.classList.add('dim');});if(!ok)b.classList.replace('dim','wrong');
     record(ok);fb(wrap,ok,ok?'Correct':'Not this time',esc(it.why));nextBtn(wrap);});
 }
 /* ---- build ---- */
@@ -261,11 +274,12 @@ function itemWeak(it,wrap){
     $('.ph',wrap).innerHTML=`<b style="color:var(--end)">Found it.</b> ${esc(it.problem)}`;
     const fx=$('.fx',wrap);fx.innerHTML=`<p style="font-size:.9rem;color:var(--muted);margin:20px 0 4px">Which sentence should replace it?</p><div class="choices"></div>`;
     const ch=$('.choices',fx);const order=shuffle(it.fixes.map((t,i)=>({t,i})));
-    order.forEach(o=>{const b=document.createElement('button');b.className='opt';b.textContent=o.t;b.onclick=()=>{
+    order.forEach(o=>{const b=document.createElement('button');b.className='opt';b.textContent=o.t;b._o=o;ch.append(b);});
+    pickThenSubmit(ch,b=>{const o=b._o;
       const ok=o.i===it.fix;$$('.opt',ch).forEach(x=>{x.disabled=true;x.classList.add('dim');});b.classList.remove('dim');b.classList.add(ok?'right':'wrong');
       if(!ok){const r=[...ch.children].find((x,k)=>order[k].i===it.fix);r.classList.remove('dim');r.classList.add('right');}
       const s=$(`.sent[data-i="${it.bad}"]`,wrap);s.classList.replace('right','fixed');$('.tx',s).textContent=it.fixes[it.fix];
-      const good=ok&&clean;record(good);fb(fx,good,good?'Correct':ok?'Right fix, but you tapped a strong step first':'Not the best replacement',ok?'The chain now holds together. Read it again from the top.':'The green option explains the step accurately and keeps the chain heading to the end point.');nextBtn(wrap);};ch.append(b);});
+      const good=ok&&clean;record(good);fb(fx,good,good?'Correct':ok?'Right fix, but you tapped a strong step first':'Not the best replacement',ok?'The chain now holds together. Read it again from the top.':'The green option explains the step accurately and keeps the chain heading to the end point.');nextBtn(wrap);});
   }
 }
 /* ---- mcq ---- */
@@ -273,9 +287,10 @@ function itemMcq(it,wrap){
   const order=shuffle(it.o.map((t,i)=>({t,i})));
   wrap.innerHTML=`<span class="src">${esc(it.src)}</span>${it.table||''}<div class="qbox">${esc(it.prompt)}</div><div class="choices"></div>`;
   const ch=$('.choices',wrap);
-  order.forEach(o=>{const b=document.createElement('button');b.className='opt';b.textContent=o.t;b.dataset.i=o.i;b.onclick=()=>{const ok=o.i===it.a;
+  order.forEach(o=>{const b=document.createElement('button');b.className='opt';b.textContent=o.t;b.dataset.i=o.i;ch.append(b);});
+  pickThenSubmit(ch,b=>{const ok=+b.dataset.i===it.a;
     $$('.opt',ch).forEach((x,k)=>{x.disabled=true;x.classList.add(order[k].i===it.a?'right':'dim');});if(!ok)b.classList.replace('dim','wrong');
-    record(ok);fb(wrap,ok,ok?'Correct':'Not this one',esc(it.why));nextBtn(wrap);};ch.append(b);});
+    record(ok);fb(wrap,ok,ok?'Correct':'Not this one',esc(it.why));nextBtn(wrap);});
 }
 /* ---- calc ---- */
 function itemCalc(it,wrap){
@@ -297,7 +312,7 @@ function itemTimed(it,wrap){
   ({drift:itemDrift,mcq:itemMcq,calc:itemCalc}[it._k])(it,wrap);
   const secs=S.st.seconds||25;
   const bar=document.createElement('div');bar.className='cd';bar.innerHTML=`<i style="animation-duration:${secs}s"></i>`;wrap.prepend(bar);
-  S.cd=setTimeout(()=>{S.cd=null;
+  S.cd=setTimeout(()=>{S.cd=null;const sr=$('.subrow',wrap);if(sr)sr.remove();
     if(it._k==='calc'){record(false);wrap._timeout();nextBtn(wrap);return;}
     $$('.opt',wrap).forEach(x=>{x.disabled=true;const right=it._k==='drift'?((x.dataset.v==='1')===it.ok):(+x.dataset.i===it.a);x.classList.add(right?'right':'dim');});
     record(false);fb(wrap,false,'Out of time',esc(it.why));nextBtn(wrap);},secs*1000);
@@ -382,7 +397,7 @@ function finish(writeDone){
   const prevBest=state.best[st.id]??-1;if(S.score>prevBest)state.best[st.id]=S.score;
   if(passed)state.passed[st.id]=true;if(st.type!=='write')noteWrong(st.id,st.items);save();
   logResult({stage:OFFSET+st.id,stageTitle:(C.short?C.short+': ':'')+st.title,score:st.type==='write'?1:S.score,total:st.type==='write'?1:n,passed,
-    seconds:Math.round((Date.now()-S.t0)/1000),
+    seconds:Math.round(elapsed()/1000),
     missed:st.type==='write'?[]:st.items.filter((it,i)=>!S.results[i]).map(it=>it._id+' '+it.src),
     answer:st.type==='write'?(state.draft||''):''});
   const r=74,CIRC=2*Math.PI*r,frac=st.type==='write'?1:S.score/n;

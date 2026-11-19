@@ -87,6 +87,8 @@ let D=null,timerH=null;
 /* teacher preview: opened from the tracker, nothing is saved to any student's account */
 const PREVIEW=(()=>{try{const p=JSON.parse(localStorage.getItem('n8_teacher_preview')||'null');return p&&p.token&&Date.now()-p.at<12*3600000?p.token:null;}catch(e){return null;}})()&&new URLSearchParams(location.search).get('preview')==='1';
 let mem={};
+let seg=null;          /* when the current on-screen stretch started; null while paused */
+const pendMean={};     /* meaning answers chosen but not yet submitted */
 const API=(()=>{try{return localStorage.getItem('n8_api')||'https://nishkam-tracker-7138.alevelnishkam.workers.dev';}catch(e){return 'https://nishkam-tracker-7138.alevelnishkam.workers.dev';}})();
 
 /* ---------- state ---------- */
@@ -122,11 +124,19 @@ async function load(){
   document.title=D.title;$('#title').textContent=D.title;
   $('#case').innerHTML=D.caseHtml?`<div class="casetext">${D.caseHtml}</div>`:(D.pages||[]).map((p,i)=>`<img src="${p}" alt="Case study page ${i+1}">`).join('');
   $('#lock').hidden=true;$('#wrap').hidden=false;
-  const s=st();if(!s.start){s.start=Date.now();save(s);}
+  const s=st();if(!s.start){s.start=Date.now();s.used=0;save(s);}else if(s.used==null&&!s.done){s.used=0;save(s);}
+  if(!s.done&&document.visibilityState!=='hidden')seg=Date.now();
   tick();timerH=setInterval(tick,1000);
   render();
 }
-function tick(){const s=st();const end=s.done?Date.parse(s.done):Date.now();const sec=Math.max(0,Math.round((end-(s.start||Date.now()))/1000));
+/* ---------- timer: only counts while this page is open and on screen ---------- */
+function usedMs(s){return (s.used||0)+(seg&&!s.done?Date.now()-seg:0);}
+function clockPause(){if(seg==null)return;const s=st();if(!s.done){s.used=usedMs(s);save(s);}seg=null;}
+function clockResume(){if(!D||seg!=null)return;const s=st();if(s.done||!s.start)return;seg=Date.now();tick();}
+window.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')clockPause();else clockResume();},true);
+addEventListener('pagehide',clockPause);addEventListener('pageshow',e=>{if(e.persisted)clockResume();});
+setInterval(()=>{if(seg!=null){clockPause();clockResume();}},30000);   /* keep the saved time up to date */
+function tick(){const s=st();const ms=s.done?(s.secs!=null?s.secs*1000:Date.parse(s.done)-(s.start||0)):usedMs(s);const sec=Math.max(0,Math.floor(ms/1000));
   const t=$('#timer');t.hidden=false;const lim=(D&&D.mins||15)*60;t.textContent=`${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}${s.done?'':' / '+(lim/60)+':00'}`;t.classList.toggle('over',sec>lim&&!s.done);}
 document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));$('#wrap').dataset.tab=b.dataset.t;scrollTo(0,0);});
 
@@ -177,11 +187,11 @@ function render(){
   if(D.kind==='p2')h+=renderP2(s);else h+=renderP3(s);
   const sc=scoreOf(s);
   if(allDone(s)){
-    if(!s.done){s.done=new Date().toISOString();s.secs=Math.round((Date.parse(s.done)-s.start)/1000);save(s);try{sessionStorage.removeItem('n8_sched');}catch(e){}}
+    if(!s.done){s.secs=Math.round(usedMs(s)/1000);s.used=s.secs*1000;s.done=new Date().toISOString();seg=null;save(s);try{sessionStorage.removeItem('n8_sched');}catch(e){}}
     h+=`<div class="card"><p class="score" style="margin:0"><b>Finished: ${sc.right} out of ${sc.total}.</b> Time taken: ${Math.floor((s.secs||0)/60)} min ${(s.secs||0)%60} s.</p><p class="small muted" style="margin:6px 0 0">This is ticked off in your schedule. Use what you found when you write the answers. <a href="schedule.html">Back to my schedule</a></p></div>`;
   }
   const y=w.scrollTop;w.innerHTML=h;w.scrollTop=y;bind();tick();
-  const pr=document.getElementById('pvReset');if(pr)pr.onclick=()=>{mem={start:Date.now()};render();w.scrollTop=0;};
+  const pr=document.getElementById('pvReset');if(pr)pr.onclick=()=>{mem={start:Date.now(),used:0};seg=document.visibilityState==='hidden'?null:Date.now();for(const k in pendMean)delete pendMean[k];render();w.scrollTop=0;};
 }
 function renderP2(s){
   let h=`<div class="card"><div class="step">The questions on this case</div><ul class="qlist">${D.questions.map(q=>`<li>${qText(q.num)}</li>`).join('')}</ul></div>`;
@@ -198,8 +208,10 @@ function renderP2(s){
   rights.forEach(([c,i])=>{
     const m=c.meaning,ans=(s.mean||{})[i],order=shuf(m.opts,'m'+i);
     h+=`<h3>${esc(c.t)}: ${esc(fmt(c,c.value))}</h3><p class="small" style="margin:0 0 6px">${esc(m.q||'What does this tell you?')}</p>`;
-    h+=order.map(([o,j])=>{let cl='opt';if(ans!=null){if(j===m.ans)cl+=' good';else if(j===ans)cl+=' bad';}
-      return `<label class="${cl}" ${ans!=null?'aria-disabled="true"':''}><input type="radio" name="m${i}" data-mean="${i}" value="${j}" ${ans===j?'checked':''} ${ans!=null?'disabled':''}><span>${esc(o)}</span></label>`;}).join('');
+    h+=order.map(([o,j])=>{let cl='opt';if(ans!=null){if(j===m.ans)cl+=' good';else if(j===ans)cl+=' bad';}else if(pendMean[i]===j)cl+=' sel';
+      const on=ans!=null?ans===j:pendMean[i]===j;
+      return `<label class="${cl}" ${ans!=null?'aria-disabled="true"':''}><input type="radio" name="m${i}" data-mean="${i}" value="${j}" ${on?'checked':''} ${ans!=null?'disabled':''}><span>${esc(o)}</span></label>`;}).join('');
+    if(ans==null)h+=`<button class="btn" data-meansub="${i}" ${pendMean[i]==null?'disabled':''}>Submit</button>`;
     if(ans!=null)h+=`<div class="fbx ${ans===m.ans?'r':'w'} small"><b>${ans===m.ans?'Right.':'Not quite.'}</b> ${esc(m.why)}</div>`;
     if(ans==null){h+=`<hr style="border:0;border-top:1px solid var(--line);margin:14px 0">`;return;}
     const u=(s.use||{})[i]||{};
@@ -260,7 +272,9 @@ function bind(){
   w.querySelectorAll('[data-check]').forEach(b=>{const k=b.dataset.check,inp=w.querySelector(`input[data-n="${k}"]`);
     const go=()=>{const v=inp.value.trim();if(isNaN(parseNum(v))){inp.focus();inp.style.borderColor='var(--end)';return;}const s=st();s.num=Object.assign({},s.num);s.num[k]=v;save(s);render();};
     b.onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go();};});
-  w.querySelectorAll('[data-mean]').forEach(r=>r.onchange=()=>{const s=st();s.mean=Object.assign({},s.mean);s.mean[r.dataset.mean]=+r.value;save(s);render();});
+  w.querySelectorAll('[data-mean]').forEach(r=>r.onchange=()=>{const i=r.dataset.mean;pendMean[i]=+r.value;
+    w.querySelectorAll(`[data-mean="${i}"]`).forEach(x=>x.closest('.opt').classList.toggle('sel',x.checked));const b=w.querySelector(`[data-meansub="${i}"]`);if(b)b.disabled=false;});
+  w.querySelectorAll('[data-meansub]').forEach(b=>b.onclick=()=>{const i=b.dataset.meansub;if(pendMean[i]==null)return;const s=st();s.mean=Object.assign({},s.mean);s.mean[i]=pendMean[i];delete pendMean[i];save(s);render();});
   w.querySelectorAll('[data-use]').forEach(b=>b.onchange=()=>{const s=st(),i=b.dataset.use;s.use=Object.assign({},s.use);
     s.use[i]={sel:[...w.querySelectorAll(`input[data-use="${i}"]:checked`)].map(x=>x.value)};save(s);b.closest('.opt').classList.toggle('sel',b.checked);});
   w.querySelectorAll('[data-usesub]').forEach(b=>b.onclick=()=>{const s=st(),i=b.dataset.usesub;s.use=Object.assign({},s.use);s.use[i]=Object.assign({sel:[]},s.use[i],{done:true});save(s);render();});

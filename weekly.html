@@ -33,6 +33,9 @@ h1{font-family:"DM Serif Display",Georgia,serif;font-weight:400;color:var(--navy
 .opt[disabled]{cursor:default}
 .opt.right{border-color:var(--ok);background:var(--ok-soft)}
 .opt.wrong{border-color:var(--end);background:var(--end-soft)}
+.opt.sel{border-color:var(--navy);box-shadow:inset 0 0 0 1px var(--navy);background:var(--bg2)}
+.sub{margin-top:10px;border:0;border-radius:9px;background:var(--navy);color:var(--card);padding:9px 20px;font:600 .95rem "IBM Plex Sans",sans-serif;cursor:pointer}
+.sub[disabled]{opacity:.45;cursor:default}
 .fb{margin-top:12px;padding:10px 14px;border-left:3px solid var(--line);font-size:.94rem}
 .fb.r{border-color:var(--ok)}.fb.w{border-color:var(--end)}
 .fb strong{display:block;margin-bottom:2px}
@@ -45,7 +48,7 @@ h1{font-family:"DM Serif Display",Georgia,serif;font-weight:400;color:var(--navy
 <div class="wrap">
   <div class="top"><a href="schedule.html">Back to my schedule</a></div>
   <h1 id="title">Weekly questions</h1>
-  <p class="lead" id="lead">Click an answer. You will see straight away whether it is right, with an explanation. Your first answer is the one that counts, so think before you click.</p>
+  <p class="lead" id="lead">Choose an answer, then press Submit. You can change your mind until you submit. Once you submit you will see whether it is right, with an explanation, and that answer is the one that counts.</p>
   <div id="bar"></div>
   <div class="prog" id="prog" hidden><span id="progTxt"></span><span class="bar"><i id="progBar"></i></span></div>
   <div id="qs"></div>
@@ -61,6 +64,7 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 const set=(new URLSearchParams(location.search).get('set')||'').replace(/[^a-z0-9-]/gi,'');
 const KEY='quiz:'+set;
 let Q=null;
+const pend={};   /* answers chosen but not yet submitted */
 Ac.merge('quiz:',(a,b)=>{const out=Object.assign({},b,a);const n=Math.max((a.a||[]).length,(b.a||[]).length);out.a=[];
   for(let i=0;i<n;i++){const x=(a.a||[])[i],y=(b.a||[])[i];out.a[i]=x!=null?x:(y!=null?y:null);}
   out.done=a.done&&b.done?(a.done<b.done?a.done:b.done):(a.done||b.done||null);return score(out);});
@@ -74,9 +78,12 @@ function render(){
     const a=st.a[i];const answered=a!=null;
     return `<div class="qc" id="q${i}"><div class="qn"><span>${i+1} of ${Q.items.length}</span><span>${esc(it.label||'')}</span></div>
       <div class="qt">${fmtQ(it.q)}</div>${it.svg?`<div class="fig">${it.svg}</div>`:''}${it.img?`<div class="fig"><img src="${esc(it.img)}" alt="${esc(it.alt||'Figure for this question')}"></div>`:''}
-      <div class="opts">${it.opts.map((o,j)=>`<button class="opt${answered&&j===it.ans?' right':''}${answered&&j===a&&a!==it.ans?' wrong':''}" data-i="${i}" data-j="${j}" ${answered?'disabled':''}><b>${L[j]}</b><span>${esc(o)}</span></button>`).join('')}</div>
+      <div class="opts">${it.opts.map((o,j)=>`<button class="opt${answered&&j===it.ans?' right':''}${answered&&j===a&&a!==it.ans?' wrong':''}${!answered&&pend[i]===j?' sel':''}" data-i="${i}" data-j="${j}" ${answered?'disabled':''}><b>${L[j]}</b><span>${esc(o)}</span></button>`).join('')}</div>
+      ${answered?'':`<button class="sub" data-sub="${i}" ${pend[i]==null?'disabled':''}>Submit answer</button>`}
       ${answered?`<div class="fb ${a===it.ans?'r':'w'}"><strong>${a===it.ans?'Right.':'Not quite. The answer is '+L[it.ans]+'.'}</strong>${esc(it.why)}${a!==it.ans?rfLinks(it.q):''}</div>`:''}</div>`;}).join('');
-  document.querySelectorAll('.opt:not([disabled])').forEach(b=>b.onclick=()=>choose(+b.dataset.i,+b.dataset.j));
+  document.querySelectorAll('.opt:not([disabled])').forEach(b=>b.onclick=()=>{const i=+b.dataset.i,j=+b.dataset.j;pend[i]=j;
+    document.querySelectorAll(`.opt[data-i="${i}"]`).forEach(x=>x.classList.toggle('sel',x===b));const sb=document.querySelector(`[data-sub="${i}"]`);if(sb)sb.disabled=false;});
+  document.querySelectorAll('[data-sub]').forEach(b=>b.onclick=()=>{const i=+b.dataset.sub;if(pend[i]==null)return;const j=pend[i];delete pend[i];choose(i,j);});
   progress(st);
 }
 /* refreshers for the calculations they got wrong */
@@ -112,7 +119,7 @@ async function load(){
   try{const r=await fetch('weekly/'+set+'.json',{cache:'no-cache'});if(!r.ok)throw 0;Q=await r.json();}
   catch(e){$('#qs').innerHTML='<p class="muted">Could not load the questions. Check your connection and try again.</p>';return;}
   document.title=Q.title;$('#title').textContent=Q.title;
-  if(/^calc/.test(set))$('#lead').textContent='Work each one out on paper first, then click your answer. Some questions ask what the answer means for the business. The worked solution appears underneath. Your first answer is the one that counts.';
+  if(/^calc/.test(set))$('#lead').textContent='Work each one out on paper first, then choose your answer and press Submit. Some questions ask what the answer means for the business. The worked solution appears underneath once you submit. Your submitted answer is the one that counts.';
   render();
 }
 Ac.bar('#bar',{inside:true,text:'Sign in once on the home page so your answers are saved and ticked off in your schedule.'});
