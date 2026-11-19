@@ -251,7 +251,7 @@ function renderSet(){
       <div><label class="f">6-mark answers</label><input type="number" id="nS" min="0" max="6" value="2"></div><div><label class="f">Extended answer</label><select id="nE" style="width:100%"><option value="0">None</option><option value="9" selected>One 9-marker</option><option value="15">One 15-marker</option></select></div></div>
     <div class="row"><div><label class="f">Title (optional)</label><input type="text" id="sTitle" placeholder="Made from the topics if left blank"></div><div><label class="f">Due (optional)</label><input type="date" id="sDue"></div></div>
     <div><label class="f">Note for the AI (optional)</label><input type="text" id="sNote" placeholder="e.g. use a hotel business; keep the calculations short"></div>
-    <div style="display:flex;gap:10px;align-items:center"><button class="btn" id="setGen">Make the work</button><span class="muted" id="setMsg" style="font-size:.9rem"></span></div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn" id="setGen">Make the work</button><span class="muted" id="setMsg" style="font-size:.9rem"></span></div>
     <p class="note" style="margin:0">Each student gets their own set. You can check and edit every question before anything is sent.</p>
   </div></div>
   <div id="setPrev"></div>`;
@@ -270,19 +270,21 @@ function renderSet(){
     if(!users.length){$('#setMsg').textContent='Choose at least one student.';return;}
     if(!mine&&!tset.size){$('#setMsg').textContent='Choose at least one topic.';return;}
     const counts={mcq:+$('#nM').value||0,calc:+$('#nC').value||0,short:+$('#nS').value||0,extended:+$('#nE').value?1:0};
-    const btn=$('#setGen');btn.disabled=true;drafts=[];let done=0;
+    const btn=$('#setGen');btn.disabled=true;drafts=[];let done=0;$('#setPrev').innerHTML='';
+    const msg=()=>{$('#setMsg').textContent=`Making the work: ${done} of ${users.length} ready. This takes about a minute${users.length>3?' or two':''}. Keep this page open.`;};msg();
     const jobs=users.map(u=>async()=>{
       const s=list.find(x=>x.u===u);
       const topics=mine?s.a.gaps.slice(0,4).map(g=>g.id):[...tset];
       const req={topics,counts,extendedMarks:+$('#nE').value||9,about:A.summary(s.a,6),title:$('#sTitle').value.trim(),note:$('#sNote').value.trim()};
       try{const spec=await W.generate(req);drafts.push({u,name:s.name,spec,req});}
       catch(e){drafts.push({u,name:s.name,error:e.message,req});}
-      done++;$('#setMsg').textContent=`Made ${done} of ${users.length}...`;
+      done++;msg();
     });
     /* three at a time */
     let i=0;await Promise.all([0,1,2].map(async()=>{while(i<jobs.length){const j=jobs[i++];await j();}}));
     drafts.sort((a,b)=>a.name.localeCompare(b.name));
-    $('#setMsg').textContent='Check the work below, then send it.';btn.disabled=false;preview();
+    $('#setMsg').textContent='Done. Check the work below, then send it.';btn.disabled=false;preview();
+    try{$('#setPrev').scrollIntoView({behavior:'smooth',block:'start'});}catch(e){}
   };
 }
 function preview(){

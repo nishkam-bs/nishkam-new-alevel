@@ -29,7 +29,11 @@ const FORMAT=`Return JSON only, no other text:
 "skill" is one of: ${SKILLS.join(', ')}. "topic" is one of the topic ids given.`;
 
 async function ask(system,content,maxTokens){
-  const r=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:maxTokens||6000,system,messages:[{role:'user',content}]})});
+  const ctl=typeof AbortController!=='undefined'?new AbortController():null,tm=ctl?setTimeout(()=>ctl.abort(),150000):0;
+  let r;
+  try{r=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:maxTokens||6000,system,messages:[{role:'user',content}]}),signal:ctl?ctl.signal:undefined});}
+  catch(e){throw new Error(e&&e.name==='AbortError'?'The AI took too long to reply. Try again.':'Could not reach the AI. Check your connection and try again.');}
+  finally{clearTimeout(tm);}
   if(!r.ok)throw new Error('The AI did not respond ('+r.status+'). Try again in a minute.');
   const d=await r.json();const raw=(d.content||[]).map(c=>c.text||'').join('');
   const obj=firstObject(raw);if(!obj)throw new Error('The reply could not be read. Try again.');
