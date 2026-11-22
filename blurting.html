@@ -446,5 +446,153 @@ const hero=document.querySelector('.hero');hero.addEventListener('pointermove',e
 })();
 </script>
 <script src="visit.js" defer></script>
+<!-- READING-TOOLS:START (dyslexia-friendly study toolbar; edit master copy and re-inject) -->
+<style id="dx-style">
+.dx-fab{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));z-index:9600;display:flex;align-items:center;gap:8px;background:#0E2A47;color:#fff;border:2px solid #B08A3E;border-radius:999px;padding:10px 16px 10px 12px;font:600 15px/1 'IBM Plex Sans',system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 20px rgba(14,42,71,.3)}
+.dx-fab:hover,.dx-fab:focus-visible{background:#163a61;outline:3px solid #FFE066;outline-offset:2px}
+.dx-fab__aa{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#FFE066;color:#0E2A47;font-weight:700;font-size:14px}
+.dx-panel{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:76px;z-index:9601;width:340px;max-width:calc(100vw - 24px);max-height:calc(100vh - 100px);overflow:auto;background:#FAF7F1;color:#0E2A47;border:2px solid #0E2A47;border-radius:16px;box-shadow:0 12px 40px rgba(14,42,71,.35);font:400 15px/1.45 'IBM Plex Sans',system-ui,sans-serif;letter-spacing:normal;word-spacing:normal}
+.dx-panel[hidden]{display:none}
+.dx-panel *{font-family:'IBM Plex Sans',system-ui,sans-serif!important;letter-spacing:normal!important;word-spacing:normal!important;line-height:1.45!important;box-sizing:border-box}
+.dx-head{display:flex;justify-content:space-between;align-items:center;background:#0E2A47;color:#FFE066;padding:12px 16px;border-radius:13px 13px 0 0;position:sticky;top:0;z-index:1}
+.dx-head h2{margin:0;font-size:17px!important;font-weight:700;color:#FFE066}
+.dx-x{background:none;border:0;color:#fff;font-size:22px;cursor:pointer;padding:0 4px}
+.dx-body{padding:6px 16px 14px}
+.dx-row{padding:10px 0;border-bottom:1px solid #E5DCC8}
+.dx-row:last-child{border-bottom:0}
+.dx-lbl{display:block;font-weight:600;font-size:14.5px;margin-bottom:6px}
+.dx-hint{display:block;font-size:12.5px;color:#4a5a6c;margin-top:4px}
+.dx-sw{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;font-weight:600;font-size:14.5px}
+.dx-sw input{appearance:none;-webkit-appearance:none;width:46px;height:26px;border-radius:999px;background:#c9c2b3;position:relative;cursor:pointer;flex:none;transition:background .2s}
+.dx-sw input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s}
+.dx-sw input:checked{background:#0E2A47}
+.dx-sw input:checked::after{left:23px;background:#FFE066}
+.dx-sw input:focus-visible{outline:3px solid #B08A3E;outline-offset:2px}
+.dx-seg{display:flex;gap:6px;flex-wrap:wrap}
+.dx-seg button,.dx-btn{border:2px solid #0E2A47;background:#fff;color:#0E2A47;border-radius:10px;padding:6px 12px;font-weight:600;font-size:14px;cursor:pointer}
+.dx-seg button[aria-pressed="true"]{background:#0E2A47;color:#FFE066}
+.dx-seg button:focus-visible,.dx-btn:focus-visible{outline:3px solid #B08A3E;outline-offset:2px}
+.dx-tints{display:flex;gap:8px;flex-wrap:wrap}
+.dx-tints button{width:36px;height:36px;border-radius:50%;border:2px solid #0E2A47;cursor:pointer;font-size:11px;font-weight:700;color:#0E2A47}
+.dx-tints button[aria-pressed="true"]{outline:3px solid #B08A3E;outline-offset:2px}
+.dx-foot{display:flex;gap:8px;justify-content:space-between;padding-top:8px}
+.dx-btn--reset{border-color:#8a8a8a;color:#444}
+.dx-panel .dx-sw input{background:#c9c2b3!important;border:0!important;margin:0!important;box-shadow:none!important}.dx-panel .dx-sw input:checked{background:#0E2A47!important}.dx-head h2{border:0!important;padding:0!important;text-decoration:none!important;background:none!important}.dx-head h2::before,.dx-head h2::after{content:none!important;display:none!important}.dx-panel button{text-transform:none!important;box-shadow:none}
+/* effects */
+html.dx-font body,html.dx-font body *:not(.dx-panel):not(.dx-panel *):not(.dx-fab):not(.dx-fab *):not(code):not(pre):not(kbd){font-family:'Lexend',Verdana,sans-serif!important;font-style:normal!important}
+html.dx-space body>*:not([class^="dx-"]) p,html.dx-space body>*:not([class^="dx-"]) li,html.dx-space body>*:not([class^="dx-"]) td,html.dx-space body>*:not([class^="dx-"]) th,html.dx-space body>*:not([class^="dx-"]) dd,html.dx-space body>*:not([class^="dx-"]) dt,html.dx-space body>*:not([class^="dx-"]) blockquote,html.dx-space body>*:not([class^="dx-"]) label,html.dx-space body>*:not([class^="dx-"]) summary{line-height:1.9!important;letter-spacing:.05em!important;word-spacing:.16em!important}
+html.dx-space body>*:not([class^="dx-"]) p,html.dx-space body>*:not([class^="dx-"]) li{margin-bottom:.6em}
+html.dx-left body>*:not([class^="dx-"]) p,html.dx-left body>*:not([class^="dx-"]) li,html.dx-left body>*:not([class^="dx-"]) td{text-align:left!important}
+body>*:not([class^="dx-"]){zoom:var(--dx-zoom,1)}
+.dx-tint{position:fixed;inset:0;pointer-events:none;z-index:9500;mix-blend-mode:multiply;display:none}
+.dx-ruler-top,.dx-ruler-bot{position:fixed;left:0;right:0;pointer-events:none;z-index:9550;background:rgba(14,42,71,.42);display:none}
+.dx-ruler-top{top:0}.dx-ruler-bot{bottom:0}
+.dx-ruler-line{position:fixed;left:0;right:0;pointer-events:none;z-index:9551;border-top:2px solid #B08A3E;border-bottom:2px solid #B08A3E;display:none}
+html.dx-hover body>*:not([class^="dx-"]) .dx-hot{background:rgba(255,224,102,.45)!important;outline:2px solid #B08A3E;outline-offset:2px;border-radius:4px;transition:background .12s}
+html.dx-read body>*:not([class^="dx-"]) .dx-hot{cursor:pointer}
+body>*:not([class^="dx-"]) .dx-speaking{background:rgba(255,224,102,.7)!important;outline:3px solid #0E2A47!important;outline-offset:2px;border-radius:4px}
+.dx-stop{position:fixed;left:50%;transform:translateX(-50%);bottom:max(18px,env(safe-area-inset-bottom));z-index:9602;display:none;background:#0E2A47;color:#FFE066;border:2px solid #B08A3E;border-radius:999px;padding:10px 20px;font:700 15px 'IBM Plex Sans',system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 20px rgba(14,42,71,.3)}
+.dx-stop.is-on{display:block}
+@media (max-width:520px){.dx-panel{right:12px;left:12px;width:auto;bottom:72px}.dx-fab__txt{display:none}.dx-fab{padding:10px}}
+@media (prefers-reduced-motion:reduce){.dx-sw input,.dx-sw input::after,html.dx-hover body>*:not([class^="dx-"]) .dx-hot{transition:none}}
+@media print{.dx-fab,.dx-panel,.dx-tint,.dx-ruler-top,.dx-ruler-bot,.dx-ruler-line,.dx-stop{display:none!important}}
+</style>
+<button type="button" class="dx-fab" id="dxFab" aria-expanded="false" aria-controls="dxPanel"><span class="dx-fab__aa" aria-hidden="true">Aa</span><span class="dx-fab__txt">Reading tools</span></button>
+<div class="dx-panel" id="dxPanel" role="dialog" aria-label="Reading tools" hidden>
+  <div class="dx-head"><h2>Reading tools</h2><button type="button" class="dx-x" id="dxClose" aria-label="Close reading tools">&times;</button></div>
+  <div class="dx-body">
+    <div class="dx-row"><label class="dx-sw">Easy-read font<input type="checkbox" data-dx="font"></label><span class="dx-hint">Switches to Lexend, a font that is easier to read.</span></div>
+    <div class="dx-row"><span class="dx-lbl">Text size</span><div class="dx-seg" data-dx-group="size">
+      <button type="button" data-v="1">Normal</button><button type="button" data-v="1.15">Large</button><button type="button" data-v="1.3">Larger</button><button type="button" data-v="1.5">Largest</button></div></div>
+    <div class="dx-row"><label class="dx-sw">Wider spacing<input type="checkbox" data-dx="space"></label><span class="dx-hint">More space between lines, letters and words.</span></div>
+    <div class="dx-row"><span class="dx-lbl">Colour overlay</span><div class="dx-tints" data-dx-group="tint">
+      <button type="button" data-v="none" style="background:#fff" aria-label="No overlay">Off</button>
+      <button type="button" data-v="#FFF3C4" style="background:#FFF3C4" aria-label="Cream overlay"></button>
+      <button type="button" data-v="#FFE1C7" style="background:#FFE1C7" aria-label="Peach overlay"></button>
+      <button type="button" data-v="#D6E8FF" style="background:#D6E8FF" aria-label="Blue overlay"></button>
+      <button type="button" data-v="#E8DDF7" style="background:#E8DDF7" aria-label="Lilac overlay"></button>
+      <button type="button" data-v="#FFD9E6" style="background:#FFD9E6" aria-label="Pink overlay"></button>
+      <button type="button" data-v="#E4E4E4" style="background:#E4E4E4" aria-label="Grey overlay"></button></div>
+      <span class="dx-hint">Try each colour. Pick the one that makes the words feel most still.</span></div>
+    <div class="dx-row"><label class="dx-sw">Reading ruler<input type="checkbox" data-dx="ruler"></label><span class="dx-hint">A bright strip follows your mouse or finger and dims the rest of the page.</span></div>
+    <div class="dx-row"><label class="dx-sw">Hover highlight<input type="checkbox" data-dx="hover"></label><span class="dx-hint">Highlights the sentence or box your mouse is over, so you do not lose your place.</span></div>
+    <div class="dx-row"><label class="dx-sw">Read aloud<input type="checkbox" data-dx="read"></label><span class="dx-hint">Click any paragraph, bullet or table box to hear it. Or highlight some words to hear just those.</span>
+      <div style="margin-top:8px"><span class="dx-lbl">Reading speed</span><div class="dx-seg" data-dx-group="rate"><button type="button" data-v="0.75">Slow</button><button type="button" data-v="0.9">Steady</button><button type="button" data-v="1.05">Normal</button></div></div></div>
+    <div class="dx-foot"><button type="button" class="dx-btn" id="dxDyslexiaPreset">Turn on recommended</button><button type="button" class="dx-btn dx-btn--reset" id="dxReset">Reset</button></div>
+  </div>
+</div>
+<div class="dx-tint" id="dxTint"></div>
+<div class="dx-ruler-top" id="dxRT"></div><div class="dx-ruler-line" id="dxRL"></div><div class="dx-ruler-bot" id="dxRB"></div>
+<button type="button" class="dx-stop" id="dxStop">Stop reading</button>
+<script>
+(function(){
+  var KEY='n8_readingTools', root=document.documentElement;
+  var DEF={font:false,size:'1',space:false,tint:'none',ruler:false,hover:false,read:false,rate:'0.9'};
+  var S=Object.assign({},DEF);
+  try{var saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved)S=Object.assign(S,saved);}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+  var $=function(id){return document.getElementById(id)};
+  var fab=$('dxFab'),panel=$('dxPanel'),tint=$('dxTint'),rt=$('dxRT'),rb=$('dxRB'),rl=$('dxRL'),stopBtn=$('dxStop');
+  var fontLoaded=false;
+  function loadFont(){if(fontLoaded)return;fontLoaded=true;var l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap';document.head.appendChild(l);}
+  var TEXT='p,li,td,th,dd,dt,blockquote,h1,h2,h3,h4,h5,summary,figcaption,label';
+  function apply(){
+    if(S.font)loadFont();
+    root.classList.toggle('dx-font',S.font);
+    root.classList.toggle('dx-space',S.space);
+    root.classList.toggle('dx-left',S.space);
+    root.classList.toggle('dx-hover',S.hover||S.read);
+    root.classList.toggle('dx-read',S.read);
+    root.style.setProperty('--dx-zoom',S.size);
+    tint.style.display=S.tint==='none'?'none':'block';tint.style.background=S.tint;
+    [rt,rb,rl].forEach(function(el){el.style.display=S.ruler?'block':'none'});
+    if(S.ruler)placeRuler(lastY||window.innerHeight/3);
+    if(!S.read)stopSpeak();
+    panel.querySelectorAll('input[data-dx]').forEach(function(i){i.checked=!!S[i.dataset.dx]});
+    panel.querySelectorAll('[data-dx-group]').forEach(function(g){var k=g.dataset.dxGroup;g.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.v===String(S[k])))})});
+    save();
+  }
+  // panel open/close
+  function openP(o){panel.hidden=!o;fab.setAttribute('aria-expanded',String(o));if(o)panel.querySelector('input,button:not(.dx-x)').focus();}
+  fab.addEventListener('click',function(){openP(panel.hidden)});
+  $('dxClose').addEventListener('click',function(){openP(false);fab.focus()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(!panel.hidden){openP(false);fab.focus();}stopSpeak();}});
+  document.addEventListener('click',function(e){if(!panel.hidden&&!panel.contains(e.target)&&!fab.contains(e.target))openP(false)});
+  panel.addEventListener('change',function(e){var k=e.target.dataset.dx;if(k){S[k]=e.target.checked;apply();}});
+  panel.addEventListener('click',function(e){var b=e.target.closest('[data-dx-group] button');if(b){S[b.parentNode.dataset.dxGroup]=b.dataset.v;apply();}});
+  $('dxReset').addEventListener('click',function(){S=Object.assign({},DEF);apply();});
+  $('dxDyslexiaPreset').addEventListener('click',function(){S=Object.assign(S,{font:true,size:'1.15',space:true,tint:'#FFF3C4',hover:true});apply();});
+  // reading ruler
+  var lastY=0,band=0;
+  function placeRuler(y){lastY=y;band=Math.max(44,Math.round(30*parseFloat(S.size)*(S.space?1.5:1.15)));var top=Math.max(0,y-band/2);rt.style.height=top+'px';rl.style.top=top+'px';rl.style.height=band+'px';rb.style.top=(top+band)+'px';rb.style.height='auto';}
+  document.addEventListener('mousemove',function(e){if(S.ruler)placeRuler(e.clientY)},{passive:true});
+  document.addEventListener('touchmove',function(e){if(S.ruler&&e.touches[0])placeRuler(e.touches[0].clientY)},{passive:true});
+  document.addEventListener('touchstart',function(e){if(S.ruler&&e.touches[0])placeRuler(e.touches[0].clientY)},{passive:true});
+  // hover highlight
+  var hot=null;
+  function target(el){if(!el||!el.closest)return null;if(el.closest('.dx-panel,.dx-fab,.sidebar,.mobile-bar,nav,header,button,input,select,textarea'))return null;var t=el.closest(TEXT);if(!t||!t.closest('body'))return null;
+    // prefer the smallest text block: a td/li inside, not a whole table
+    return t;}
+  document.addEventListener('mouseover',function(e){if(!(S.hover||S.read))return;var t=target(e.target);if(t===hot)return;if(hot)hot.classList.remove('dx-hot');hot=t;if(hot)hot.classList.add('dx-hot');},{passive:true});
+  document.addEventListener('mouseleave',function(){if(hot){hot.classList.remove('dx-hot');hot=null;}});
+  // read aloud
+  var synth=window.speechSynthesis,speakingEl=null,voice=null;
+  function pickVoice(){if(!synth)return;var v=synth.getVoices();voice=v.find(function(x){return /en-GB/i.test(x.lang)&&/natural|google|daniel|libby|sonia|serena|female/i.test(x.name)})||v.find(function(x){return /en-GB/i.test(x.lang)})||v.find(function(x){return /^en/i.test(x.lang)})||null;}
+  if(synth){pickVoice();if('onvoiceschanged' in synth)synth.onvoiceschanged=pickVoice;}
+  function stopSpeak(){if(synth)synth.cancel();if(speakingEl)speakingEl.classList.remove('dx-speaking');speakingEl=null;stopBtn.classList.remove('is-on');}
+  function speak(text,el){if(!synth){alertless();return;}stopSpeak();text=(text||'').replace(/\s+/g,' ').trim();if(!text)return;
+    // split long text into sentence chunks so browsers do not cut off
+    var parts=text.match(/[^.!?]+[.!?]*\s*/g)||[text];
+    speakingEl=el||null;if(el)el.classList.add('dx-speaking');stopBtn.classList.add('is-on');
+    parts.forEach(function(p,i){var u=new SpeechSynthesisUtterance(p);u.lang='en-GB';if(voice)u.voice=voice;u.rate=parseFloat(S.rate);if(i===parts.length-1)u.onend=function(){stopSpeak()};synth.speak(u);});}
+  function alertless(){stopBtn.textContent='Read aloud is not available in this browser';stopBtn.classList.add('is-on');setTimeout(function(){stopBtn.classList.remove('is-on');stopBtn.textContent='Stop reading'},3000);}
+  stopBtn.addEventListener('click',stopSpeak);
+  document.addEventListener('mouseup',function(e){if(!S.read||panel.contains(e.target))return;var sel=window.getSelection&&String(window.getSelection()).trim();if(sel&&sel.length>1){e.dxHandled=true;speak(sel,null);}});
+  document.addEventListener('click',function(e){if(!S.read)return;var sel=window.getSelection&&String(window.getSelection()).trim();if(sel&&sel.length>1)return;if(e.target.closest('a,button,input,select,textarea,summary,label'))return;var t=target(e.target);if(!t)return;if(t===speakingEl){stopSpeak();return;}speak(t.innerText,t);});
+  window.addEventListener('pagehide',stopSpeak);
+  apply();
+})();
+</script>
+<!-- READING-TOOLS:END -->
 </body>
 </html>
