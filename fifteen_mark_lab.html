@@ -746,6 +746,7 @@ async function runMark(){
     if(window.YTrack)YTrack.mark({tool:'15-Mark Lab',question:qText,mark:fb.mark,maxMark:15,level:fb.level,
       www1:fb.positive||'',www2:'Structure: '+structSummary(fb),
       ebi1:[fb.blocker_heading,fb.blocker].filter(Boolean).join(': '),ebi2:[fb.improve,fb.rewrite_original&&fb.rewrite_improved?'You wrote: "'+fb.rewrite_original+'" It could read: "'+fb.rewrite_improved+'"':''].filter(Boolean).join(' '),
+      target:{skill:'',excerpt:fb.rewrite_original||'',problem:[fb.blocker,fb.improve].filter(Boolean).join(' '),better:fb.rewrite_improved||''},
       answer:essayText||(uploadedImages.length?'[handwritten answer uploaded as photos]':''),panel:'#fbPanel'});
   }catch(err){
     document.getElementById('ldPanel').classList.remove('show');

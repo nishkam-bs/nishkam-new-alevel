@@ -52,6 +52,7 @@ textarea{min-height:120px;line-height:1.6}
 .err{color:var(--end)}
 ol.steps{margin:6px 0 0;padding-left:20px}
 [hidden]{display:none!important}
+.intro{background:rgba(127,127,127,.08);border-radius:10px;padding:12px 14px;margin:0 0 14px;line-height:1.6;font-size:.95rem}
 </style>
 </head>
 <body>
@@ -152,9 +153,9 @@ function offerAfter(w){
     decks:d,back:'practice.html#w='+w.id,no:'Not now'});
 }
 function lists(){
-  const li=w=>`<li><span class="t"><b>${esc(w.title)}</b><br><span class="small muted">${w.source==='teacher'?'Set':'Made'} ${fmt(w.created)}${w.due&&w.status!=='done'?` · due ${esc(new Date(w.due).toLocaleDateString('en-GB',{day:'numeric',month:'short'}))}`:''} · ${(w.spec.items||[]).length} questions</span></span>
+  const li=w=>`<li><span class="t"><b>${esc(w.title)}</b><br><span class="small muted">${w.source==='teacher'?'Set':w.source==='auto'?'Follow-up set':'Made'} ${fmt(w.created)}${w.due&&w.status!=='done'?` · due ${esc(new Date(w.due).toLocaleDateString('en-GB',{day:'numeric',month:'short'}))}`:''} · ${(w.spec.items||[]).length} questions</span></span>
     ${w.status==='done'?`<span class="tag done">${w.score}/${w.total}</span>`:`<span class="tag todo">${w.status==='started'?'Started':'To do'}</span>`}<button class="btn ghost" data-w="${esc(w.id)}">${w.status==='done'?'See marks':w.status==='started'?'Carry on':'Start'}</button></li>`;
-  const t=work.filter(w=>w.source==='teacher'),s=work.filter(w=>w.source==='self');
+  const t=work.filter(w=>w.source==='teacher'||w.source==='auto'),s=work.filter(w=>w.source==='self');
   $('#teacherList').innerHTML=t.length?t.map(li).join(''):'<li class="muted">Nothing set at the moment.</li>';
   $('#selfList').innerHTML=s.length?s.map(li).join(''):'<li class="muted">Sets you make appear here.</li>';
   $$('[data-w]').forEach(b=>b.onclick=()=>open(work.find(w=>w.id===b.dataset.w)));
@@ -190,15 +191,16 @@ function open(w){
   if(!w)return;cur=w;answers=Object.assign({},w.answers||{});
   $('#home').hidden=true;$('#doView').hidden=false;scrollTo({top:0});
   $('#doTitle').textContent=w.title;
-  $('#doMeta').textContent=(w.source==='teacher'?'Set by your teacher':'Made by you')+' · '+fmt(w.created)+(w.status==='done'?` · marked: ${w.score}/${w.total}`:' · your answers save as you go');
+  $('#doMeta').textContent=(w.source==='teacher'?'Set by your teacher':w.source==='auto'?'Follow-up on a topic that has come up more than once in your work':'Made by you')+' · '+fmt(w.created)+(w.status==='done'?` · marked: ${w.score}/${w.total}`:' · your answers save as you go');
   if(locked(w))return;
-  if(w.source!=='teacher')setTimeout(()=>offerBefore(w),200);
+  if(w.source==='self')setTimeout(()=>offerBefore(w),200);
   draw();
 }
 /* work the teacher sets stays locked until the refresher is done */
 function locked(w){
-  if(!RF||!RF.gate||w.source!=='teacher'||w.status==='done')return false;
-  const g=RF.gate({id:'work:'+w.id,items:w.spec.items||[],gapText:gapText(),back:'practice.html#w='+w.id,onLeave:()=>$('#doBack').click()});
+  if(!RF||!RF.gate||w.status==='done')return false;
+  if(w.source!=='teacher'&&!(w.source==='auto'&&w.spec&&w.spec.deck))return false;
+  const g=RF.gate({id:'work:'+w.id,ids:w.source==='auto'&&w.spec.deck?[w.spec.deck]:null,items:w.spec.items||[],gapText:gapText(),back:'practice.html#w='+w.id,onLeave:()=>$('#doBack').click()});
   if(g.done)return false;
   $('#doQs').innerHTML=`<div class="q"><p><b>Refresher first.</b> You need to do a short refresher before you can start this work.</p><p>${esc(g.text)}</p><p><a class="btn" href="${esc(g.href)}">Start the refresher</a></p></div>`;
   $('#doEnd').hidden=true;
@@ -206,7 +208,7 @@ function locked(w){
 }
 function draw(){
   const w=cur,done=w.status==='done',res=done&&w.result?w.result.items:[];
-  $('#doQs').innerHTML=(done?`<p><span class="score">${w.score}/${w.total}</span> <span class="muted">${Math.round(w.score/Math.max(1,w.total)*100)}%</span></p>`:'')+
+  $('#doQs').innerHTML=(w.spec.recap?`<div class="intro"><b>Recap</b><br>${esc(w.spec.recap)}</div>`:'')+(done?`<p><span class="score">${w.score}/${w.total}</span> <span class="muted">${Math.round(w.score/Math.max(1,w.total)*100)}%</span></p>`:'')+
   w.spec.items.map((it,i)=>{const a=answers[i],r=res[i];
     const fb=r?`<div class="fb ${r.ok>=.75?'good':r.ok>=.4?'mid':'bad'}">${r.marks}/${r.max}${it.type==='mcq'?(r.ok?' - right.':` - the answer is: ${esc(it.options[it.answer])}.`):''}${it.type==='calc'?(r.ok?' - right.':` - the answer is ${it.answer} ${esc(it.unit)}.`):''}
       ${it.explain?` ${esc(it.explain)}`:''}${it.working?`<br><span class="muted">Working: ${esc(it.working)}</span>`:''}${r.feedback?`<br>${esc(r.feedback)}`:''}${r.better?`<br><span class="muted">It could read: ${esc(r.better)}</span>`:''}${r.ok<1&&RF?RF.find(it.q).slice(0,2).map(k=>`<br><a href="${esc(RF.link([k],'practice.html#w='+w.id))}">Refresher: ${esc(RF.DECKS[k].title)}</a>`).join(''):''}</div>`:'';

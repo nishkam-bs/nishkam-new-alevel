@@ -320,7 +320,7 @@ function pick(items,gapText){
    work is done; otherwise shows the pop-up and returns {done:false, ids, href, text}. */
 function gate(o){
   if(gateDone(o.id))return {done:true};
-  const ids=pick(o.items,o.gapText);
+  const ids=o.ids&&o.ids.length?o.ids.filter(k=>DECKS[k]):pick(o.items,o.gapText);
   if(!ids.length)return {done:true};
   const href=link(ids,o.back)+'&gate='+encodeURIComponent(o.id);
   const list=ids.map(k=>DECKS[k].title),mins=ids.reduce((s,k)=>s+(DECKS[k].mins||3),0);

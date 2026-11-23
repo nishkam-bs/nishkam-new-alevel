@@ -174,11 +174,14 @@ async function loadSched(force){
     if(!due){schedInfo=null;}else{
       const mk=new Set((d.marks||[]).map(m=>m.ref)),ps=new Set((d.passes||[]).map(p=>+p.stage)),ex=new Set((d.excused||[]).map(x=>x.sched_id));
       const items=d.items.filter(i=>i.due===due);
-      const isDone=i=>{if(ex.has(i.id))return true;if(i.kind==='exam')return mk.has(i.ref);if(i.kind==='choice')return String(i.ref).split(',').some(r=>mk.has(r));if(i.kind==='question')return mk.has(i.id);if(i.kind==='quiz'||i.kind==='drill'){const q=get(i.kind+':'+i.ref);return !!(q&&q.done);}
+      /* redrafts and follow-ups due at this deadline count as homework too */
+      (d.redrafts||[]).filter(r=>r.due===due).forEach(r=>items.push({id:'rd:'+r.id,kind:'redraft',done:!!r.submitted}));
+      (d.follows||[]).filter(f=>f.due===due).forEach(f=>items.push({id:'fu:'+f.id,kind:'follow',done:f.status==='done'}));
+      const isDone=i=>{if(ex.has(i.id))return true;if(i.kind==='exam')return mk.has(i.ref);if(i.kind==='choice')return String(i.ref).split(',').some(r=>mk.has(r));if(i.kind==='question')return mk.has(i.id);if(i.kind==='redraft'||i.kind==='follow')return i.done;if(i.kind==='quiz'||i.kind==='drill'){const q=get(i.kind+':'+i.ref);return !!(q&&q.done);}
         if(i.kind==='course'&&i.ref in CO){const st=get('course:'+i.ref)||{};for(let k=1;k<=10;k++){if(!ps.has(CO[i.ref]+k)&&!(st.passed&&st.passed[k]))return false;}return true;}return false;};
-      const grp=i=>i.kind==='drill'?'Data drill':i.kind==='quiz'?(/^kq/.test(i.ref)?'Knowledge quiz':'Calculations'):i.kind==='course'?'Course':
+      const grp=i=>i.kind==='redraft'?'Redrafts':i.kind==='follow'?'Follow-up':i.kind==='drill'?'Data drill':i.kind==='quiz'?(/^kq/.test(i.ref)?'Knowledge quiz':'Calculations'):i.kind==='course'?'Course':
         (+i.marks===6?'6-mark questions':+i.marks===9?'9-mark questions':+i.marks===15?'15-mark questions':'Written answers');
-      const order=['6-mark questions','9-mark questions','15-mark questions','Written answers','Calculations','Knowledge quiz','Data drill','Course'];const g={};
+      const order=['6-mark questions','9-mark questions','15-mark questions','Written answers','Redrafts','Follow-up','Calculations','Knowledge quiz','Data drill','Course'];const g={};
       items.forEach(i=>{const k=grp(i);g[k]=g[k]||{label:k,done:0,total:0};g[k].total++;if(isDone(i))g[k].done++;});
       schedInfo={due,total:items.length,done:items.filter(isDone).length,groups:order.filter(k=>g[k]).map(k=>g[k])};
     }
@@ -255,13 +258,15 @@ const COURSES=[['y12_course_analyse6_v1','6-mark Analyse',10,'course-6mark-analy
 /* ---------- one-off notice on the home page (shown once per student, on any device) ---------- */
 /* Switched off until the wording has been approved. Set NOTICE_ON to true to show it. */
 const NOTICE_ON=true;
-const NOTICE={key:'notice:homework-7138-v1',html:`<h2>Weekly homework</h2>
+const NOTICE={key:'notice:homework-7138-v2',html:`<h2>Weekly homework</h2>
 <p>The homework system on the A-level Business site is now up and running. Click <b>My schedule</b> on the home page to see what is due.</p>
 <h3>Every week you will have</h3>
 <ul><li><b>Two 6-mark, two 9-mark and two 15-mark questions</b> on topics we have already covered. Each one opens in the right marking tool with its case study. Get them marked on the site by typing them or uploading photos of your handwritten answers.</li>
 <li><b>15 calculation questions.</b> Work out the answer, then decide what it means for the business.</li>
 <li><b>A data drill</b> (about 15 mins). Mostly clicking, using a case study: choose the calculations worth doing, work them out, and decide which question you would use them in. Using data well is a big part of every paper.</li>
-<li><b>A 20-question knowledge quiz.</b> Your first answer counts.</li></ul>
+<li><b>A 20-question knowledge quiz.</b> Your first answer counts.</li>
+<li><b>Redrafts.</b> When an answer is marked, you are given the part where you lost the most marks. You rewrite just that part, not the whole answer. Up to two count each week. They are on the <b>Redraft</b> page.</li>
+<li><b>Follow-ups.</b> If the same topic keeps going wrong in your work, you get a short set on it: a refresher or short recap first, then a few questions.</li></ul>
 <p>There is no homework in KAT weeks.</p>
 <h3>Deadline</h3>
 <p><b>Wednesday 11:59pm</b> every week. The first one is <b>Wednesday 9 December</b>.</p>

@@ -49,14 +49,22 @@ const SCHEMA = [
   `CREATE UNIQUE INDEX IF NOT EXISTS blurts_qid ON blurts(qid)`,
   `CREATE INDEX IF NOT EXISTS marks_user ON marks(username)`,
   `CREATE INDEX IF NOT EXISTS blurts_user ON blurts(username)`,
-  `CREATE INDEX IF NOT EXISTS sessions_user ON sessions(username)`
+  `CREATE INDEX IF NOT EXISTS sessions_user ON sessions(username)`,
+  `CREATE TABLE IF NOT EXISTS redrafts(id TEXT PRIMARY KEY, username TEXT NOT NULL, mark_qid TEXT, created TEXT NOT NULL, due TEXT,
+     tool TEXT, question TEXT, mark TEXT, lost REAL, skill TEXT, excerpt TEXT, problem TEXT, better TEXT,
+     answer TEXT, how TEXT, verdict TEXT, feedback TEXT, tries INTEGER NOT NULL DEFAULT 0, submitted TEXT, done_at TEXT, status TEXT NOT NULL DEFAULT 'set')`,
+  `CREATE INDEX IF NOT EXISTS redrafts_user ON redrafts(username)`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS redrafts_mark ON redrafts(mark_qid)`,
+  `CREATE TABLE IF NOT EXISTS follow(id TEXT PRIMARY KEY, username TEXT NOT NULL, topic TEXT NOT NULL, created TEXT NOT NULL,
+     kinds TEXT, before REAL, work_id TEXT, deck TEXT, why TEXT)`,
+  `CREATE INDEX IF NOT EXISTS follow_user ON follow(username)`
 ];
 let schemaReady = false;
 async function ensureSchema(db) {
   if (schemaReady) return;
   await db.batch(SCHEMA.map(s => db.prepare(s)));
   /* columns added after the first version */
-  for (const sql of ['ALTER TABLE marks ADD COLUMN ref TEXT', 'ALTER TABLE marks ADD COLUMN how TEXT']) { try { await db.prepare(sql).run(); } catch (e) {} }
+  for (const sql of ['ALTER TABLE marks ADD COLUMN ref TEXT', 'ALTER TABLE marks ADD COLUMN how TEXT', 'ALTER TABLE follow ADD COLUMN sent_by TEXT']) { try { await db.prepare(sql).run(); } catch (e) {} }
   schemaReady = true;
 }
 
@@ -135,6 +143,54 @@ async function fail(db, k) {
   await db.prepare('INSERT INTO fails(k,n,until) VALUES(?,?,?) ON CONFLICT(k) DO UPDATE SET n=excluded.n, until=excluded.until').bind(k, n, until).run();
 }
 const clearFails = (db, k) => db.prepare('DELETE FROM fails WHERE k=?').bind(k).run();
+
+/* ---------- redrafts: one targeted part of a marked answer ---------- */
+const REDRAFTS_PER_WEEK = 2;      // redrafts that count towards a weekly deadline; any more are optional
+const REDRAFT_TRIES = 2;
+const dayIso = d => d.toISOString().slice(0, 10);
+/* the first homework deadline at least four days away, so a student always has a few days */
+async function nextDue(db) {
+  const from = dayIso(new Date(Date.now() + 4 * 86400000));
+  const r = await db.prepare('SELECT MIN(due) AS due FROM sched WHERE due>=?').bind(from).first();
+  return r && r.due ? r.due : null;
+}
+function parseMark(m) { const x = String(m || '').match(/(\d+(?:\.\d+)?)\s*\/\s*(\d+)/); return x ? { got: +x[1], max: +x[2] } : null; }
+async function createRedraft(db, username, b, markQid) {
+  const t = b.target, pm = parseMark(b.mark);
+  if (!t || typeof t !== 'object' || !pm || pm.max < 6) return;   // 6, 9 and 15-mark answers
+  if (pm.max - pm.got < 2 || pm.got / pm.max >= 0.85) return;   // nothing worth redrafting
+  const lost = Math.round(100 * (pm.max - pm.got) / pm.max);     // share of the marks lost, so a 9-marker can outrank a 25-marker
+  const problem = str(t.problem, 600).trim();
+  if (problem.length < 15) return;
+  let due = await nextDue(db);
+  if (due) {
+    const { results } = await db.prepare('SELECT id,lost,submitted FROM redrafts WHERE username=? AND due=?').bind(username, due).all();
+    if (results.length >= REDRAFTS_PER_WEEK) {
+      /* keep the ones where the most marks were lost; the other becomes optional */
+      const open = results.filter(r => !r.submitted).sort((a, c) => (a.lost || 0) - (c.lost || 0));
+      if (open.length && lost > (open[0].lost || 0)) await db.prepare('UPDATE redrafts SET due=NULL WHERE id=?').bind(open[0].id).run();
+      else due = null;
+    }
+  }
+  await db.prepare(`INSERT OR IGNORE INTO redrafts(id,username,mark_qid,created,due,tool,question,mark,lost,skill,excerpt,problem,better,status)
+    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,'set')`).bind('r-' + b64u(rand(9)), username, markQid, nowIso(), due, str(b.tool, 60), str(b.question, 500),
+    str(b.mark, 20), lost, str(t.skill, 40), str(t.excerpt, 1500), problem, str(t.better, 1500)).run();
+}
+
+async function addFollow(db, username, b, by) {
+  const topic = str(b.topic, 20);
+  if (!/^3\.\d{1,2}\.\d{1,2}[a-z]?$/.test(topic)) throw new HttpError(400, 'Unknown topic.');
+  if (!b.spec || !Array.isArray(b.spec.items) || b.spec.items.length < 3) throw new HttpError(400, 'Not enough questions.');
+  const spec = JSON.stringify(b.spec);
+  if (spec.length > MAX_KEY_BYTES) throw new HttpError(413, 'Too large.');
+  const id = 'f-' + b64u(rand(9)), wid = 'w-' + b64u(rand(9)), t = nowIso(), due = await nextDue(db);
+  await db.batch([
+    db.prepare("INSERT INTO work(id,username,source,title,spec,status,created,due) VALUES(?,?,'auto',?,?,'set',?,?)").bind(wid, username, str(b.spec.title, 160), spec, t, due),
+    db.prepare('INSERT INTO follow(id,username,topic,created,kinds,before,work_id,deck,why,sent_by) VALUES(?,?,?,?,?,?,?,?,?,?)')
+      .bind(id, username, topic, t, str(Array.isArray(b.kinds) ? b.kinds.join(',') : b.kinds, 120), Number(b.before) || 0, wid, str(b.deck, 40) || null, str(b.why, 600), by)
+  ]);
+  return { id, workId: wid, due };
+}
 
 /* =====================================================================
    Routes
@@ -227,7 +283,71 @@ const routes = {
     await db.prepare('INSERT OR IGNORE INTO marks(qid,username,t,tool,question,mark,level,well,improve,answer,ref,how) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)')
       .bind(qid(b), u.username, nowIso(), str(b.tool, 60), str(b.question, 500), str(b.mark, 20), str(b.level, 60),
         str(b.well, 1200), str(b.improve, 1200), str(b.answer, 12000), str(b.ref, 60) || null, str(b.how, 300) || null).run();
+    if (b.target && qid(b)) { try { await createRedraft(db, u.username, b, qid(b)); } catch (e) { console.error('redraft', e && e.stack || e); } }
     return { ok: true };
+  },
+
+  /* ----- redrafts ----- */
+  async '/redraft/mine'(db, b) {
+    const u = await student(db, b);
+    const [rd, ex] = await db.batch([
+      db.prepare('SELECT id,created,due,tool,question,mark,lost,skill,excerpt,problem,better,answer,verdict,feedback,tries,submitted,done_at,status FROM redrafts WHERE username=? ORDER BY created DESC LIMIT 60').bind(u.username),
+      db.prepare("SELECT sched_id FROM excuse WHERE username=? AND sched_id LIKE 'rd:%'").bind(u.username)
+    ]);
+    return { redrafts: rd.results, excused: ex.results.map(x => x.sched_id.slice(3)), tries: REDRAFT_TRIES };
+  },
+
+  async '/redraft/submit'(db, b) {
+    const u = await student(db, b);
+    const r = await db.prepare('SELECT id,tries,status FROM redrafts WHERE id=? AND username=?').bind(str(b.id, 40), u.username).first();
+    if (!r) throw new HttpError(404, 'That redraft could not be found.');
+    if (r.status === 'fixed' || r.tries >= REDRAFT_TRIES) throw new HttpError(409, 'This redraft is finished.');
+    const verdict = ['fixed', 'partly', 'notyet'].includes(b.verdict) ? b.verdict : 'partly';
+    const tries = r.tries + 1;
+    const status = verdict === 'fixed' ? 'fixed' : tries >= REDRAFT_TRIES ? (verdict === 'notyet' ? 'flag' : 'partly') : verdict;
+    const t = nowIso();
+    await db.prepare('UPDATE redrafts SET answer=?, how=?, verdict=?, feedback=?, tries=?, status=?, done_at=?, submitted=COALESCE(submitted,?) WHERE id=?')
+      .bind(str(b.answer, 6000), str(b.how, 300) || null, verdict, str(b.feedback, 1500), tries, status, t, t, r.id).run();
+    return { ok: true, status, tries, left: REDRAFT_TRIES - tries };
+  },
+
+  /* ----- automatic follow-up for a gap that shows up in more than one place ----- */
+  async '/follow/mine'(db, b) {
+    const u = await student(db, b);
+    const [mk, at, bl, wk, st, fl, rd] = await db.batch([
+      db.prepare('SELECT t,tool,question,mark,level,well,improve,ref FROM marks WHERE username=? ORDER BY id DESC LIMIT 400').bind(u.username),
+      db.prepare('SELECT t,stage,title,score,total,passed,missed FROM attempts WHERE username=? ORDER BY id DESC LIMIT 1500').bind(u.username),
+      db.prepare('SELECT t,kind,ref,topic,got,total FROM blurts WHERE username=? ORDER BY id DESC LIMIT 600').bind(u.username),
+      db.prepare('SELECT id,source,title,spec,status,created,due,result,score,total,done_at FROM work WHERE username=? ORDER BY created DESC LIMIT 80').bind(u.username),
+      db.prepare("SELECT k,data FROM store WHERE username=? AND (k LIKE 'course:%' OR k='blurt:history' OR k='rfgate')").bind(u.username),
+      db.prepare('SELECT id,topic,created,kinds,before,work_id,deck,why FROM follow WHERE username=? ORDER BY created DESC LIMIT 60').bind(u.username),
+      db.prepare('SELECT created,skill,verdict,status,submitted FROM redrafts WHERE username=? AND submitted IS NOT NULL ORDER BY created DESC LIMIT 60').bind(u.username)
+    ]);
+    const parse = (x, d) => { try { return x ? JSON.parse(x) : d; } catch (e) { return d; } };
+    const store = {}; st.results.forEach(r => { store[r.k] = parse(r.data, null); });
+    return {
+      marks: mk.results, store, follows: fl.results, redrafts: rd.results,
+      attempts: at.results.map(r => Object.assign({}, r, { stageTitle: r.title, passed: !!r.passed, missed: parse(r.missed, []) })),
+      blurts: bl.results,
+      work: wk.results.map(w => Object.assign({}, w, { spec: parse(w.spec, {}), result: parse(w.result, null) }))
+    };
+  },
+
+  async '/follow/create'(db, b) {
+    const u = await student(db, b);
+    /* each gap gets its own follow-up; the same topic is not followed up while one is open on it or within a week */
+    const open = await db.prepare("SELECT f.id FROM follow f LEFT JOIN work w ON w.id=f.work_id WHERE f.username=? AND f.topic=? AND (w.status!='done' OR f.created>?) LIMIT 1")
+      .bind(u.username, str(b.topic, 20), new Date(Date.now() - 7 * 86400000).toISOString()).first();
+    if (open) throw new HttpError(409, 'Already followed up recently.');
+    return addFollow(db, u.username, b, 'auto');
+  },
+
+  /* the teacher sends a follow-up straight away (no waiting rules) */
+  async '/follow/send'(db, b) {
+    await session(db, b.token, 'teacher');
+    const username = str(b.username, 40);
+    if (!(await db.prepare('SELECT 1 FROM users WHERE username=?').bind(username).first())) throw new HttpError(404, 'No account with that username.');
+    return addFollow(db, username, b, 'teacher');
   },
 
   async '/blurt'(db, b) {
@@ -255,17 +375,19 @@ const routes = {
 
   async '/dashboard'(db, b) {
     await session(db, b.token, 'teacher');
-    const [users, att, mk, bl, st, wk, nt, sc, ex, vs] = await db.batch([
+    const [users, att, mk, bl, st, wk, nt, sc, ex, vs, rd, fl] = await db.batch([
       db.prepare('SELECT username,name,must_change,created,last_seen FROM users ORDER BY name'),
       db.prepare('SELECT username,t,stage,title,score,total,passed,missed,answer FROM attempts ORDER BY id DESC LIMIT 8000'),
       db.prepare('SELECT username,t,tool,question,mark,level,well,improve,answer,ref,how FROM marks ORDER BY id DESC LIMIT 3000'),
       db.prepare('SELECT username,t,kind,ref,topic,got,total,detail FROM blurts ORDER BY id DESC LIMIT 4000'),
-      db.prepare("SELECT username,k,data,t FROM store WHERE k LIKE 'course:%' OR k LIKE 'quiz:%' OR k LIKE 'drill:%' OR k='blurt:history'"),
+      db.prepare("SELECT username,k,data,t FROM store WHERE k LIKE 'course:%' OR k LIKE 'quiz:%' OR k LIKE 'drill:%' OR k='blurt:history' OR k='rfgate'"),
       db.prepare('SELECT id,username,source,title,spec,status,created,due,answers,result,score,total,done_at FROM work ORDER BY created DESC LIMIT 1500'),
       db.prepare('SELECT username,text,t FROM notes'),
       db.prepare('SELECT id,due,kind,ref,title,detail,marks,who,sort FROM sched ORDER BY due,sort'),
       db.prepare('SELECT sched_id,username,note,t FROM excuse'),
-      db.prepare('SELECT username,t,page,title FROM visits WHERE t>? ORDER BY id DESC LIMIT 4000').bind(new Date(Date.now() - 31 * 86400000).toISOString())
+      db.prepare('SELECT username,t,page,title FROM visits WHERE t>? ORDER BY id DESC LIMIT 4000').bind(new Date(Date.now() - 31 * 86400000).toISOString()),
+      db.prepare('SELECT id,username,created,due,tool,question,mark,lost,skill,excerpt,problem,answer,how,verdict,feedback,tries,submitted,done_at,status FROM redrafts ORDER BY created DESC LIMIT 2000'),
+      db.prepare('SELECT id,username,topic,created,kinds,before,work_id,deck,why,sent_by FROM follow ORDER BY created DESC LIMIT 1000')
     ]);
     const store = {}, storeT = {};
     st.results.forEach(r => { try { (store[r.username] = store[r.username] || {})[r.k] = JSON.parse(r.data); (storeT[r.username] = storeT[r.username] || {})[r.k] = r.t; } catch (e) {} });
@@ -286,7 +408,9 @@ const routes = {
       work: wk.results.map(w => Object.assign({}, w, { exam: w.username, name: name(w.username), spec: parse(w.spec, {}), answers: parse(w.answers, {}), result: parse(w.result, null) })),
       notes: Object.fromEntries(nt.results.map(n => [n.username, { text: n.text, t: n.t }])),
       sched: sc.results.map(x => Object.assign({}, x, { who: parse(x.who, 'all') })),
-      excuses: ex.results
+      excuses: ex.results,
+      redrafts: rd.results.map(r => Object.assign({ exam: r.username, name: name(r.username) }, r)),
+      follows: fl.results.map(f => Object.assign({ exam: f.username, name: name(f.username) }, f))
     };
   },
 
@@ -377,8 +501,12 @@ const routes = {
       db.prepare('SELECT ref,MIN(t) AS t,COUNT(*) AS n FROM marks WHERE username=? AND ref IS NOT NULL GROUP BY ref').bind(u.username),
       db.prepare('SELECT stage,MIN(t) AS t FROM attempts WHERE username=? AND passed=1 GROUP BY stage').bind(u.username)
     ]);
+    const [rd, fw] = await db.batch([
+      db.prepare('SELECT id,due,tool,skill,problem,submitted,status FROM redrafts WHERE username=? AND due IS NOT NULL').bind(u.username),
+      db.prepare("SELECT f.id,f.topic,w.id AS work_id,w.title,w.due,w.status,w.done_at FROM follow f JOIN work w ON w.id=f.work_id WHERE f.username=? AND w.due IS NOT NULL").bind(u.username)
+    ]);
     const mine = sc.results.filter(x => { if (x.who === 'all') return true; try { return JSON.parse(x.who).includes(u.username); } catch (e) { return false; } });
-    return { items: mine, excused: ex.results, marks: mk.results, passes: at.results };
+    return { items: mine, excused: ex.results, marks: mk.results, passes: at.results, redrafts: rd.results, follows: fw.results };
   },
 
   async '/sched/save'(db, b) {
@@ -473,7 +601,7 @@ const routes = {
   async '/accounts/delete'(db, b) {
     await session(db, b.token, 'teacher');
     const u = str(b.username, 40);
-    await db.batch(['users', 'sessions', 'store', 'attempts', 'marks', 'blurts', 'work', 'notes', 'excuse'].map(t => db.prepare(`DELETE FROM ${t} WHERE username=?`).bind(u)));
+    await db.batch(['users', 'sessions', 'store', 'attempts', 'marks', 'blurts', 'work', 'notes', 'excuse', 'redrafts', 'follow', 'visits'].map(t => db.prepare(`DELETE FROM ${t} WHERE username=?`).bind(u)));
     return { ok: true };
   }
 };
