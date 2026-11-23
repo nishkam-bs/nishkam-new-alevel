@@ -130,5 +130,36 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 const typeName={mcq:'Multiple choice',calc:'Calculation',short:'Short answer',extended:'Extended answer'};
 const label=it=>{const t=TOP[it.topic];return (t?`${t.ref} ${t.title}`:'')+(it.marks?` · ${it.marks} marks`:'');};
 
-window.WorkGen={generate,mark,clean,esc,typeName,label};
+/* a second, independent check before anything is sent automatically:
+   an examiner works out every question without being told the answer.
+   Anything it disagrees with is dropped. */
+async function verify(spec){
+  const items=spec.items||[];
+  const sys=`You are an experienced AQA A-level Business (7138) examiner checking practice questions before a student sees them. Work each one out yourself.
+- Multiple choice: give the index (0-3) of the one correct option, or -1 if no option is correct, more than one could be defended, or the question is unclear.
+- Calculation: work it out and give the number only.
+- Short answer: "ok" is true only if the question is clear, on the 7138 specification, and every mark point is accurate.
+If a recap is given, "recap_ok" is true only if every statement in it is accurate and on the 7138 specification.
+Return JSON only: {"items":[{"i":0,"answer":0,"ok":true,"issue":""}],"recap_ok":true,"recap_issue":""}`;
+  const body=items.map((it,i)=>it.type==='mcq'?`Item ${i} (multiple choice): ${it.q}\n${it.options.map((o,k)=>k+') '+o).join('\n')}`
+    :it.type==='calc'?`Item ${i} (calculation, answer in ${it.unit||'the unit asked'}): ${it.q}`
+    :`Item ${i} (short answer, ${it.marks} marks): ${it.q}\nMark points: ${(it.points||[]).join(' | ')}`).join('\n\n')+(spec.recap?`\n\nRecap:\n${spec.recap}`:'');
+  const d=await ask(sys,body,2500+items.length*300);
+  const res={};(d.items||[]).forEach(r=>{if(r&&r.i!=null)res[+r.i]=r;});
+  const keep=items.filter((it,i)=>{const r=res[i];if(!r)return false;
+    if(it.type==='mcq')return +r.answer===it.answer;
+    if(it.type==='calc'){const n=parseFloat(String(r.answer==null?'':r.answer).replace(/[^0-9.\-]/g,''));return isFinite(n)&&Math.abs(n-it.answer)<=Math.max(Math.abs(it.answer)*0.01,0.051);}
+    if(it.type==='short')return r.ok===true;
+    return false;});
+  return Object.assign({},spec,{items:keep,recap:spec.recap&&d.recap_ok===true?spec.recap:''});
+}
+/* a short recap of one topic, for a follow-up set */
+async function recap(topicId,about){
+  const t=TOP[topicId];if(!t)return '';
+  const sys=`You write a short recap of one topic for a Year 12 student on AQA A-level Business (7138), as their teacher would. 80 to 130 words, plain British English, no headings, no lists, no hype. Explain the idea accurately, then the point students most often get wrong about it. Stay strictly within the 7138 specification. Return JSON only: {"recap":"..."}`;
+  const d=await ask(sys,`Topic: ${t.ref} ${t.title}${about?`\n\nWhat this student has been getting wrong:\n${about}`:''}`,800);
+  return String(d.recap||'').trim();
+}
+
+window.WorkGen={generate,mark,clean,verify,recap,esc,typeName,label};
 })();

@@ -120,6 +120,22 @@ function observe(root){
   new MutationObserver(()=>{const t=curTA();if(t&&t!==seen){seen=t;ta=t;setTimeout(restore,0);}}).observe(root,{childList:true,subtree:true});
 }
 
+/* tell the student which part they will redraft (only when marks were lost) */
+function redraftNote(r,tg){
+  const m=String(r.mark||'').match(/(\d+(?:\.\d+)?)\s*\/\s*(\d+)/);if(!m)return;
+  const got=+m[1],max=+m[2];if(max<6||max-got<2||got/max>=0.85)return;
+  const panel=r.panel&&document.querySelector(r.panel);if(!panel)return;
+  const old=panel.querySelector('.nk-rd');if(old)old.remove();
+  const e=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const box=document.createElement('div');box.className='nk-rd';
+  box.style.cssText='margin:18px 0 0;padding:14px 16px;border:1px solid rgba(127,127,127,.35);border-radius:10px;font-size:.92rem;line-height:1.55';
+  box.innerHTML=`<b>Your redraft</b><p style="margin:6px 0">You don't need to rewrite the whole answer. Just fix the part where you lost the most marks:</p>
+    ${tg.excerpt?`<p style="margin:6px 0;padding-left:10px;border-left:3px solid rgba(127,127,127,.4);font-style:italic">${e(tg.excerpt)}</p>`:''}
+    <p style="margin:6px 0">${e(tg.problem)}</p>
+    <p style="margin:8px 0 0">It has been added to your <a href="redraft.html">redrafts</a>. Do it without looking at the improved version above.</p>`;
+  panel.appendChild(box);
+}
+
 window.NTrack={
   init(sel){
     const root=typeof sel==='string'?document.querySelector(sel):sel;
@@ -133,7 +149,11 @@ window.NTrack={
     const row={ref:currentRef(),tool:r.tool,question:String(r.question||'').slice(0,500),mark:String(r.mark==null?'':r.mark).slice(0,20),level:String(r.level||'').slice(0,60),
       well:String(r.well||'').slice(0,1200),improve:String(r.improve||'').slice(0,1200),answer:String(r.answer||'').slice(0,12000)};
     try{const h=how();if(h)row.how=JSON.stringify(h);}catch(e){}
+    const tg=r.target&&String(r.target.problem||'').trim().length>=15?{skill:String(r.target.skill||'').slice(0,40),excerpt:String(r.target.excerpt||'').trim().slice(0,1500),
+      problem:String(r.target.problem).trim().slice(0,600),better:String(r.target.better||'').trim().slice(0,1500)}:null;
+    if(tg)row.target=tg;
     A.send('/mark',row);
+    if(tg&&A.user)redraftNote(r,tg);
     if(row.ref)try{A.set(DKEY,{text:''});}catch(e){}
     if(A.on&&!A.user){
       const panel=r.panel&&document.querySelector(r.panel);
@@ -147,7 +167,7 @@ window.YTrack={
   mark(r){
     const lvl=r.level==null||r.level===''?'':(/^level/i.test(String(r.level))?String(r.level):'Level '+r.level);
     window.NTrack.mark({tool:r.tool,question:r.question,mark:(r.mark==null?'':r.mark)+(r.maxMark?'/'+r.maxMark:''),level:lvl,
-      well:[r.www1,r.www2].filter(Boolean).join(' '),improve:[r.ebi1,r.ebi2].filter(Boolean).join(' '),answer:r.answer,panel:r.panel});
+      well:[r.www1,r.www2].filter(Boolean).join(' '),improve:[r.ebi1,r.ebi2].filter(Boolean).join(' '),answer:r.answer,panel:r.panel,target:r.target});
   }
 };
 })();

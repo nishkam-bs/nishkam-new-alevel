@@ -76,7 +76,7 @@ async function load(){
   const store={};Object.keys(S.COURSES).forEach(k=>{const v=Ac.get('course:'+k);if(v)store['course:'+k]=v;});(d.items||[]).forEach(i=>{if(i.kind==='quiz'||i.kind==='drill'){const v=Ac.get(i.kind+':'+i.ref);if(v)store[i.kind+':'+i.ref]=v;}});
   const marks={};(d.marks||[]).forEach(m=>{marks[m.ref]=m.t;});const passes={};(d.passes||[]).forEach(p=>{passes[p.stage]=p.t;});
   const ctx={marks,passes,store,excused:new Set((d.excused||[]).map(x=>x.sched_id))};
-  const items=(d.items||[]).filter(i=>S.released(i));
+  const items=(d.items||[]).filter(i=>S.released(i)).concat(S.extraItems(d.redrafts,d.follows));
   $('#main').hidden=false;
   if(!items.length){$('#thisWeek').innerHTML='<h2>Nothing set yet</h2><p class="muted">Homework starts the week of 1 December. It will appear here then.</p>';$('#weeks').innerHTML='';return;}
   const all=items.map(it=>Object.assign({it,d:S.describe(it)},S.status(it,ctx)));
@@ -95,6 +95,7 @@ async function load(){
 Ac.ready.then(load);Ac.onChange(()=>load());
 })();
 </script>
+<script src="follow-auto.js" defer></script>
 <script src="visit.js" defer></script>
 </body>
 </html>

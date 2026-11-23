@@ -30,6 +30,8 @@ function describe(it){
     sub:kq?'20 short questions on what we have covered. Click an answer and you see straight away whether it is right, with the explanation.':'Work each one out, then choose what the answer means for the business. The worked solution appears after you answer.',link:`weekly.html?set=${encodeURIComponent(it.ref)}`};}
   if(it.kind==='drill')return {title:it.title||'Data drill',
     sub:'About 15 minutes: choose which calculations are worth doing, work them out, say what the numbers show and which question you would use them in.',link:`drill.html?d=${encodeURIComponent(it.ref)}`};
+  if(it.kind==='redraft')return {title:'Redraft: '+(it.title||'the part where you lost marks'),sub:it.detail||'',link:'redraft.html'};
+  if(it.kind==='follow')return {title:'Follow-up: '+(it.title||'practice'),sub:'A short set on a topic that has come up more than once in your work.',link:'practice.html#w='+encodeURIComponent(it.ref)};
   if(it.kind==='course'){const c=COURSES[it.ref]||[0,it.title||it.ref,'courses.html'];return {title:it.title||c[1],sub:'Pass every stage.',link:c[2]};}
   if(it.kind==='question')return {title:`${it.marks}-mark question`+(it.detail?`: ${it.detail}`:''),sub:it.title,needs:'',link:`${labFor(+it.marks)}?q=${encodeURIComponent(it.id)}`,marks:+it.marks};
   return {title:it.title||'Task',sub:it.detail||'',link:'#'};
@@ -41,6 +43,7 @@ function status(it,ctx,now){
   let t=null,done=false;
   if(it.kind==='exam'||it.kind==='question'){const ref=it.kind==='exam'?it.ref:it.id;const x=ctx.marks&&ctx.marks[ref];if(x){done=true;t=Date.parse(x);}}
   else if(it.kind==='choice'){String(it.ref).split(',').forEach(r=>{const x=ctx.marks&&ctx.marks[r];if(x){const tt=Date.parse(x);if(!done||tt<t)t=tt;done=true;}});}
+  else if(it.kind==='redraft'||it.kind==='follow'){if(it.doneAt){done=true;t=Date.parse(it.doneAt)||null;}}
   else if(it.kind==='quiz'||it.kind==='drill'){const q=(ctx.store||{})[it.kind+':'+it.ref];if(q&&q.done){done=true;t=Date.parse(q.done)||null;}}
   else if(it.kind==='course'){
     const c=COURSES[it.ref];if(c){const st=(ctx.store||{})['course:'+it.ref]||{};let latest=0,all=true;
@@ -56,9 +59,18 @@ function ctxFrom(marksRows,attemptRows,store,excusedIds){
   (attemptRows||[]).forEach(a=>{if(a.passed&&(!passes[a.stage]||a.t<passes[a.stage]))passes[a.stage]=a.t;});
   return {marks,passes,store:store||{},excused:new Set(excusedIds||[])};
 }
+/* redrafts and follow-ups from /sched/mine (or the dashboard) as schedule items */
+const RD_SKILL={endpoint:'reaching the end point',analysis:'analysis',application:'using the case',evaluation:'evaluation',judgement:'judgement',models:'using models',
+  conceptual_accuracy:'getting the concept right',question_focus:'answering the question',introduction:'introduction',conclusion:'conclusion'};
+function extraItems(redrafts,follows){
+  const out=[];
+  (redrafts||[]).filter(r=>r.due).forEach(r=>out.push({id:'rd:'+r.id,due:r.due,kind:'redraft',title:(RD_SKILL[r.skill]||'where you lost marks')+(r.tool?` (${r.tool})`:''),detail:r.problem||'',doneAt:r.submitted||null,sort:900}));
+  (follows||[]).filter(f=>f.due).forEach(f=>out.push({id:'fu:'+f.id,due:String(f.due).slice(0,10),kind:'follow',ref:f.work_id,title:f.title||'',doneAt:f.status==='done'?(f.done_at||f.due):null,sort:950}));
+  return out;
+}
 function weeks(items){const s=new Set((items||[]).map(i=>i.due));(window.SCHED_PLAN&&SCHED_PLAN.weeks||[]).forEach(w=>s.add(w.due));return [...s].sort();}
 function currentDue(items,now){now=now||Date.now();return weeks(items).find(d=>deadline(d)>=now)||weeks(items).slice(-1)[0];}
 function lastDue(items,now){now=now||Date.now();return weeks(items).filter(d=>deadline(d)<now).slice(-1)[0]||null;}
 function weekInfo(due){return (window.SCHED_PLAN&&SCHED_PLAN.weeks||[]).find(w=>w.due===due)||{due,note:''};}
-window.Sched={EX,COURSES,deadline,describe,status,ctxFrom,weeks,currentDue,lastDue,weekInfo,fmtDay,labFor,releaseOf,released};
+window.Sched={EX,COURSES,deadline,describe,status,ctxFrom,extraItems,RD_SKILL,weeks,currentDue,lastDue,weekInfo,fmtDay,labFor,releaseOf,released};
 })();
