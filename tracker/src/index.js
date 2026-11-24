@@ -491,6 +491,16 @@ const routes = {
     return { ok: true };
   },
 
+  /* re-marking a finished set (e.g. a calculation now accepted): keeps the time it was handed in */
+  async '/work/rescore'(db, b) {
+    const u = await student(db, b);
+    const res = JSON.stringify(b.result || {});
+    if (res.length > MAX_KEY_BYTES) throw new HttpError(413, 'Too much to save.');
+    await db.prepare("UPDATE work SET result=?, score=?, total=? WHERE id=? AND username=? AND status='done'")
+      .bind(res, Number(b.score) || 0, Number(b.total) || 0, str(b.id, 40), u.username).run();
+    return { ok: true };
+  },
+
   async '/notes/save'(db, b) {
     await session(db, b.token, 'teacher');
     await db.prepare('INSERT INTO notes(username,text,t) VALUES(?,?,?) ON CONFLICT(username) DO UPDATE SET text=excluded.text, t=excluded.t')

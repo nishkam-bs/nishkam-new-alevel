@@ -74,6 +74,30 @@ function firstObject(raw){
 }
 const topicLine=id=>{const t=TOP[id];return t?`${id} = ${t.ref} ${t.title}`:'';};
 
+const toNum=s=>{s=String(s==null?'':s).trim().replace(/[−–—]/g,'-').replace(/:\s*1\s*$/,'');const neg=/^\(.*\)$/.test(s.replace(/[^0-9.()\-]/g,''))||/^-|^£\s*-/.test(s);s=s.replace(/[^0-9.]/g,'');if(s==='')return NaN;const n=parseFloat(s);return neg?-n:n;};
+/* the number the working ends on (after the last "="), or null */
+function finalOf(working){
+  const w=String(working||'');const k=w.lastIndexOf('=');if(k<0)return null;
+  const m=w.slice(k+1).replace(/[−–—]/g,'-').match(/\(?-?\s*£?\s*[\d,]*\.?\d+/);if(!m)return null;
+  const n=toNum(m[0]);return isFinite(n)?n:null;
+}
+const near=(a,b)=>Math.abs(a-b)<=Math.max(Math.abs(b)*0.01,0.051);
+/* every value that counts as right for a calculation: the answer, the figure the working
+   reaches (if the two disagree, the working is shown to students, so it must count too),
+   and the same figure written out in full when the unit is £m, £bn or £000 */
+function rightValues(it){
+  const base=[it.answer];const f=finalOf(it.working);if(f!=null&&!near(f,it.answer))base.push(f);
+  const u=String(it.unit||'').toLowerCase(),out=[];
+  base.forEach(v=>{out.push(v);
+    if(/\bm\b|£m|million/.test(u))out.push(v*1e6);
+    if(/bn|billion/.test(u))out.push(v*1e9);
+    if(/000|thousand|\bk\b/.test(u))out.push(v*1e3);});
+  return out;
+}
+function calcOk(it,a){const n=toNum(a);return isFinite(n)&&rightValues(it).some(v=>near(n,v));}
+/* what to show as the answer: where the answer and the working disagree, the working */
+function shownAnswer(it){const f=finalOf(it.working);return f!=null&&!near(f,it.answer)?f:it.answer;}
+
 function clean(spec,topicIds){
   const ok=new Set(topicIds&&topicIds.length?topicIds:Object.keys(TOP));
   const items=(spec.items||[]).map(it=>{
@@ -88,6 +112,8 @@ function clean(spec,topicIds){
     }else if(it.type==='calc'){
       const n=parseFloat(String(it.answer).replace(/[^0-9.\-]/g,''));if(!isFinite(n))return null;
       o.answer=n;o.unit=String(it.unit||'');o.working=String(it.working||'');o.skill='quant';
+      /* the answer must match what the working works out */
+      const f=finalOf(o.working);if(f!=null&&!near(f,n)&&!near(f,n/100)&&!near(f,n*100))return null;
     }else if(it.type==='short'){
       o.marks=Math.max(1,Math.min(8,+it.marks||(it.points||[]).length||2));o.points=(it.points||[]).map(String);
     }else if(it.type==='extended'){
@@ -116,17 +142,38 @@ async function generate(req){
   let spec;
   try{spec=clean(await ask(sys,user,tokens),topics);}
   catch(e){spec=clean(await ask(sys,user,tokens),topics);}
+  spec.items=await checked(spec.items);
   /* if some questions are missing (a long reply cut off, or ones that failed the checks), ask once more for just those */
   const have=t=>spec.items.filter(it=>it.type===t).length;
   const miss={mcq:Math.max(0,c.mcq-have('mcq')),calc:Math.max(0,c.calc-have('calc')),short:Math.max(0,c.short-have('short')),extended:Math.max(0,c.extended-have('extended'))};
   const nMiss=miss.mcq+miss.calc+miss.short+miss.extended;
   if(nMiss){
     const user2=user.replace(/Write exactly: [^\n]*/,`Write exactly: ${miss.mcq} multiple choice, ${miss.calc} calculation, ${miss.short} short answer, ${miss.extended} extended (${req.extendedMarks||9} marks).`);
-    try{const more=clean(await ask(sys,user2,Math.min(12000,1500+nMiss*700)),topics);spec.items=spec.items.concat(more.items);if(!spec.title||spec.title==='Practice')spec.title=more.title;}catch(e){}
+    try{const more=clean(await ask(sys,user2,Math.min(12000,1500+nMiss*700)),topics);more.items=await checked(more.items);spec.items=spec.items.concat(more.items);if(!spec.title||spec.title==='Practice')spec.title=more.title;}catch(e){}
   }
   if(!spec.items.length)throw new Error('No usable questions came back. Try again.');
   if(req.title)spec.title=req.title;
   return spec;
+}
+
+/* multiple choice and calculations are worked out again by a separate examiner pass before
+   anyone sees them; any it disagrees with are dropped. Written questions are kept as they are. */
+async function checked(items){
+  const auto=items.filter(it=>it.type==='mcq'||it.type==='calc');
+  if(!auto.length)return items;
+  let keep;
+  try{keep=new Set((await verify({items:auto})).items);}catch(e){return items;}
+  return items.filter(it=>!(it.type==='mcq'||it.type==='calc')||keep.has(it));
+}
+/* re-mark the calculations in a finished set with the current rules (answers written in full,
+   answers that match the working). Returns null if nothing changes. */
+function recheck(spec,answers,result){
+  if(!result||!Array.isArray(result.items))return null;
+  const items=spec.items||[];let changed=false;
+  const out=result.items.map((r,i)=>{const it=items[i];if(!it||it.type!=='calc'||!r)return r;
+    const ok=calcOk(it,(answers||{})[i])?1:0;if(ok===r.ok)return r;changed=true;return Object.assign({},r,{ok,marks:ok*2,max:2});});
+  if(!changed)return null;
+  return {items:out,score:out.reduce((a,r)=>a+(r?r.marks:0),0),total:out.reduce((a,r)=>a+(r?r.max:0),0)};
 }
 
 /* mark a set: multiple choice and calculations here, written answers by the AI */
@@ -136,9 +183,7 @@ async function mark(spec,answers){
     const a=answers[i];
     if(it.type==='mcq')res[i]={ok:+a===it.answer?1:0,marks:+a===it.answer?1:0,max:1};
     else if(it.type==='calc'){
-      const n=parseFloat(String(a==null?'':a).replace(/[^0-9.\-]/g,''));
-      const tol=Math.max(Math.abs(it.answer)*0.01,0.051);
-      const ok=isFinite(n)&&Math.abs(n-it.answer)<=tol?1:0;
+      const ok=calcOk(it,a)?1:0;
       res[i]={ok,marks:ok*2,max:2};
     }else open.push(i);
   });
@@ -189,5 +234,5 @@ async function recap(topicId,about){
   return String(d.recap||'').trim();
 }
 
-window.WorkGen={generate,mark,clean,verify,recap,esc,typeName,label};
+window.WorkGen={generate,mark,clean,verify,recap,recheck,shownAnswer,calcOk,esc,typeName,label};
 })();
