@@ -235,28 +235,44 @@ const routes = {
     return { ok: true };
   },
 
-  /* push local changes and pull everything back. Newer timestamp wins for each item. */
+  /* push local changes and pull everything back.
+     Items sent with b (the server time of the copy the device last saw) are only written if nobody
+     has changed them since; otherwise the device merges the two copies and sends again. This stops
+     a device with old progress wiping out work done on another device.
+     Items sent without b: newer timestamp wins.
+     One item that is too big is skipped (and reported), it no longer stops everything else saving. */
   async '/sync'(db, b) {
     const u = await student(db, b);
     const items = Array.isArray(b.items) ? b.items.slice(0, 100) : [];
-    const stmts = [];
+    const stmts = [], keys = [], skipped = [];
     for (const it of items) {
       const k = str(it && it.k, 120), t = int(it && it.t);
       if (!k || !t) continue;
       const data = JSON.stringify(it.data === undefined ? null : it.data);
-      if (data.length > MAX_KEY_BYTES) throw new HttpError(413, 'Some of your work is too large to save.');
-      stmts.push(db.prepare(`INSERT INTO store(username,k,data,t) VALUES(?,?,?,?)
-        ON CONFLICT(username,k) DO UPDATE SET data=excluded.data, t=excluded.t WHERE excluded.t > store.t`).bind(u.username, k, data, t));
+      if (data.length > MAX_KEY_BYTES) { skipped.push(k); continue; }
+      if (it.b !== undefined && it.b !== null) {
+        stmts.push(db.prepare(`INSERT INTO store(username,k,data,t) VALUES(?,?,?,?)
+          ON CONFLICT(username,k) DO UPDATE SET data=excluded.data, t=MAX(excluded.t, store.t + 1) WHERE store.t <= ?`).bind(u.username, k, data, t, int(it.b)));
+      } else {
+        stmts.push(db.prepare(`INSERT INTO store(username,k,data,t) VALUES(?,?,?,?)
+          ON CONFLICT(username,k) DO UPDATE SET data=excluded.data, t=excluded.t WHERE excluded.t > store.t`).bind(u.username, k, data, t));
+      }
+      keys.push(k);
     }
+    const written = [];
     if (stmts.length) {
-      const count = await db.prepare('SELECT COUNT(*) AS n FROM store WHERE username=?').bind(u.username).first();
-      if (count.n + stmts.length > MAX_KEYS + 100) throw new HttpError(413, 'Too many saved items.');
-      await db.batch(stmts);
+      /* only brand-new items count towards the limit; updating existing ones is always allowed */
+      const { results: have } = await db.prepare('SELECT k FROM store WHERE username=?').bind(u.username).all();
+      const existing = new Set(have.map(r => r.k));
+      const fresh = keys.filter(k => !existing.has(k)).length;
+      if (fresh && existing.size + fresh > MAX_KEYS + 100) throw new HttpError(413, 'Too many saved items.');
+      const res = await db.batch(stmts);
+      res.forEach((r, i) => { if (r && r.meta && r.meta.changes > 0) written.push(keys[i]); });
     }
     const { results } = await db.prepare('SELECT k,data,t FROM store WHERE username=?').bind(u.username).all();
     const out = {};
     for (const r of results) { try { out[r.k] = { data: JSON.parse(r.data), t: r.t }; } catch (e) {} }
-    return { items: out, now: Date.now() };
+    return { items: out, written, skipped, now: Date.now() };
   },
 
   async '/log'(db, b) {
@@ -360,7 +376,7 @@ const routes = {
 
   async '/mymarks'(db, b) {
     const u = await student(db, b);
-    const { results } = await db.prepare('SELECT t,tool,question,mark,level,well,improve,ref FROM marks WHERE username=? ORDER BY id DESC LIMIT 60').bind(u.username).all();
+    const { results } = await db.prepare('SELECT t,tool,question,mark,level,well,improve,ref FROM marks WHERE username=? ORDER BY id DESC LIMIT 300').bind(u.username).all();
     return { marks: results };
   },
 

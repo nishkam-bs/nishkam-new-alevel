@@ -105,7 +105,7 @@ function logResult(row){if(TRACK&&signedIn())A.send('/log',row);}
 let authBar=null;
 function renderAuth(){
   const box=$('#authBox');if(!TRACK){box.hidden=true;return;}box.hidden=false;
-  if(!authBar)authBar=A.bar(box,{inside:true,text:'Sign in once on the home page to start. Your progress is saved to your account, so you can carry on from any device.'});
+  if(!authBar)authBar=A.bar(box,{inside:true,text:'You are not signed in on this browser. Sign in to start. Your progress is saved to your account, so you can carry on from any device.'});
 }
 A.onChange(keys=>{if(keys.includes(AKEY)||keys.includes('*')){if($('#mapView')&&!$('#mapView').hidden){loadState();renderMap();}}});
 

@@ -849,7 +849,7 @@ function updateProgress(){
     document.getElementById('pAvg').textContent=avg+'/6';
     const best=Math.max(...hist.map(h=>h.mark));
     document.getElementById('pBest').textContent=best+'/6';
-    document.getElementById('pHist').innerHTML='<table class="p-table"><tr><th>Date</th><th>Mark</th><th>Level</th><th>Endpoint</th><th>Question</th></tr>'+hist.slice().reverse().map(h=>`<tr><td>${h.date}</td><td style="font-weight:800">${h.mark}/6</td><td>${h.level}</td><td style="color:${h.endpoint?'var(--green)':'var(--red)'}">${h.endpoint?'Yes':'No'}</td><td class="muted" style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${h.q}...</td></tr>`).join('')+'</table>';
+    document.getElementById('pHist').innerHTML='<table class="p-table"><tr><th>Date</th><th>Mark</th><th>Level</th><th>Endpoint</th><th>Question</th></tr>'+hist.slice().reverse().map(h=>`<tr><td>${h.date}</td><td style="font-weight:800">${h.mark}/6</td><td>${h.level}</td><td style="color:${h.fromAccount?'inherit':h.endpoint?'var(--green)':'var(--red)'}">${h.fromAccount?'—':h.endpoint?'Yes':'No'}</td><td class="muted" style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${h.q}...</td></tr>`).join('')+'</table>';
   }
 }
 </script>

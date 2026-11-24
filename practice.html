@@ -113,7 +113,7 @@ const A=window.Analysis,W=window.WorkGen,T=window.TAXO,esc=W.esc,Ac=window.Acct;
 let work=[],mine=null,cur=null,answers={},saveT=null;
 const fmt=t=>new Date(t).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
 
-Ac.bar('#bar',{inside:true,text:'Sign in once on the home page to use practice. Your sets and marks are saved to your account.'});
+Ac.bar('#bar',{inside:true,text:'You are not signed in on this browser. Sign in to use practice. Your sets and marks are saved to your account.'});
 
 async function load(){
   if(!Ac.user){$('#home').hidden=true;return;}

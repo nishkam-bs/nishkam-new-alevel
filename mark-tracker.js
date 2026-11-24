@@ -136,10 +136,26 @@ function redraftNote(r,tg){
   panel.appendChild(box);
 }
 
+/* The labs' Progress tab used to read only this device's history. When signed in, show the
+   student's marks from their account instead, so it is the same on every device. */
+const LAB_TOOL={six_marker_lab:'6-Mark Lab',nine_mark_lab:'9-Mark Lab',fifteen_mark_lab:'15-Mark Lab'};
+async function accountHistory(){
+  const tool=LAB_TOOL[PAGE];if(!tool||!A.user||typeof g('updateProgress')!=='function')return;
+  try{
+    const d=await A.call('/mymarks');
+    const rows=(d.marks||[]).filter(m=>m.tool===tool).reverse().map(m=>{
+      const x=String(m.mark||'').match(/(\d+(?:\.\d+)?)/);
+      return {date:String(m.t||'').slice(0,10),q:String(m.question||'').slice(0,60),mark:x?+x[1]:0,level:String(m.level||'').replace(/^level\s*/i,''),fromAccount:true};
+    });
+    labSet({hist:rows});g('updateProgress')();
+  }catch(e){}
+}
+
 window.NTrack={
   init(sel){
+    A.ready.then(accountHistory);A.onChange(k=>{if(k.includes('*'))accountHistory();});
     const root=typeof sel==='string'?document.querySelector(sel):sel;
-    bar=A.bar(root||document.body,{text:'Sign in once on the home page and your answers and marks are saved to your account, and homework is ticked off.'});
+    bar=A.bar(root||document.body,{text:'You are not signed in on this browser. Sign in and your answers and marks are saved to your account, and homework is ticked off.'});
     watch();addEventListener('pagehide',snapshot);
     if(root)observe(root);
     if(QP)A.ready.then(openLinked);else A.ready.then(restore);
