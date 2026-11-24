@@ -69,7 +69,7 @@ details.wk summary span{font-weight:400;color:var(--muted);font-size:.88rem;marg
 const $=s=>document.querySelector(s),S=window.Sched,Ac=window.Acct;
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const LABEL={done:'Done',late:'Done late',missing:'Missed',todo:'To do',excused:'Excused'};
-Ac.bar('#bar',{inside:true,text:'Sign in once on the home page to see your schedule.'});
+Ac.bar('#bar',{inside:true,text:'You are not signed in on this browser. Sign in to see your schedule.'});
 async function load(){
   if(!Ac.user){$('#main').hidden=true;return;}
   let d;try{d=await Ac.call('/sched/mine');}catch(e){$('#main').hidden=false;$('#thisWeek').innerHTML='<p class="muted">Could not load your schedule. Check your connection.</p>';return;}

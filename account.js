@@ -26,8 +26,17 @@ const ldel=k=>{try{LS&&LS.removeItem(k);}catch(e){}};
 
 const override=(()=>{try{return LS&&LS.getItem('n8_api');}catch(e){return null;}})();
 const API=override||'https://nishkam-tracker-7138.alevelnishkam.workers.dev';
-const ON=!!LS&&(!!override||/github\.io$|alevelnishkam\.workers\.dev$/.test(location.hostname));
-const HOME='index.html#account';
+const SITE_OK=!!override||/github\.io$|alevelnishkam\.workers\.dev$/.test(location.hostname);
+const ON=!!LS&&SITE_OK;
+/* the sign-in link brings the student back to the page they were on */
+const here=()=>location.pathname.split('/').pop()+location.search;
+const isHome=()=>/(^|\/)(index\.html)?$/.test(location.pathname);
+const HOME=isHome()?'index.html#account':'index.html?back='+encodeURIComponent(here())+'#account';
+function goBack(){
+  try{const b=new URLSearchParams(location.search).get('back');
+    if(b&&/^[\w-]+\.html(\?[^#]*)?$/.test(b)&&b!=='index.html'){location.href=b;return true;}}catch(e){}
+  return false;
+}
 
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const offlineMsg='Could not connect. Check your internet and try again.';
@@ -57,35 +66,76 @@ function expire(){
 }
 
 /* ---------- saved items ---------- */
+/* Times come from the server's clock, not the device's. A laptop or phone with the wrong time
+   used to have its work rejected (or overwritten) without any warning. */
+let skew=+lget('n8_skew',0)||0;
+const clock=()=>Date.now()+skew;
+/* store[k] = {data, t, b}: b is the server time of the copy this device last saw (for merging) */
 function get(k){const it=store[k];return it?it.data:undefined;}
 function set(k,data){
-  store[k]={data,t:Date.now()};dirty.add(k);saveLocal();
+  const b=store[k]?store[k].b:undefined;
+  store[k]={data,t:clock(),b};dirty.add(k);saveLocal();
   if(active()){clearTimeout(syncTimer);syncTimer=setTimeout(sync,1500);setStatus('waiting');}
 }
 function mergerFor(k){const m=mergers.find(m=>k.startsWith(m.prefix));return m&&m.fn;}
+const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+/* what is sent for one item. Items that can be merged (course progress, quizzes ...) carry b,
+   so the server refuses them if another device has saved a newer copy in the meantime. */
+function itemFor(k){
+  const it=store[k],o={k,data:it?it.data:null,t:it?it.t:clock()};
+  if(mergerFor(k))o.b=it&&it.b!=null?it.b:0;
+  return o;
+}
+/* the server takes at most 100 items and about 1MB per request */
+function chunks(items){
+  const out=[];let cur=[],size=0;
+  items.forEach(it=>{const n=JSON.stringify(it).length;if(cur.length&&(cur.length>=90||size+n>750000)){out.push(cur);cur=[];size=0;}cur.push(it);size+=n;});
+  if(cur.length||!out.length)out.push(cur);
+  return out;
+}
 
 async function sync(){
   if(!active())return;
   if(syncing)return syncing;
   syncing=(async()=>{
     const keys=[...dirty];
-    const items=keys.map(k=>({k,data:store[k]?store[k].data:null,t:store[k]?store[k].t:Date.now()}));
+    const items=keys.map(itemFor);
+    const sentT={};items.forEach(i=>{sentT[i.k]=i.t;});
     try{
-      const d=await api('/sync',{items});
-      keys.forEach(k=>{if(store[k]&&items.find(i=>i.k===k).t===store[k].t)dirty.delete(k);});
+      let d=null;const written=new Set(),skipped=new Set();let legacy=false;
+      for(const part of chunks(items)){
+        const t0=Date.now();
+        d=await api('/sync',{items:part});
+        if(d.now)skew=Math.round(d.now-(t0+Date.now())/2);
+        if(Array.isArray(d.written))d.written.forEach(k=>written.add(k));else legacy=true;
+        (d.skipped||[]).forEach(k=>skipped.add(k));
+      }
+      lset('n8_skew',skew);
+      const srvItems=d.items||{};
+      const conflict=new Set();
+      keys.forEach(k=>{
+        const unchanged=store[k]&&store[k].t===sentT[k];
+        if(!unchanged)return;                          // edited again while this sync was running
+        if(skipped.has(k)){dirty.delete(k);console.warn('Too large to save to the account:',k);return;}
+        if(legacy||written.has(k)){dirty.delete(k);const s=srvItems[k];if(s)store[k].b=s.t,store[k].t=s.t;return;}
+        conflict.add(k);                               // another device saved a newer copy
+      });
       const changed=[];
-      Object.entries(d.items||{}).forEach(([k,srv])=>{
-        const loc=store[k];
-        if(!loc){store[k]=srv;changed.push(k);return;}
-        if(dirty.has(k))return;                       // newer local edit made during this sync
-        const fn=mergerFor(k);
-        if(fn&&JSON.stringify(loc.data)!==JSON.stringify(srv.data)){
+      Object.entries(srvItems).forEach(([k,srv])=>{
+        const loc=store[k],fn=mergerFor(k);
+        if(!loc){store[k]={data:srv.data,t:srv.t,b:srv.t};changed.push(k);return;}
+        if(dirty.has(k)&&!conflict.has(k))return;     // newer local edit made during this sync
+        if(conflict.has(k)&&!fn){                      // newest copy wins, and the server's is newer
+          dirty.delete(k);store[k]={data:srv.data,t:srv.t,b:srv.t};if(!same(loc.data,srv.data))changed.push(k);return;
+        }
+        if(fn&&!same(loc.data,srv.data)){
           const m=fn(loc.data,srv.data);
-          if(JSON.stringify(m)!==JSON.stringify(srv.data)){store[k]={data:m,t:Date.now()};dirty.add(k);}
-          else store[k]=srv;
-          if(JSON.stringify(m)!==JSON.stringify(loc.data))changed.push(k);
-        }else if(srv.t>loc.t){store[k]=srv;changed.push(k);}
-        else if(srv.t<loc.t)dirty.add(k);
+          if(same(m,srv.data)){store[k]={data:srv.data,t:srv.t,b:srv.t};dirty.delete(k);}
+          else{store[k]={data:m,t:Math.max(clock(),srv.t+1),b:srv.t};dirty.add(k);}
+          if(!same(m,loc.data))changed.push(k);
+        }else if(srv.t>loc.t){store[k]={data:srv.data,t:srv.t,b:srv.t};dirty.delete(k);if(!same(loc.data,srv.data))changed.push(k);}
+        else if(srv.t<loc.t&&!same(loc.data,srv.data)){dirty.add(k);loc.b=srv.t;}
+        else{loc.b=srv.t;if(conflict.has(k))dirty.delete(k);}
       });
       saveLocal();
       if(changed.length)listeners.forEach(fn=>{try{fn(changed);}catch(e){console.error(e);}});
@@ -150,6 +200,7 @@ async function signOut(){
   auth=null;ldel('n8_auth');
   /* shared school computers: remove this student's saved work from the device */
   store={};dirty=new Set();saveLocal();ldel('n8_queue');
+  ['n6_history','n9_history','n15_history'].forEach(ldel);
   listeners.forEach(fn=>{try{fn(['*']);}catch(e){}});
   renderBars();
 }
@@ -237,11 +288,19 @@ function renderBar(b){
     el.innerHTML=`<span>Choose your own password to finish signing in.</span><a href="${HOME}">Go to the home page</a>`;
   }else{
     el.className='nk-bar'+(opts.alert?' warn':'');
-    el.innerHTML=`<span>${esc(opts.alert||opts.text||'Sign in once on the home page and your work here is saved to your account.')}</span><a href="${HOME}">Sign in</a>`;
+    el.innerHTML=`<span>${esc(opts.alert||opts.text||'You are not signed in on this browser. Sign in and your work here is saved to your account.')}</span><a href="${HOME}">Sign in</a>`;
   }
 }
 function renderBars(){bars.forEach(renderBar);}
 function bar(target,opts){
+  if(!ON&&SITE_OK&&!LS){
+    /* the browser is blocking saved data (some in-app browsers and private modes do this) */
+    addCss();const at=typeof target==='string'?document.querySelector(target):target;if(!at)return null;
+    const el=document.createElement('div');el.className='nk-bar warn';
+    el.textContent='This browser is not letting the site save anything, so you cannot sign in here. Open the site in Chrome or Safari (not inside another app or a private window).';
+    if(opts&&opts.inside)at.prepend(el);else at.parentNode.insertBefore(el,at);
+    return {el,alert(){},clear(){}};
+  }
   if(!ON)return null;addCss();
   const at=typeof target==='string'?document.querySelector(target):target;if(!at)return null;
   const el=document.createElement('div');el.setAttribute('aria-live','polite');
@@ -312,12 +371,12 @@ function mountHome(target){
   el.hidden=false;
   const draw=async()=>{
     if(!auth){
-      el.innerHTML=`<div class="nk-home"><h3>Sign in</h3><p>Use the username and password your teacher gave you. You only need to sign in once on each device. After that, your course progress, essays and marks are saved to your account and carry on from any computer or phone.</p>
+      el.innerHTML=`<div class="nk-home"><h3>Sign in</h3><p>Use the username and password your teacher gave you. You need to sign in once on each device and each browser (a link opened inside another app, such as Google Classroom, may count as a different browser). After that, your course progress, essays and marks are saved to your account and carry on from any computer or phone.</p>
         <form id="nkSignIn" autocomplete="on"><label>Username<input name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
         <label>Password<input name="password" type="password" autocomplete="current-password" required></label><button type="submit">Sign in</button></form><p class="nk-err" aria-live="polite"></p></div>`;
       el.querySelector('form').onsubmit=async e=>{e.preventDefault();const f=e.target,btn=f.querySelector('button'),err=el.querySelector('.nk-err');
         btn.disabled=true;err.textContent='';
-        try{await signIn(f.username.value,f.password.value);draw();}
+        try{await signIn(f.username.value,f.password.value);if(!(active()&&goBack()))draw();}
         catch(x){err.textContent=x.message==='Failed to fetch'?offlineMsg:x.message;btn.disabled=false;}};
       return;
     }
@@ -331,7 +390,7 @@ function mountHome(target){
       el.querySelector('form').onsubmit=async e=>{e.preventDefault();const f=e.target,btn=f.querySelector('button'),err=el.querySelector('.nk-err');
         err.textContent='';if(f.next.value!==f.again.value){err.textContent='The two new passwords are different.';return;}
         btn.disabled=true;
-        try{await changePassword(f.current.value,f.next.value);draw();}
+        try{await changePassword(f.current.value,f.next.value);if(!goBack())draw();}
         catch(x){err.textContent=x.status===401?'Please sign in again.':x.message==='Failed to fetch'?offlineMsg:x.message;btn.disabled=false;if(x.status===401)draw();}};
       return;
     }
@@ -373,9 +432,11 @@ if(ON){
   addEventListener('online',()=>{sync();flush();});
   document.addEventListener('visibilitychange',()=>{
     if(document.visibilityState==='hidden'&&active()&&dirty.size){
-      const keys=[...dirty];
-      try{fetch(API+'/sync',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({token:auth.token,items:keys.map(k=>({k,data:store[k]?store[k].data:null,t:store[k]?store[k].t:Date.now()}))})});}catch(e){}
+      /* a page that is closing can only send about 64KB, so send what fits; the rest goes next time */
+      const items=[];let size=200;
+      [...dirty].map(itemFor).forEach(it=>{const n=JSON.stringify(it).length;if(size+n<60000&&items.length<90){items.push(it);size+=n;}});
+      if(items.length)try{fetch(API+'/sync',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({token:auth.token,items})}).catch(()=>{});}catch(e){}
     }else if(document.visibilityState==='visible')sync();
   });
   setInterval(()=>{if(document.visibilityState==='visible'){sync();flush();}},90000);

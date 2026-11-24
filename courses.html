@@ -73,7 +73,7 @@ function render(server){
     if(fine&&!reduce){el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`rotateX(${-y*6}deg) rotateY(${x*8}deg)`;});el.addEventListener('pointerleave',()=>el.style.transform='');}
   });
 }
-A.bar('#who',{inside:true,text:'Sign in once on the home page and your course progress is saved to your account.'});
+A.bar('#who',{inside:true,text:'You are not signed in on this browser. Sign in and your course progress is saved to your account.'});
 render(null);
 A.ready.then(()=>render(null));A.onChange(()=>render(null));
 

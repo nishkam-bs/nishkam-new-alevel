@@ -280,7 +280,7 @@ let dT=null;$('#b-text').addEventListener('input',()=>{clearTimeout(dT);dT=setTi
 addEventListener('pagehide',()=>{sendBlurt();rfSend();});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){sendBlurt();rfSend();}});
 A.ready.then(()=>{fillTopicsKeep();showResume();});A.onChange(()=>{fillTopicsKeep();showResume();});
-A.bar(document.querySelector('.tabs').closest('.panel'),{text:'Sign in once on the home page and your blurting scores are saved to your account.'});
+A.bar(document.querySelector('.tabs').closest('.panel'),{text:'You are not signed in on this browser. Sign in and your blurting scores are saved to your account.'});
 
 /* photo */
 $('#b-photo').onchange=e=>{const f=e.target.files[0];if(!f)return;const img=new Image(),r=new FileReader();

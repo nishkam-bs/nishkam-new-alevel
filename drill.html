@@ -285,7 +285,7 @@ function bind(){
     d.sel=d.sel.includes(j)?d.sel.filter(x=>x!==j):d.sel.concat(j);s.data[k]=d;save(s);b.classList.toggle('sel');});
   w.querySelectorAll('[data-datasub]').forEach(b=>b.onclick=()=>{const s=st(),k=b.dataset.datasub;s.data=Object.assign({},s.data);s.data[k]=Object.assign({sel:[]},s.data[k],{done:true});save(s);render();});
 }
-Ac.bar('#bar',{inside:true,text:'Sign in once on the home page to open the case studies.'});
+Ac.bar('#bar',{inside:true,text:'You are not signed in on this browser. Sign in to open the case studies.'});
 if(PREVIEW)load();else{Ac.ready.then(load);Ac.onChange(keys=>{if(D&&keys.includes(KEY))render();else if(!D&&Ac.user)load();});}
 })();
 </script>

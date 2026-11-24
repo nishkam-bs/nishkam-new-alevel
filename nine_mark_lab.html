@@ -959,7 +959,7 @@ function updateProgress(){
     document.getElementById('pAvg').textContent=avg+'/9';
     const best=Math.max(...hist.map(h=>h.mark));
     document.getElementById('pBest').textContent=best+'/9';
-    document.getElementById('pHist').innerHTML='<table class="p-table"><tr><th>Date</th><th>Mark</th><th>Level</th><th>Type</th><th>Judgement</th><th>Question</th></tr>'+hist.slice().reverse().map(h=>`<tr><td>${h.date}</td><td style="font-weight:800">${h.mark}/9</td><td>${h.level}</td><td>${h.qtype==='quantitative'?'Quant':'Non-quant'}</td><td>${h.judgement||'—'}</td><td class="muted" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${h.q}...</td></tr>`).join('')+'</table>';
+    document.getElementById('pHist').innerHTML='<table class="p-table"><tr><th>Date</th><th>Mark</th><th>Level</th><th>Type</th><th>Judgement</th><th>Question</th></tr>'+hist.slice().reverse().map(h=>`<tr><td>${h.date}</td><td style="font-weight:800">${h.mark}/9</td><td>${h.level}</td><td>${h.fromAccount?'—':h.qtype==='quantitative'?'Quant':'Non-quant'}</td><td>${h.judgement||'—'}</td><td class="muted" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${h.q}...</td></tr>`).join('')+'</table>';
   }
 }
 </script>
