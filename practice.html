@@ -188,7 +188,12 @@ $('#mGo').onclick=()=>{const t=$$('#mTopics input:checked').map(c=>c.value);if(!
 
 /* doing a set */
 function open(w){
-  if(!w)return;cur=w;answers=Object.assign({},w.answers||{});
+  if(!w)return;
+  /* finished sets are re-marked with the current rules, so a right answer is never left marked wrong */
+  if(w.status==='done'&&W.recheck){const rc=W.recheck(w.spec,w.answers,w.result);
+    if(rc){w.result=Object.assign({},w.result,{items:rc.items,score:rc.score,total:rc.total});w.score=rc.score;w.total=rc.total;
+      Ac.call('/work/rescore',{id:w.id,result:w.result,score:rc.score,total:rc.total}).catch(()=>{});}}
+  cur=w;answers=Object.assign({},w.answers||{});
   $('#home').hidden=true;$('#doView').hidden=false;scrollTo({top:0});
   $('#doTitle').textContent=w.title;
   $('#doMeta').textContent=(w.source==='teacher'?'Set by your teacher':w.source==='auto'?'Follow-up on a topic that has come up more than once in your work':'Made by you')+' · '+fmt(w.created)+(w.status==='done'?` · marked: ${w.score}/${w.total}`:' · your answers save as you go');
@@ -210,7 +215,7 @@ function draw(){
   const w=cur,done=w.status==='done',res=done&&w.result?w.result.items:[];
   $('#doQs').innerHTML=(w.spec.recap?`<div class="intro"><b>Recap</b><br>${esc(w.spec.recap)}</div>`:'')+(done?`<p><span class="score">${w.score}/${w.total}</span> <span class="muted">${Math.round(w.score/Math.max(1,w.total)*100)}%</span></p>`:'')+
   w.spec.items.map((it,i)=>{const a=answers[i],r=res[i];
-    const fb=r?`<div class="fb ${r.ok>=.75?'good':r.ok>=.4?'mid':'bad'}">${r.marks}/${r.max}${it.type==='mcq'?(r.ok?' - right.':` - the answer is: ${esc(it.options[it.answer])}.`):''}${it.type==='calc'?(r.ok?' - right.':` - the answer is ${it.answer} ${esc(it.unit)}.`):''}
+    const fb=r?`<div class="fb ${r.ok>=.75?'good':r.ok>=.4?'mid':'bad'}">${r.marks}/${r.max}${it.type==='mcq'?(r.ok?' - right.':` - the answer is: ${esc(it.options[it.answer])}.`):''}${it.type==='calc'?(r.ok?' - right.':` - the answer is ${W.shownAnswer?W.shownAnswer(it):it.answer} ${esc(it.unit)}.`):''}
       ${it.explain?` ${esc(it.explain)}`:''}${it.working?`<br><span class="muted">Working: ${esc(it.working)}</span>`:''}${r.feedback?`<br>${esc(r.feedback)}`:''}${r.better?`<br><span class="muted">It could read: ${esc(r.better)}</span>`:''}${r.ok<1&&RF?RF.find(it.q).slice(0,2).map(k=>`<br><a href="${esc(RF.link([k],'practice.html#w='+w.id))}">Refresher: ${esc(RF.DECKS[k].title)}</a>`).join(''):''}</div>`:'';
     return `<div class="q"><div class="meta">${i+1}. ${W.typeName[it.type]}${it.marks?` · ${it.marks} marks`:''}</div>${it.case?`<div class="case">${esc(it.case)}</div>`:''}<div class="stem">${esc(it.q)}</div>
     ${it.type==='mcq'?it.options.map((o,oi)=>`<label class="opt${done?(oi===it.answer?' right':(+a===oi?' wrong':'')):''}"><input type="radio" name="q${i}" value="${oi}" ${+a===oi&&a!==''&&a!=null?'checked':''} ${done?'disabled':''}> <span>${esc(o)}</span></label>`).join(''):''}

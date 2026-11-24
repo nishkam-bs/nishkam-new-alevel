@@ -168,9 +168,12 @@ $('#course').onchange=e=>{const v=e.target.value;$('#detail').hidden=true;
   if(v==='s'){MODE='s';document.querySelector('#dash h1').textContent='This week';render();return;}
   MODE='c';OFF=+v;STAGES=COURSES[OFF].stages;WRITE_STAGE=10;document.querySelector('#dash h1').textContent=COURSES[OFF].name;render();};
 
+/* show finished sets re-marked with the current calculation rules (the student's copy is updated when they next open it) */
+function rescore(d){if(!window.WorkGen||!WorkGen.recheck)return;(d.work||[]).forEach(w=>{if(w.status!=='done')return;
+  const rc=WorkGen.recheck(w.spec||{},w.answers||{},w.result);if(rc){w.result=Object.assign({},w.result,{items:rc.items,score:rc.score,total:rc.total});w.score=rc.score;w.total=rc.total;}});}
 async function load(){
   $('#refresh').disabled=true;
-  try{data=await api('/dashboard',{token});$('#loginView').hidden=true;$('#dash').hidden=false;if(MODE==='o')document.querySelector('#dash h1').textContent='Overview';if(MODE==='s')document.querySelector('#dash h1').textContent='This week';render();
+  try{data=await api('/dashboard',{token});rescore(data);$('#loginView').hidden=true;$('#dash').hidden=false;if(MODE==='o')document.querySelector('#dash h1').textContent='Overview';if(MODE==='s')document.querySelector('#dash h1').textContent='This week';render();
     $('#updated').textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
   catch(x){if(x.status===401){$('#logout').click();$('#lerr').textContent='Please sign in again.';}else alert(x.message);}
   $('#refresh').disabled=false;
