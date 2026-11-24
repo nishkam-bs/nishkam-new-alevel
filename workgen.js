@@ -36,8 +36,27 @@ async function ask(system,content,maxTokens){
   finally{clearTimeout(tm);}
   if(!r.ok)throw new Error('The AI did not respond ('+r.status+'). Try again in a minute.');
   const d=await r.json();const raw=(d.content||[]).map(c=>c.text||'').join('');
-  const obj=firstObject(raw);if(!obj)throw new Error('The reply could not be read. Try again.');
-  return obj;
+  /* a long set can be cut off before the end: keep every question that came back complete */
+  const obj=firstObject(raw);
+  if(obj&&(!/"items"\s*:/.test(raw)||Array.isArray(obj.items)))return obj;
+  const items=completeItems(raw);
+  if(items.length)return {title:(raw.match(/"title"\s*:\s*"([^"]*)"/)||[])[1]||'',items,cut:true};
+  if(obj)return obj;
+  throw new Error('The reply could not be read. Try again.');
+}
+/* the complete objects inside the "items" array of a reply that may have been cut off */
+function completeItems(raw){
+  const k=raw.search(/"items"\s*:\s*\[/);if(k<0)return [];
+  const out=[];let depth=0,inStr=false,esc=false,start=-1;
+  for(let i=raw.indexOf('[',k)+1;i<raw.length;i++){
+    const c=raw[i];
+    if(inStr){if(esc)esc=false;else if(c==='\\')esc=true;else if(c==='"')inStr=false;continue;}
+    if(c==='"')inStr=true;
+    else if(c==='{'){if(depth===0)start=i;depth++;}
+    else if(c==='}'){depth--;if(depth===0&&start>=0){try{out.push(JSON.parse(raw.slice(start,i+1)));}catch(e){}start=-1;}}
+    else if(c===']'&&depth===0)break;
+  }
+  return out;
 }
 /* the first complete JSON object in the reply, ignoring any text before or after it */
 function firstObject(raw){
@@ -93,9 +112,18 @@ async function generate(req){
     req.note?`Teacher's note: ${req.note}`:'',
     `Title for the set: ${req.title||'a short plain title naming the topics'}`
   ].filter(Boolean).join('\n\n');
+  const tokens=Math.min(12000,1500+total*700);
   let spec;
-  try{spec=clean(await ask(sys,user,Math.min(12000,1500+total*700)),topics);}
-  catch(e){spec=clean(await ask(sys,user,Math.min(12000,1500+total*700)),topics);}
+  try{spec=clean(await ask(sys,user,tokens),topics);}
+  catch(e){spec=clean(await ask(sys,user,tokens),topics);}
+  /* if some questions are missing (a long reply cut off, or ones that failed the checks), ask once more for just those */
+  const have=t=>spec.items.filter(it=>it.type===t).length;
+  const miss={mcq:Math.max(0,c.mcq-have('mcq')),calc:Math.max(0,c.calc-have('calc')),short:Math.max(0,c.short-have('short')),extended:Math.max(0,c.extended-have('extended'))};
+  const nMiss=miss.mcq+miss.calc+miss.short+miss.extended;
+  if(nMiss){
+    const user2=user.replace(/Write exactly: [^\n]*/,`Write exactly: ${miss.mcq} multiple choice, ${miss.calc} calculation, ${miss.short} short answer, ${miss.extended} extended (${req.extendedMarks||9} marks).`);
+    try{const more=clean(await ask(sys,user2,Math.min(12000,1500+nMiss*700)),topics);spec.items=spec.items.concat(more.items);if(!spec.title||spec.title==='Practice')spec.title=more.title;}catch(e){}
+  }
   if(!spec.items.length)throw new Error('No usable questions came back. Try again.');
   if(req.title)spec.title=req.title;
   return spec;
