@@ -121,7 +121,7 @@ function usePhotos(list,typed){
   return upOn||!String(typed||'').trim();
 }
 
-const UNREADABLE_NOTE='\n\nIf the handwriting is too unclear to mark fairly, reply only with {"unreadable":true,"reason":"<one short sentence>"} instead.';
+const UNREADABLE_NOTE='\n\nHANDWRITING. Read the handwriting carefully before you mark. Do not guess at words to make the answer work. If you cannot read it confidently (more than about one word in twenty is a guess, or a sentence that matters for the mark is unclear), do not mark it: reply only with {"unreadable":true,"reason":"<which parts you could not read, for example most of the second paragraph, in one short sentence>"}. If you can read it but some words or parts were hard to read, mark it and add "legibility":"<one sentence telling the student which words or parts were hard to read>" to your JSON. Leave legibility out if the handwriting was clear.';
 
 function friendly(status,text){
   if(status===413)return 'Your pages are too big to send. Try fewer pages, or type your answer.';
@@ -170,7 +170,11 @@ function json(t){
   const a=c.indexOf('{'),b=c.lastIndexOf('}');
   if(a<0||b<=a)throw new Error('nojson');
   const o=JSON.parse(c.slice(a,b+1));
-  if(o&&o.unreadable){const e=new Error('The marker couldn\'t read your handwriting clearly enough to mark it fairly'+(o.reason?' ('+String(o.reason).replace(/\.$/,'')+')':'')+'. Retake the photos in good light, straight on, one page per photo, or type your answer.');e.unreadable=true;throw e;}
+  if(o&&o.unreadable){
+    const why=o.reason?String(o.reason).replace(/\.$/,''):'';
+    try{window.dispatchEvent(new CustomEvent('nm-unreadable',{detail:{reason:why}}));}catch(x){}
+    const e=new Error('Your answer has not been marked because the marker could not read your handwriting clearly enough to mark it fairly'+(why?' ('+why+')':'')+'. If your photos are blurred or dark, retake them in good light, straight on, one page per photo. If the photos are clear, the problem is the handwriting itself: in the exam an examiner has to read it too, so write more slowly and clearly, or type your answer here. Your teacher can see that this answer could not be read.');e.unreadable=true;throw e;}
+  window.__nmLegibility=o&&o.legibility?{t:Date.now(),text:String(o.legibility).slice(0,400)}:null;
   return o;
 }
 /* ask + json, trying once more if the reply wasn't readable JSON */
