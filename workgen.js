@@ -176,6 +176,40 @@ function recheck(spec,answers,result){
   return {items:out,score:out.reduce((a,r)=>a+(r?r.marks:0),0),total:out.reduce((a,r)=>a+(r?r.max:0),0)};
 }
 
+/* written answers: blank ones score 0 here; the rest go to the AI, numbered 1, 2, 3...
+   Anything missing from the reply is asked for again on its own (twice), so an answer is
+   never given 0 just because the reply could not be read. */
+const MARK_FAIL='This answer could not be marked. Ask your teacher to look at it.';
+async function markOpen(items,answers,idx){
+  const out={},todo=[];
+  idx.forEach(i=>{if(!String(answers[i]==null?'':answers[i]).trim())out[i]={ok:0,marks:0,max:items[i].marks,feedback:'You did not write an answer for this question.',better:''};else todo.push(i);});
+  if(!todo.length)return out;
+  const sys=`You mark a Year 12 student's answers to AQA A-level Business (7138) practice questions. Mark fairly against the points or guidance given, as an AQA examiner would. Give credit for correct points made in different words. Feedback is to the student as "you", in plain British English, one or two sentences: what was good and the one thing that would gain more marks. "better" is a short example of how one weak sentence could read (empty if the answer was strong). Number each result to match the answer it marks (Answer 1 is "n":1). Inside feedback and better, never use the double quote character; use single quotes if you need to quote. Return JSON only: {"marks":[{"n":1,"marks":0,"feedback":"","better":""}]}`;
+  const run=async list=>{
+    const body=list.map((i,k)=>{const it=items[i];return `Answer ${k+1} (${it.marks} marks): ${it.case?'Case: '+it.case+'\n':''}Question: ${it.q}\n${it.type==='short'?'Mark points: '+(it.points||[]).join(' | '):'A strong answer would: '+(it.guidance||[]).join(' | ')}\nStudent's answer: ${String(answers[i]).trim()}`;}).join('\n\n');
+    const std='';
+    let d;try{d=await ask(sys+std,body,1500+list.length*700);}catch(e){return;}
+    const arr=d&&Array.isArray(d.marks)?d.marks:[];
+    arr.forEach((m,k)=>{const n=+m.n;const i=n>=1&&n<=list.length?list[n-1]:list[k];if(i==null||out[i])return;const it=items[i];
+      const mk=Math.max(0,Math.min(it.marks,Math.round(+m.marks||0)));
+      out[i]={ok:mk/it.marks,marks:mk,max:it.marks,feedback:String(m.feedback||''),better:String(m.better||'')};});
+  };
+  await run(todo);
+  for(const i of todo){for(let k=0;k<2&&!out[i];k++)await run([i]);}
+  return out;
+}
+/* sets handed in before this fix may have answers that came back unmarked: mark those now */
+async function remarkFailed(spec,answers,result){
+  if(!result||!Array.isArray(result.items))return null;
+  const items=spec.items||[];
+  const idx=result.items.map((r,i)=>r&&r.feedback===MARK_FAIL&&items[i]?i:-1).filter(i=>i>=0);
+  if(!idx.length)return null;
+  const done=await markOpen(items,answers||{},idx);
+  if(!idx.some(i=>done[i]))return null;
+  const out=result.items.map((r,i)=>done[i]||r);
+  return {items:out,score:out.reduce((a,r)=>a+(r?r.marks:0),0),total:out.reduce((a,r)=>a+(r?r.max:0),0)};
+}
+
 /* mark a set: multiple choice and calculations here, written answers by the AI */
 async function mark(spec,answers){
   const items=spec.items||[],res=items.map(()=>null),open=[];
@@ -188,12 +222,9 @@ async function mark(spec,answers){
     }else open.push(i);
   });
   if(open.length){
-    const sys=`You mark a Year 12 student's answers to AQA A-level Business (7138) practice questions. Mark fairly against the points or guidance given, as an AQA examiner would. Give credit for correct points made in different words. Feedback is to the student as "you", in plain British English, one or two sentences: what was good and the one thing that would gain more marks. "better" is a short example of how one weak sentence could read (empty if the answer was strong). Return JSON only: {"marks":[{"i":0,"marks":0,"feedback":"","better":""}]}`;
-    const body=open.map(i=>{const it=items[i];return `Item ${i} (${it.marks} marks): ${it.case?'Case: '+it.case+'\n':''}Question: ${it.q}\n${it.type==='short'?'Mark points: '+it.points.join(' | '):'A strong answer would: '+it.guidance.join(' | ')}\nStudent's answer: ${String(answers[i]||'').trim()||'(no answer)'}`;}).join('\n\n');
-    const d=await ask(sys,body,1500+open.length*500);
-    (d.marks||[]).forEach((m,k)=>{const i=open.includes(+m.i)?+m.i:open[k];if(i==null||res[i])return;const it=items[i];const mk=Math.max(0,Math.min(it.marks,+m.marks||0));
-      res[i]={ok:mk/it.marks,marks:mk,max:it.marks,feedback:String(m.feedback||''),better:String(m.better||'')};});
-    open.forEach(i=>{if(!res[i])res[i]={ok:0,marks:0,max:items[i].marks,feedback:'This answer could not be marked. Ask your teacher to look at it.'};});
+    const done=await markOpen(items,answers,open);
+    open.forEach(i=>{res[i]=done[i]||null;});
+    if(open.some(i=>!res[i]))throw new Error('Your written answers could not be marked just now. Your answers are saved: press the button again in a minute.');
   }
   const score=res.reduce((a,r)=>a+r.marks,0),total=res.reduce((a,r)=>a+r.max,0);
   return {items:res,score,total};
@@ -234,5 +265,5 @@ async function recap(topicId,about){
   return String(d.recap||'').trim();
 }
 
-window.WorkGen={generate,mark,clean,verify,recap,recheck,shownAnswer,calcOk,esc,typeName,label};
+window.WorkGen={generate,mark,remarkFailed,clean,verify,recap,recheck,shownAnswer,calcOk,esc,typeName,label};
 })();

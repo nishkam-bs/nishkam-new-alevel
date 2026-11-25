@@ -193,6 +193,9 @@ function open(w){
   if(w.status==='done'&&W.recheck){const rc=W.recheck(w.spec,w.answers,w.result);
     if(rc){w.result=Object.assign({},w.result,{items:rc.items,score:rc.score,total:rc.total});w.score=rc.score;w.total=rc.total;
       Ac.call('/work/rescore',{id:w.id,result:w.result,score:rc.score,total:rc.total}).catch(()=>{});}}
+  if(w.status==='done'&&W.remarkFailed&&!w._rf){w._rf=1;W.remarkFailed(w.spec,w.answers,w.result).then(rf=>{if(!rf)return;
+    w.result=Object.assign({},w.result,{items:rf.items,score:rf.score,total:rf.total});w.score=rf.score;w.total=rf.total;
+    Ac.call('/work/rescore',{id:w.id,result:w.result,score:rf.score,total:rf.total}).catch(()=>{});if(cur===w)open(w);}).catch(()=>{});}
   cur=w;answers=Object.assign({},w.answers||{});
   $('#home').hidden=true;$('#doView').hidden=false;scrollTo({top:0});
   $('#doTitle').textContent=w.title;
