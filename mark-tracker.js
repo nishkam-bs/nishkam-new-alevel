@@ -168,6 +168,13 @@ window.NTrack={
     const tg=r.target&&String(r.target.problem||'').trim().length>=15?{skill:String(r.target.skill||'').slice(0,40),excerpt:String(r.target.excerpt||'').trim().slice(0,1500),
       problem:String(r.target.problem).trim().slice(0,600),better:String(r.target.better||'').trim().slice(0,1500)}:null;
     if(tg)row.target=tg;
+    /* the marker could read the handwriting but some of it was hard: tell the student and the teacher */
+    try{const lg=window.__nmLegibility,h=row.how?JSON.parse(row.how):null;
+      if(lg&&h&&h.m==='photo'&&Date.now()-lg.t<600000){window.__nmLegibility=null;
+        row.improve=('Handwriting: '+lg.text+' '+row.improve).slice(0,1200);
+        const panel=r.panel&&document.querySelector(r.panel);
+        if(panel){const b=document.createElement('div');b.style.cssText='margin:14px 0 0;padding:12px 14px;border-left:4px solid #be4848;background:rgba(190,72,72,.08);border-radius:8px;font-size:.92rem;line-height:1.55';
+          b.innerHTML='<b>Your handwriting</b><p style="margin:4px 0 0"></p>';b.querySelector('p').textContent=lg.text+' An examiner can only give marks for what they can read, so make sure every word is clear.';panel.prepend(b);}}}catch(e){}
     A.send('/mark',row);
     if(tg&&A.user)redraftNote(r,tg);
     if(row.ref)try{A.set(DKEY,{text:''});}catch(e){}
@@ -186,4 +193,16 @@ window.YTrack={
       well:[r.www1,r.www2].filter(Boolean).join(' '),improve:[r.ebi1,r.ebi2].filter(Boolean).join(' '),answer:r.answer,panel:r.panel,target:r.target});
   }
 };
+
+/* the marker refused to mark a photo because it could not read the handwriting: record it for the teacher
+   (no ref, so it does not tick off homework) */
+const TOOL_NAME={'marker':'25-mark lab','open_essay_lab':'Open essay lab','nine_marker_lab':'9-mark lab','conclusion-lab':'Conclusion lab','fifteen_mark_lab':'15-Mark Lab','nine_mark_lab':'9-Mark Lab','six_marker_lab':'6-Mark Lab'};
+addEventListener('nm-unreadable',e=>{
+  if(!TOOL_NAME[PAGE]||!A.user)return;
+  let ref='';try{ref=typeof currentRef==='function'?currentRef():'';}catch(x){}
+  let q='';try{const s=document.querySelector('.qopt.sel,.qopt.selected');q=s?s.textContent.trim():'';}catch(x){}
+  const why=(e.detail&&e.detail.reason)||'';
+  A.send('/mark',{ref:'',tool:TOOL_NAME[PAGE],question:((ref?ref+': ':'')+q).slice(0,500)||'(question not recorded)',mark:'',level:'Not marked: handwriting could not be read',
+    well:'',improve:('The marker could not read this handwritten answer'+(why?': '+why:'')+'.').slice(0,1200),answer:'[Handwritten answer uploaded as photos]',how:JSON.stringify({m:'photo',pg:(typeof uploadedImages!=='undefined'&&uploadedImages.length)||0})});
+});
 })();

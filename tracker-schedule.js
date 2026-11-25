@@ -129,7 +129,7 @@ function when(t){const d=new Date(t),today=new Date();const same=d.toDateString(
 function events(){
   const d=TR.data,ev=[],T=x=>typeof x==='number'?x:Date.parse(x);
   const setName=r=>{const m=/^(kq|calc)-(\d+)/.exec(r);return m?(m[1]==='kq'?'knowledge quiz':'calculations')+' (week '+(+m[2])+')':r;};
-  (d.marks||[]).forEach(m=>{const h=parseHow(m),k=howKind(h);ev.push({u:m.exam,t:T(m.t),what:`had an answer marked in the ${m.tool}: ${m.mark}`+(k==='hw'?' (handwritten)':k==='pz'?' (typed, mostly pasted)':k==='ty'?' (typed)':''),detail:m.question,k:'mark'});});
+  (d.marks||[]).forEach(m=>{const h=parseHow(m),k=howKind(h);ev.push({u:m.exam,t:T(m.t),what:`had an answer marked in the ${m.tool}: ${m.mark||m.level}`+(k==='hw'?' (handwritten)':k==='pz'?' (typed, mostly pasted)':k==='ty'?' (typed)':''),detail:m.question,k:'mark'});});
   (d.rows||[]).forEach(r=>ev.push({u:r.exam,t:T(r.t),what:`${r.passed?'passed':'had a go at'} ${r.stageTitle||'a course stage'}${r.total?` (${r.score}/${r.total})`:''}`,k:'course'}));
   (d.blurts||[]).forEach(b=>ev.push({u:b.exam,t:T(b.t),what:`did a ${b.kind==='rapid'?'rapid recall':'blurt'}${b.topic?' on '+b.topic:''}${b.total?` (${b.got}/${b.total})`:''}`,k:'blurt'}));
   Object.entries(d.storeT||{}).forEach(([u,ks])=>Object.entries(ks).forEach(([key,t])=>{const v=((d.store||{})[u]||{})[key]||{};
