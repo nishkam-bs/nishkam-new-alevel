@@ -228,11 +228,11 @@ async function loadSched(force){
       /* redrafts and follow-ups due at this deadline count as homework too */
       (d.redrafts||[]).filter(r=>r.due===due).forEach(r=>items.push({id:'rd:'+r.id,kind:'redraft',done:!!r.submitted}));
       (d.follows||[]).filter(f=>f.due===due).forEach(f=>items.push({id:'fu:'+f.id,kind:'follow',done:f.status==='done'}));
-      const isDone=i=>{if(ex.has(i.id))return true;if(i.kind==='exam')return mk.has(i.ref);if(i.kind==='choice')return String(i.ref).split(',').some(r=>mk.has(r));if(i.kind==='question')return mk.has(i.id);if(i.kind==='redraft'||i.kind==='follow')return i.done;if(i.kind==='quiz'||i.kind==='drill'){const q=get(i.kind+':'+i.ref);return !!(q&&q.done);}
+      const isDone=i=>{if(ex.has(i.id))return true;if(i.kind==='exam')return mk.has(i.ref);if(i.kind==='choice')return String(i.ref).split(',').some(r=>mk.has(r));if(i.kind==='question')return mk.has(i.id);if(i.kind==='conclusion')return mk.has('CL:'+i.ref);if(i.kind==='redraft'||i.kind==='follow')return i.done;if(i.kind==='quiz'||i.kind==='drill'){const q=get(i.kind+':'+i.ref);return !!(q&&q.done);}
         if(i.kind==='course'&&i.ref in CO){const st=get('course:'+i.ref)||{};for(let k=1;k<=10;k++){if(!ps.has(CO[i.ref]+k)&&!(st.passed&&st.passed[k]))return false;}return true;}return false;};
-      const grp=i=>i.kind==='redraft'?'Redrafts':i.kind==='follow'?'Follow-up':i.kind==='drill'?'Data drill':i.kind==='quiz'?(/^kq/.test(i.ref)?'Knowledge quiz':'Calculations'):i.kind==='course'?'Course':
+      const grp=i=>i.kind==='redraft'?'Redrafts':i.kind==='follow'?'Follow-up':i.kind==='drill'?'Data drill':i.kind==='quiz'?(/^kq/.test(i.ref)?'Knowledge quiz':'Calculations'):i.kind==='course'?'Course':i.kind==='conclusion'?'Conclusion Lab':
         (+i.marks===6?'6-mark questions':+i.marks===9?'9-mark questions':+i.marks===15?'15-mark questions':'Written answers');
-      const order=['6-mark questions','9-mark questions','15-mark questions','Written answers','Redrafts','Follow-up','Calculations','Knowledge quiz','Data drill','Course'];const g={};
+      const order=['6-mark questions','9-mark questions','15-mark questions','Written answers','Conclusion Lab','Redrafts','Follow-up','Calculations','Knowledge quiz','Data drill','Course'];const g={};
       items.forEach(i=>{const k=grp(i);g[k]=g[k]||{label:k,done:0,total:0};g[k].total++;if(isDone(i))g[k].done++;});
       schedInfo={due,total:items.length,done:items.filter(isDone).length,groups:order.filter(k=>g[k]).map(k=>g[k])};
     }

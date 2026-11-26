@@ -56,6 +56,8 @@ function how(){
 
 /* which homework question is open */
 function currentRef(){
+  /* the Conclusion Lab names its question itself (CL:<id>), so a homework question's conclusion never ticks off the full answer */
+  const cl=g('clRef');if(typeof cl==='string'&&cl)return cl;
   const q=g('curQ');
   if(linked&&q&&String(q).trim()===linked.q)return linked.id;
   const H=window.HW;if(H&&q){const hit=H.qs.find(x=>x.q.trim()===String(q).trim());if(hit)return hit.id;}

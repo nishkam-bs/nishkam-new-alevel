@@ -97,6 +97,7 @@ const shortLabel=it=>{if(it.kind==='exam'){const e=S.EX[it.ref];return e?`P${e.p
   if(it.kind==='course')return (S.COURSES[it.ref]||[0,it.title])[1].replace(' course','');
   if(it.kind==='quiz')return /^kq/.test(it.ref)?'Quiz':'Calcs';
   if(it.kind==='drill')return 'Data drill';
+  if(it.kind==='conclusion')return 'Conclusion';
   if(/^hw/.test(it.id))return `${it.marks}m ${String(it.detail||'').replace(/ (Ltd|plc)$/,'').split(' ')[0]}`;return `Set Q (${it.marks})`;};
 const LETTER={done:'✓',late:'L',missing:'✗',todo:'·',excused:'E'};
 const TITLE={done:'Done on time',late:'Done after the deadline',missing:'Not done by the deadline',todo:'Not done yet',excused:'Excused'};
@@ -179,7 +180,7 @@ function wireActivity(){
 /* ---------- this week ---------- */
 function renderWeek(){
   const {items,students}=data();
-  if(!autoTried&&items.length&&(()=>{const m=planChanges(items);return m.old.length||m.changed.length||m.missing.some(i=>/^dr-/.test(i.id));})()){autoUpdate(items);return;}
+  if(!autoTried&&items.length&&(()=>{const m=planChanges(items);return m.old.length||m.changed.length||m.missing.some(i=>/^(dr|cl)-/.test(i.id));})()){autoUpdate(items);return;}
   let planMsg='';try{planMsg=sessionStorage.getItem('n8_plan_msg')||'';}catch(e){}
   if(!items.length){root.innerHTML=`<div class="sc-card"><h2>No schedule yet</h2><p class="muted">Load the plan. Each week has two 6-mark, two 9-mark and two 15-mark questions on topics already taught, 10 calculations with questions on using the answers, a data drill and a 20-question knowledge quiz. Everything is due on Wednesday at 11:59pm and nothing is set in KAT weeks. More weeks are added to the plan as each topic is taught.</p><button class="btn" id="scLoad">Load the plan</button> <span class="muted" id="scMsg"></span></div>`;
     $('#scLoad').onclick=loadPlan;return;}
@@ -217,7 +218,8 @@ function renderWeek(){
       return `<tr><td class="l">${esc(s.name)}</td><td>${dn}/${mine.length+rw.length}</td>${wk.map(i=>{const x=s.st[i.id];if(!x)return '<td class="muted">–</td>';
         const qz=(i.kind==='quiz'||i.kind==='drill')?((TR.data.store||{})[s.u]||{})[i.kind+':'+i.ref]:null,sc=qz&&qz.total?` · ${qz.score}/${qz.total} right${qz.secs?` in ${Math.round(qz.secs/60)} min`:' first time'}`:'';
         const hw=(x.s==='done'||x.s==='late')?howOf(s.u,i):null;
-        return `<td><span class="c ${x.s}${hw&&hw.k?' '+hw.k:''}" data-u="${esc(s.u)}" data-i="${esc(i.id)}" title="${TITLE[x.s]}${x.t?' · '+new Date(x.t).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}${sc}${hw?' · '+esc(hw.t):''}">${qz&&qz.done&&qz.total?qz.score:LETTER[x.s]}</span></td>`;}).join('')}${rdCell(s,rw)}</tr>`;}).join('')}
+        const cl=i.kind==='conclusion'?(TR.data.marks||[]).filter(m=>m.exam===s.u&&m.ref==='CL:'+i.ref).sort((a,b)=>String(a.t).localeCompare(String(b.t)))[0]:null;
+        return `<td><span class="c ${x.s}${hw&&hw.k?' '+hw.k:''}" data-u="${esc(s.u)}" data-i="${esc(i.id)}" title="${TITLE[x.s]}${x.t?' · '+new Date(x.t).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}${sc}${cl&&cl.level?' · first go '+esc(cl.level):''}${hw?' · '+esc(hw.t):''}">${qz&&qz.done&&qz.total?qz.score:LETTER[x.s]}</span></td>`;}).join('')}${rdCell(s,rw)}</tr>`;}).join('')}
     </tbody></table></div>
     <div id="rdDetail"></div>
     <div class="legend"><span><span class="c done">✓</span> on time</span><span><span class="c late">L</span> late</span><span><span class="c missing">✗</span> missed</span><span><span class="c todo">·</span> not yet</span><span><span class="c excused">E</span> excused</span></div>
@@ -363,8 +365,8 @@ function coursesCard(items,students){
 }
 
 /* ---------- moving to a new version of the plan ---------- */
-const fromPlan=id=>/^e-P\d-\d{4}N?-[\d.]+$/.test(id)||/^ch-/.test(id)||/^c-[a-z0-9_]+_v1$/.test(id)||/^qz-/.test(id)||/^dr-/.test(id);
-function refsOf(it){return it.kind==='choice'?String(it.ref).split(','):it.kind==='exam'?[it.ref]:[];}
+const fromPlan=id=>/^e-P\d-\d{4}N?-[\d.]+$/.test(id)||/^ch-/.test(id)||/^c-[a-z0-9_]+_v1$/.test(id)||/^qz-/.test(id)||/^dr-/.test(id)||/^cl-/.test(id);
+function refsOf(it){return it.kind==='choice'?String(it.ref).split(','):it.kind==='exam'?[it.ref]:it.kind==='conclusion'?['CL:'+it.ref]:[];}
 function planChanges(items){
   const planIds=new Set(SCHED_PLAN.items.map(i=>i.id)),have=new Set(items.map(i=>i.id));
   const byId=Object.fromEntries(items.map(i=>[i.id,i]));
@@ -384,10 +386,10 @@ async function applyPlan(items){
 let autoTried=false;
 async function autoUpdate(items){
   if(autoTried||!items.length)return false;autoTried=true;
-  const m=planChanges(items);if(!m.old.length&&!m.changed.length&&!m.missing.some(i=>/^dr-/.test(i.id)))return false;
+  const m=planChanges(items);if(!m.old.length&&!m.changed.length&&!m.missing.some(i=>/^(dr|cl)-/.test(i.id)))return false;
   root.innerHTML='<div class="sc-card"><h2>Updating the schedule</h2><p class="muted">Moving to the new weekly plan...</p></div>';
   try{const r=await applyPlan(items);
-    try{sessionStorage.setItem('n8_plan_msg',`The schedule has been updated to the latest weekly plan. ${r.kept.length?`${r.kept.length} question${r.kept.length>1?'s':''} already handed in ${r.kept.length>1?'have':'has'} been kept for the students who did ${r.kept.length>1?'them':'it'}, marked as done.`:'Nobody had handed in any of the old questions yet.'}`);}catch(e){}
+    try{sessionStorage.setItem('n8_plan_msg',`The schedule has been updated to the latest weekly plan, including one Conclusion Lab question a week. ${r.kept.length?`${r.kept.length} question${r.kept.length>1?'s':''} already handed in ${r.kept.length>1?'have':'has'} been kept for the students who did ${r.kept.length>1?'them':'it'}, marked as done.`:'Nobody had handed in any of the old questions yet.'}`);}catch(e){}
     await TR.reload();}catch(e){root.innerHTML=`<div class="sc-card"><h2>Could not update the schedule</h2><p class="muted">${esc(e.message)}</p></div>`;}
   return true;
 }

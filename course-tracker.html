@@ -237,7 +237,7 @@ function renderMarks(){
   $('#sDone').textContent=marks.length;
   const ps=marks.map(m=>pct(m.mark)).filter(x=>x!=null);$('#sAvg').textContent=ps.length?Math.round(ps.reduce((a,b)=>a+b,0)/ps.length)+'%':'–';
   const wk=Date.now()-7*86400000;$('#sWeek').textContent=marks.filter(m=>Date.parse(m.t)>wk).length;
-  $('#tbl').innerHTML=marks.length?`<thead><tr><th class="l">Student</th><th class="l">Date</th><th class="l">Tool</th><th class="l">Question</th><th>Mark</th><th class="l">Level</th><th class="l">How</th></tr></thead><tbody>${marks.map((m,i)=>`<tr><td class="l"><button data-i="${i}">${esc(m.name)}</button> <span class="muted">${esc(m.exam)}</span></td><td class="l muted">${new Date(m.t).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</td><td class="l">${esc(m.tool)}</td><td class="l" style="white-space:normal;min-width:240px;max-width:420px">${esc(m.question.length>140?m.question.slice(0,140)+'…':m.question)}</td><td><span class="cell ${(pct(m.mark)??0)>=50?'p':'a'}">${esc(m.mark)}</span></td><td class="l muted">${esc(m.level)}</td><td class="l">${howCell(m)}</td></tr>`).join('')}</tbody>`:'<tbody><tr><td class="l muted">No marked answers yet. Students\' results appear here when they use the 25-mark lab, Open essay lab, 9-mark lab or Redraft while signed in.</td></tr></tbody>';
+  $('#tbl').innerHTML=marks.length?`<thead><tr><th class="l">Student</th><th class="l">Date</th><th class="l">Tool</th><th class="l">Question</th><th>Mark</th><th class="l">Level</th><th class="l">How</th></tr></thead><tbody>${marks.map((m,i)=>`<tr><td class="l"><button data-i="${i}">${esc(m.name)}</button> <span class="muted">${esc(m.exam)}</span></td><td class="l muted">${new Date(m.t).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</td><td class="l">${esc(m.tool)}</td><td class="l" style="white-space:normal;min-width:240px;max-width:420px">${esc(m.question.length>140?m.question.slice(0,140)+'…':m.question)}</td><td>${m.mark?`<span class="cell ${(pct(m.mark)??0)>=50?'p':'a'}">${esc(m.mark)}</span>`:'<span class="muted">—</span>'}</td><td class="l muted">${esc(m.level)}</td><td class="l">${howCell(m)}</td></tr>`).join('')}</tbody>`:'<tbody><tr><td class="l muted">No marked answers yet. Students\' results appear here when they use the 6, 9 or 15-mark labs, the Conclusion lab or Redraft while signed in.</td></tr></tbody>';
   document.querySelectorAll('#tbl button').forEach(b=>b.onclick=()=>markDetail(marks[+b.dataset.i]));
 }
 function markDetail(m){
@@ -373,6 +373,7 @@ if(token)load();
 <script src="tracker-resources.js"></script>
 <script src="tracker-overview.js"></script>
 <script src="exam-bank.js"></script>
+<script src="conclusion-bank.js"></script>
 <script src="schedule.js"></script>
 <script src="tracker-schedule.js"></script>
 </body>

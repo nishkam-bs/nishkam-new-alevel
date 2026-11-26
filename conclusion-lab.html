@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Conclusion Lab — AQA A-Level Business</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0d1b34;--navy2:#172a4a;--gold:#eeb834;--gold-soft:#fff8e5;
+  --blue:#3a69b4;--green:#288566;--red:#be4848;--cream:#f8f6f0;
+  --ink:#191f2a;--muted:#6a7485;--line:#dfe4ea;--white:#fff;--soft:#f3f5f8;
+  --shadow:0 12px 30px rgba(13,27,52,.08);--radius:16px;
+}
+*{box-sizing:border-box;margin:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--blue);text-decoration:none}
+.app{min-height:100vh;display:grid;grid-template-columns:260px minmax(0,1fr)}
+aside{background:linear-gradient(180deg,var(--navy),#112442 70%);color:white;padding:24px 18px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+main{padding:32px 38px 80px;max-width:1100px;width:100%;overflow-x:hidden}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.logo{width:46px;height:46px;border-radius:13px;background:var(--gold);display:grid;place-items:center;color:var(--navy);font-weight:900;font-size:16px}
+.brand h1{font-size:16px;line-height:1.15;margin:0}.brand span{font-size:11px;color:#aebbd1;display:block;margin-top:2px}
+nav{display:flex;flex-direction:column;gap:4px}
+nav button{width:100%;border:0;background:transparent;color:#dbe4f2;padding:13px 14px;border-radius:11px;text-align:left;font-size:14px;font-weight:600}
+nav button:hover{background:rgba(255,255,255,.08);color:white}
+nav button.on{background:rgba(255,255,255,.12);color:white}
+nav a{color:#dbe4f2;padding:13px 14px;border-radius:11px;font-size:14px;font-weight:600}
+nav a:hover{background:rgba(255,255,255,.08);color:white}
+.side-card{margin-top:auto;padding:15px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:rgba(255,255,255,.04)}
+.side-card .mini{font-size:10px;color:#b8c5d9;text-transform:uppercase;letter-spacing:.1em}
+.tab{display:none}.tab.on{display:block}
+.eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);font-weight:800}
+h2{font-size:28px;font-weight:900;color:var(--navy);margin:5px 0 6px}
+h3{font-size:18px;font-weight:800;color:var(--navy);margin:0 0 10px}
+h4{font-size:14px;font-weight:700;color:var(--navy);margin:0 0 6px}
+.sub{color:var(--muted);font-size:14px}
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);min-width:0}
+.mt{margin-top:18px}
+select,textarea{width:100%;border:1px solid #ccd3dc;border-radius:11px;background:white;padding:12px 14px;font:inherit;font-size:15px;color:var(--ink);outline:0}
+select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(58,105,180,.12)}
+textarea{min-height:220px;resize:vertical;line-height:1.7}
+.btn{border:0;border-radius:11px;padding:12px 18px;font-weight:800;font-size:14px}
+.btn-p{background:var(--navy);color:white}.btn-p:hover{background:var(--navy2)}
+.btn-p:disabled{opacity:.55;cursor:default}
+.btn-o{background:var(--soft);color:var(--navy);border:1px solid var(--line)}.btn-o:hover{background:#e8ebf0}
+.btn-sm{padding:8px 13px;font-size:12px;border-radius:9px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tiny{font-size:12px;color:var(--muted)}
+.qlist{display:grid;gap:8px;max-height:460px;overflow-y:auto;padding-right:6px;margin-top:12px}
+.qopt{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:white;font-size:14px;line-height:1.5;text-align:left;width:100%}
+.qopt:hover{border-color:var(--blue);background:#f5f8fd}
+.qopt.sel{border-color:var(--gold);background:var(--gold-soft);border-width:2px}
+.qopt .qy{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px}
+.qopt .done{float:right;font-size:11px;color:var(--green);font-weight:700}
+.qbox{font-size:16px;font-weight:600;color:var(--navy);line-height:1.5}
+.tip{margin-top:12px;padding:12px 14px;border-left:4px solid var(--blue);background:#f0f5fc;border-radius:8px;font-size:14px}
+details.facts{margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--soft)}
+details.facts summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--navy)}
+details.facts ul{margin:10px 0 0;padding-left:20px;font-size:14px}
+details.facts li{margin:5px 0}
+.casetext{margin-top:10px;font-size:14px;white-space:pre-wrap;line-height:1.65}
+.qopt.locked{opacity:.55;cursor:default;background:var(--soft)}.qopt.locked:hover{border-color:var(--line);background:var(--soft)}
+.qopt .lk{float:right;font-size:11px;color:var(--muted);font-weight:700}
+.para{margin-top:14px}
+.para .lab{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.para p{font-size:15px;line-height:1.75}
+.yours{margin-top:18px;padding-top:18px;border-top:2px solid var(--line)}
+.modes{display:flex;gap:6px;margin:8px 0 10px}
+.modes button{border:1px solid var(--line);background:white;border-radius:9px;padding:7px 12px;font-size:13px;font-weight:600;color:var(--navy)}
+.modes button.on{background:var(--navy);color:white;border-color:var(--navy)}
+.upload-zone{border:2px dashed var(--line);border-radius:14px;padding:26px;text-align:center;cursor:pointer;background:var(--soft);font-size:14px}
+.upload-previews{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.upload-previews img{width:60px;height:80px;object-fit:cover;border-radius:8px;border:2px solid var(--line)}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;color:var(--navy)}
+.timer.up{color:var(--red)}
+.ld{display:none;text-align:center;padding:30px 10px}.ld.show{display:block}
+.spin{width:36px;height:36px;border:4px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;margin:0 auto 12px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.err{display:none;margin-top:12px;padding:12px 14px;border-radius:10px;background:#fff5f5;border-left:4px solid var(--red);font-size:14px}
+.fb{margin-top:20px}
+.fb .head{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.lvl{font-size:30px;font-weight:900;color:var(--navy);line-height:1}
+.lvl small{font-size:15px;color:var(--muted);font-weight:700}
+.lvlname{font-weight:800;font-size:15px}
+.steps{display:flex;gap:4px;margin-top:8px}
+.steps span{width:34px;height:8px;border-radius:4px;background:#e4e8ee}
+.steps span.f{background:var(--navy)}
+.pt{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.pt:last-child{border-bottom:0}
+.st{font-size:12px;font-weight:800;border-radius:7px;padding:4px 8px;text-align:center;align-self:start}
+.st.yes{background:#e8f5ee;color:var(--green)}.st.opt{background:var(--soft);color:var(--muted)}.st.partly{background:#fff6e0;color:#946200}.st.no{background:#fdecec;color:var(--red)}
+.pt q{display:block;margin:6px 0;padding-left:10px;border-left:3px solid #c9d1dc;font-style:italic;quotes:none;color:#3b4453}
+.flag{margin-top:10px;padding:10px 12px;border-radius:10px;background:#fff5f5;border-left:4px solid var(--red);font-size:14px}
+.flag q{display:block;margin:6px 0;font-style:italic;quotes:none}
+.rw{padding:12px 14px;border-radius:10px;font-size:14px;line-height:1.7;margin-top:10px}
+.rw .k{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.rw.o{background:#fffaf0;border-left:4px solid var(--gold)}.rw.o .k{color:#946200}
+.rw.n{background:#f3faf6;border-left:4px solid var(--green)}.rw.n .k{color:var(--green)}
+.next{margin-top:14px;padding:12px 14px;border-radius:10px;background:#f0f5fc;border-left:4px solid var(--blue);font-size:14px}
+.model{margin-top:18px}
+.model p{font-size:15px;line-height:1.75}
+.model ul{margin:8px 0 0;padding-left:20px;font-size:14px}
+.cmp{margin-top:10px;font-size:14px;font-weight:600}
+.guide p{font-size:15px;margin:0 0 10px}
+.guide h3{margin-top:22px}
+.calrow{display:grid;grid-template-columns:150px 90px 90px 80px minmax(0,1fr);gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+@media(max-width:1050px){.app{grid-template-columns:minmax(0,1fr)}aside{min-width:0;height:auto;position:relative;flex-direction:row;align-items:center;gap:12px;padding:14px 16px}aside nav{flex-direction:row;overflow-x:auto;gap:4px;flex:1;min-width:0}.brand{margin-bottom:0}.brand h1 br{display:none}.side-card{display:none}nav button,nav a{width:auto;white-space:nowrap;padding:10px 12px}}
+@media(max-width:700px){main{padding:20px 14px}.pt{grid-template-columns:1fr}.st{justify-self:start}.calrow{grid-template-columns:1fr 1fr}}
+@media print{aside,.noprint{display:none!important}.app{display:block}main{padding:0}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand">
+    <div class="logo">CL</div>
+    <div><h1>Conclusion<br>Lab</h1><span>AQA Business 7138</span></div>
+  </div>
+  <nav>
+    <button class="on" data-t="write">Write a conclusion</button>
+    <button data-t="guide">How conclusions are judged</button>
+    <a href="index.html">Home</a>
+  </nav>
+  <div class="side-card">
+    <div class="mini">Nishkam School West London</div>
+    <strong style="font-size:14px;color:#dbe4f2">Man Neeva, Mat Uchi</strong>
+  </div>
+</aside>
+
+<main>
+<section id="write" class="tab on">
+  <div class="eyebrow">Conclusion Lab</div>
+  <h2>Write the conclusion</h2>
+  <p class="sub">The two paragraphs have been written for you. You write the conclusion that would finish the answer. You get a level and feedback, then a second go, and then you see an example conclusion.</p>
+
+  <div class="card mt" id="pick">
+    <h3>Choose a question</h3>
+    <select id="typeFilter" style="max-width:340px">
+      <option value="all">All questions</option>
+      <option value="a9">9-mark Assess</option>
+      <option value="a9q">9-mark Assess with a calculation</option>
+      <option value="e15o">15-mark Evaluate: two options</option>
+      <option value="e15w">15-mark Evaluate: two ways</option>
+    </select>
+    <div class="qlist" id="qlist"></div>
+  </div>
+
+  <div class="card mt" id="work" style="display:none">
+    <div class="row" style="justify-content:space-between">
+      <div class="tiny" id="wSrc"></div>
+      <button class="btn btn-o btn-sm noprint" id="changeQ" type="button">Choose a different question</button>
+    </div>
+    <div class="qbox mt" id="wQ" style="margin-top:8px"></div>
+    <div class="tip" id="wTip"></div>
+    <details class="facts" id="wFacts" open><summary id="wFactHead">Information from the case</summary><ul id="wFactList"></ul><div id="wCase" class="casetext"></div></details>
+    <div class="para"><div class="lab" id="wL1">Paragraph 1</div><p id="wP1"></p></div>
+    <div class="para"><div class="lab" id="wL2">Paragraph 2</div><p id="wP2"></p></div>
+
+    <div id="fb1" class="fb"></div>
+    <div class="yours noprint" id="yours">
+      <div class="row" style="justify-content:space-between">
+        <h3 id="yHead" style="margin:0">Your conclusion</h3>
+        <div class="row"><span class="timer" id="timer"></span><button class="btn btn-o btn-sm" id="timeBtn" type="button">Time myself (5 minutes)</button></div>
+      </div>
+      <p class="tiny" id="yNote" style="margin-top:6px">Write it the way you would in the exam. There is no set wording.</p>
+      <div class="modes" id="modes"><button class="on" data-m="type" type="button">Type it</button><button data-m="upload" type="button">Upload a photo</button></div>
+      <div id="typeMode"><textarea id="essay" placeholder="Write your conclusion here…"></textarea><div class="tiny" id="wc" style="margin-top:6px">0 words</div></div>
+      <div id="uploadMode2" style="display:none">
+        <div class="upload-zone" id="dropZone">Tap to take or choose a photo of your handwritten conclusion<br><span class="tiny">JPG, PNG or PDF, up to 2 pages</span></div>
+        <input type="file" id="fileInput" accept="image/*,application/pdf" multiple style="display:none"/>
+        <div class="upload-previews" id="previews"></div>
+      </div>
+      <div class="row mt"><button class="btn btn-p" id="checkBtn" type="button">Check my conclusion</button></div>
+      <div class="ld" id="ld"><div class="spin"></div><div class="tiny">Reading your conclusion…</div></div>
+      <div class="err" id="err"></div>
+    </div>
+
+    <div id="fb2" class="fb"></div>
+    <div id="modelBox"></div>
+  </div>
+</section>
+
+<section id="guide" class="tab guide">
+  <div class="eyebrow">Conclusion Lab</div>
+  <h2>How conclusions are judged</h2>
+  <div class="card mt">
+    <p>On a 9-mark or 15-mark question, the conclusion is where a lot of the evaluation marks are decided. Strong conclusions make a clear judgement that comes out of the arguments already in the answer and explain what that judgement depends on. Weak ones repeat the paragraphs, sit on the fence, or bring in something new at the end.</p>
+    <p>There is no set wording you have to use. Your conclusion is judged on what it does, not on whether it starts with a particular phrase.</p>
+    <h3>What a strong conclusion does</h3>
+    <p>It answers the exact question. If the question asks whether the business should raise its price, the judgement says whether it should raise its price, not whether the business will be successful.</p>
+    <p>It weighs the two sides. Don't summarise both paragraphs and then pick one. Say which side carries more weight for this business and why.</p>
+    <p>It says what the answer depends on, and why. "It depends on the business" isn't enough. Say what about this business: how price sensitive its customers are, whether the forecast can be trusted, how big the risk is compared with its profit.</p>
+    <p>It ends with a clear final judgement that matches everything before it.</p>
+    <p>It doesn't bring in new arguments. If an idea hasn't been developed in your paragraphs, the conclusion is not the place for it.</p>
+    <h3>9-mark Assess questions</h3>
+    <p>The question asks about one issue, such as whether to spend more on something or whether to raise a price. AQA wants a decision on that issue. For the top level there has to be a clear answer that weighs the argument against the counter-argument. A judgement can be qualified ("yes, as long as…") but it still has to answer the question.</p>
+    <p>If there is a calculation, use the result in your judgement. Say what the figure shows and why it matters more, or less, than the evidence on the other side. You can also question how reliable the figure is.</p>
+    <h3>15-mark Evaluate questions</h3>
+    <p>You either evaluate two options you are given, or two ways you have chosen to solve a problem. Either way you must recommend one. "Both are good" or "they should do both" is not a recommendation.</p>
+    <p>The top level considers what matters most to this business in its situation, for example profit now or growth later, keeping control, or how much risk it can take. A recommendation that leaves out the main weakness of the option you chose is unlikely to reach the top level.</p>
+    <p>If the question has a calculation, use the figures in your recommendation.</p>
+    <h3>Levels, not marks</h3>
+    <p>The lab gives your conclusion a level using the AQA level descriptors for that type of question. 9-mark questions have three levels and 15-mark questions have five. It is a judgement of your conclusion only, so it is not the same as a mark for a whole answer.</p>
+    <h3>When questions open</h3>
+    <p>Some questions are homework questions. They open here after the homework is due, so you always write the full answer yourself first.</p>
+  </div>
+</section>
+</main>
+</div>
+
+<script src="hw-bank.js"></script>
+<script src="conclusion-bank.js"></script>
+<script src="marking-uploads.js"></script>
+<script>
+"use strict";
+const MODEL='claude-sonnet-4-6';
+const B=window.CBANK;
+const TYPE_ORDER=['a9','a9q','e15o','e15w'];
+/* clRef and curQ are read by mark-tracker.js to tag the saved answer with the question */
+let clRef='',curQ=null;
+let selQ=null;
+let uploadedImages=[];
+let state=null; /* {q, attempt, first:{text,fb}, second:{text,fb}} */
+const LEVEL_NAMES={5:['Weak','Limited','Reasonable','Good','Excellent'],3:['Limited','Reasonable','Good']};
+const POINT_LABELS={answer:'Answers the exact question',weigh:'Weighs the two sides',depends:'Says what it depends on, and why',second:'Adds a second condition',final:'Clear final judgement'};
+const CONTEXT_LABEL={a9:'Uses the case',a9q:'Uses the calculation',e15o:'Thinks about what matters most to the business',e15w:'Thinks about what matters most to the business'};
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const words=s=>{s=String(s||'').trim();return s?s.split(/\s+/).length:0;};
+const levelName=(l,max)=>(LEVEL_NAMES[max]||[])[l-1]||'';
+const store={get(k){try{return JSON.parse(localStorage.getItem('n8_cl:'+k)||'null');}catch(e){return null;}},set(k,v){try{localStorage.setItem('n8_cl:'+k,JSON.stringify(v));}catch(e){}}};
+const caseOf=q=>q.caseId&&window.HW&&HW.cases[q.caseId]||null;
+const caseText=q=>{const c=caseOf(q);return c?String(c.ctx||''):'';};
+
+/* homework questions stay locked until the homework is due (Wednesday 11:59pm UK time) */
+function ukOffset(y,m,d){const t=Date.UTC(y,m,d,12);const lastSun=(mm)=>{const x=new Date(Date.UTC(y,mm+1,0));return x.getUTCDate()-x.getUTCDay();};
+  const start=Date.UTC(y,2,lastSun(2),1),end=Date.UTC(y,9,lastSun(9),1);return t>=start&&t<end?1:0;}
+function openAt(q){if(!q.open)return 0;const [y,m,d]=q.open.split('-').map(Number);return Date.UTC(y,m-1,d,23,59,59)-ukOffset(y,m-1,d)*3600000;}
+const isOpen=(q,now)=>(now||Date.now())>openAt(q);
+const openLabel=q=>{const t=new Date(openAt(q)+1000);return t.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',timeZone:'Europe/London'});};
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));
+  $(b.dataset.t).classList.add('on');b.classList.add('on');scrollTo(0,0);
+});
+
+/* ---------- question list ---------- */
+function renderList(){
+  const f=$('typeFilter').value,done=store.get('done')||{};
+  const items=B.Q.map((q,i)=>({q,i})).filter(x=>f==='all'||x.q.type===f)
+    .sort((a,b)=>(isOpen(b.q)-isOpen(a.q))||(TYPE_ORDER.indexOf(a.q.type)-TYPE_ORDER.indexOf(b.q.type)));
+  $('qlist').innerHTML=items.map(({q,i})=>{
+    const t=B.TYPES[q.type],d=done[q.id],c=caseOf(q),open=isOpen(q);
+    const head=`${esc(q.src)}${c?' · '+esc(c.title):''} · ${t.marks} marks`;
+    if(!open)return `<div class="qopt locked"><div class="qy">${head}<span class="lk">Opens ${esc(openLabel(q))}</span></div>${esc(q.q.split('\n')[0])} <span class="tiny">This is a homework question. It opens here once the homework is due.</span></div>`;
+    return `<button class="qopt${selQ===i?' sel':''}" data-i="${i}" type="button"><div class="qy">${head}${d?`<span class="done">Last level: ${d.l} of ${d.m}</span>`:''}</div>${esc(q.q).replace(/\n/g,'<br>')}</button>`;
+  }).join('');
+}
+$('typeFilter').onchange=renderList;
+$('qlist').addEventListener('click',e=>{const b=e.target.closest('button.qopt');if(b)openQ(+b.dataset.i);});
+$('changeQ').onclick=()=>{$('work').style.display='none';$('pick').style.display='';clRef='';curQ=null;renderList();$('pick').scrollIntoView({behavior:'smooth'});};
+
+function openQ(i){
+  const q=B.Q[i],t=B.TYPES[q.type];
+  if(!isOpen(q))return;
+  selQ=i;clRef='CL:'+q.id;curQ=q.q;
+  state={q,attempt:1,first:null,second:null};
+  const c=caseOf(q);
+  $('wSrc').textContent=`${q.src}${c?' · '+c.title:''} · ${t.name} · ${t.marks} marks`;
+  $('wQ').innerHTML=esc(q.q).replace(/\n/g,'<br>');
+  $('wTip').textContent=t.tip;
+  if(c){$('wFactHead').textContent='Case study: '+c.title;$('wFactList').innerHTML='';$('wCase').textContent=caseText(q);$('wFacts').style.display='';$('wFacts').open=false;}
+  else if(q.facts&&q.facts.length){$('wFactHead').textContent='Information from the case';$('wCase').textContent='';$('wFactList').innerHTML=q.facts.map(f=>`<li>${esc(f)}</li>`).join('');$('wFacts').style.display='';$('wFacts').open=true;}
+  else $('wFacts').style.display='none';
+  const L=q.labels||[],kind=q.type==='e15o'?'Option':'Way';
+  $('wL1').textContent=L[0]?`Paragraph 1 · ${kind} 1: ${L[0]}`:'Paragraph 1';
+  $('wL2').textContent=L[1]?`Paragraph 2 · ${kind} 2: ${L[1]}`:'Paragraph 2';
+  $('wP1').textContent=q.forP;$('wP2').textContent=q.againstP;
+  $('fb1').innerHTML='';$('fb2').innerHTML='';$('modelBox').innerHTML='';
+  $('yours').style.display='';$('yHead').textContent='Your conclusion';
+  $('yNote').textContent='Write it the way you would in the exam. There is no set wording.';
+  $('checkBtn').textContent='Check my conclusion';
+  $('err').style.display='none';
+  $('essay').value='';$('essay').dispatchEvent(new Event('input'));
+  uploadedImages.length=0;$('previews').innerHTML='';
+  stopTimer();
+  $('pick').style.display='none';$('work').style.display='';
+  renderList();
+  $('work').scrollIntoView({behavior:'smooth'});
+}
+
+/* ---------- typing, photos, timer ---------- */
+$('essay').addEventListener('input',()=>{$('wc').textContent=words($('essay').value)+' words';});
+document.querySelectorAll('#modes button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#modes button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  $('typeMode').style.display=b.dataset.m==='type'?'':'none';
+  $('uploadMode2').style.display=b.dataset.m==='upload'?'':'none';
+});
+$('dropZone').onclick=()=>$('fileInput').click();
+$('fileInput').onchange=()=>{NMark.addFiles($('fileInput').files,uploadedImages,$('previews'),2);$('fileInput').value='';};
+let tEnd=0,tInt=null;
+function stopTimer(){clearInterval(tInt);tInt=null;$('timer').textContent='';$('timer').classList.remove('up');$('timeBtn').textContent='Time myself (5 minutes)';}
+$('timeBtn').onclick=()=>{
+  if(tInt){stopTimer();return;}
+  tEnd=Date.now()+5*60000;$('timeBtn').textContent='Stop timer';
+  const tick=()=>{const s=Math.round((tEnd-Date.now())/1000);
+    if(s<=0){$('timer').textContent="Time's up";$('timer').classList.add('up');clearInterval(tInt);tInt=null;$('timeBtn').textContent='Time myself (5 minutes)';return;}
+    $('timer').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+  tick();tInt=setInterval(tick,1000);
+};
+
+/* ---------- the marker ---------- */
+function descriptors(max){
+  const top=`Answers the exact question with a clear judgement that is built on the two paragraphs. It weighs them, explaining why one carries more weight for this business (or when each would apply), rather than restating them. It identifies what the answer depends on in terms specific to this business and question, and explains why. It uses the case, and the calculated figures where the question has a calculation, to support the judgement. Consistent from start to finish.`;
+  const good=`A clear judgement built on the paragraphs that shows balance and addresses the question, but the weighing or the deciding factor is less well developed: asserted rather than explained, or the case and figures are used thinly, or it does not quite get to what matters most for this business.`;
+  const reas=`Makes a clear decision on the question and refers to both sides, but does not really weigh them. Typically it gives a point from each paragraph and then picks one without explaining why that side wins, or the "it depends" is generic (for example "it depends on the business" or "it depends on the economy" without saying what about it), or it quotes figures without saying why they matter. This is the right level for a conclusion that summarises both sides and then makes a decision.`;
+  const lim=`Limited links to the analysis. It is one-sided (uses only one paragraph), sits on the fence without a decision, answers a different question, copies the paragraphs' wording rather than drawing a judgement from them, or relies on a new argument instead of the ones already made.`;
+  const weak=`Assertion only: an opinion with no real reason and no use of the paragraphs, or not relevant to the question.`;
+  if(max===5)return `Level 5 (Excellent): ${top}\nLevel 4 (Good): ${good}\nLevel 3 (Reasonable): ${reas}\nLevel 2 (Limited): ${lim}\nLevel 1 (Weak): ${weak}`;
+  return `Level 3 (Good): ${top} A conclusion that weighs the two sides convincingly but is less developed than the example can still be Level 3; it does not need to be perfect.\nLevel 2 (Reasonable): ${reas} Also use Level 2 for a conclusion that makes a supported judgement but whose weighing is only partly explained.\nLevel 1 (Limited): ${lim} Also use Level 1 for assertion only: an opinion with no reason and no use of the paragraphs.`;
+}
+function systemPrompt(q){
+  const t=B.TYPES[q.type],max=t.levels,mid=max===5?3:2,low=max===5?2:1;
+  const c=caseOf(q);
+  const caseBlock=c?`\nTHE CASE STUDY THE STUDENT HAD (${c.title}):\n${caseText(q)}\n`:q.facts&&q.facts.length?`\nCASE INFORMATION THE STUDENT HAD:\n- ${q.facts.join('\n- ')}\n`:'';
+  const L=q.labels||[];
+  return `You are an experienced AQA A-level Business (7138) examiner and teacher. You are judging one thing only: a Year 12 student's conclusion.
+
+The student was given an exam-style question on a case study and two finished paragraphs written by their teacher${q.type==='a9'||q.type==='a9q'?', one arguing each way':', one making the case for each '+(q.type==='e15o'?'option':'way')}. The student wrote only the conclusion that would end the answer. Judge the level the conclusion is working at. A conclusion is mainly assessed on evaluation (AO4): a judgement built on the analysis, balance, and focus on the question as a whole.
+
+THE QUESTION (${q.src}, ${t.marks} marks): ${q.q}
+${caseBlock}${q.calc?`\nTHE CALCULATION (already worked out in the paragraphs): ${q.calc}\n`:''}
+PARAGRAPH 1${L[0]?' ('+L[0]+')':''}: ${q.forP}
+
+PARAGRAPH 2${L[1]?' ('+L[1]+')':''}: ${q.againstP}
+
+TYPE OF QUESTION: ${t.marker}
+
+WHAT THE JUDGEMENT COULD DEPEND ON
+${q.depends.join('; ')}.
+${q.report}
+
+ONE EXAMPLE OF A TOP-LEVEL CONCLUSION (one possible answer, not the only one; a different judgement can be just as good if it is justified):
+${q.model}
+
+LEVELS FOR A CONCLUSION TO THIS QUESTION (best fit, ${max} levels):
+${descriptors(max)}
+
+HOW TO JUDGE
+- Judge holistically and pick the best-fit level. This is not a checklist.
+- Do not require any particular wording, sentence starters or formula. A conclusion that does the job in its own words gets the same credit as one that uses textbook phrases.
+- Length is not quality. A short conclusion that weighs well beats a long one that repeats.
+- The student does not have to reach the same answer as the example. Any answer is fine if it is justified by the paragraphs.
+- A condition the answer depends on that follows from the paragraphs or the case is evaluation, not a new argument. A new line of analysis that was not in the paragraphs earns nothing and should be flagged.
+- A conclusion that will not decide (for example "both are equally good" or "they should do both" with nothing more) cannot go above Level ${low}. Explaining clearly when each side applies, and which applies to this business, is a judgement, not fence-sitting.${q.type==='e15o'||q.type==='e15w'?' On this question the student must recommend one option.':''}
+- Floor: a conclusion that makes a clear decision on the question AND uses a point from each paragraph is at least Level ${mid}, even if it does not explain why one side wins (that missing weighing is what keeps it at Level ${mid}). This floor does not apply if it answers a different question, contains a business error, or relies on a new argument.
+- If the conclusion answers a different question from the one set, it cannot go above Level ${low}.
+- A business error (for example treating revenue and profit as the same thing, getting price or income elasticity the wrong way round, misreading the figures) lowers the level.
+${q.calc?'- This question has a calculation. Using the calculated figures to decide the question is stronger than quoting them, and quoting them is stronger than ignoring them. A conclusion that ignores the figures can still reach the middle level but should not get the top level.\n':''}- Ignore spelling and grammar unless the meaning is unclear.
+- Be fair and consistent. Do not hold back the top level from a conclusion that does what the example does. Do not give the top level to a conclusion that only restates the two paragraphs, however well written.
+- If the student names a model or theory that is not on the AQA 7138 specification (for example Bowman's strategic clock, the Blake Mouton grid, Hackman and Oldham's job characteristics model, Kaplan and Norton's balanced scorecard, Greiner, Hofstede, Mayo, Vroom or McClelland), tell them it is not on the specification.
+
+FEEDBACK STYLE
+Write to the student as "you", in plain, simple language a good teacher would use with a Year 12 class. British spelling. No marks, no percentages, no grades, no emoji. Quote the student's words exactly in quote fields (copy them character for character; use "" if nothing fits). Be specific to this question; refer to the business and the figures in the case.
+
+REPLY WITH JSON ONLY. Your first character must be { and your last must be }.
+{
+ "level": <whole number 1-${max}>,
+ "summary": "<2-3 sentences: what the conclusion does well and the main thing holding it back>",
+ "points": [
+  {"key":"answer","status":"yes|partly|no","quote":"","comment":"<does it answer the exact question, in its terms?${q.type==='e15o'||q.type==='e15w'?' Does it recommend one?':''}>"},
+  {"key":"weigh","status":"yes|partly|no","quote":"","comment":"<does it weigh the two sides, saying which carries more weight and why, rather than repeating them?>"},
+  {"key":"depends","status":"yes|partly|no","quote":"","comment":"<does it say what the answer depends on, specific to this business, and why?>"},
+  {"key":"context","status":"yes|partly|no","quote":"","comment":"<${CONTEXT_LABEL[q.type]}: ${q.type==='a9'?'does it use the case to support the judgement?':q.type==='a9q'?'does it use the calculated figure to decide the question, and say what it shows?':'does it base the recommendation on what matters most to this business in its situation'+(q.calc?', using the calculated figures':'')+'?'}>"},
+  {"key":"second","status":"yes|partly|no","quote":"","comment":"<does it add a second condition? This is a useful extra, not essential: say so if it is missing but the rest is strong>"},
+  {"key":"final","status":"yes|partly|no","quote":"","comment":"<is the final judgement clear and consistent with the rest?>"}
+ ],
+ "flags": [ {"type":"repeats|new_argument|fence|drift|error","quote":"<exact words>","comment":"<one sentence>"} ],
+ "you_wrote": "<one sentence copied exactly from the conclusion: the one whose improvement would make the biggest difference>",
+ "could_write": "<that sentence improved, in a student's plain words, using the paragraphs; at most 50 words; not a whole conclusion>",
+ "next_step": "<one specific thing to do in the next attempt, in one or two sentences>"
+}
+"flags" is an empty array if there is nothing to flag.`;
+}
+
+/* Photos are read first on their own, with no question, paragraphs or example in front of the reader,
+   so it cannot fill in words it cannot see. Only the transcript is then judged. */
+const TRANSCRIBE=`You copy out a student's handwritten work exactly as it is written. You are not marking it and you have not been told what it is about.
+
+Copy every word exactly, including mistakes. Do not correct, improve, complete or guess any word. Do not add words that are not there.
+
+If you cannot read the handwriting confidently (more than about one word in twenty would be a guess, or a whole sentence is unclear), do not transcribe it: reply only with {"unreadable":true,"reason":"<which parts you could not read, for example most of the second half, in one short sentence>"}.
+
+Otherwise reply with JSON only: {"transcript":"<the text exactly as written>"}. If you could read it but some words or parts were hard to read, add "legibility":"<one sentence telling the student which words or parts were hard to read>". Leave legibility out if the handwriting was clear.`;
+async function transcribe(){
+  const content=NMark.blocks(uploadedImages);
+  content.push({type:'text',text:'Copy out the handwritten text in the image(s).'});
+  const tr=await NMark.markJSON({model:MODEL,max_tokens:1500,temperature:0,system:TRANSCRIBE,messages:[{role:'user',content}]});
+  const t=String(tr.transcript||'').trim();
+  if(words(t)<5){const e=new Error('The marker could not find a written conclusion in your photo. Check you uploaded the right page, or type your conclusion.');throw e;}
+  return {text:t,legibility:window.__nmLegibility};
+}
+
+function userText(text,photo){
+  let s='';
+  if(state.attempt===2&&state.first){
+    s+=`This is the student's SECOND attempt. Their first attempt was judged Level ${state.first.fb.level} of ${B.TYPES[state.q.type].levels}. First attempt:\n"""${state.first.text}"""\nFeedback they were given: ${state.first.fb.next_step}\n\nJudge the second attempt on its own merits with the same standard. Also add to your JSON "compare": "better|same|worse" and "compare_note": "<one sentence on what changed>".\n\n`;
+  }
+  if(photo)s+=`The student handwrote this conclusion; it has been copied out exactly from their photo, so ignore spelling and small slips.\n`;
+  s+=`THE STUDENT'S CONCLUSION:\n"""${text}"""`;
+  return s;
+}
+
+/* overlap with the paragraphs: is the conclusion mostly copied from them? */
+function copiedShare(text,q){
+  const norm=s=>String(s).toLowerCase().replace(/[^a-z0-9%£ ]/g,' ').split(/\s+/).filter(Boolean);
+  const src=norm(q.forP+' '+q.againstP),w=norm(text);if(w.length<12)return 0;
+  const grams=new Set();for(let i=0;i+6<=src.length;i++)grams.add(src.slice(i,i+6).join(' '));
+  let hit=0,n=0;for(let i=0;i+6<=w.length;i++){n++;if(grams.has(w.slice(i,i+6).join(' ')))hit++;}
+  return n?hit/n:0;
+}
+
+function clean(fb,max){
+  const lvl=Math.max(1,Math.min(max,Math.round(+fb.level||1)));
+  const okSt=s=>['yes','partly','no'].includes(s)?s:'partly';
+  const pts=(Array.isArray(fb.points)?fb.points:[]).filter(p=>p&&p.key).map(p=>({key:String(p.key),status:okSt(p.status),quote:String(p.quote||''),comment:String(p.comment||'')}));
+  const flags=(Array.isArray(fb.flags)?fb.flags:[]).filter(f=>f&&f.comment).map(f=>({type:String(f.type||''),quote:String(f.quote||''),comment:String(f.comment)}));
+  return Object.assign({},fb,{level:lvl,points:pts,flags});
+}
+
+async function check(){
+  const q=state.q,t=B.TYPES[q.type],max=t.levels;
+  const typed=$('essay').value.trim();
+  if(NMark.pending){$('checkBtn').disabled=true;$('checkBtn').textContent='Getting your photo ready…';await NMark.ready();$('checkBtn').disabled=false;}
+  const photo=NMark.usePhotos(uploadedImages,typed);
+  const err=m=>{$('err').textContent=m;$('err').style.display='block';};
+  $('err').style.display='none';
+  if(!photo){
+    if(words(typed)<8)return err('Write your conclusion first. Even a few sentences is enough to get feedback.');
+    if(copiedShare(typed,q)>0.6)return err('Most of this is copied from the paragraphs. A conclusion should weigh them up in your own words, not repeat them.');
+  }
+  $('checkBtn').disabled=true;$('ld').classList.add('show');
+  try{
+    let src=typed,lg=null;
+    if(photo){const tr=await transcribe();src=tr.text;lg=tr.legibility;}
+    let fb=await NMark.markJSON({model:MODEL,max_tokens:2500,temperature:0,system:systemPrompt(q),messages:[{role:'user',content:[{type:'text',text:userText(src,photo)}]}]});
+    fb=clean(fb,max);
+    if(photo){fb.transcript=src;window.__nmLegibility=lg||null;}
+    const text=src;
+    /* a one-line answer cannot do the job of a conclusion */
+    if(!photo&&words(typed)<15&&fb.level>1)fb.level=1;
+    show(fb,text,photo);
+  }catch(e){err(e.message||'Something went wrong. Press the button again.');}
+  finally{$('checkBtn').disabled=false;$('ld').classList.remove('show');}
+}
+$('checkBtn').onclick=check;
+
+function fbHTML(fb,max,title,text){
+  const pts=fb.points.map(p=>{
+    const label=p.key==='context'?CONTEXT_LABEL[state.q.type]:POINT_LABELS[p.key]||p.key;
+    const opt=p.key==='second'&&p.status==='no';
+    const st=opt?'Optional':p.status==='yes'?'Done':p.status==='partly'?'Partly':'Missing';
+    return `<div class="pt"><span class="st ${opt?'opt':p.status}">${st}</span><div><b>${esc(label)}</b>${p.quote?`<q>${esc(p.quote)}</q>`:''}<div>${esc(p.comment)}</div></div></div>`;
+  }).join('');
+  const FL={repeats:'Repeating the paragraphs',new_argument:'A new argument',fence:'Sitting on the fence',drift:'Not answering the exact question',error:'A business error'};
+  const flags=fb.flags.map(f=>`<div class="flag"><b>${esc(FL[f.type]||'Watch out')}</b>${f.quote?`<q>${esc(f.quote)}</q>`:''}${esc(f.comment)}</div>`).join('');
+  const steps=Array.from({length:max},(_,i)=>`<span class="${i<fb.level?'f':''}"></span>`).join('');
+  const rw=fb.you_wrote&&fb.could_write?`<div class="rw o"><div class="k">You wrote</div>${esc(fb.you_wrote)}</div><div class="rw n"><div class="k">You could have written</div>${esc(fb.could_write)}</div>`:'';
+  const cmp=fb.compare?`<div class="cmp">Compared with your first go: ${esc(fb.compare==='better'?'better.':fb.compare==='worse'?'not as strong.':'about the same.')} ${esc(fb.compare_note||'')}</div>`:'';
+  return `<div class="card"><h3>${esc(title)}</h3>
+    <div class="head"><div><div class="lvl">Level ${fb.level} <small>of ${max}</small></div><div class="steps">${steps}</div></div><div class="lvlname">${esc(levelName(fb.level,max))}</div></div>
+    ${cmp}
+    <p style="margin-top:12px;font-size:15px">${esc(fb.summary||'')}</p>
+    ${text&&text.charAt(0)!=='['?`<details style="margin-top:10px"><summary class="tiny" style="cursor:pointer">Your conclusion</summary><p style="margin-top:6px;font-size:14px;white-space:pre-wrap">${esc(text)}</p></details>`:''}
+    <div class="mt">${pts}</div>${flags}${rw}
+    ${fb.next_step?`<div class="next"><b>Next time:</b> ${esc(fb.next_step)}</div>`:''}</div>`;
+}
+
+function log(fb,text,attempt){
+  const q=state.q,max=B.TYPES[q.type].levels;
+  if(window.NTrack)NTrack.mark({panel:attempt===1?'#fb1':'#fb2',tool:'Conclusion lab',question:`Conclusion only: ${q.src}. ${q.q.replace(/\n/g,' ')}`,mark:'',
+    level:`Level ${fb.level} of ${max}${attempt===2?' (second try)':''}`,well:fb.summary||'',improve:fb.next_step||'',answer:text});
+  const d=store.get('done')||{};d[q.id]={l:fb.level,m:max,t:Date.now()};store.set('done',d);
+}
+
+function show(fb,text,photo){
+  const q=state.q,max=B.TYPES[q.type].levels;
+  if(state.attempt===1){
+    state.first={text,fb};
+    $('fb1').innerHTML=fbHTML(fb,max,'Your first go',text);
+    log(fb,text,1);
+    state.attempt=2;
+    $('yHead').textContent='Second go';
+    $('yNote').textContent='Improve your conclusion using the feedback above. You will see an example conclusion after this.';
+    $('checkBtn').textContent='Check my second go';
+    if(!photo){$('essay').value=text;$('essay').dispatchEvent(new Event('input'));}
+    else if(fb.transcript){$('essay').value=String(fb.transcript);document.querySelector('#modes [data-m="type"]').click();$('essay').dispatchEvent(new Event('input'));}
+    uploadedImages.length=0;$('previews').innerHTML='';
+    $('modelBox').innerHTML=`<div class="row mt noprint"><button class="btn btn-o btn-sm" type="button" id="skipBtn">Skip the second go and see the example</button></div>`;
+    $('skipBtn').onclick=()=>{$('yours').style.display='none';showModel();};
+    $('fb1').scrollIntoView({behavior:'smooth'});
+  }else{
+    state.second={text,fb};
+    $('fb2').innerHTML=fbHTML(fb,max,'Your second go',text);
+    log(fb,text,2);
+    $('yours').style.display='none';
+    showModel();
+    $('fb2').scrollIntoView({behavior:'smooth'});
+  }
+}
+
+function showModel(){
+  const q=state.q;
+  $('modelBox').innerHTML=`<div class="card model"><h3>An example conclusion</h3>
+    <p>${esc(q.model)}</p>
+    <p class="tiny" style="margin-top:10px">This is one way to answer it. A conclusion that reaches a different judgement can be just as good if the paragraphs support it.</p>
+    <h4 class="mt">What the answer could depend on</h4>
+    <ul>${q.depends.map(d=>`<li>${esc(d)}</li>`).join('')}</ul>
+    <h4 class="mt">${esc(q.reportHead||'Notes')}</h4><p style="font-size:14px">${esc(q.report)}</p>
+    <div class="row mt noprint"><button class="btn btn-p" type="button" id="againBtn">Try another question</button><button class="btn btn-o" type="button" onclick="print()">Save as PDF</button></div></div>`;
+  $('againBtn').onclick=()=>$('changeQ').click();
+}
+
+/* ---------- start ---------- */
+renderList();
+(function(){
+  const p=new URLSearchParams(location.search).get('q');
+  if(!p)return;
+  const i=B.Q.findIndex(x=>'CL:'+x.id===p||x.id===p);
+  if(i<0)return;
+  if(isOpen(B.Q[i]))openQ(i);
+  else{const e=document.createElement('div');e.className='tip';e.style.cssText='margin:0 0 14px';e.textContent=`That question opens on ${openLabel(B.Q[i])}, once the homework is due.`;$('pick').prepend(e);}
+})();
+</script>
+<script src="account.js"></script>
+<script src="mark-tracker.js"></script>
+<script>NTrack.init('#write');</script>
+<script src="conclusion-check.js" defer></script>
+<script src="visit.js" defer></script>
+</body>
+</html>
